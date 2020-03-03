@@ -1,0 +1,291 @@
+
+body.main {
+    background-color: black;
+    background-image: url("../resources/background.jpg");
+    background-size: 100%;
+    background-attachment: fixed;
+}
+
+body.admin {
+    background-color: white;
+    background-image: url("../resources/background-admin.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.transparent {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.heading-huge {
+    color: white;
+    font-size: 4.8vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.heading {
+    color: white;
+    font-size: 3.6vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+.text {
+    color: white;
+    font-size: 2vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.item-container {
+    display: block;
+    padding: 1.5vh 1.5vh 1.5vh 1.5vh;
+    border-radius: 1.5vh;
+    font-family: "Courier New", Courier, monospace;
+    margin-top: 2vh;
+    margin-left: 2vh;
+}
+
+.item-container-heading {
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 3.6vh;
+    color: white;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.center-vertical {
+    vertical-align: center;
+}
+
+.center-element {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.login-widget {
+    margin-top: 20vh;
+}
+
+.width-100-pc {
+    width: 100%;
+}
+
+.fw {
+    color: white;
+}
+
+.btn-std {
+    height: 3.5vh;
+    margin-left: 0.5vh;
+    margin-right: 0.5vh;
+    font-size: 1.5vh;
+}
+
+.button-fa-white-large {
+    font-size: 5vh;
+    color: white;
+}
+
+.btn-vertical {
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+.spinner-huge {
+    font-size: 7vh;
+}
+
+.admin-panel-top {
+    width: 100%;
+    height: 6vh;
+    background-color: black;
+    display: inline-block;
+    padding: 1vh 1vh 1vh 1vh;
+}
+
+.admin-panel-left-side {
+    display: inline-block;
+    float: left;
+}
+
+.admin-panel-right-side {
+    display: inline-block;
+    float: right;
+}
+
+.list-line {
+    height: 4.5vh;
+}
+
+.list-tr {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: gray;
+}
+
+.list-entry {
+    text-align: center;
+}
+
+.modal-dialog {
+    width: 36vw !important;
+    max-width: 100% !important;
+}
+
+.modal-window-huge {
+    width: 80vw !important;
+    max-width: 100% !important;
+}
+
+.modal-title {
+    font-size: 2vh !important;
+}
+
+button.close {
+    font-size: 3vh !important;
+}
+
+.input {
+    height: 3vh !important;
+    font-size: 2vh !important;
+}
+
+.input-textarea-description {
+    font-size: 2vh;
+    height: 20vh;
+}
+
+.input-textarea-text {
+    font-size: 2vh;
+    height: 70vh;
+}
+
+.tooltip {
+    font-size: 2vh !important;
+}
+
+.tooltip-inner {
+    width: 20vw !important;
+    max-width: 20vw !important;
+}
+
+.gallery-image-list-item {
+    max-height: 10vh;
+    max-width: 20%;
+}
+
+/* elements within td one under another */
+.structure {
+    display: grid;
+}
+
+.photo-entry {
+    max-height: 12vh;
+    color: white;
+    font-size: 2vh;
+}
+
+.photo-edit-image {
+    max-width: 50vw;
+    max-height: 40vh;
+}
+
+.div-image-selected {
+    border-style: solid;
+    border-width: medium;
+    border-color: lightskyblue;
+}
+
+.selected-img {
+    max-width: 30vw;
+    max-height: 30vh;
+}
+
+.tiny-img {
+    max-width: 10vw;
+    max-height: 10vh;
+}
+
+.td-tall {
+    padding-bottom: 2vh;
+}
+
+.highres-line-item {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.image-select-tiles {
+    width: 9vw;
+    height: 9vw;
+    background-position: center;
+    background-size: cover;
+    display: inline-block;
+}
+
+.image-select-preview-div {
+    background-color: #777777;
+    width: 20vw;
+    height: 20vw;
+    display: inline-block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image-select-preview-img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+@media (max-width: 1200px) {
+    .width-large {
+        width: 97%;
+    }
+    .width-medium {
+        width: 97%;
+    }
+
+    .width-full {
+        width: 97%;
+    }
+}
+
+@media (min-width: 1201px) {
+    .width-large {
+        width: 75%;
+    }
+
+    .width-medium {
+        width: 48%;
+    }
+
+    .width-full {
+        width: 97%;
+    }
+}

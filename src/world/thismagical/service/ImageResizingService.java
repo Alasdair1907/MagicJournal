@@ -1,0 +1,92 @@
+package world.thismagical.service;
+/*
+  User: Alasdair
+  Date: 1/1/2020
+  Time: 6:15 PM                                                                                                    
+                                        `.------:::--...``.`                                        
+                                    `-:+hmmoo+++dNNmo-.``/dh+...                                    
+                                   .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
+                                 `-//+ooooo++///////:---..``.````-``                                
+                           `````.----:::/::::::::::::--------.....--..`````                         
+           ```````````...............---:::-----::::---..------------------........```````          
+        `:/+ooooooosssssssyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysssssssssssssssssssssssssssoo+/:`       
+          ``..-:/++ossyhhddddddddmmmmmarea51mbobmlazarmmmmmmmddddddddddddddhhyysoo+//:-..``         
+                      ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
+                                 ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
+                                       `.-/+oossssyysssoo+/-.`                                      
+                                                                                                   
+*/
+
+import world.thismagical.util.Tools;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+public class ImageResizingService {
+
+    public static void resize(String inputFileName, String outputFileName, Integer maxWidthForHorizontal, Integer maxHeightForVertical){
+        try {
+            File inputFile = new File(inputFileName);
+            BufferedImage inputImage = ImageIO.read(inputFile);
+
+            Integer x = inputImage.getWidth();
+            Integer y = inputImage.getHeight();
+
+            Integer newX = null;
+            Integer newY = null;
+
+            Double ratio = null;
+
+            if (x > y){
+                // horizontal
+
+                if (maxWidthForHorizontal >= x){
+                    copy(inputFileName, outputFileName);
+                    return;
+                }
+
+                ratio = ( x.doubleValue() / maxWidthForHorizontal.doubleValue());
+
+                newX = maxWidthForHorizontal;
+                newY = ((Double) (y.doubleValue() / ratio)).intValue();
+
+            } else {
+                // vertical or square
+
+                if (maxHeightForVertical >= y){
+                    copy(inputFileName, outputFileName);
+                    return;
+                }
+
+                ratio = y.doubleValue() / maxHeightForVertical.doubleValue();
+
+                newX = ((Double) (x.doubleValue() / ratio)).intValue();
+                newY = maxHeightForVertical;
+            }
+
+            BufferedImage outputImage = new BufferedImage(newX, newY, inputImage.getType());
+            Graphics2D g2d = outputImage.createGraphics();
+
+            g2d.drawImage(inputImage, 0, 0, newX, newY, null);
+            g2d.dispose();
+
+            ImageIO.write(outputImage, Tools.getExtension(inputFileName), new File(outputFileName));
+
+        } catch (Exception ex){
+            Tools.log("resize() error: "+ex.getMessage());
+        }
+    }
+
+    private static void copy(String inputFileName, String outputFileName){
+        try {
+            Files.copy(Paths.get(inputFileName), Paths.get(outputFileName), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception ex){
+            Tools.log("[ERROR] error copying file "+inputFileName+" to "+outputFileName+":\r\n"+ex.getMessage());
+        }
+    }
+}
