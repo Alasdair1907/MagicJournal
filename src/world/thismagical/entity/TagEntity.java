@@ -47,7 +47,7 @@ public class TagEntity implements Serializable {
     }
 
     public PostAttribution getAttributionClass() {
-        return PostAttribution.getImageAttribution(this.attributionClass);
+        return PostAttribution.getPostAttribution(this.attributionClass);
     }
 
     public void setAttributionClass(PostAttribution attributionClass){

@@ -27,10 +27,8 @@ import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.TagTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
-import world.thismagical.vo.PhotoVO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TagService {
@@ -137,7 +135,7 @@ public class TagService {
             for (String tag : tagsArray){
                 TagEntity tagEntity = new TagEntity();
                 tagEntity.setTag(tag.trim());
-                tagEntity.setAttributionClass(PostAttribution.getImageAttribution(tagTO.attribution));
+                tagEntity.setAttributionClass(PostAttribution.getPostAttribution(tagTO.attribution));
                 tagEntity.setParentObjectId(tagTO.objectId);
 
                 TagDao.addOrUpdateTag(tagEntity, session);

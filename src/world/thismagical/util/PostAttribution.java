@@ -16,7 +16,7 @@ public enum PostAttribution {
         return this.id;
     }
 
-    public static PostAttribution getImageAttribution(Short id){
+    public static PostAttribution getPostAttribution(Short id){
         for (PostAttribution imageAttribution : PostAttribution.values()){
             if (imageAttribution.id.equals(id)){
                 return imageAttribution;

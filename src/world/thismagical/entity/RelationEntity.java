@@ -18,6 +18,7 @@ package world.thismagical.entity;
 */
 
 import world.thismagical.util.PostAttribution;
+import world.thismagical.util.RelationClass;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -54,11 +55,11 @@ public class RelationEntity implements Serializable {
     }
 
     public PostAttribution getSrcAttributionClass() {
-        return PostAttribution.getImageAttribution(srcAttributionClass);
+        return PostAttribution.getPostAttribution(srcAttributionClass);
     }
 
-    public void setSrcAttributionClass(Short srcAttributionClass) {
-        this.srcAttributionClass = srcAttributionClass;
+    public void setSrcAttributionClass(PostAttribution postAttribution) {
+        this.srcAttributionClass = postAttribution.getId();
     }
 
     public Long getSrcObjectId() {
@@ -69,12 +70,12 @@ public class RelationEntity implements Serializable {
         this.srcObjectId = srcObjectId;
     }
 
-    public Short getDstAttributionClass() {
-        return dstAttributionClass;
+    public PostAttribution getDstAttributionClass() {
+        return PostAttribution.getPostAttribution(dstAttributionClass);
     }
 
-    public void setDstAttributionClass(Short dstAttributionClass) {
-        this.dstAttributionClass = dstAttributionClass;
+    public void setDstAttributionClass(PostAttribution postAttribution) {
+        this.dstAttributionClass = postAttribution.getId();
     }
 
     public Long getDstObjectId() {
@@ -85,11 +86,11 @@ public class RelationEntity implements Serializable {
         this.dstObjectId = dstObjectId;
     }
 
-    public Short getRelationClass() {
-        return relationClass;
+    public RelationClass getRelationClass() {
+        return RelationClass.getRelationClass(this.relationClass);
     }
 
-    public void setRelationClass(Short relationClass) {
-        this.relationClass = relationClass;
+    public void setRelationClass(RelationClass relationClass) {
+        this.relationClass = relationClass.getId();
     }
 }

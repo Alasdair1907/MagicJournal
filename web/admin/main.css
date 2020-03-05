@@ -263,6 +263,11 @@ button.close {
     margin: auto;
 }
 
+.relation-manager-list-group {
+    height: 10vh !important;
+    overflow-y: scroll !important;
+}
+
 @media (max-width: 1200px) {
     .width-large {
         width: 97%;

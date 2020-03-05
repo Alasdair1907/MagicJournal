@@ -18,6 +18,7 @@ package world.thismagical.dao;
 */
 
 import org.hibernate.Session;
+import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.GalleryEntity;
 import world.thismagical.entity.PhotoEntity;
@@ -84,6 +85,28 @@ public class GalleryDao {
         }
 
         return galleryEntity;
+    }
+
+    public static List<GalleryEntity> getGalleryEntitiesByIds(List<Long> ids, Session session){
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<GalleryEntity> cq = criteriaBuilder.createQuery(GalleryEntity.class);
+        Root<GalleryEntity> galleryEntityRoot = cq.from(GalleryEntity.class);
+
+        CriteriaBuilder.In<Long> in = criteriaBuilder.in(galleryEntityRoot.get("id"));
+        for (Long id: ids){
+            in.value(id);
+        }
+
+        cq.where(in);
+
+        List<GalleryEntity> galleryEntityList = null;
+        try {
+            galleryEntityList = session.createQuery(cq).getResultList();
+        } catch (Exception ex){
+            Tools.log("[WARN] getGalleryEntitiesByIds: "+ex.getMessage());
+        }
+
+        return galleryEntityList;
     }
 
     public static void toggleGalleryPublish(Long id, Session session){

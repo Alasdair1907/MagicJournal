@@ -84,6 +84,28 @@ public class ArticleDao {
         return articleEntity;
     }
 
+    public static List<ArticleEntity> getArticleEntitiesByIds(List<Long> ids, Session session){
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<ArticleEntity> cq = criteriaBuilder.createQuery(ArticleEntity.class);
+        Root<ArticleEntity> articleEntityRoot = cq.from(ArticleEntity.class);
+
+        CriteriaBuilder.In<Long> in = criteriaBuilder.in(articleEntityRoot.get("id"));
+        for (Long id: ids){
+            in.value(id);
+        }
+
+        cq.where(in);
+
+        List<ArticleEntity> articleEntityList = null;
+        try {
+            articleEntityList = session.createQuery(cq).getResultList();
+        } catch (Exception ex){
+            Tools.log("[WARN] getArticleEntitiesByIds: "+ex.getMessage());
+        }
+
+        return articleEntityList;
+    }
+
     public static void toggleArticlePublish(Long id, Session session){
         ArticleEntity articleEntity = getArticleEntityById(id, session);
 

@@ -20,12 +20,18 @@ $.widget("admin.RelationManager", {
 <span class="item-container-heading">Tag Editor</span>
 
 <span class="text">Posts that refer current post:</span>
+<div class="list-group relation-manager-list-group">
 
+{{#each postRelateToThisList}}
+<a href="#" class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}">{{this.dstObjectTitle}}</a>
+{{/each}}
+</div>
 
 <span class="text">Current post relates to:</span>
 <div class="list-group">
+
 {{#each currentPostRelatesToList}}
-<a href="#" class="list-group-item list-group-item-action" data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}">{{this.dstObjectTitle}}</a>
+<a href="#" class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}">{{this.dstObjectTitle}}</a>
 {{/each}}
 </div>
 

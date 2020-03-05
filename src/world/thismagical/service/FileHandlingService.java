@@ -99,7 +99,7 @@ public class FileHandlingService {
             return Boolean.FALSE;
         }
 
-        PostAttribution imageAttribution = PostAttribution.getImageAttribution(imageUploadTO.imageAttributionClass);
+        PostAttribution imageAttribution = PostAttribution.getPostAttribution(imageUploadTO.imageAttributionClass);
 
         if (imageAttribution == null){
             return Boolean.FALSE;

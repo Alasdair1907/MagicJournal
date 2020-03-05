@@ -19,6 +19,7 @@ package world.thismagical.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.PhotoEntity;
 import world.thismagical.util.Tools;
@@ -99,6 +100,28 @@ public class PhotoDao {
         }
 
         return photoEntity;
+    }
+
+    public static List<PhotoEntity> getPhotoEntitiesByIds(List<Long> ids, Session session){
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<PhotoEntity> cq = criteriaBuilder.createQuery(PhotoEntity.class);
+        Root<PhotoEntity> photoEntityRoot = cq.from(PhotoEntity.class);
+
+        CriteriaBuilder.In<Long> in = criteriaBuilder.in(photoEntityRoot.get("id"));
+        for (Long id: ids){
+            in.value(id);
+        }
+
+        cq.where(in);
+
+        List<PhotoEntity> photoEntityList = null;
+        try {
+            photoEntityList = session.createQuery(cq).getResultList();
+        } catch (Exception ex){
+            Tools.log("[WARN] getPhotoEntitiesByIds: "+ex.getMessage());
+        }
+
+        return photoEntityList;
     }
 
     public static void togglePhotoPublish(Long id, Session session){

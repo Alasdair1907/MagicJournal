@@ -446,7 +446,7 @@ public class JsonApi {
         Session session = sessionFactory.openSession();
 
         try {
-            res = TagService.listTagsForObjectStr(PostAttribution.getImageAttribution(request.attribution), request.objectId, session);
+            res = TagService.listTagsForObjectStr(PostAttribution.getPostAttribution(request.attribution), request.objectId, session);
         } finally {
             session.close();
         }
@@ -489,7 +489,7 @@ public class JsonApi {
         Session session = sessionFactory.openSession();
 
         try {
-            List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.getImageAttribution(postAttribution), Collections.singletonList(objId), session);
+            List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.getPostAttribution(postAttribution), Collections.singletonList(objId), session);
             jsonAdminResponse.success = true;
             jsonAdminResponse.data = imageVOList;
         } catch (Exception ex){
@@ -798,4 +798,24 @@ public class JsonApi {
 
         return res;
     }
+
+    /*
+    public static JsonAdminResponse<RelationTO> listRelationsForPost(PostTO postTO, SessionFactory sessionFactory){
+
+        JsonAdminResponse<RelationTO> res = new JsonAdminResponse<>();
+
+        if (postTO.postAttributionClass == null || postTO.postObjectId == null){
+            res.success = false;
+            res.errorDescription = "listRelationsForPost: null argument";
+            return res;
+        }
+
+        Session session = sessionFactory.openSession();
+
+        try {
+
+        }
+
+    }
+     */
 }

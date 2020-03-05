@@ -21,15 +21,17 @@ import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
 
 public class RelationVO {
-    PostAttribution srcAttributionClass;
-    Short srcAttributionClassShort;
-    Long srcObjectId;
-    String srcObjectTitle;
+    public PostAttribution srcAttributionClass;
+    public Short srcAttributionClassShort;
+    public Long srcObjectId;
+    public String srcObjectTitle;
 
-    PostAttribution dstAttributionClass;
-    Short dstAttributionClassShort;
-    Long dstObjectId;
-    String dstObjectTitle;
+    public PostAttribution dstAttributionClass;
+    public Short dstAttributionClassShort;
+    public Long dstObjectId;
+    public String dstObjectTitle;
 
-    RelationClass relationClass;
+    public RelationClass relationClass;
+    public Short relationClassShort;
+    public Boolean isAuto;
 }

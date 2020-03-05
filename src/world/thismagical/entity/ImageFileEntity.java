@@ -97,7 +97,7 @@ public class ImageFileEntity implements Serializable {
     }
 
     public PostAttribution getImageAttributionClass() {
-        return PostAttribution.getImageAttribution(this.imageAttributionClass);
+        return PostAttribution.getPostAttribution(this.imageAttributionClass);
     }
 
     public void setImageAttributionClass(PostAttribution imageAttribution) {
