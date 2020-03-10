@@ -40,6 +40,8 @@
     <script src="/external/tagsinput/bootstrap-tagsinput.js"></script>
     <link rel="stylesheet" href="/external/tagsinput/bootstrap-tagsinput.css">
 
+    <script src="helper.js"></script>
+
     <script src="templates.js"></script>
     <script src="templates-author.js"></script>
     <script src="templates-photo.js"></script>

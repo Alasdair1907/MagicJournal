@@ -88,6 +88,11 @@ public class GalleryDao {
     }
 
     public static List<GalleryEntity> getGalleryEntitiesByIds(List<Long> ids, Session session){
+
+        if (ids == null || ids.isEmpty()){
+            return null;
+        }
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<GalleryEntity> cq = criteriaBuilder.createQuery(GalleryEntity.class);
         Root<GalleryEntity> galleryEntityRoot = cq.from(GalleryEntity.class);

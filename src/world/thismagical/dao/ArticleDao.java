@@ -85,6 +85,11 @@ public class ArticleDao {
     }
 
     public static List<ArticleEntity> getArticleEntitiesByIds(List<Long> ids, Session session){
+
+        if (ids == null || ids.isEmpty()){
+            return null;
+        }
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<ArticleEntity> cq = criteriaBuilder.createQuery(ArticleEntity.class);
         Root<ArticleEntity> articleEntityRoot = cq.from(ArticleEntity.class);
@@ -101,6 +106,7 @@ public class ArticleDao {
             articleEntityList = session.createQuery(cq).getResultList();
         } catch (Exception ex){
             Tools.log("[WARN] getArticleEntitiesByIds: "+ex.getMessage());
+            Tools.log(Tools.getStackTraceStr(ex));
         }
 
         return articleEntityList;

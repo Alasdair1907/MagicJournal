@@ -214,6 +214,11 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("listAllArticleVOsNoFilter")){
+            JsonAdminResponse<List<ArticleVO>> res = JsonApi.listAllArticleVOsNoFilter(sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         if (action.equals("getArticleVOByArticleId")){
             Long id = Long.parseLong(data);
             JsonAdminResponse<ArticleVO> res = JsonApi.getArticleVOByArticleId(id, sessionFactory);
@@ -241,6 +246,12 @@
         if (action.equals("setArticleTitleImageId")){
             ArticleTO articleTO = objectMapper.readValue(data, ArticleTO.class);
             JsonAdminResponse<Void> res = JsonApi.setArticleTitleImageId(articleTO, guid, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("listRelationsForPost")){
+            PostTO postTO = objectMapper.readValue(data, PostTO.class);
+            JsonAdminResponse<RelationTO> res = JsonApi.listRelationsForPost(postTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

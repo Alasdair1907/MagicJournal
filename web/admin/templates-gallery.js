@@ -119,7 +119,11 @@ let galleryNewOrEdit = `
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
 </div>
 
-<div data-role="gallery-tag-editor" class="highres-line-item width-medium"></div>
+<div class="highres-line-item width-medium">
+    <div data-role="gallery-tag-editor"></div>
+    <div data-role="gallery-relation-editor"></div>
+</div>
+
 
 </div>
 

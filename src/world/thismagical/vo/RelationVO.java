@@ -2,7 +2,7 @@ package world.thismagical.vo;
 /*
   User: Alasdair
   Date: 3/4/2020
-  Time: 12:00 AM                                                                                                    
+
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -21,6 +21,8 @@ import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
 
 public class RelationVO {
+    public Long relationId;
+
     public PostAttribution srcAttributionClass;
     public Short srcAttributionClassShort;
     public Long srcObjectId;

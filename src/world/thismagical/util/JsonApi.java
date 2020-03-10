@@ -729,6 +729,32 @@ public class JsonApi {
         return res;
     }
 
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
+        Session session = sessionFactory.openSession();
+
+        List<ArticleVO> articleVOList = null;
+        JsonAdminResponse<List<ArticleVO>> res = new JsonAdminResponse<>();
+
+        try {
+            articleVOList = ArticleService.listAllArticleVOs(null, session);
+        } catch (Exception ex){
+            Tools.log("[ERROR] listAllArticleVOsNoFilter: "+ex.getMessage());
+            ex.printStackTrace();
+
+            res.success = false;
+            res.errorDescription = "error obtaining list of articles";
+
+            return res;
+        } finally {
+            session.close();
+        }
+
+        res.success = true;
+        res.data = articleVOList;
+
+        return res;
+    }
+
     public static JsonAdminResponse<Long> saveOrUpdateArticle(ArticleTO articleTO, SessionFactory sessionFactory){
         Session session = sessionFactory.openSession();
         JsonAdminResponse<Long> res = null;
@@ -799,7 +825,7 @@ public class JsonApi {
         return res;
     }
 
-    /*
+
     public static JsonAdminResponse<RelationTO> listRelationsForPost(PostTO postTO, SessionFactory sessionFactory){
 
         JsonAdminResponse<RelationTO> res = new JsonAdminResponse<>();
@@ -813,9 +839,18 @@ public class JsonApi {
         Session session = sessionFactory.openSession();
 
         try {
-
+            res.data = RelationService.getRelationTO(postTO, session);
+            res.success = true;
+        } /*catch (Exception ex) {
+            res.success = false;
+            res.errorDescription = "can't load relations for post "+postTO.postObjectId+" of class "+postTO.postAttributionClass;
+            Tools.log("listRelationsForPost: " + ex.getMessage());
+        }*/ finally {
+            session.close();
         }
 
+        return res;
+
     }
-     */
+
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class RelationService {
 
-    RelationTO getRelationTO(PostTO postTO, Session session){
+    public static RelationTO getRelationTO(PostTO postTO, Session session){
         List<RelationVO> relationVOList = listRelationsForPost(PostAttribution.getPostAttribution(postTO.postAttributionClass), postTO.postObjectId, session);
 
         List<RelationVO> postsReferToThis = new ArrayList<>();
@@ -44,12 +44,12 @@ public class RelationService {
 
     }
 
-    List<RelationVO> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
+    public static List<RelationVO> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postAttribution, postId, session);
         return relationEntityListToVo(relationEntities, session);
     }
 
-    List<RelationVO> relationEntityListToVo(List<RelationEntity> relationEntityList, Session session){
+    public static List<RelationVO> relationEntityListToVo(List<RelationEntity> relationEntityList, Session session){
         if (relationEntityList == null){
             throw new IllegalArgumentException("relationEntityListToVo: null argument");
         }
@@ -64,6 +64,8 @@ public class RelationService {
 
         for (RelationEntity relationEntity : relationEntityList){
             RelationVO relationVO = new RelationVO();
+
+            relationVO.relationId = relationEntity.getId();
 
             relationVO.srcAttributionClass = relationEntity.getSrcAttributionClass();
             relationVO.srcAttributionClassShort = relationEntity.getSrcAttributionClass().getId();
@@ -120,7 +122,7 @@ public class RelationService {
         return relationVOList;
     }
 
-    Entities gatherRelationsEntities(List<RelationEntity> relationEntityList, Session session){
+    public static Entities gatherRelationsEntities(List<RelationEntity> relationEntityList, Session session){
         if (relationEntityList == null){
             throw new IllegalArgumentException("relationEntityListToVo: null argument");
         }

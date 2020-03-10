@@ -184,9 +184,11 @@ $.widget("admin.galleriesWidget", {
         let $submitElem = element.find('[data-role="data-gallery-save-or-update"]');
 
         let $tagEditorDiv = element.find('[data-role="gallery-tag-editor"]');
+        let $relationEditorDiv = element.find('[data-role="gallery-relation-editor"]');
         let $galleryImageManagerDiv = element.find('[data-role="gallery-image-manager"]');
 
         $tagEditorDiv.TagEditor({attributionClass: 0, objectId: galleryVO.id});
+        $relationEditorDiv.RelationManager({attributionClass: 0, objectId: galleryVO.id});
         $galleryImageManagerDiv.ImageManager({attributionClass: 0, objectId: galleryVO.id});
 
         $submitElem.unbind();

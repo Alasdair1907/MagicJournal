@@ -103,6 +103,11 @@ public class PhotoDao {
     }
 
     public static List<PhotoEntity> getPhotoEntitiesByIds(List<Long> ids, Session session){
+
+        if (ids == null || ids.isEmpty()){
+            return null;
+        }
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<PhotoEntity> cq = criteriaBuilder.createQuery(PhotoEntity.class);
         Root<PhotoEntity> photoEntityRoot = cq.from(PhotoEntity.class);
