@@ -255,5 +255,11 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("createNewRelation")){
+            RelationVO relationVOpartial = objectMapper.readValue(data, RelationVO.class);
+            JsonAdminResponse<RelationTO> res = JsonApi.createNewRelation(guid, relationVoPartial, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
     }
 %>

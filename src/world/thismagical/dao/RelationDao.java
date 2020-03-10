@@ -44,5 +44,15 @@ public class RelationDao {
         return relationEntityList;
     }
 
+    public static void saveRelation(RelationEntity relationEntity, Session session){
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.saveOrUpdate(relationEntity);
+
+        session.flush();
+    }
+
 
 }

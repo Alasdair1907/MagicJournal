@@ -5,15 +5,15 @@ import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.GalleryDao;
 import world.thismagical.dao.PhotoDao;
 import world.thismagical.dao.RelationDao;
-import world.thismagical.entity.ArticleEntity;
-import world.thismagical.entity.GalleryEntity;
-import world.thismagical.entity.PhotoEntity;
-import world.thismagical.entity.RelationEntity;
+import world.thismagical.entity.*;
+import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostTO;
 import world.thismagical.to.RelationTO;
 import world.thismagical.util.PostAttribution;
+import world.thismagical.util.RelationClass;
 import world.thismagical.vo.RelationVO;
 
+import javax.management.relation.Relation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -167,6 +167,43 @@ public class RelationService {
         entities.galleryEntities = GalleryDao.getGalleryEntitiesByIds(new ArrayList<>(galleryEntityIds), session);
 
         return entities;
+    }
+
+    public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVoPartial, Session session){
+
+        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
+
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+
+        if (authorEntity == null){
+            jsonAdminResponse.success = false;
+            jsonAdminResponse.errorDescription = "User session not found!";
+            return jsonAdminResponse;
+        }
+
+        if (!AuthorizationService.userHasGeneralWritePrivileges(authorEntity, jsonAdminResponse)){
+            return jsonAdminResponse;
+        }
+
+        RelationEntity relationEntity = relationVoPartialToRelationEntity(relationVoPartial);
+        RelationDao.saveRelation(relationEntity, session);
+
+        jsonAdminResponse.success = true;
+        return jsonAdminResponse;
+    }
+
+    public static RelationEntity relationVoPartialToRelationEntity(RelationVO relationVO){
+        RelationEntity relationEntity = new RelationEntity();
+
+        relationEntity.setSrcAttributionClass(PostAttribution.getPostAttribution(relationVO.srcAttributionClassShort));
+        relationEntity.setSrcObjectId(relationVO.srcObjectId);
+
+        relationEntity.setDstAttributionClass(PostAttribution.getPostAttribution(relationVO.dstAttributionClassShort));
+        relationEntity.setDstObjectId(relationVO.dstObjectId);
+
+        relationEntity.setRelationClass(RelationClass.RELATION_RELATED);
+
+        return relationEntity;
     }
 
     public static class Entities {

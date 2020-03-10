@@ -138,6 +138,27 @@ public class AuthorizationService {
         return authorEntity;
     }
 
+    public static <T> Boolean userHasGeneralWritePrivileges(AuthorEntity author, JsonAdminResponse<T> jsonAdminResponse){
+
+        if (author == null){
+            jsonAdminResponse.success = false;
+            jsonAdminResponse.errorDescription = "Not authorized!";
+            return false;
+        }
+
+        if (author.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_SUPER_USER){
+            return true;
+        }
+
+        if (author.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
+            return true;
+        }
+
+        jsonAdminResponse.success = false;
+        jsonAdminResponse.errorDescription = "Not authorized!";
+        return false;
+    }
+
     public static <T> Boolean checkPrivileges(AuthorEntity objectAuthorEntity, AuthorEntity currentAuthorEntity, JsonAdminResponse<T> jsonAdminResponse){
 
         if (currentAuthorEntity == null){

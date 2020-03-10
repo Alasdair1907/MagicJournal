@@ -19,6 +19,7 @@ package world.thismagical.entity;
 
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
+import world.thismagical.vo.RelationVO;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -93,4 +94,5 @@ public class RelationEntity implements Serializable {
     public void setRelationClass(RelationClass relationClass) {
         this.relationClass = relationClass.getId();
     }
+
 }

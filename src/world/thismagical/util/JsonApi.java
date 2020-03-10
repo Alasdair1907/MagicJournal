@@ -1,6 +1,7 @@
 package world.thismagical.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.ArticleDao;
@@ -852,5 +853,24 @@ public class JsonApi {
         return res;
 
     }
+
+    public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVOPartial, SessionFactory sessionFactory){
+        JsonAdminResponse<Void> res = new JsonAdminResponse<>();
+
+        Session session = sessionFactory.openSession();
+
+        try {
+
+        } finally {
+            session.close();
+        }
+
+        res.success = true;
+
+        return res;
+
+    }
+
+
 
 }

@@ -104,9 +104,6 @@ $.widget("admin.RelationManager", {
     },
 
     _relationAdd: async function(self, ops){
-        let objectId = ops.objectId;
-        let postAttributionClass = ops.attributionClass;
-
         let $mainElem = self.element.find('[data-role="modal-relation-select-main"]');
 
         let $articleSrc = self.element.find('[data-role="relation-article"]');
@@ -145,6 +142,24 @@ $.widget("admin.RelationManager", {
             let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
             $mainElem.html(hModalListingTemplate({postVOList: galleryVOList, class: 0}));
         });
+
+    },
+
+    _processSelect: async function(self, ops, selectedId, selectedClass){
+        let objectId = ops.objectId;
+        let postAttributionClass = ops.attributionClass;
+
+        let guid = Cookies.get("guid");
+        let relationVo = {
+            srcAttributionClassShort: postAttributionClass,
+            srcObjectId: objectId,
+
+            dstAttributionClassShort: selectedClass,
+            dstObjectId: selectedId
+        };
+        let relationVoJson = JSON.stringify(relationVo);
+        let res = ajax({guid: guid, action: "createNewRelation", data: relationVoJson});
+
     },
 
     _display: async function(self, ops){
