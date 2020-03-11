@@ -138,11 +138,9 @@ public class AuthorizationService {
         return authorEntity;
     }
 
-    public static <T> Boolean userHasGeneralWritePrivileges(AuthorEntity author, JsonAdminResponse<T> jsonAdminResponse){
+    public static Boolean userHasGeneralWritePrivileges(AuthorEntity author){
 
         if (author == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Not authorized!";
             return false;
         }
 
@@ -154,8 +152,6 @@ public class AuthorizationService {
             return true;
         }
 
-        jsonAdminResponse.success = false;
-        jsonAdminResponse.errorDescription = "Not authorized!";
         return false;
     }
 

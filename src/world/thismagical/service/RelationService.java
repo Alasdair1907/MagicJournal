@@ -1,6 +1,7 @@
 package world.thismagical.service;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.GalleryDao;
 import world.thismagical.dao.PhotoDao;
@@ -11,6 +12,9 @@ import world.thismagical.to.PostTO;
 import world.thismagical.to.RelationTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
+import world.thismagical.vo.ArticleVO;
+import world.thismagical.vo.GalleryVO;
+import world.thismagical.vo.PhotoVO;
 import world.thismagical.vo.RelationVO;
 
 import javax.management.relation.Relation;
@@ -68,10 +72,12 @@ public class RelationService {
             relationVO.relationId = relationEntity.getId();
 
             relationVO.srcAttributionClass = relationEntity.getSrcAttributionClass();
+            relationVO.srcAttributionClassStr = relationEntity.getSrcAttributionClass().getReadable();
             relationVO.srcAttributionClassShort = relationEntity.getSrcAttributionClass().getId();
             relationVO.srcObjectId = relationEntity.getSrcObjectId();
 
             relationVO.dstAttributionClass = relationEntity.getDstAttributionClass();
+            relationVO.dstAttributionClassStr = relationEntity.getDstAttributionClass().getReadable();
             relationVO.dstAttributionClassShort = relationEntity.getDstAttributionClass().getId();
             relationVO.dstObjectId = relationEntity.getDstObjectId();
 
@@ -171,26 +177,140 @@ public class RelationService {
 
     public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVoPartial, Session session){
 
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-
         AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
         if (authorEntity == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "User session not found!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("user session not found");
         }
 
-        if (!AuthorizationService.userHasGeneralWritePrivileges(authorEntity, jsonAdminResponse)){
-            return jsonAdminResponse;
+        if (!AuthorizationService.userHasGeneralWritePrivileges(authorEntity)){
+            return JsonAdminResponse.fail("insufficient privileges");
         }
 
         RelationEntity relationEntity = relationVoPartialToRelationEntity(relationVoPartial);
         RelationDao.saveRelation(relationEntity, session);
 
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
+
+    public static JsonAdminResponse<Void> deleteRelation(String guid, Long relationId, Session session){
+
+        if (guid == null || relationId == null){
+            return JsonAdminResponse.fail("deleteRelation: null argument");
+        }
+
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+
+        if (authorEntity == null){
+            return JsonAdminResponse.fail("session not found");
+        }
+
+        if (!AuthorizationService.userHasGeneralWritePrivileges(authorEntity)){
+            return JsonAdminResponse.fail("insufficient privileges");
+        }
+
+        RelationDao.deleteRelation(relationId, session);
+
+        return JsonAdminResponse.success(null);
+    }
+
+    public static Set<Long> getSetOfConcernedPosts(PostTO postTO, PostAttribution targetPostAttribution, Set<Long> postIdsToFilter, Session session){
+
+        Long postId = postTO.postObjectId;
+        PostAttribution thisPostAttribution = PostAttribution.getPostAttribution(postTO.postAttributionClass);
+
+        List<RelationVO> relationVOList = listRelationsForPost(thisPostAttribution, postId, session);
+
+        if (relationVOList == null || relationVOList.isEmpty()){
+            return new HashSet<>(postIdsToFilter);
+        }
+
+        if (postIdsToFilter == null || postIdsToFilter.isEmpty()){
+            return new HashSet<>();
+        }
+        
+        Set<Long> res = new HashSet<>(postIdsToFilter);
+
+        for (RelationVO relationVO : relationVOList){
+            if (relationVO.dstAttributionClass == thisPostAttribution && relationVO.dstObjectId.equals(postId)){
+                if (relationVO.srcAttributionClass == targetPostAttribution){
+                    res.remove(relationVO.srcObjectId);
+                }
+            }
+
+            if (relationVO.srcAttributionClass == thisPostAttribution && relationVO.srcObjectId.equals(postId)){
+                if (relationVO.dstAttributionClass == targetPostAttribution){
+                    res.remove(relationVO.dstObjectId);
+                }
+            }
+        }
+
+        return res;
+    }
+    
+    public static List<ArticleVO> listConcernedArticlesVOs(PostTO postTO, Session session){
+
+        if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
+            throw new IllegalArgumentException();
+        }
+
+        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(null, session);
+        if (articleVOList.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Set<Long> articleIdSet = articleVOList.stream().map(it -> it.id).collect(Collectors.toSet());
+
+        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.ARTICLE){
+            articleIdSet.remove(postTO.postObjectId);
+        }
+
+        Set<Long> articleIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.ARTICLE, articleIdSet, session);
+        return articleVOList.stream().filter(it -> articleIdSetFinal.contains(it.id)).collect(Collectors.toList());
+    }
+
+    public static List<PhotoVO> listConcernedPhotosVOs(PostTO postTO, Session session){
+
+        if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
+            throw new IllegalArgumentException();
+        }
+
+        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(null, session);
+        if (photoVOList.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Set<Long> photoIdSet = photoVOList.stream().map(it -> it.id).collect(Collectors.toSet());
+
+        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.PHOTO){
+            photoIdSet.remove(postTO.postObjectId);
+        }
+
+        Set<Long> photoIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.PHOTO, photoIdSet, session);
+        return photoVOList.stream().filter(it -> photoIdSetFinal.contains(it.id)).collect(Collectors.toList());
+    }
+
+    public static List<GalleryVO> listConcernedGalleryVOs(PostTO postTO, Session session){
+
+        if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
+            throw new IllegalArgumentException();
+        }
+
+        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(null, session);
+        if (galleryVOList.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Set<Long> galleryIdSet = galleryVOList.stream().map(it -> it.id).collect(Collectors.toSet());
+
+        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.GALLERY){
+            galleryIdSet.remove(postTO.postObjectId);
+        }
+
+        Set<Long> galleryIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.GALLERY, galleryIdSet, session);
+        return galleryVOList.stream().filter(it -> galleryIdSetFinal.contains(it.id)).collect(Collectors.toList());
+    }
+
 
     public static RelationEntity relationVoPartialToRelationEntity(RelationVO relationVO){
         RelationEntity relationEntity = new RelationEntity();

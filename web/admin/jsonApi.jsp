@@ -256,10 +256,33 @@
         }
 
         if (action.equals("createNewRelation")){
-            RelationVO relationVOpartial = objectMapper.readValue(data, RelationVO.class);
-            JsonAdminResponse<RelationTO> res = JsonApi.createNewRelation(guid, relationVoPartial, sessionFactory);
+            RelationVO relationVoPartial = objectMapper.readValue(data, RelationVO.class);
+            JsonAdminResponse<Void> res = JsonApi.createNewRelation(guid, relationVoPartial, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("deleteRelation")){
+            Long relationId = Long.parseLong(data);
+            JsonAdminResponse<Void> res = JsonApi.deleteRelation(guid, relationId, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+        
+        if (action.equals("listConcernedArticlesVOs")){
+            PostTO postTO = objectMapper.readValue(data, PostTO.class);
+            JsonAdminResponse<List<ArticleVO>> res = JsonApi.listConcernedArticlesVOs(postTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("listConcernedPhotosVOs")){
+            PostTO postTO = objectMapper.readValue(data, PostTO.class);
+            JsonAdminResponse<List<PhotoVO>> res = JsonApi.listConcernedPhotosVOs(postTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("listConcernedGalleryVOs")){
+            PostTO postTO = objectMapper.readValue(data, PostTO.class);
+            JsonAdminResponse<List<GalleryVO>> res = JsonApi.listConcernedGalleryVOs(postTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
     }
 %>

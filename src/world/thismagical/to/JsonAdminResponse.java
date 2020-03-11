@@ -21,4 +21,18 @@ public class JsonAdminResponse<T> {
     public Boolean success;
     public String errorDescription;
     public T data;
+
+    public static <I> JsonAdminResponse<I> fail(String errorDescription){
+        JsonAdminResponse<I> res = new JsonAdminResponse<>();
+        res.success = false;
+        res.errorDescription = errorDescription;
+        return res;
+    }
+
+    public static <I> JsonAdminResponse<I> success(I data){
+        JsonAdminResponse<I> res = new JsonAdminResponse<>();
+        res.success = true;
+        res.data = data;
+        return res;
+    }
 }

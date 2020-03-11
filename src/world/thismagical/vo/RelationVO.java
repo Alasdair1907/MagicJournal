@@ -24,11 +24,14 @@ public class RelationVO {
     public Long relationId;
 
     public PostAttribution srcAttributionClass;
+    public String srcAttributionClassStr;
     public Short srcAttributionClassShort;
     public Long srcObjectId;
     public String srcObjectTitle;
 
+
     public PostAttribution dstAttributionClass;
+    public String dstAttributionClassStr;
     public Short dstAttributionClassShort;
     public Long dstObjectId;
     public String dstObjectTitle;

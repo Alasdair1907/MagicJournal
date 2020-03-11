@@ -1,10 +1,12 @@
 package world.thismagical.dao;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import world.thismagical.entity.RelationEntity;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -54,5 +56,16 @@ public class RelationDao {
         session.flush();
     }
 
+    public static void deleteRelation(Long relationId, Session session){
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        Query deleteQuery = session.createQuery("delete from RelationEntity where id =: relationId");
+        deleteQuery.setParameter("relationId", relationId);
+        deleteQuery.executeUpdate();
+
+        session.flush();
+    }
 
 }

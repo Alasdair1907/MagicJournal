@@ -17,13 +17,13 @@
 $.widget("admin.RelationManager", {
     _template: `
 <div class="item-container transparent width-100-pc">
-<span class="item-container-heading">Tag Editor</span>
+<span class="item-container-heading">Relations Editor</span>
 
 <span class="text">Posts that refer current post:</span>
 <div class="list-group relation-manager-list-group">
 
 {{#each postsRelateToThisList}}
-<a href="#" class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">{{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
+<a class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.srcAttributionClassStr}}] {{this.srcObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
 {{/each}}
 </div>
 
@@ -31,7 +31,7 @@ $.widget("admin.RelationManager", {
 <div class="list-group relation-manager-list-group">
 
 {{#each currentPostRelatesToList}}
-<a href="#" class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">{{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
+<a class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.dstAttributionClassStr}}] {{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
 {{/each}}
 </div>
 
@@ -80,7 +80,7 @@ $.widget("admin.RelationManager", {
     `,
     _modalListingTemplate: `
 {{#each postVOList}}
-<button type="button" class="width-medium btn btn-light btn-std" data-role="relation-target-selected" data-id="{{this.id}}" data-class="{{class}}">{{this.title}} / {{this.authorVO.displayName}}</button><br />
+<button type="button" class="width-medium btn btn-light btn-std" data-role="relation-target-selected" data-id="{{this.id}}" data-class="{{../class}}">{{this.title}} / {{this.authorVO.displayName}}</button><br />
 {{/each}}
     `,
 
@@ -103,49 +103,85 @@ $.widget("admin.RelationManager", {
         await self._display(self, ops);
     },
 
-    _relationAdd: async function(self, ops){
+    _relationAdd: async function(self, ops, $modalElem){
         let $mainElem = self.element.find('[data-role="modal-relation-select-main"]');
 
         let $articleSrc = self.element.find('[data-role="relation-article"]');
         let $photoSrc = self.element.find('[data-role="relation-photo"]');
         let $gallerySrc = self.element.find('[data-role="relation-gallery"]');
 
+        let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId};
+        let postTOJson = JSON.stringify(postTO);
+
         $articleSrc.unbind();
         $articleSrc.click(await async function(){
-            let articleVOList = await ajax({action: "listAllArticleVOsNoFilter"}, "error listing articles");
+            let articleVOList = await ajax({action: "listConcernedArticlesVOs", data: postTOJson}, "error listing articles");
             if (articleVOList === undefined){
                 return;
             }
 
             let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
-            $mainElem.html(hModalListingTemplate({postVOList: articleVOList, class: 2}));
+            $mainElem.html(hModalListingTemplate({postVOList: articleVOList, class: "2"}));
+
+            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+            $selectables.unbind();
+            $selectables.click(await async function(){
+                let dstObjectId = $(this).data('id');
+                let dstObjectClassShort = $(this).data('class');
+
+                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+
+            });
         });
 
         $photoSrc.unbind();
         $photoSrc.click(await async function(){
-            let photoVOList = await ajax({action: "listAllPhotoVOsNoFilter"}, "error listing photos");
+
+            let photoVOList = await ajax({action: "listConcernedPhotosVOs", data: postTOJson}, "error listing photos");
             if (photoVOList === undefined){
                 return;
             }
 
             let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
             $mainElem.html(hModalListingTemplate({postVOList: photoVOList, class: 1}));
+
+            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+            $selectables.unbind();
+            $selectables.click(await async function(){
+                let dstObjectId = $(this).data('id');
+                let dstObjectClassShort = $(this).data('class');
+
+                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+
+            });
+
         });
 
         $gallerySrc.unbind();
         $gallerySrc.click(await async function() {
-            let galleryVOList = await ajax({action: "listAllGalleryVOsNoFilter"}, "error listing galleries");
+            let galleryVOList = await ajax({action: "listConcernedGalleryVOs", data: postTOJson}, "error listing galleries");
             if (galleryVOList === undefined){
                 return;
             }
 
             let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
             $mainElem.html(hModalListingTemplate({postVOList: galleryVOList, class: 0}));
+
+            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+            $selectables.unbind();
+            $selectables.click(await async function(){
+                let dstObjectId = $(this).data('id');
+                let dstObjectClassShort = $(this).data('class');
+
+                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+
+            });
+
         });
 
     },
 
-    _processSelect: async function(self, ops, selectedId, selectedClass){
+    _processSelect: async function(self, ops, selectedId, selectedClass, $modalElem){
         let objectId = ops.objectId;
         let postAttributionClass = ops.attributionClass;
 
@@ -158,7 +194,16 @@ $.widget("admin.RelationManager", {
             dstObjectId: selectedId
         };
         let relationVoJson = JSON.stringify(relationVo);
-        let res = ajax({guid: guid, action: "createNewRelation", data: relationVoJson});
+        let res = await ajax({guid: guid, action: "createNewRelation", data: relationVoJson}, "error creating new relation");
+
+        if (res === undefined){
+            return;
+        }
+
+        $modalElem.modal('hide');
+        $modalElem.html('');
+        self.element.html('');
+        self.element.RelationManager({attributionClass: postAttributionClass, objectId: objectId});
 
     },
 
@@ -169,25 +214,7 @@ $.widget("admin.RelationManager", {
             postObjectId: ops.objectId
         };
 
-        let relationToJson =  await $.ajax({
-            url: '/admin/jsonApi.jsp',
-            method: 'POST',
-            data: {action: "listRelationsForPost", data: JSON.stringify(postTo) }
-        });
-
-        if (!relationToJson){
-            alert("error loading relations list!");
-            return;
-        }
-
-        let res = JSON.parse(relationToJson);
-
-        if (!res.success){
-            alert("error loading relations list: "+res.errorDescription);
-            return;
-        }
-
-        let relationTo = res.data;
+        let relationTo = await ajax({action: "listRelationsForPost", data: JSON.stringify(postTo) }, "error listing relations for post");
 
         let hMainTemplate = Handlebars.compile(self._template);
         self.element.html(hMainTemplate({postsRelateToThisList: relationTo.postsReferToThis, currentPostRelatesToList: relationTo.currentPostRelatesTo}));
@@ -209,7 +236,18 @@ $.widget("admin.RelationManager", {
 
         $deleteLinkButton.unbind();
         $deleteLinkButton.click(await async function(){
+            if (currentlySelectedLinkId == null){
+                return;
+            }
 
+            let guid = Cookies.get("guid");
+            let res = await ajax({action:"deleteRelation", guid: guid, data: currentlySelectedLinkId}, "error deleting relation");
+            if (res === undefined){
+                return;
+            }
+
+            self.element.html("");
+            self.element.RelationManager({attributionClass: ops.attributionClass, objectId: ops.objectId});
         });
 
         $newLinkButton.unbind();
@@ -220,8 +258,7 @@ $.widget("admin.RelationManager", {
             let $relationSelectModal = self.element.find('[data-role=relation-select-modal]');
             $relationSelectModal.modal();
 
-            self._relationAdd(self, ops);
+            self._relationAdd(self, ops, $relationSelectModal);
         });
-
     }
 });

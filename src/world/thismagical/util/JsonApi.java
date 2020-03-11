@@ -855,20 +855,73 @@ public class JsonApi {
     }
 
     public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVOPartial, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> res = new JsonAdminResponse<>();
+        JsonAdminResponse<Void> res;
 
         Session session = sessionFactory.openSession();
 
         try {
-
+            res = RelationService.createNewRelation(guid, relationVOPartial, session);
         } finally {
             session.close();
         }
 
-        res.success = true;
+        return res;
+    }
+
+    public static JsonAdminResponse<Void> deleteRelation(String guid, Long relationId, SessionFactory sessionFactory){
+        JsonAdminResponse<Void> res;
+
+        Session session = sessionFactory.openSession();
+
+        try {
+            res = RelationService.deleteRelation(guid, relationId, session);
+        } finally {
+            session.close();
+        }
 
         return res;
+    }
+    
+    public static JsonAdminResponse<List<ArticleVO>> listConcernedArticlesVOs(PostTO postTO, SessionFactory sessionFactory){
+        JsonAdminResponse<List<ArticleVO>> res;
 
+        Session session = sessionFactory.openSession();
+
+        try {
+            res = JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, session));
+        } finally {
+            session.close();
+        }
+
+        return res;
+    }
+
+    public static JsonAdminResponse<List<PhotoVO>> listConcernedPhotosVOs(PostTO postTO, SessionFactory sessionFactory){
+        JsonAdminResponse<List<PhotoVO>> res;
+
+        Session session = sessionFactory.openSession();
+
+        try {
+            res = JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, session));
+        } finally {
+            session.close();
+        }
+
+        return res;
+    }
+
+    public static JsonAdminResponse<List<GalleryVO>> listConcernedGalleryVOs(PostTO postTO, SessionFactory sessionFactory){
+        JsonAdminResponse<List<GalleryVO>> res;
+
+        Session session = sessionFactory.openSession();
+
+        try {
+            res = JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, session));
+        } finally {
+            session.close();
+        }
+
+        return res;
     }
 
 
