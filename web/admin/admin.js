@@ -24,6 +24,13 @@ $.widget("admin.loginPanel", {
         let $userPasswordForm = self.element.find('[data-role=author_password');
         let $loginButton = self.element.find('[data-role=perform_login');
 
+        $userLoginForm.keyup(function(event){
+            if (event.key == "Enter"){ $loginButton.click()}
+        });
+
+        $userPasswordForm.keyup(function(event){
+            if (event.key == "Enter"){ $loginButton.click()}
+        });
 
         $loginButton.click(function () {
             var loginInfo = {
