@@ -15,7 +15,7 @@
 */
 
 let photoEditSelect = `
-<div class="item-container transparent width-large">
+<div class="item-container transparent width-full">
 <span class="item-container-heading">Existing Photo Posts</span>
 <table class="width-100-pc">
 
@@ -63,19 +63,19 @@ let photoEditSelect = `
 `;
 
 let photoNewOrEdit = `
-<div class="item-container transparent width-large">
+<div class="item-container transparent highres-line-item width-medium">
 <span class="item-container-heading">Edit</span>
 
 <input type="hidden" data-role="data-id" value="{{photoVO.id}}">
 
 <span class="text">Title:</span>
-<input type="text" class="form-control input" data-role="data-title" value="{{photoVO.title}}"><br/>
+<input type="text" class="form-control input width-100-pc" data-role="data-title" value="{{photoVO.title}}"><br/>
 
 <span class="text">Description:</span><br />
-<textarea cols="64" class="input-textarea-description" rows="16" data-role="data-description">{{photoVO.description}}</textarea><br />
+<textarea class="input-textarea-description width-100-pc" maxlength="1000" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />
 
 <span class="text">GPS coordinates:</span>
-<input type="text" class="form-control input" data-role="data-gps-coordinates" value="{{photoVO.gpsCoordinates}}"><br />
+<input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{photoVO.gpsCoordinates}}"><br />
 
 <span class="text">Image:</span><br />
 <img src="/getImage.jsp?filename={{photoVO.imageVO.preview}}" class="photo-edit-image" data-role="photo-image"><br />
@@ -86,7 +86,12 @@ let photoNewOrEdit = `
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
 </div>
 
-<div data-role="photo-tag-editor"></div>
+
+<div class="highres-line-item width-medium">
+    <div data-role="photo-tag-editor"></div>
+    <div data-role="photo-relation-manager"></div>
+</div>
+
 `;
 
 /** extends photoEditSelect **/

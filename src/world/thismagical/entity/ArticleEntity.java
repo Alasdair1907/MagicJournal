@@ -1,8 +1,8 @@
 package world.thismagical.entity;
+import world.thismagical.util.PostAttribution;
+
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -28,7 +28,7 @@ public class ArticleEntity implements Serializable {
 
     @OneToOne
     @JoinColumn(name="author_id")
-    AuthorEntity authorEntity;
+    AuthorEntity author;
 
     @Column(name="creation_date")
     LocalDateTime creationDate;
@@ -79,12 +79,12 @@ public class ArticleEntity implements Serializable {
         this.articleText = articleText;
     }
 
-    public AuthorEntity getAuthorEntity() {
-        return authorEntity;
+    public AuthorEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthorEntity(AuthorEntity authorEntity) {
-        this.authorEntity = authorEntity;
+    public void setAuthor(AuthorEntity authorEntity) {
+        this.author = authorEntity;
     }
 
     public LocalDateTime getCreationDate() {

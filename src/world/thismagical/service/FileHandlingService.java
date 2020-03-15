@@ -124,6 +124,7 @@ public class FileHandlingService {
         List<ImageFileEntity> imageFileEntityList = handleUpload(servletContext, request, imageFileEntityStub);
 
         if (imageFileEntityList.size() == 0){
+            session.close();
             return Boolean.FALSE;
         }
 
@@ -223,13 +224,12 @@ public class FileHandlingService {
 
         List<ImageFileEntity> imageFileEntityList = FileDao.getImageEntitiesByIds(Collections.singletonList(id), session);
         if (imageFileEntityList == null || imageFileEntityList.isEmpty()){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "file not found!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("file not found");
         }
 
         ImageFileEntity currentPost = imageFileEntityList.get(0);
         AuthorEntity postAuthor = null;
+
         if (currentPost.getImageAttributionClass() == PostAttribution.PHOTO){
             PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(currentPost.getParentObjectId(), session);
             postAuthor = photoEntity.getAuthor();
@@ -238,7 +238,7 @@ public class FileHandlingService {
             postAuthor = galleryEntity.getAuthor();
         } else if (currentPost.getImageAttributionClass() == PostAttribution.ARTICLE){
             ArticleEntity articleEntity = ArticleDao.getArticleEntityById(currentPost.getParentObjectId(), session);
-            postAuthor = articleEntity.getAuthorEntity();
+            postAuthor = articleEntity.getAuthor();
         }
 
         if (!AuthorizationService.checkPrivileges(postAuthor, authorEntity, jsonAdminResponse)){

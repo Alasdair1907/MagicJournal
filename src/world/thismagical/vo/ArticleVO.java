@@ -36,7 +36,7 @@ public class ArticleVO {
         this.id = articleEntity.getId();
         this.title = articleEntity.getTitle();
         this.description = articleEntity.getDescription();
-        this.authorVO = new AuthorVO(articleEntity.getAuthorEntity());
+        this.authorVO = new AuthorVO(articleEntity.getAuthor());
         this.creationDate = articleEntity.getCreationDate();
         this.creationDateStr = articleEntity.getCreationDate().format(DateTimeFormatter.ISO_DATE_TIME);
         this.gpsCoordinates = articleEntity.getGpsCoordinates();

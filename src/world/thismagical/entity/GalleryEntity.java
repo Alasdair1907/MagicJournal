@@ -17,6 +17,8 @@ package world.thismagical.entity;
                                                                                                    
 */
 
+import world.thismagical.util.PostAttribution;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -103,4 +105,5 @@ public class GalleryEntity implements Serializable {
     public void setPublished(Boolean published) {
         this.published = published;
     }
+
 }

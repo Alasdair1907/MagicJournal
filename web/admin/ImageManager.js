@@ -69,7 +69,7 @@ $.widget("admin.ImageManager", {
     _imageListTemplate: `
     <div></div>
     {{#each imageVOList}}
-    <div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="gallery-images" style="background-image:url('/getImage.jsp?filename={{this.thumbnail}}'); width: 15vw; height: 15vw; background-position: center; background-size: cover; display: inline-block;">&nbsp;</div>
+    <div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="gallery-images" class="" style="background-image:url('/getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
     {{/each}}
     </div>
     `,

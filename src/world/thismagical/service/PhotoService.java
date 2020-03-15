@@ -29,6 +29,7 @@ import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
+import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.PhotoVO;
 
@@ -108,9 +109,9 @@ public class PhotoService {
             photoEntity.setCreationDate(LocalDateTime.now());
         }
 
-        photoEntity.setTitle(photoTO.title);
-        photoEntity.setDescription(photoTO.description);
-        photoEntity.setGpsCoordinates(photoTO.gpsCoordinates);
+        photoEntity.setTitle(Tools.nullToEmpty(photoTO.title));
+        photoEntity.setDescription(Tools.nullToEmpty(photoTO.description));
+        photoEntity.setGpsCoordinates(Tools.nullToEmpty(photoTO.gpsCoordinates));
         photoEntity.setPublished(photoTO.published);
 
         if (!session.getTransaction().isActive()){

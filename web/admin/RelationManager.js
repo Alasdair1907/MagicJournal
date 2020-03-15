@@ -23,7 +23,7 @@ $.widget("admin.RelationManager", {
 <div class="list-group relation-manager-list-group">
 
 {{#each postsRelateToThisList}}
-<a class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.srcAttributionClassStr}}] {{this.srcObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
+<a class="list-group-item list-group-item-action rel-list-item {{#if this.isAuto}}disabled{{/if}}">[{{this.srcAttributionClassStr}}] {{this.srcObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
 {{/each}}
 </div>
 
@@ -31,14 +31,14 @@ $.widget("admin.RelationManager", {
 <div class="list-group relation-manager-list-group">
 
 {{#each currentPostRelatesToList}}
-<a class="list-group-item list-group-item-action {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.dstAttributionClassStr}}] {{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
+<a class="list-group-item list-group-item-action rel-list-item {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.dstAttributionClassStr}}] {{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
 {{/each}}
 </div>
 
 <table class="width-100-pc">
 <tr>
-<td width="50%;" class="center-text"><button type="button" class="btn btn-danger btn-std" data-role="delete-link" disabled="disabled">Delete Link</button></td>
-<td width="50%;" class="center-text"><button type="button" class="btn btn-success btn-std" data-role="new-link" >Add New Link</button></td>
+<td width="50%;" class="center-text"><button type="button" class="btn btn-danger btn-std btn-vertical" data-role="delete-link" disabled="disabled">Delete Link</button></td>
+<td width="50%;" class="center-text"><button type="button" class="btn btn-success btn-std btn-vertical" data-role="new-link" >Add New Link</button></td>
 </tr>
 </table>
 </div>

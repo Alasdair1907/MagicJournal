@@ -1,17 +1,20 @@
+body {
+    min-height: 100vh;
+}
 
 body.main {
     background-color: black;
     background-image: url("../resources/background.jpg");
-    background-size: 100%;
-    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 body.admin {
     background-color: white;
     background-image: url("../resources/background-admin.jpg");
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
 }
 
 .transparent {
@@ -261,6 +264,13 @@ button.close {
     left: 0;
     right: 0;
     margin: auto;
+}
+
+.rel-list-item {
+    height: 3.5vh;
+    font-size: 1.5vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
 }
 
 .relation-manager-list-group {

@@ -66,12 +66,14 @@ $.widget("admin.articlesWidget", {
         let $submitElem = element.find('[data-role="data-article-save-or-update"]');
         let $articleImageElem = element.find('[data-role="article-title-image"]'); // img with the image
         let $tagEditorDiv = element.find('[data-role="article-tag-editor"]');
+        let $relationEditorDiv = element.find('[data-role="article-relation-editor"]');
         let $helperImageManager = element.find('[data-role="article-helper-image-manager"]');
 
         let $modalAnchor = self.element.find('[data-role="modal-anchor"]');
         let $articleUpdateImageButton = element.find('[data-role="data-article-update-image"]');
 
         $tagEditorDiv.TagEditor({attributionClass: 2, objectId: articleVO.id});
+        $relationEditorDiv.RelationManager({attributionClass: 2, objectId: articleVO.id});
         $helperImageManager.ImageManager({attributionClass: 2, objectId: articleVO.id});
 
         $articleUpdateImageButton.unbind();

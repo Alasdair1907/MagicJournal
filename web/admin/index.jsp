@@ -59,7 +59,8 @@
     <script src="ImageSelectJs.js"></script>
     <script src="RelationManager.js"></script>
 
-    <link rel="stylesheet" media="screen and (min-aspect-ratio: 1000/1000)" href="/admin/main.css">
+    <link rel="stylesheet" href="/admin/main.css">
+    <!-- <link rel="stylesheet" media="screen and (min-aspect-ratio: 1000/1000)" href="/admin/main.css"> -->
     <!--<link rel="stylesheet" media="screen and (max-aspect-ratio: 999/1000)" href="/main-vertical.css">-->
 
 </head>

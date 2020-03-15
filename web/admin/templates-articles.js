@@ -95,6 +95,7 @@ let articleNewOrEdit = `
 </div>
 
 <div data-role="article-tag-editor" class="width-large"></div>
+<div data-role="article-relation-editor" class="width-large"></div>
 <div data-role="article-helper-image-manager" class="width-large"></div>
 
 <div data-role="modal-anchor"></div>

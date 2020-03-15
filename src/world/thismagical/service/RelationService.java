@@ -29,6 +29,10 @@ public class RelationService {
     public static RelationTO getRelationTO(PostTO postTO, Session session){
         List<RelationVO> relationVOList = listRelationsForPost(PostAttribution.getPostAttribution(postTO.postAttributionClass), postTO.postObjectId, session);
 
+        if (relationVOList == null || relationVOList.isEmpty()){
+            return RelationTO.getEmpty(postTO);
+        }
+
         List<RelationVO> postsReferToThis = new ArrayList<>();
         List<RelationVO> currentPostRelatesTo = new ArrayList<>();
 
@@ -50,6 +54,11 @@ public class RelationService {
 
     public static List<RelationVO> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postAttribution, postId, session);
+
+        if (relationEntities == null || relationEntities.isEmpty()){
+            return null;
+        }
+
         return relationEntityListToVo(relationEntities, session);
     }
 
@@ -130,7 +139,7 @@ public class RelationService {
 
     public static Entities gatherRelationsEntities(List<RelationEntity> relationEntityList, Session session){
         if (relationEntityList == null){
-            throw new IllegalArgumentException("relationEntityListToVo: null argument");
+            throw new IllegalArgumentException("gatherRelationsEntities: null argument");
         }
 
         Set<Long> articleEntityIds = new HashSet<>();

@@ -31,6 +31,7 @@ import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
+import world.thismagical.util.Tools;
 import world.thismagical.vo.GalleryVO;
 import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.PhotoVO;
@@ -136,9 +137,9 @@ public class GalleryService {
             galleryEntity.setCreationDate(LocalDateTime.now());
         }
 
-        galleryEntity.setTitle(galleryTO.title);
-        galleryEntity.setDescription(galleryTO.description);
-        galleryEntity.setGpsCoordinates(galleryTO.gpsCoordinates);
+        galleryEntity.setTitle(Tools.nullToEmpty(galleryTO.title));
+        galleryEntity.setDescription(Tools.nullToEmpty(galleryTO.description));
+        galleryEntity.setGpsCoordinates(Tools.nullToEmpty(galleryTO.gpsCoordinates));
         galleryEntity.setPublished(galleryTO.published);
 
         if (!session.getTransaction().isActive()){

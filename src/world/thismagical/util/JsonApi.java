@@ -1,7 +1,6 @@
 package world.thismagical.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.ArticleDao;

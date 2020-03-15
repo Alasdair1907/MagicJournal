@@ -122,4 +122,12 @@ public class Tools {
 
         return Boolean.TRUE;
     }
+
+    public static String nullToEmpty(String input){
+        if (input == null){
+            return "";
+        }
+
+        return input;
+    }
 }

@@ -80,6 +80,10 @@ public class SessionDao {
 
     public static SessionEntity createNewSession(AuthorEntity authorEntity, Session session){
 
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
         String login = authorEntity.getLogin();
         PrivilegeLevel privilegeLevel = authorEntity.getPrivilegeLevel();
 

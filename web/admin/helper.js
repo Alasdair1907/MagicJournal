@@ -1,9 +1,14 @@
 let  ajax = async function(data, errDescrDefault) {
-    let adminResponseJson = await $.ajax({
-        url: '/admin/jsonApi.jsp',
-        method: 'POST',
-        data: data
-    });
+    let adminResponseJson;
+    try {
+        adminResponseJson = await $.ajax({
+            url: '/admin/jsonApi.jsp',
+            method: 'POST',
+            data: data
+        });
+    } catch (error){
+        console.log("helper.js ajax() - ajax error");
+    }
 
     let adminResponse = adminResponseJson ? JSON.parse(adminResponseJson) : {data: null, success: false, errorDescription: errDescrDefault};
 

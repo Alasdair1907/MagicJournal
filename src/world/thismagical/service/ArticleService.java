@@ -15,17 +15,15 @@ package world.thismagical.service;
 */
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import world.thismagical.dao.FileDao;
 import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.TagDao;
 import world.thismagical.entity.AuthorEntity;
-import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
 import world.thismagical.util.PostAttribution;
-import world.thismagical.util.PrivilegeLevel;
+import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.ArticleVO;
 
@@ -68,9 +66,7 @@ public class ArticleService {
         JsonAdminResponse<Long> jsonAdminResponse = new JsonAdminResponse<>();
 
         if (articleTO == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "ArticleTO: null argument";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("ArticleTO: null argument");
         }
 
         String sessionGuid = articleTO.sessionGuid;
@@ -81,7 +77,7 @@ public class ArticleService {
         AuthorEntity articleEntityAuthor = null;
 
         if (articleEntity != null){
-            articleEntityAuthor = articleEntity.getAuthorEntity();
+            articleEntityAuthor = articleEntity.getAuthor();
         } else {
             articleEntityAuthor = currentAuthorEntity;
         }
@@ -94,17 +90,20 @@ public class ArticleService {
             articleEntity = new ArticleEntity();
         }
 
-        articleEntity.setAuthorEntity(currentAuthorEntity);
+        articleEntity.setAuthor(currentAuthorEntity);
 
         if (articleEntity.getCreationDate() == null){
             articleEntity.setCreationDate(LocalDateTime.now());
         }
 
-        articleEntity.setTitle(articleTO.title);
-        articleEntity.setDescription(articleTO.description);
-        articleEntity.setGpsCoordinates(articleTO.gpsCoordinates);
+        articleEntity.setTitle(Tools.nullToEmpty(articleTO.title));
+        articleEntity.setDescription(Tools.nullToEmpty(articleTO.description));
+        articleEntity.setGpsCoordinates(Tools.nullToEmpty(articleTO.gpsCoordinates));
         articleEntity.setPublished(articleTO.published);
-        articleEntity.setTitleImageId(articleTO.titleImageId);
+
+        if (articleTO.titleImageId != null) {
+            articleEntity.setTitleImageId(articleTO.titleImageId);
+        }
         articleEntity.setArticleText(articleTO.articleText); // TODO: analyze file usage with Link Service
 
         if (!session.getTransaction().isActive()){
@@ -125,7 +124,7 @@ public class ArticleService {
 
         JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
 
-        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthorEntity(), currentAuthorEntity, jsonAdminResponse)){
+        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
             jsonAdminResponse.success = false;
             jsonAdminResponse.errorDescription = "unauthorized action";
             return jsonAdminResponse;
@@ -148,7 +147,7 @@ public class ArticleService {
 
         JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
 
-        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthorEntity(), currentAuthorEntity, jsonAdminResponse)){
+        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
             jsonAdminResponse.success = false;
             jsonAdminResponse.errorDescription = "unauthorized action";
             return jsonAdminResponse;
@@ -172,7 +171,7 @@ public class ArticleService {
         ArticleEntity articleEntity = ArticleDao.getArticleEntityById(articleTO.id, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthorEntity(), currentAuthorEntity, jsonAdminResponse)){
+        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
             jsonAdminResponse.success = false;
             jsonAdminResponse.errorDescription = "unauthorized action";
             return jsonAdminResponse;

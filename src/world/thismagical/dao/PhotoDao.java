@@ -19,7 +19,6 @@ package world.thismagical.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.PhotoEntity;
 import world.thismagical.util.Tools;

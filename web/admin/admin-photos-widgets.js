@@ -63,12 +63,20 @@ $.widget("admin.photosWidget", {
         let $submitElem = element.find('[data-role="data-photo-save-or-update"]');
         let $photoImageElem = element.find('[data-role="photo-image"]');
         let $photoImageUploadElem = element.find('[data-role="data-photo-upload-image"]');
+
         let $tagEditorDiv = element.find('[data-role="photo-tag-editor"]');
+        let $relationManagerDiv = element.find('[data-role="photo-relation-manager"]');
 
         $tagEditorDiv.TagEditor({attributionClass: 1, objectId: photoVO.id});
+        $relationManagerDiv.RelationManager({attributionClass: 1, objectId: photoVO.id});
 
         $photoImageUploadElem.unbind();
         $photoImageUploadElem.click(await async function(){
+
+            let buttonHtml = $photoImageUploadElem.html();
+            $photoImageUploadElem.html("<i class=\"fas fa-cog fa-spin\"></i>");
+            $photoImageUploadElem.prop("disabled", true);
+
             let file = $fileElem.get(0).files[0];
             let fileData = new FormData();
             fileData.append("fileInput", file);
@@ -90,13 +98,15 @@ $.widget("admin.photosWidget", {
                 processData: false
             });
 
+            $photoImageUploadElem.html(buttonHtml);
+            $photoImageUploadElem.prop("disabled", false);
+
             let imageVO = await self._getPhotoImageVO(photoVO.id);
             if (!imageVO){
                 alert("can't load image for photo!");
             }
 
             $photoImageElem.attr("src", "/getImage.jsp?filename="+imageVO.thumbnail);
-
         });
 
         $submitElem.unbind();

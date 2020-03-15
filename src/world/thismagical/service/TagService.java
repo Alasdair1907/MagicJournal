@@ -113,7 +113,7 @@ public class TagService {
 
         if (tagTO.attribution.equals(PostAttribution.ARTICLE.getId())){
             ArticleEntity articleEntity = ArticleDao.getArticleEntityById(tagTO.objectId, session);
-            postAuthor = articleEntity.getAuthorEntity();
+            postAuthor = articleEntity.getAuthor();
         }
 
         if (postAuthor.getAuthorId() != authorEntity.getAuthorId()){
