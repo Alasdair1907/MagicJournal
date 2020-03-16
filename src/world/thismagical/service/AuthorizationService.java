@@ -155,31 +155,19 @@ public class AuthorizationService {
         return false;
     }
 
-    public static <T> Boolean checkPrivileges(AuthorEntity objectAuthorEntity, AuthorEntity currentAuthorEntity, JsonAdminResponse<T> jsonAdminResponse){
+    public static Boolean checkPrivileges(AuthorEntity objectAuthorEntity, AuthorEntity currentAuthorEntity){
 
-        if (currentAuthorEntity == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Not authorized!";
-            return false;
-        }
-
-        if (objectAuthorEntity == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Internal error: object has no author!";
+        if (objectAuthorEntity == null || currentAuthorEntity == null){
             return false;
         }
 
         if ( currentAuthorEntity.getAuthorId() != objectAuthorEntity.getAuthorId()){
             // only superuser is allowed to do that!
             if (currentAuthorEntity.getPrivilegeLevel() != PrivilegeLevel.PRIVILEGE_SUPER_USER){
-                jsonAdminResponse.success = false;
-                jsonAdminResponse.errorDescription = "Not enough privileges!";
                 return false;
             }
         } else {
             if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
-                jsonAdminResponse.success = false;
-                jsonAdminResponse.errorDescription = "Test users are not allowed to modify content!";
                 return false;
             }
         }

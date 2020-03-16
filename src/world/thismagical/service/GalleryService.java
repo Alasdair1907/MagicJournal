@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 public class GalleryService {
     public static GalleryVO getGalleryVOByGalleryId(Long galleryId, Session session){
-        GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(galleryId, session);
+        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(galleryId, GalleryEntity.class, session);
         GalleryVO galleryVO = new GalleryVO(galleryEntity);
 
         galleryVO.imageVOList = FileDao.getImages(PostAttribution.GALLERY, Collections.singletonList(galleryEntity.getId()), session);
@@ -69,8 +69,9 @@ public class GalleryService {
         return galleryVO;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<GalleryVO> listAllGalleryVOs(AuthorEntity authorFilter, Session session){
-        List<GalleryEntity> galleryEntityList = GalleryDao.listAllGalleries(authorFilter, session);
+        List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(authorFilter, GalleryEntity.class, session);
         List<GalleryVO> galleryVOList = new ArrayList<>();
 
         for (GalleryEntity galleryEntity : galleryEntityList){
@@ -83,36 +84,27 @@ public class GalleryService {
 
     public static JsonAdminResponse<Void> togglePostPublish(Long id,  String guid, Session session){
 
-        GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(id, session);
+        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(id, GalleryEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-
-        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "unauthorized action";
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
-        GalleryDao.toggleGalleryPublish(id, session);
+        GalleryDao.togglePostPublish(id, GalleryEntity.class, session);
 
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
 
     public static JsonAdminResponse<Long> createOrUpdateGallery(GalleryTO galleryTO, Session session){
 
-        JsonAdminResponse<Long> jsonAdminResponse = new JsonAdminResponse<>();
-
         if (galleryTO == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "GalleryTO: null argument";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("GalleryTO: null argument");
         }
 
         String sessionGuid = galleryTO.sessionGuid;
 
-        GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(galleryTO.id, session);
+        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(galleryTO.id, GalleryEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(sessionGuid, session);
 
         AuthorEntity galleryEntityAuthor = null;
@@ -123,8 +115,8 @@ public class GalleryService {
             galleryEntityAuthor = currentAuthorEntity;
         }
 
-        if (!AuthorizationService.checkPrivileges(galleryEntityAuthor, currentAuthorEntity, jsonAdminResponse)){
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(galleryEntityAuthor, currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
         if (galleryEntity == null) {
@@ -149,31 +141,24 @@ public class GalleryService {
         session.saveOrUpdate(galleryEntity);
         session.flush();
 
-        jsonAdminResponse.data = galleryEntity.getId();
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(galleryEntity.getId());
     }
 
     public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, Session session){
-        GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(id, session);
+        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(id, GalleryEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-
-        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "unauthorized action";
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
         List<ImageVO> galleryImages = FileDao.getImages(PostAttribution.GALLERY, Collections.singletonList(id), session);
         FileHandlingService.deleteImages(galleryImages, session);
 
-        GalleryDao.deleteGallery(id, session);
+        GalleryDao.deleteEntity(id, GalleryEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.GALLERY.getId(), session);
 
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
 
 

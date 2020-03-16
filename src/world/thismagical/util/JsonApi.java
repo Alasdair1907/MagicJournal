@@ -3,10 +3,7 @@ package world.thismagical.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.dao.ArticleDao;
-import world.thismagical.dao.AuthorDao;
-import world.thismagical.dao.FileDao;
-import world.thismagical.dao.SessionDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.SessionEntity;
@@ -658,7 +655,7 @@ public class JsonApi {
         ImageVO imageVO = null;
 
         try {
-            ArticleEntity articleEntity = ArticleDao.getArticleEntityById(parentObjectId, session);
+            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(parentObjectId, ArticleEntity.class, session);
             imageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
         } finally {
             session.close();

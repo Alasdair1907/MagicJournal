@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="photos")
-public class PhotoEntity implements Serializable {
+public class PhotoEntity implements Serializable, PostEntity {
 
     @Id
     @Column(name="id")

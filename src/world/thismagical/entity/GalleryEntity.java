@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="galleries")
-public class GalleryEntity implements Serializable {
+public class GalleryEntity implements Serializable, PostEntity {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

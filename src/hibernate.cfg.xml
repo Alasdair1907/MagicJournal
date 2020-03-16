@@ -17,7 +17,6 @@
         <property name="show_sql">false</property>
         <property name="format_sql">true</property>
 
-        <mapping class="world.thismagical.entity.TestEntity"/>
         <mapping class="world.thismagical.entity.AuthorEntity"/>
         <mapping class="world.thismagical.entity.SessionEntity"/>
         <mapping class="world.thismagical.entity.ImageFileEntity"/>

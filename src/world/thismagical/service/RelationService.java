@@ -2,10 +2,7 @@ package world.thismagical.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.dao.ArticleDao;
-import world.thismagical.dao.GalleryDao;
-import world.thismagical.dao.PhotoDao;
-import world.thismagical.dao.RelationDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostTO;
@@ -95,6 +92,8 @@ public class RelationService {
 
             relationVO.isAuto = relationVO.relationClass.getIsAuto();
 
+            // TODO simplify
+
             switch (relationVO.srcAttributionClass){
                 case ARTICLE:
                     relationVO.srcObjectTitle = entities.articleEntities.stream()
@@ -137,6 +136,7 @@ public class RelationService {
         return relationVOList;
     }
 
+    @SuppressWarnings("unchecked")
     public static Entities gatherRelationsEntities(List<RelationEntity> relationEntityList, Session session){
         if (relationEntityList == null){
             throw new IllegalArgumentException("gatherRelationsEntities: null argument");
@@ -177,9 +177,9 @@ public class RelationService {
         }
 
         Entities entities = new Entities();
-        entities.articleEntities = ArticleDao.getArticleEntitiesByIds(new ArrayList<>(articleEntityIds), session);
-        entities.photoEntities = PhotoDao.getPhotoEntitiesByIds(new ArrayList<>(photoEntityIds), session);
-        entities.galleryEntities = GalleryDao.getGalleryEntitiesByIds(new ArrayList<>(galleryEntityIds), session);
+        entities.articleEntities = (List<ArticleEntity>) (List) ArticleDao.getEntitiesByIds(new ArrayList<>(articleEntityIds), ArticleEntity.class, session);
+        entities.photoEntities = (List<PhotoEntity>) (List) PhotoDao.getEntitiesByIds(new ArrayList<>(photoEntityIds), PhotoEntity.class, session);
+        entities.galleryEntities = (List<GalleryEntity>) (List) GalleryDao.getEntitiesByIds(new ArrayList<>(galleryEntityIds), GalleryEntity.class, session);
 
         return entities;
     }

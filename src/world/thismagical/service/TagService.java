@@ -18,10 +18,7 @@ package world.thismagical.service;
 */
 
 import org.hibernate.Session;
-import world.thismagical.dao.ArticleDao;
-import world.thismagical.dao.GalleryDao;
-import world.thismagical.dao.PhotoDao;
-import world.thismagical.dao.TagDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.TagTO;
@@ -100,21 +97,24 @@ public class TagService {
             return jsonAdminResponse;
         }
 
-        AuthorEntity postAuthor = null;
+        PostEntity postEntity = PostDao.getPostEntityById(tagTO.objectId, PostAttribution.getPostAttribution(tagTO.attribution).getAssociatedClass(), session);
+        AuthorEntity postAuthor = postEntity.getAuthor();
+
+        /* TODO test & remove kebab
         if (tagTO.attribution.equals(PostAttribution.PHOTO.getId())){
-            PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(tagTO.objectId, session);
+            PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(tagTO.objectId, PhotoEntity.class, session);
             postAuthor = photoEntity.getAuthor();
         }
 
         if (tagTO.attribution.equals(PostAttribution.GALLERY.getId())){
-            GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(tagTO.objectId, session);
+            GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(tagTO.objectId, GalleryEntity.class, session);
             postAuthor = galleryEntity.getAuthor();
         }
 
         if (tagTO.attribution.equals(PostAttribution.ARTICLE.getId())){
-            ArticleEntity articleEntity = ArticleDao.getArticleEntityById(tagTO.objectId, session);
+            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(tagTO.objectId, ArticleEntity.class, session);
             postAuthor = articleEntity.getAuthor();
-        }
+        }*/
 
         if (postAuthor.getAuthorId() != authorEntity.getAuthorId()){
             if (authorEntity.getPrivilegeLevel() != PrivilegeLevel.PRIVILEGE_SUPER_USER){

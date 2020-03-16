@@ -23,10 +23,7 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.dao.ArticleDao;
-import world.thismagical.dao.FileDao;
-import world.thismagical.dao.GalleryDao;
-import world.thismagical.dao.PhotoDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.to.ImageFileDescrTO;
 import world.thismagical.to.ImageUploadTO;
@@ -205,21 +202,15 @@ public class FileHandlingService {
     }
     
     private static JsonAdminResponse<Void> verifyPrivileges(Long id, String guid, Session session){
-        
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
 
         if (id == null || guid == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "verifyPrivileges() : null argument";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("verifyPrivileges() : null argument");
         }
         
         AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
         if (authorEntity == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "session not found!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("session not found!");
         }
 
         List<ImageFileEntity> imageFileEntityList = FileDao.getImageEntitiesByIds(Collections.singletonList(id), session);
@@ -230,23 +221,26 @@ public class FileHandlingService {
         ImageFileEntity currentPost = imageFileEntityList.get(0);
         AuthorEntity postAuthor = null;
 
+        PostEntity postEntity = PostDao.getPostEntityById(currentPost.getParentObjectId(), currentPost.getImageAttributionClass().getAssociatedClass(), session);
+        postAuthor = postEntity.getAuthor();
+
+        /* TODO test & remove kebab
         if (currentPost.getImageAttributionClass() == PostAttribution.PHOTO){
-            PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(currentPost.getParentObjectId(), session);
+            PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(currentPost.getParentObjectId(), PhotoEntity.class, session);
             postAuthor = photoEntity.getAuthor();
         } else if (currentPost.getImageAttributionClass() == PostAttribution.GALLERY){
-            GalleryEntity galleryEntity = GalleryDao.getGalleryEntityById(currentPost.getParentObjectId(), session);
+            GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(currentPost.getParentObjectId(), GalleryEntity.class, session);
             postAuthor = galleryEntity.getAuthor();
         } else if (currentPost.getImageAttributionClass() == PostAttribution.ARTICLE){
-            ArticleEntity articleEntity = ArticleDao.getArticleEntityById(currentPost.getParentObjectId(), session);
+            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(currentPost.getParentObjectId(), ArticleEntity.class, session);
             postAuthor = articleEntity.getAuthor();
+        }*/
+
+        if (!AuthorizationService.checkPrivileges(postAuthor, authorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
-        if (!AuthorizationService.checkPrivileges(postAuthor, authorEntity, jsonAdminResponse)){
-            jsonAdminResponse.success = false;
-            return jsonAdminResponse;
-        }
-
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
     
     public static JsonAdminResponse<Void> deleteFile(Long id, String guid, SessionFactory sessionFactory){

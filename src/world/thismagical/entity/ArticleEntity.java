@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "articles")
-public class ArticleEntity implements Serializable {
+public class ArticleEntity implements Serializable, PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,22 +63,6 @@ public class ArticleEntity implements Serializable {
         this.description = description;
     }
 
-    public Long getTitleImageId() {
-        return titleImageId;
-    }
-
-    public void setTitleImageId(Long titleImageId) {
-        this.titleImageId = titleImageId;
-    }
-
-    public String getArticleText() {
-        return articleText;
-    }
-
-    public void setArticleText(String articleText) {
-        this.articleText = articleText;
-    }
-
     public AuthorEntity getAuthor() {
         return author;
     }
@@ -109,5 +93,22 @@ public class ArticleEntity implements Serializable {
 
     public void setPublished(Boolean published) {
         this.published = published;
+    }
+
+
+    public String getArticleText() {
+        return articleText;
+    }
+
+    public void setArticleText(String articleText) {
+        this.articleText = articleText;
+    }
+
+    public Long getTitleImageId() {
+        return titleImageId;
+    }
+
+    public void setTitleImageId(Long titleImageId) {
+        this.titleImageId = titleImageId;
     }
 }

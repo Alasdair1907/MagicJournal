@@ -25,6 +25,7 @@ import world.thismagical.dao.TagDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.PhotoEntity;
+import world.thismagical.entity.PostEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
 import world.thismagical.util.PostAttribution;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 public class PhotoService {
 
     public static PhotoVO getPhotoVObyPhotoId(Long photoId, Session session){
-        PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(photoId, session);
+        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(photoId, PhotoEntity.class, session);
         PhotoVO photoVO = new PhotoVO(photoEntity);
 
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(photoEntity.getId()), session);
@@ -51,8 +52,9 @@ public class PhotoService {
         return photoVO;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<PhotoVO> listAllPhotoVOs(AuthorEntity authorFilter, Session session){
-        List<PhotoEntity> photoEntityList = PhotoDao.listAllPhotos(authorFilter, session);
+        List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(authorFilter, PhotoEntity.class, session);
         List<Long> parentObjectIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, parentObjectIds, session);
 
@@ -74,17 +76,13 @@ public class PhotoService {
 
     public static JsonAdminResponse<Long> createOrUpdatePhoto(PhotoTO photoTO, Session session){
 
-        JsonAdminResponse<Long> jsonAdminResponse = new JsonAdminResponse<>();
-
         if (photoTO == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "PhotoTO: null argument";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("PhotoTO: null argument");
         }
 
         String sessionGuid = photoTO.sessionGuid;
 
-        PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(photoTO.id, session);
+        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(photoTO.id, PhotoEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(sessionGuid, session);
 
         AuthorEntity photoEntityAuthor = null;
@@ -95,8 +93,8 @@ public class PhotoService {
             photoEntityAuthor = currentAuthorEntity;
         }
 
-        if (!AuthorizationService.checkPrivileges(photoEntityAuthor, currentAuthorEntity, jsonAdminResponse)){
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(photoEntityAuthor, currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
         if (photoEntity == null) {
@@ -129,50 +127,38 @@ public class PhotoService {
         session.saveOrUpdate(photoEntity);
         session.flush();
 
-        jsonAdminResponse.data = photoEntity.getId();
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(photoEntity.getId());
     }
 
     public static JsonAdminResponse<Void> deletePhoto(Long id, String guid, Session session){
-        PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(id, session);
+        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(id, PhotoEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-
-        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "unauthorized action";
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
         List<ImageVO> photoImages = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(id), session);
         FileHandlingService.deleteImages(photoImages, session);
 
-        PhotoDao.deletePhoto(id, session);
+        PhotoDao.deleteEntity(id, PhotoEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.PHOTO.getId(), session);
 
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
 
     public static JsonAdminResponse<Void> togglePhotoPublish(Long id, String guid, Session session){
 
-        PhotoEntity photoEntity = PhotoDao.getPhotoEntityById(id, session);
+        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(id, PhotoEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-
-        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity, jsonAdminResponse)){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "unauthorized action";
-            return jsonAdminResponse;
+        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity)){
+            return JsonAdminResponse.fail("unauthorized action");
         }
 
-        PhotoDao.togglePhotoPublish(id, session);
+        PhotoDao.togglePostPublish(id, PhotoEntity.class, session);
 
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
 
 }
