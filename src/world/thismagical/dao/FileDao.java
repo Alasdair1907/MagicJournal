@@ -95,6 +95,8 @@ public class FileDao {
             parentObjectIdIn.value(parentObjectId);
         }
 
+        cq.orderBy(cb.desc(root.get("id")));
+
         Predicate attributionPredicate = cb.equal(root.get("imageAttributionClass"), imageAttribution.getId());
         Predicate and = cb.and(attributionPredicate, parentObjectIdIn);
 

@@ -109,63 +109,36 @@ public class JsonApi {
 
     public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, SessionFactory sessionFactory){
         Session session = sessionFactory.openSession();
-        session.beginTransaction();
 
-        JsonAdminResponse<Void> res = new JsonAdminResponse<>();
+        JsonAdminResponse<Void> jsonAdminResponse;
 
         try {
-            if (!AuthorizationService.isSessionValid(guid, PrivilegeLevel.PRIVILEGE_SUPER_USER, session)){
-                throw new IllegalAccessException();
-            }
-        } catch (Exception e) {
+            jsonAdminResponse = AuthorService.createNewAuthor(guid, newAuthor, session);
+        } catch (Exception ex){
+            Tools.log("createNewAuthor: "+ex.getMessage()+"\r\n"+Tools.getStackTraceStr(ex));
+            jsonAdminResponse = JsonAdminResponse.fail("createNewAuthor error");
+        } finally {
             session.close();
-            res.success = false;
-            res.errorDescription = "Not authorized!";
-            return res;
         }
 
-        boolean illegalArgument = false;
-        if (newAuthor.getLogin() == null){
-            illegalArgument = true;
-        }
+        return jsonAdminResponse;
+    }
 
-        if (newAuthor.getPasswd() == null){
-            illegalArgument = true;
-        }
+    public static JsonAdminResponse<Void> deleteAuthor(String guid, Long targetAuthorId, SessionFactory sessionFactory){
+        Session session = sessionFactory.openSession();
 
-        if (newAuthor.getDisplayName() == null){
-            illegalArgument = true;
-        }
+        JsonAdminResponse<Void> jsonAdminResponse = null;
 
-        if (newAuthor.getPrivilegeLevel() == null){
-            illegalArgument = true;
-        }
-
-        if (illegalArgument){
+        try {
+            jsonAdminResponse = AuthorService.deleteAuthor(guid, targetAuthorId, session);
+        } catch (Exception ex){
+            Tools.log("deleteAuthor: "+ex.getMessage()+"\r\n"+Tools.getStackTraceStr(ex));
+            return JsonAdminResponse.fail("error deleting author");
+        } finally {
             session.close();
-            res.success = false;
-            res.errorDescription = "Illegal argument!";
-            return res;
         }
 
-        AuthorEntity existingAuthor = AuthorDao.getAuthorEntityByLogin(newAuthor.getLogin(), session);
-        if (existingAuthor != null){
-            session.close();
-            res.success = false;
-            res.errorDescription = "Login already exists!";
-            return res;
-        }
-
-        String plainTextPassword = newAuthor.getPasswd();
-        String hashedPassword = Tools.sha256(plainTextPassword);
-        newAuthor.setPasswd(hashedPassword);
-
-        session.save(newAuthor);
-        session.flush();
-        session.close();
-
-        res.success = true;
-        return res;
+        return jsonAdminResponse;
     }
 
     public static JsonAdminResponse<Void> changeDisplayName(String guid, Long targetAuthorId, String newDisplayName, SessionFactory sessionFactory){

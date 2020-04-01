@@ -1,8 +1,8 @@
-package world.thismagical.entity;
+package world.thismagical.to;
 /*
   User: Alasdair
-  Date: 3/16/2020
-  Time: 9:09 PM                                                                                                    
+  Date: 4/1/2020
+  Time: 3:43 PM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -17,28 +17,14 @@ package world.thismagical.entity;
                                                                                                    
 */
 
-import java.time.LocalDateTime;
+import world.thismagical.vo.ArticleVO;
+import world.thismagical.vo.GalleryVO;
+import world.thismagical.vo.PhotoVO;
 
-public interface PostEntity {
-    Long getId();
-    void setId(Long id);
+import java.util.List;
 
-    String getTitle();
-    void setTitle(String title);
-
-    String getDescription();
-    void setDescription(String description);
-
-    AuthorEntity getAuthor();
-    void setAuthor(AuthorEntity authorEntity);
-
-    LocalDateTime getCreationDate();
-    void setCreationDate(LocalDateTime creationDate);
-
-    String getGpsCoordinates();
-    void setGpsCoordinates(String gpsCoordinates);
-
-    Boolean getPublished();
-    void setPublished(Boolean published);
-
+public class PostsTO {
+    public List<ArticleVO> articles;
+    public List<PhotoVO> photos;
+    public List<GalleryVO> galleries;
 }

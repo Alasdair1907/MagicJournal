@@ -124,7 +124,6 @@ let galleryNewOrEdit = `
     <div data-role="gallery-relation-editor"></div>
 </div>
 
-
 </div>
 
 <div data-role="gallery-image-manager" class="width-full"></div>

@@ -103,7 +103,8 @@ public class ArticleService {
         if (articleTO.titleImageId != null) {
             articleEntity.setTitleImageId(articleTO.titleImageId);
         }
-        articleEntity.setArticleText(articleTO.articleText); // TODO: analyze file usage with Link Service
+        articleEntity.setArticleText(articleTO.articleText);
+
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
@@ -111,6 +112,8 @@ public class ArticleService {
 
         session.saveOrUpdate(articleEntity);
         session.flush();
+
+        RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
 
         return JsonAdminResponse.success(articleEntity.getId());
     }

@@ -15,19 +15,6 @@ import java.util.List;
 
 public class AuthorDao {
 
-    /**
-     * takes AuthorEntity with unhashed password, replaces it with a hash, and
-     * executes saveOrUpdate() on that object.
-     */
-    public static void addAuthor(AuthorEntity author, Session session){
-
-            String password = author.getPasswd();
-            String hash = Tools.sha256(password);
-            author.setPasswd(hash);
-
-            session.saveOrUpdate(author);
-            session.flush();
-    }
 
     public static AuthorEntity getArticleAuthor(Long articleId, Session session){
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -98,5 +85,6 @@ public class AuthorDao {
 
         return author;
     }
+
 
 }

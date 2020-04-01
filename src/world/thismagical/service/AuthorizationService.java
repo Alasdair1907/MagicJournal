@@ -161,12 +161,26 @@ public class AuthorizationService {
             return false;
         }
 
+        // both users and superusers can remove test users' objects
+
+        if (objectAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
+            if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_SUPER_USER || currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // only superuser is allowed to remove others' posts
+
         if ( currentAuthorEntity.getAuthorId() != objectAuthorEntity.getAuthorId()){
-            // only superuser is allowed to do that!
+
             if (currentAuthorEntity.getPrivilegeLevel() != PrivilegeLevel.PRIVILEGE_SUPER_USER){
                 return false;
             }
+
         } else {
+            // test users aren't allowed to make any changes whatsoever
             if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
                 return false;
             }

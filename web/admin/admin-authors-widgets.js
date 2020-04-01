@@ -16,22 +16,69 @@
 
 
 $.widget("admin.authorsEdit", {
-    _create: function() {
+    _create: async function() {
         let self = this;
-        this._display(self);
+        await this._display(self);
     },
 
-    _init: function() {
-        this._display(this);
+    _init: async function() {
+        await this._display(this);
     },
 
-    _display: function(self) {
+    _createNewAuthor: function(self) {
+        let $newAuthorDisplayName = self.element.find('[data-role=new-author-display-name]');
+        let $newAuthorLogin = self.element.find('[data-role=new-author-login]');
+        let $newAuthorPassword = self.element.find('[data-role=new-author-password]');
+        let $newAuthorPrivilegeLevelId = self.element.find('[data-role=new-author-privilege-level-id]:checked');
+
+        let newAuthorDisplayName = $newAuthorDisplayName.val();
+        let newAuthorLogin = $newAuthorLogin.val();
+        let newAuthorPassword = $newAuthorPassword.val();
+        let newAuthorPrivilegeId = $newAuthorPrivilegeLevelId.data('id');
+
+        if (!newAuthorDisplayName){
+            alert('empty author display name!');
+            return;
+        }
+
+        if (!newAuthorLogin){
+            alert('empty author login!');
+            return;
+        }
+
+        if (!newAuthorPassword){
+            alert('empty author password!');
+            return;
+        }
+
+        if (!newAuthorPrivilegeId){
+            alert('select privilege level!');
+            return;
+        }
+
+        let newAuthor = {
+            displayName: newAuthorDisplayName,
+            login: newAuthorLogin,
+            passwd: newAuthorPassword,
+            privilegeLevel: newAuthorPrivilegeId
+        };
+
+        let res = ajax({guid: guid, data: JSON.stringify(newAuthor), action: "createNewAuthor"}, "error creating user");
+        if (res === undefined){
+            return;
+        }
+
+        self._display(self);
+    },
+
+    _display: async function(self) {
 
         let guid = Cookies.get("guid");
         let currentUserPrivilegeLevelName = Cookies.get("privilegeLevelName");
 
         let listAllAuthorsVOResponse;
         let listPrivilegesResponse;
+
 
         $.when(
             $.ajax({
@@ -71,68 +118,16 @@ $.widget("admin.authorsEdit", {
                 $('[data-role=addNewAuthorPanel]').html(hAddNewAuthorPanel({privilegeVOs: privilegeVOs}));
 
                 /**
-                 * create new author - process button click
-                 */
-
-                $('[data-role=new-author-create]').click(function(){
-                    let $newAuthorDisplayName = self.element.find('[data-role=new-author-display-name]');
-                    let $newAuthorLogin = self.element.find('[data-role=new-author-login]');
-                    let $newAuthorPassword = self.element.find('[data-role=new-author-password]');
-                    let $newAuthorPrivilegeLevelId = self.element.find('[data-role=new-author-privilege-level-id]:checked');
-
-                    let newAuthorDisplayName = $newAuthorDisplayName.val();
-                    let newAuthorLogin = $newAuthorLogin.val();
-                    let newAuthorPassword = $newAuthorPassword.val();
-                    let newAuthorPrivilegeId = $newAuthorPrivilegeLevelId.data('id');
-
-                    if (!newAuthorDisplayName){
-                        alert('empty author display name!');
-                        return;
-                    }
-
-                    if (!newAuthorLogin){
-                        alert('empty author login!');
-                        return;
-                    }
-
-                    if (!newAuthorPassword){
-                        alert('empty author password!');
-                        return;
-                    }
-
-                    let newAuthor = {
-                        displayName: newAuthorDisplayName,
-                        login: newAuthorLogin,
-                        passwd: newAuthorPassword,
-                        privilegeLevel: newAuthorPrivilegeId
-                    };
-
-                    let createNewAuthor = $.ajax({
-                        url: '/admin/jsonApi.jsp',
-                        method: 'POST',
-                        data: {guid: guid, data: JSON.stringify(newAuthor), action: "createNewAuthor"}
-                    });
-
-                    createNewAuthor.done(function(adminResponseJson){
-                        let adminResponse = JSON.parse(adminResponseJson);
-
-                        if (!adminResponse.success){
-                            alert("error creating user: "+adminResponse.errorDescription);
-                        } else {
-                            self._display(self);
-                        }
-                    });
-
-                });
-
-                /**
                  * enable or disable elements according to user privileges
                  */
+
+                $('button[data-role=delete-user]').prop("disabled", false);
 
                 if (userIsSuperuser){
                     $('button[data-role=change-display-name]').prop("disabled", false);
                     $('button[data-role=change-password]').prop("disabled", false);
                     $('button[data-role=change-privilege]').prop("disabled", false);
+
 
                     $('[data-user=super]').prop("disabled", false);
                 } else {
@@ -141,6 +136,14 @@ $.widget("admin.authorsEdit", {
                     $('button[data-role=change-display-name][data-id='+authorId+']').prop("disabled", false);
                     $('button[data-role=change-password][data-id='+authorId+']').prop("disabled", false);
                 }
+
+                /**
+                 * create new author - process button click
+                 */
+
+                $('[data-role=new-author-create]').click(function(){
+                    self._createNewAuthor(self);
+                });
 
 
                 /**
@@ -184,7 +187,7 @@ $.widget("admin.authorsEdit", {
                     });
                 });
 
-                ////
+
                 /**
                  * change display name modal and api call
                  */
@@ -263,6 +266,37 @@ $.widget("admin.authorsEdit", {
                             }
                         });
                     });
+                });
+
+                /*
+                delete user
+                 */
+
+                let $deleteButton = self.element.find('[data-role=delete-user]');
+                $deleteButton.click(function(){
+                    let targetUserId = $(this).data("id");
+                    $('[data-role="delete-user-confirm"]').modal();
+
+                    $('[data-role="delete-confirm"]').unbind();
+                    $('[data-role="delete-confirm"]').click(function(){
+                        let deleteUser = $.ajax({
+                            url: '/admin/jsonApi.jsp',
+                            method: 'POST',
+                            data: {guid: guid, data: targetUserId, action: "deleteUser"}
+                        });
+
+                        deleteUser.done(function(adminResponseJson){
+                            let adminResponse = JSON.parse(adminResponseJson);
+
+                            if (!adminResponse.success){
+                                alert("can't delete user: "+adminResponse.errorDescription);
+                            } else {
+                                $('[data-role="delete-user-confirm"]').modal('hide');
+                                self._display(self);
+                            }
+                        });
+                    });
+
                 });
 
 

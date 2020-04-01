@@ -42,10 +42,11 @@ let registeredAuthorsPanel = `
     </span>
     </td>
     
-    <td class="list-entry center-text" style="width: 40%;">
+    <td class="list-entry center-text" style="width: 40%; text-align: left !important;">
     <button type="button" class="btn btn-light btn-std" disabled="disabled" data-id="{{this.id}}" data-role="change-display-name">display name</button>
     <button type="button" class="btn btn-light btn-std" disabled="disabled" data-id="{{this.id}}" data-role="change-password">password</button>
     <button type="button" class="btn btn-light btn-std" disabled="disabled" data-id="{{this.id}}" data-role="change-privilege">privilege level</button>
+    <button type="button" class="btn btn-danger btn-std" disabled="disabled" data-id="{{this.id}}" data-role="delete-user" {{#if this.hasPosts}}style="display:none"{{/if}}>delete</button>
     </td>
   </tr>
 {{/each}}
@@ -77,9 +78,13 @@ let addNewAuthorPanel = `
 <td><span class="text">Privilege Level:</span></td>
 <td class="text">
 
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
 {{#each privilegeVOs}}
-<input type="radio" name="privileges" data-user="super" disabled="disabled" data-role="new-author-privilege-level-id" data-id="{{this.id}}"> {{this.name}} 
+<label class="btn btn-std btn-secondary">
+<input type="radio" name="privileges" data-user="super" disabled="disabled" data-role="new-author-privilege-level-id" data-id="{{this.id}}" autocomplete="off"> {{this.name}} 
+</label>
 {{/each}}
+</div>
 
 </td>
 </tr>
@@ -169,6 +174,34 @@ let addNewAuthorPanel = `
     <div class="modal-footer">
       <button type="button" class="btn btn-light btn-std" data-role="update-user-access-level">Update</button>
       <button type="button" class="btn btn-danger btn-std" data-dismiss="modal" onclick="$('[data-role=new-user-password]').val('');">Close</button>
+    </div>
+    
+  </div>
+</div>
+</div>
+
+
+<!-- user deletion confirmation -->
+
+<div class="modal" data-role="delete-user-confirm">
+<div class="modal-dialog">
+  <div class="modal-content">
+  
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm Deletion</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    
+    <!-- Modal body -->
+    <div class="modal-body">
+      <span>This will permanently delete the user. Continue?</span>
+    </div>
+    
+    <!-- Modal footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm">Yes, delete!</button>
+      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">No</button>
     </div>
     
   </div>

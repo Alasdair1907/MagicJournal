@@ -52,7 +52,7 @@ $.widget("admin.ImageManager", {
 </td>
 
 <td>
-<div data-role="selected-img" style="img-select-placeholder">
+<img src="/getImage.jsp?filename=imgAdminPlaceholder.png" data-role="selected-img" class="selected-img" alt="Select an image to preview.">
 
 
 </div>
@@ -126,7 +126,7 @@ $.widget("admin.ImageManager", {
         $imageListElem.html(hImageListTemplate({imageVOList: imageVOList}));
 
         let $galleryImages = self.element.find('[data-role="gallery-images"]');
-        let $selectedImgDiv = self.element.find('[data-role="selected-img"]');
+        let $selectedImgElem = self.element.find('[data-role="selected-img"]');
 
         let $selectedImgTitle = self.element.find('[data-role="selected-img-title"]');
         let $selectedImgGps = self.element.find('[data-role="selected-img-gps"]');
@@ -137,41 +137,34 @@ $.widget("admin.ImageManager", {
         $galleryImages.click(await async function () {
 
             $galleryImages.removeClass("div-image-selected");
-            $selectedImgDiv.html("");
 
             let imageId = $(this).data("id");
             let previewFile = $(this).data("preview");
             $(this).addClass("div-image-selected");
 
-            $selectedImgDiv.html('<img src="/getImage.jsp?filename='+previewFile+'" class="selected-img">');
+            $selectedImgElem.attr("src", "/getImage.jsp?filename="+previewFile);
+            $selectedImgElem.data("id", imageId);
 
-            $selectedImgDiv.data("id", imageId);
 
             $selectedImgTitle.prop("disabled", false);
             $selectedImgGps.prop("disabled", false);
             $selectedImgDelete.prop("disabled", false);
             $selectedImgUpdate.prop("disabled", false);
 
-            let jsonAdminResponse = await $.ajax({
-                url: '/admin/jsonApi.jsp',
-                method: 'POST',
-                data: {data: imageId, action: "getImageFileDescrTO"}
-            });
-
-            let adminResponse = JSON.parse(jsonAdminResponse);
-
-            if (!adminResponse.success){
-                alert("error obtaining file information: "+adminResponse.errorDescription);
-            } else {
-               $selectedImgTitle.val(adminResponse.data.title);
-               $selectedImgGps.val(adminResponse.data.gps);
+            let res = await ajax({data: imageId, action: "getImageFileDescrTO"}, "error obtaining file information");
+            if (res === undefined){
+                $selectedImgTitle.val("");
+                $selectedImgGps.val("");
+                return;
             }
 
+            $selectedImgTitle.val(res.title);
+            $selectedImgGps.val(res.gps);
         });
 
         $selectedImgDelete.unbind();
         $selectedImgDelete.click(await async function(){
-            let id = $selectedImgDiv.data("id");
+            let id = $selectedImgElem.data("id");
             let jsonAdminResponse = await $.ajax({
                 url: '/admin/jsonApi.jsp',
                 method: 'POST',
@@ -189,7 +182,7 @@ $.widget("admin.ImageManager", {
 
         $selectedImgUpdate.unbind();
         $selectedImgUpdate.click(await async function(){
-            let id = $selectedImgDiv.data("id");
+            let id = $selectedImgElem.data("id");
             let title = $selectedImgTitle.val();
             let gps = $selectedImgGps.val();
 

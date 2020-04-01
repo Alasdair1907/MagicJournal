@@ -31,7 +31,7 @@ $.widget("admin.RelationManager", {
 <div class="list-group relation-manager-list-group">
 
 {{#each currentPostRelatesToList}}
-<a class="list-group-item list-group-item-action rel-list-item {{#if this.isAuto}}disabled{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">[{{this.dstAttributionClassStr}}] {{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
+<a class="list-group-item list-group-item-action rel-list-item" data-auto="{{#if this.isAuto}}true{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">{{#if this.isAuto}}[AUTO]{{/if}}[{{this.dstAttributionClassStr}}] {{this.dstObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}}" -->
 {{/each}}
 </div>
 
@@ -228,6 +228,12 @@ $.widget("admin.RelationManager", {
 
         $linkSelection.unbind();
         $linkSelection.click(function(){
+
+            let auto = $(this).data("auto");
+            if (auto === true){
+                return;
+            }
+
             $linkSelection.removeClass("active");
             $(this).addClass("active");
             currentlySelectedLinkId = $(this).data('id');

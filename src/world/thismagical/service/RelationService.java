@@ -7,6 +7,7 @@ import world.thismagical.entity.*;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostTO;
 import world.thismagical.to.RelationTO;
+import world.thismagical.util.BBCodeExtractor;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
 import world.thismagical.vo.ArticleVO;
@@ -20,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
 
 public class RelationService {
 
@@ -318,6 +321,55 @@ public class RelationService {
 
         Set<Long> galleryIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.GALLERY, galleryIdSet, session);
         return galleryVOList.stream().filter(it -> galleryIdSetFinal.contains(it.id)).collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void updateArticleGalleryRelations(Long articleId, String articleText, Session session){
+        BBCodeExtractor.BBCodeData bbCodeData = BBCodeExtractor.parse(articleText);
+
+        if (bbCodeData.imgIds == null || bbCodeData.imgIds.isEmpty()){
+            return;
+        }
+
+        List<ImageFileEntity> imageFileEntities = FileDao.getImageEntitiesByIds(bbCodeData.imgIds, session);
+        List<Long> postIds = imageFileEntities.stream().filter(it->it.getImageAttributionClass().equals(PostAttribution.GALLERY))
+                .map(ImageFileEntity::getParentObjectId).collect(Collectors.toList());
+
+        if (postIds == null || postIds.isEmpty()){
+            return;
+        }
+
+        List<GalleryEntity> galleryEntities = (List<GalleryEntity>) (List) GalleryDao.getEntitiesByIds(postIds, GalleryEntity.class, session);
+        Set<Long> galleryEntityIds = galleryEntities.stream().map(GalleryEntity::getId).collect(Collectors.toSet());
+
+        List<RelationEntity> articleRelationEntities = RelationDao.listRelationsForPost(PostAttribution.ARTICLE, articleId, session);
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        for (Long galleryId : galleryEntityIds){
+
+            List<RelationEntity> toReplace = articleRelationEntities.stream()
+                    .filter(it -> it.getSrcAttributionClass().equals(PostAttribution.ARTICLE) && it.getSrcObjectId().equals(articleId)
+                                    && it.getDstAttributionClass().equals(PostAttribution.GALLERY) && it.getDstObjectId().equals(galleryId))
+                    .collect(Collectors.toList());
+
+            for (RelationEntity relationEntity : toReplace) {
+                session.delete(relationEntity);
+            }
+
+            RelationEntity relationEntity = new RelationEntity();
+            relationEntity.setSrcAttributionClass(PostAttribution.ARTICLE);
+            relationEntity.setSrcObjectId(articleId);
+            relationEntity.setDstAttributionClass(PostAttribution.GALLERY);
+            relationEntity.setDstObjectId(galleryId);
+            relationEntity.setRelationClass(RelationClass.RELATION_DEPENDENT);
+
+            session.save(relationEntity);
+        }
+
+        session.flush();
     }
 
 

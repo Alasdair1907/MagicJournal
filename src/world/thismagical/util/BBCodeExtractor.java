@@ -1,8 +1,8 @@
-package world.thismagical.entity;
+package world.thismagical.util;
 /*
   User: Alasdair
-  Date: 3/16/2020
-  Time: 9:09 PM                                                                                                    
+  Date: 3/27/2020
+  Time: 9:23 PM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -17,28 +17,38 @@ package world.thismagical.entity;
                                                                                                    
 */
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public interface PostEntity {
-    Long getId();
-    void setId(Long id);
+public class BBCodeExtractor {
 
-    String getTitle();
-    void setTitle(String title);
+    public static String REGEX_IMG_ID = "\\[\\s*img\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]"; // \[\s*img\s*id\s*\=\s*([0-9]+)\s*\]
 
-    String getDescription();
-    void setDescription(String description);
+    private final static Pattern regexImgId = Pattern.compile(REGEX_IMG_ID);
 
-    AuthorEntity getAuthor();
-    void setAuthor(AuthorEntity authorEntity);
+    public static BBCodeData parse(String s){
 
-    LocalDateTime getCreationDate();
-    void setCreationDate(LocalDateTime creationDate);
+        // [img id="1234"]
+        List<Long> imgIds = null;
+        Matcher m = regexImgId.matcher(s);
+        if (m.find()){
+            imgIds = new ArrayList<>();
 
-    String getGpsCoordinates();
-    void setGpsCoordinates(String gpsCoordinates);
+            for (int i = 1; i <= m.groupCount(); i++){
+                Long id = Long.parseLong(m.group(i));
+                imgIds.add(id);
+            }
+        }
 
-    Boolean getPublished();
-    void setPublished(Boolean published);
+        BBCodeData bbCodeData = new BBCodeData();
+        bbCodeData.imgIds = imgIds;
 
+        return bbCodeData;
+    }
+
+    public static class BBCodeData {
+        public List<Long> imgIds;
+    }
 }

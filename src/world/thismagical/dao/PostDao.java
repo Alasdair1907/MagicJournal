@@ -68,7 +68,7 @@ public class PostDao {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(clazz);
         Root<T> root = cq.from(clazz);
-        cq.orderBy(cb.asc(root.get("creationDate")));
+        cq.orderBy(cb.desc(root.get("creationDate")));
 
         if (authorFilter != null){
             Predicate authorPredicate = cb.equal(root.get("author"), authorFilter);

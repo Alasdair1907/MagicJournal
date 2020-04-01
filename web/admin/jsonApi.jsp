@@ -84,6 +84,12 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("deleteUser")){
+            Long userId = Long.parseLong(data);
+            JsonAdminResponse<Void> res = JsonApi.deleteAuthor(guid, userId, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         // photos edit
 
         if (action.equals("saveOrUpdatePhoto")){

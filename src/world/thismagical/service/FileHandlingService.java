@@ -224,18 +224,6 @@ public class FileHandlingService {
         PostEntity postEntity = PostDao.getPostEntityById(currentPost.getParentObjectId(), currentPost.getImageAttributionClass().getAssociatedClass(), session);
         postAuthor = postEntity.getAuthor();
 
-        /* TODO test & remove kebab
-        if (currentPost.getImageAttributionClass() == PostAttribution.PHOTO){
-            PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(currentPost.getParentObjectId(), PhotoEntity.class, session);
-            postAuthor = photoEntity.getAuthor();
-        } else if (currentPost.getImageAttributionClass() == PostAttribution.GALLERY){
-            GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(currentPost.getParentObjectId(), GalleryEntity.class, session);
-            postAuthor = galleryEntity.getAuthor();
-        } else if (currentPost.getImageAttributionClass() == PostAttribution.ARTICLE){
-            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(currentPost.getParentObjectId(), ArticleEntity.class, session);
-            postAuthor = articleEntity.getAuthor();
-        }*/
-
         if (!AuthorizationService.checkPrivileges(postAuthor, authorEntity)){
             return JsonAdminResponse.fail("unauthorized action");
         }
