@@ -23,7 +23,7 @@ $.widget("admin.RelationManager", {
 <div class="list-group relation-manager-list-group">
 
 {{#each postsRelateToThisList}}
-<a class="list-group-item list-group-item-action rel-list-item {{#if this.isAuto}}disabled{{/if}}">[{{this.srcAttributionClassStr}}] {{this.srcObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
+<a class="list-group-item list-group-item-action rel-list-item" data-auto="{{#if this.isAuto}}true{{/if}}" data-role="link-selection" data-id="{{this.relationId}}">{{#if this.isAuto}}[AUTO]{{/if}}[{{this.srcAttributionClassStr}}] {{this.srcObjectTitle}}</a> <!-- data-object-id="{{this.dstObjectId}}" data-object-class="{{this.dstAttributionClassShort}} -->
 {{/each}}
 </div>
 

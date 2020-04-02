@@ -146,6 +146,12 @@ public class AuthorService {
             return JsonAdminResponse.fail("unauthorized action");
         }
 
+        PostsTO authorPosts = getAuthorPostsVOs(targetAuthorEntity.getAuthorId(), session).data;
+        if (authorPosts != null && !authorPosts.isEmpty()){
+            Tools.log("[WARN] attempt to delete user with posts. epic bug or hacking attempt. action by: "+currentAuthorEntity.getLogin()+" attempt to delete: "+targetAuthorEntity.getLogin());
+            return JsonAdminResponse.fail("user has posts");
+        }
+
 
         SessionEntity sessionEntity = SessionDao.getSessionEntity(targetAuthorEntity.getLogin(), session);
 

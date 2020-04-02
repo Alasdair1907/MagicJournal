@@ -55,6 +55,7 @@ $.widget("admin.galleriesWidget", {
             $createNewGalleryButton.unbind();
             $createNewGalleryButton.click(await async function(){
 
+                let buttonText = spinButton($createNewGalleryButton);
                 // create a gallery entity
                 let galleryTO = await self._getEmptyGalleryTO();
                 let newId = await self._saveOrUpdateGallery(galleryTO);
@@ -62,13 +63,20 @@ $.widget("admin.galleriesWidget", {
                 // edit gallery entity
                 let galleryVO = await self._getEmptyGalleryVO(newId);
                 await self._edit($galleryEditForm, galleryVO, self);
+
+                unSpinButton($createNewGalleryButton, buttonText);
             });
 
             $galleryEditButtons.unbind();
             $galleryEditButtons.click(await async function(){
+
+                let buttonText = spinButton($galleryEditButtons);
+
                 let galleryId = $(this).data('id');
                 let galleryVO = await self._loadGallery(galleryId);
                 await self._edit($galleryEditForm, galleryVO, self);
+
+                unSpinButton($galleryEditButtons, buttonText);
             });
 
             $galleryPublishToggle.unbind();
@@ -193,6 +201,9 @@ $.widget("admin.galleriesWidget", {
 
         $submitElem.unbind();
         $submitElem.click(await async function(){
+
+            spinButton($submitElem);
+
             let galleryTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),

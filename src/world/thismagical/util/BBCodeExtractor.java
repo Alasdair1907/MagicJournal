@@ -33,13 +33,11 @@ public class BBCodeExtractor {
         // [img id="1234"]
         List<Long> imgIds = null;
         Matcher m = regexImgId.matcher(s);
-        if (m.find()){
-            imgIds = new ArrayList<>();
 
-            for (int i = 1; i <= m.groupCount(); i++){
-                Long id = Long.parseLong(m.group(i));
-                imgIds.add(id);
-            }
+        imgIds = new ArrayList<>();
+        while (m.find()){
+            Long id = Long.parseLong(m.group(1));
+            imgIds.add(id);
         }
 
         BBCodeData bbCodeData = new BBCodeData();

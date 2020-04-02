@@ -64,6 +64,7 @@ $.widget("admin.articlesWidget", {
         let $textElem = element.find('[data-role="data-article-text"]');
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
         let $submitElem = element.find('[data-role="data-article-save-or-update"]');
+        let $submitElemClose = element.find('[data-role="data-article-save-or-update-close"]');
         let $articleImageElem = element.find('[data-role="article-title-image"]'); // img with the image
         let $tagEditorDiv = element.find('[data-role="article-tag-editor"]');
         let $relationEditorDiv = element.find('[data-role="article-relation-editor"]');
@@ -111,6 +112,29 @@ $.widget("admin.articlesWidget", {
 
         $submitElem.unbind();
         $submitElem.click(await async function(){
+
+            let buttonText = spinButton($submitElem);
+
+            let articleTO = {
+                id: $idElem.val(),
+                title: $titleElem.val(),
+                description: $descrElem.val(),
+                articleText: $textElem.val(),
+                gpsCoordinates: $gpsElem.val(),
+                sessionGuid: Cookies.get("guid")
+            };
+
+            await self._saveOrUpdateArticle(articleTO);
+            $relationEditorDiv.RelationManager({attributionClass: 2, objectId: articleVO.id});
+
+            unSpinButton($submitElem, buttonText);
+        });
+
+        $submitElemClose.unbind();
+        $submitElemClose.click(await async function(){
+
+            spinButton($submitElemClose);
+
             let articleTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
@@ -216,6 +240,8 @@ $.widget("admin.articlesWidget", {
             $createNewArticleButton.unbind();
             $createNewArticleButton.click(await async function(){
 
+                let buttonText = spinButton($createNewArticleButton);
+
                 // create article entity
                 let articleTO = await self._getEmptyArticleTO();
                 let newId = await self._saveOrUpdateArticle(articleTO);
@@ -223,6 +249,8 @@ $.widget("admin.articlesWidget", {
                 // edit article entity
                 let articleVO = await self._getEmptyArticleVO(newId);
                 await self._edit($articlePostEditForm, articleVO, self);
+
+                unSpinButton($createNewArticleButton, buttonText);
             });
 
             $articlePostEditButtons.unbind();

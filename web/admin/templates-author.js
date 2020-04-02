@@ -81,7 +81,7 @@ let addNewAuthorPanel = `
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
 {{#each privilegeVOs}}
 <label class="btn btn-std btn-secondary">
-<input type="radio" name="privileges" data-user="super" disabled="disabled" data-role="new-author-privilege-level-id" data-id="{{this.id}}" autocomplete="off"> {{this.name}} 
+<input type="radio" name="privileges" data-user="super" disabled="disabled" data-role="new-author-privilege-level-id" data-id="{{this.id}}"> {{this.name}} 
 </label>
 {{/each}}
 </div>

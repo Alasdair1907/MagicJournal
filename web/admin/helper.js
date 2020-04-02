@@ -19,3 +19,18 @@ let  ajax = async function(data, errDescrDefault) {
 
     return adminResponse.data;
 };
+
+let buttonSpinner = "<i class=\"fas fa-cog fa-spin\"></i>";
+
+let spinButton = function($buttonElem){
+    let buttonText = $buttonElem.html();
+    $buttonElem.html(buttonSpinner);
+    $buttonElem.prop("disabled", true);
+
+    return buttonText;
+};
+
+let unSpinButton = function($buttonElem, text){
+    $buttonElem.html(text);
+    $buttonElem.prop("disabled", false);
+};

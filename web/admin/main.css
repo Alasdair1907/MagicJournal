@@ -14,7 +14,7 @@ body.admin {
     background-image: url("../resources/background-admin.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    /* background-attachment: fixed; */
+    background-attachment: fixed;
 }
 
 .transparent {
@@ -209,6 +209,7 @@ button.close {
 .photo-edit-image {
     max-width: 50vw;
     max-height: 40vh;
+    margin-top: 1vh;
 }
 
 .image-manager-tile {
@@ -290,6 +291,16 @@ button.close {
 .relation-manager-list-group {
     height: 10vh !important;
     overflow-y: scroll !important;
+}
+
+.hr-white {
+    border-color: white;
+    border-width: 0.2vh;
+}
+
+.flex-inline-left {
+    display: flex;
+    justify-content: left;
 }
 
 @media (max-width: 1200px) {

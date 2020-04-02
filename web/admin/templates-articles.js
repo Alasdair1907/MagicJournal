@@ -84,14 +84,17 @@ let articleNewOrEdit = `
 <span class="text">GPS coordinates:</span>
 <input type="text" class="form-control input" data-role="data-gps-coordinates" value="{{articleVO.gpsCoordinates}}"><br />
 
+<div style="display: flex">
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save article</button><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update-close" {{#if testUser}}disabled="disabled"{{/if}}>Save article & Close</button><br />
+</div>
 
-<span class="text">Image:</span><br />
-<img src="/getImage.jsp?filename={{articleVO.titleImageVO.preview}}" class="photo-edit-image" data-role="article-title-image"><br />
+<hr class="hr-white">
 
-<span class="text">Change title image:</span><br />
+<span class="text">Title Image:</span><br />
+<img src="/getImage.jsp?filename={{articleVO.titleImageVO.preview}}" class="photo-edit-image" data-role="article-title-image" alt="Article Title Image"><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-update-image">Change image</button><br />
 
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-update-image">Update image</button><br />
 </div>
 
 <div data-role="article-tag-editor" class="width-large"></div>

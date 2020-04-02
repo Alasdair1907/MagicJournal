@@ -49,32 +49,19 @@ $.widget("admin.TagEditor", {
             objectId: ops.objectId
         };
 
-        let tagListJsonResult = await $.ajax({
-            url: '/admin/jsonApi.jsp',
-            method: 'POST',
-            data: {action: "listTags", data: JSON.stringify(tagTORequest)}
-        });
-
-        if (!tagListJsonResult){
-            alert("error loading tags list!");
-            return;
-        }
-
-        let tagListResponse = JSON.parse(tagListJsonResult);
-
-        if (!tagListResponse.success){
-            alert("error loading tags list: "+tagListResponse.errorDescription);
-            return;
-        }
+        let tagList = await ajax({action: "listTags", data: JSON.stringify(tagTORequest)}, "error loading tags list");
 
         let hTemplate = Handlebars.compile(self._template);
-        self.element.html(hTemplate({tagListStr: tagListResponse.data.tagListStr}));
+        self.element.html(hTemplate({tagListStr: tagList.tagListStr}));
 
         let $saveOrUpdateButton = self.element.find('[data-role=save-or-update-tags]');
         let $tagsInput = self.element.find('[data-role=tagsinput]');
 
         $saveOrUpdateButton.unbind();
         $saveOrUpdateButton.click(await async function(){
+
+            let buttonText = spinButton($saveOrUpdateButton);
+
             let newTags = $tagsInput.val();
 
             let tagTOSave = {
@@ -83,21 +70,8 @@ $.widget("admin.TagEditor", {
                 tagListStr: newTags
             };
 
-            let saveResult = await $.ajax({
-                url: '/admin/jsonApi.jsp',
-                method: 'POST',
-                data: {action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagTOSave)}
-            });
-
-            if (!saveResult){
-                alert("error saving tags!");
-                return;
-            }
-
-            let saveResultResponse = JSON.parse(saveResult);
-            if (!saveResultResponse.success){
-                alert("error saving tags: "+saveResultResponse.errorDescription);
-            }
+            await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagTOSave)}, "error saving tags");
+            unSpinButton($saveOrUpdateButton, buttonText);
         });
     }
 });

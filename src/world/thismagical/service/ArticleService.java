@@ -74,10 +74,12 @@ public class ArticleService {
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(sessionGuid, session);
 
         AuthorEntity articleEntityAuthor = null;
+        Boolean newArticle = false;
 
         if (articleEntity != null){
             articleEntityAuthor = articleEntity.getAuthor();
         } else {
+            newArticle = true;
             articleEntityAuthor = currentAuthorEntity;
         }
 
@@ -113,7 +115,9 @@ public class ArticleService {
         session.saveOrUpdate(articleEntity);
         session.flush();
 
-        RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
+        if (!newArticle) {
+            RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
+        }
 
         return JsonAdminResponse.success(articleEntity.getId());
     }

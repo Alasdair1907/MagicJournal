@@ -27,4 +27,20 @@ public class PostsTO {
     public List<ArticleVO> articles;
     public List<PhotoVO> photos;
     public List<GalleryVO> galleries;
+
+    public boolean isEmpty(){
+        if (!this.articles.isEmpty()){
+            return false;
+        }
+
+        if (!this.photos.isEmpty()){
+            return false;
+        }
+
+        if (!this.galleries.isEmpty()){
+            return false;
+        }
+
+        return true;
+    }
 }

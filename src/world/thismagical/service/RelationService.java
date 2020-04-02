@@ -327,35 +327,51 @@ public class RelationService {
     public static void updateArticleGalleryRelations(Long articleId, String articleText, Session session){
         BBCodeExtractor.BBCodeData bbCodeData = BBCodeExtractor.parse(articleText);
 
-        if (bbCodeData.imgIds == null || bbCodeData.imgIds.isEmpty()){
-            return;
-        }
-
-        List<ImageFileEntity> imageFileEntities = FileDao.getImageEntitiesByIds(bbCodeData.imgIds, session);
-        List<Long> postIds = imageFileEntities.stream().filter(it->it.getImageAttributionClass().equals(PostAttribution.GALLERY))
-                .map(ImageFileEntity::getParentObjectId).collect(Collectors.toList());
-
-        if (postIds == null || postIds.isEmpty()){
-            return;
-        }
-
-        List<GalleryEntity> galleryEntities = (List<GalleryEntity>) (List) GalleryDao.getEntitiesByIds(postIds, GalleryEntity.class, session);
-        Set<Long> galleryEntityIds = galleryEntities.stream().map(GalleryEntity::getId).collect(Collectors.toSet());
-
-        List<RelationEntity> articleRelationEntities = RelationDao.listRelationsForPost(PostAttribution.ARTICLE, articleId, session);
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
         }
 
+        // clean out existing dependent relations for this object
+
+        List<RelationEntity> articleRelationEntities = RelationDao.listRelationsForPost(PostAttribution.ARTICLE, articleId, session);
+        List<RelationEntity> toDelete = articleRelationEntities.stream()
+                .filter(it -> it.getSrcAttributionClass().equals(PostAttribution.ARTICLE) && it.getSrcObjectId().equals(articleId)
+                        && it.getRelationClass().equals(RelationClass.RELATION_DEPENDENT))
+                .collect(Collectors.toList());
+
+        for (RelationEntity relationEntity : toDelete) {
+            session.delete(relationEntity);
+        }
+
+        if (bbCodeData.imgIds.isEmpty()){
+            session.flush();
+            return;
+        }
+
+        // get a list of gallery ids
+        List<ImageFileEntity> imageFileEntities = FileDao.getImageEntitiesByIds(bbCodeData.imgIds, session);
+
+        if (imageFileEntities == null){
+            return;
+        }
+
+        Set<Long> galleryEntityIds = imageFileEntities.stream().filter(it->it.getImageAttributionClass().equals(PostAttribution.GALLERY))
+                .map(ImageFileEntity::getParentObjectId).collect(Collectors.toSet());
+
+        if (galleryEntityIds.isEmpty()){
+            return;
+        }
+
         for (Long galleryId : galleryEntityIds){
 
+            // avoid duplicating manually created relations
             List<RelationEntity> toReplace = articleRelationEntities.stream()
                     .filter(it -> it.getSrcAttributionClass().equals(PostAttribution.ARTICLE) && it.getSrcObjectId().equals(articleId)
-                                    && it.getDstAttributionClass().equals(PostAttribution.GALLERY) && it.getDstObjectId().equals(galleryId))
+                            && it.getDstAttributionClass().equals(PostAttribution.GALLERY) && it.getDstObjectId().equals(galleryId))
                     .collect(Collectors.toList());
 
-            for (RelationEntity relationEntity : toReplace) {
+            for (RelationEntity relationEntity : toReplace){
                 session.delete(relationEntity);
             }
 

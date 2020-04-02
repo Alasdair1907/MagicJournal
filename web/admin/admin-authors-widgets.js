@@ -25,7 +25,7 @@ $.widget("admin.authorsEdit", {
         await this._display(this);
     },
 
-    _createNewAuthor: function(self) {
+    _createNewAuthor: async function(self, $button, buttonText) {
         let $newAuthorDisplayName = self.element.find('[data-role=new-author-display-name]');
         let $newAuthorLogin = self.element.find('[data-role=new-author-login]');
         let $newAuthorPassword = self.element.find('[data-role=new-author-password]');
@@ -38,21 +38,25 @@ $.widget("admin.authorsEdit", {
 
         if (!newAuthorDisplayName){
             alert('empty author display name!');
+            unSpinButton($button, buttonText);
             return;
         }
 
         if (!newAuthorLogin){
             alert('empty author login!');
+            unSpinButton($button, buttonText);
             return;
         }
 
         if (!newAuthorPassword){
             alert('empty author password!');
+            unSpinButton($button, buttonText);
             return;
         }
 
-        if (!newAuthorPrivilegeId){
+        if (newAuthorPrivilegeId === undefined || newAuthorPrivilegeId === null || newAuthorPrivilegeId === ""){
             alert('select privilege level!');
+            unSpinButton($button, buttonText);
             return;
         }
 
@@ -63,8 +67,9 @@ $.widget("admin.authorsEdit", {
             privilegeLevel: newAuthorPrivilegeId
         };
 
-        let res = ajax({guid: guid, data: JSON.stringify(newAuthor), action: "createNewAuthor"}, "error creating user");
+        let res = await ajax({guid: guid, data: JSON.stringify(newAuthor), action: "createNewAuthor"}, "error creating user");
         if (res === undefined){
+            unSpinButton($button, buttonText);
             return;
         }
 
@@ -141,8 +146,12 @@ $.widget("admin.authorsEdit", {
                  * create new author - process button click
                  */
 
-                $('[data-role=new-author-create]').click(function(){
-                    self._createNewAuthor(self);
+                let $createNewAuthorButton = $('[data-role=new-author-create]');
+
+                $createNewAuthorButton.unbind();
+                $createNewAuthorButton.click(function(){
+                    let buttonText = spinButton($createNewAuthorButton);
+                    self._createNewAuthor(self, $createNewAuthorButton, buttonText);
                 });
 
 

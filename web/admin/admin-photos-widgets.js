@@ -73,9 +73,7 @@ $.widget("admin.photosWidget", {
         $photoImageUploadElem.unbind();
         $photoImageUploadElem.click(await async function(){
 
-            let buttonHtml = $photoImageUploadElem.html();
-            $photoImageUploadElem.html("<i class=\"fas fa-cog fa-spin\"></i>");
-            $photoImageUploadElem.prop("disabled", true);
+            let buttonText = spinButton($photoImageUploadElem);
 
             let file = $fileElem.get(0).files[0];
             let fileData = new FormData();
@@ -98,8 +96,7 @@ $.widget("admin.photosWidget", {
                 processData: false
             });
 
-            $photoImageUploadElem.html(buttonHtml);
-            $photoImageUploadElem.prop("disabled", false);
+            unSpinButton($photoImageUploadElem, buttonText);
 
             let imageVO = await self._getPhotoImageVO(photoVO.id);
             if (!imageVO){
@@ -111,6 +108,9 @@ $.widget("admin.photosWidget", {
 
         $submitElem.unbind();
         $submitElem.click(await async function(){
+
+            spinButton($submitElem);
+
             let photoTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
