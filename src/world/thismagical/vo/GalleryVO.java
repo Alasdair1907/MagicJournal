@@ -19,6 +19,7 @@ package world.thismagical.vo;
 
 import world.thismagical.entity.GalleryEntity;
 import world.thismagical.entity.PhotoEntity;
+import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +44,7 @@ public class GalleryVO {
         this.description = galleryEntity.getDescription();
         this.authorVO = new AuthorVO(galleryEntity.getAuthor());
         this.creationDate = galleryEntity.getCreationDate();
-        this.creationDateStr = galleryEntity.getCreationDate().format(DateTimeFormatter.ISO_DATE_TIME);
+        this.creationDateStr = Tools.formatDate(galleryEntity.getCreationDate());
         this.gpsCoordinates = galleryEntity.getGpsCoordinates();
         this.published = galleryEntity.getPublished();
     }

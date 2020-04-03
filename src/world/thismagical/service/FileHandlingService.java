@@ -293,6 +293,7 @@ public class FileHandlingService {
             ImageFileEntity toUpdate = imageFileEntityList.get(0);
             toUpdate.setTitle(imageFileDescrTO.title);
             toUpdate.setGpsCoordinates(imageFileDescrTO.gps);
+            toUpdate.setOrderNumber(imageFileDescrTO.orderNumber);
             FileDao.saveOrUpdate(toUpdate, session);
         } finally {
             session.close();

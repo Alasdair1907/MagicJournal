@@ -89,9 +89,8 @@ public class ArticleService {
 
         if (articleEntity == null) {
             articleEntity = new ArticleEntity();
+            articleEntity.setAuthor(currentAuthorEntity);
         }
-
-        articleEntity.setAuthor(currentAuthorEntity);
 
         if (articleEntity.getCreationDate() == null){
             articleEntity.setCreationDate(LocalDateTime.now());

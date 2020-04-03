@@ -55,6 +55,9 @@ public class ImageFileEntity implements Serializable {
     @Column(name="gps_coordinates")
     private String gpsCoordinates;
 
+    @Column(name="order_num")
+    private Long orderNumber;
+
     public ImageFileEntity(ImageFileEntity imageFileEntity){
         this.imageAttributionClass = imageFileEntity.getImageAttributionClass().getId();
         this.parentObjectId = imageFileEntity.getParentObjectId();
@@ -135,5 +138,13 @@ public class ImageFileEntity implements Serializable {
 
     public void setGpsCoordinates(String gpsCoordinates) {
         this.gpsCoordinates = gpsCoordinates;
+    }
+
+    public Long getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }

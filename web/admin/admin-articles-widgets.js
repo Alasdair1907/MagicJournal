@@ -133,7 +133,7 @@ $.widget("admin.articlesWidget", {
         $submitElemClose.unbind();
         $submitElemClose.click(await async function(){
 
-            spinButton($submitElemClose);
+            let buttonText = spinButton($submitElemClose);
 
             let articleTO = {
                 id: $idElem.val(),
@@ -144,8 +144,11 @@ $.widget("admin.articlesWidget", {
                 sessionGuid: Cookies.get("guid")
             };
 
-            await self._saveOrUpdateArticle(articleTO);
-            await self._display(self);
+            let res = await self._saveOrUpdateArticle(articleTO);
+            unSpinButton($submitElemClose, buttonText);
+            if (res !== undefined || res !== null){
+                await self._display(self);
+            }
         });
 
         // image select
@@ -180,19 +183,7 @@ $.widget("admin.articlesWidget", {
 
     _saveOrUpdateArticle: async function(articleTO){
         let articleTOJson = JSON.stringify(articleTO);
-        let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
-            method: 'POST',
-            data: {data:articleTOJson, action:"saveOrUpdateArticle"}
-        });
-
-        let adminResponse = JSON.parse(jsonAdminResponse);
-
-        if (adminResponse.success === false){
-            alert("error saving or updating article: "+adminResponse.errorDescription);
-        } else {
-            return adminResponse.data;
-        }
+        return await ajax({data:articleTOJson, action:"saveOrUpdateArticle"}, "error saving or updating article");
     },
 
     _loadArticle: async function(articleId){

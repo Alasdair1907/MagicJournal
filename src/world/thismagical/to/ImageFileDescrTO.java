@@ -29,9 +29,11 @@ public class ImageFileDescrTO {
         this.imageEntityId = imageFileEntity.getId();
         this.title = imageFileEntity.getTitle();
         this.gps = imageFileEntity.getGpsCoordinates();
+        this.orderNumber = imageFileEntity.getOrderNumber();
     }
 
     public Long imageEntityId;
     public String title;
     public String gps;
+    public Long orderNumber;
 }

@@ -80,7 +80,7 @@ let addNewAuthorPanel = `
 
 <div class="btn-group btn-group-toggle" data-toggle="buttons">
 {{#each privilegeVOs}}
-<label class="btn btn-std btn-secondary">
+<label class="btn btn-std btn-radio btn-secondary">
 <input type="radio" name="privileges" data-user="super" disabled="disabled" data-role="new-author-privilege-level-id" data-id="{{this.id}}"> {{this.name}} 
 </label>
 {{/each}}
@@ -165,9 +165,16 @@ let addNewAuthorPanel = `
     
     <!-- Modal body -->
     <div class="modal-body">
+    
+<div class="btn-group btn-group-toggle" data-toggle="buttons">    
 {{#each privilegeVOs}}
+<label class="btn btn-std btn-radio btn-secondary">
 <input type="radio" name="privileges" data-role="update-author-privilege-level-id" data-id="{{this.id}}"> {{this.name}} 
+</label>
 {{/each}}
+</div>
+ 
+ 
     </div>
     
     <!-- Modal footer -->
@@ -195,7 +202,7 @@ let addNewAuthorPanel = `
     
     <!-- Modal body -->
     <div class="modal-body">
-      <span>This will permanently delete the user. Continue?</span>
+      <span class="text-black">This will permanently delete the user. Continue?</span>
     </div>
     
     <!-- Modal footer -->

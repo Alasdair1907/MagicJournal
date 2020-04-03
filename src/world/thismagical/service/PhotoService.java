@@ -99,9 +99,9 @@ public class PhotoService {
 
         if (photoEntity == null) {
             photoEntity = new PhotoEntity();
+            photoEntity.setAuthor(currentAuthorEntity);
         }
 
-        photoEntity.setAuthor(currentAuthorEntity);
 
         if (photoEntity.getCreationDate() == null){
             photoEntity.setCreationDate(LocalDateTime.now());

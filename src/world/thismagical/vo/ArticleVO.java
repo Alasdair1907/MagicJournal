@@ -15,6 +15,7 @@ package world.thismagical.vo;
 */
 
 import world.thismagical.entity.ArticleEntity;
+import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +39,7 @@ public class ArticleVO {
         this.description = articleEntity.getDescription();
         this.authorVO = new AuthorVO(articleEntity.getAuthor());
         this.creationDate = articleEntity.getCreationDate();
-        this.creationDateStr = articleEntity.getCreationDate().format(DateTimeFormatter.ISO_DATE_TIME);
+        this.creationDateStr = Tools.formatDate(articleEntity.getCreationDate());
         this.gpsCoordinates = articleEntity.getGpsCoordinates();
         this.published = articleEntity.getPublished();
         this.articleText = articleEntity.getArticleText();

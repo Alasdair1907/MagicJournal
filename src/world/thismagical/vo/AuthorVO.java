@@ -57,9 +57,9 @@ public class AuthorVO {
 
         if (providePosts && session != null){
             this.postsTO = AuthorService.getAuthorPostsVOs(authorEntity.getAuthorId(), session).data;
-            if ( (this.postsTO.photos != null && !this.postsTO.photos.isEmpty()) ||
-                    (this.postsTO.galleries != null && !this.postsTO.galleries.isEmpty()) ||
-                    (this.postsTO.articles != null && !this.postsTO.articles.isEmpty())){
+            if (this.postsTO.isEmpty()){
+                this.hasPosts = false;
+            } else {
                 this.hasPosts = true;
             }
         }

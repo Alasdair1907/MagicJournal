@@ -122,6 +122,14 @@ public class Tools {
         return Boolean.TRUE;
     }
 
+    public static String formatDate(LocalDateTime localDateTime){
+        if (localDateTime == null){
+            return "";
+        }
+
+        return localDateTime.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm"));
+    }
+
     public static String nullToEmpty(String input){
         if (input == null){
             return "";

@@ -46,6 +46,10 @@ $.widget("admin.ImageManager", {
 </tr>
 
 <tr>
+<td class="td-tall"><span class="text">Ordering number:</span></td><td class="td-tall"><input type="text" data-role="selected-img-order-number" class="input width-full" disabled="disabled"></td>
+</tr>
+
+<tr>
 <td class="td-tall"><button type="button" class="btn btn-danger btn-std" data-role="selected-img-delete" disabled="disabled">Delete Image</button> </td>
 <td class="td-tall"><button type="button" class="btn btn-light btn-std" data-role="selected-img-update" disabled="disabled">Save Changes</button> </td></tr>
 </table>
@@ -130,6 +134,7 @@ $.widget("admin.ImageManager", {
 
         let $selectedImgTitle = self.element.find('[data-role="selected-img-title"]');
         let $selectedImgGps = self.element.find('[data-role="selected-img-gps"]');
+        let $selectedImgOrder = self.element.find('[data-role="selected-img-order-number"]');
         let $selectedImgDelete = self.element.find('[data-role="selected-img-delete"]');
         let $selectedImgUpdate = self.element.find('[data-role="selected-img-update"]');
 
@@ -148,6 +153,7 @@ $.widget("admin.ImageManager", {
 
             $selectedImgTitle.prop("disabled", false);
             $selectedImgGps.prop("disabled", false);
+            $selectedImgOrder.prop("disabled", false);
             $selectedImgDelete.prop("disabled", false);
             $selectedImgUpdate.prop("disabled", false);
 
@@ -155,11 +161,14 @@ $.widget("admin.ImageManager", {
             if (res === undefined){
                 $selectedImgTitle.val("");
                 $selectedImgGps.val("");
+                $selectedImgOrder.val("");
                 return;
             }
 
             $selectedImgTitle.val(res.title);
             $selectedImgGps.val(res.gps);
+            $selectedImgOrder.val(res.orderNumber);
+
         });
 
         $selectedImgDelete.unbind();
@@ -185,11 +194,13 @@ $.widget("admin.ImageManager", {
             let id = $selectedImgElem.data("id");
             let title = $selectedImgTitle.val();
             let gps = $selectedImgGps.val();
+            let orderNumber = $selectedImgOrder.val();
 
             let imageFileDescrTO = {
                 imageEntityId: id,
                 title: title,
-                gps: gps
+                gps: gps,
+                orderNumber: orderNumber
             };
 
             let jsonAdminResponse = await $.ajax({

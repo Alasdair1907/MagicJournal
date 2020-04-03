@@ -3,7 +3,8 @@ author_id bigserial PRIMARY KEY,
 display_name varchar(128),
 login varchar(128),
 password varchar(128),
-privilege_level smallint
+privilege_level smallint,
+bio varchar(5120);
 );
 
 CREATE TABLE sessions (
@@ -22,7 +23,8 @@ original_file_name varchar(256),
 title varchar(128),
 gps_coordinates varchar(128),
 image_attribution_class smallint,
-parent_object_id bigint
+parent_object_id bigint,
+order_num bigint
 );
 
 CREATE TABLE photos (

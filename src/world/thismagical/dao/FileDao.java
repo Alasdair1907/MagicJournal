@@ -18,7 +18,11 @@ package world.thismagical.dao;
 */
 
 
+import org.hibernate.Criteria;
+import org.hibernate.NullPrecedence;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
@@ -86,6 +90,8 @@ public class FileDao {
             return null;
         }
 
+
+
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<ImageFileEntity> cq = cb.createQuery(ImageFileEntity.class);
         Root<ImageFileEntity> root = cq.from(ImageFileEntity.class);
@@ -95,7 +101,7 @@ public class FileDao {
             parentObjectIdIn.value(parentObjectId);
         }
 
-        cq.orderBy(cb.desc(root.get("id")));
+        cq.orderBy(cb.asc(root.get("orderNumber")), cb.desc(root.get("id")));
 
         Predicate attributionPredicate = cb.equal(root.get("imageAttributionClass"), imageAttribution.getId());
         Predicate and = cb.and(attributionPredicate, parentObjectIdIn);
@@ -161,7 +167,7 @@ public class FileDao {
 
         List<ImageVO> imageVOList = new ArrayList<>();
 
-        for (ImageFileEntity imageFileEntity : files){
+       for (ImageFileEntity imageFileEntity : files){
             ImageVO imageVO = new ImageVO(imageFileEntity);
             imageVOList.add(imageVO);
         }

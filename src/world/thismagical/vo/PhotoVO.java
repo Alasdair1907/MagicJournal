@@ -18,6 +18,7 @@ package world.thismagical.vo;
 */
 
 import world.thismagical.entity.PhotoEntity;
+import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +41,7 @@ public class PhotoVO {
         this.description = photoEntity.getDescription();
         this.authorVO = new AuthorVO(photoEntity.getAuthor());
         this.creationDate = photoEntity.getCreationDate();
-        this.creationDateStr = photoEntity.getCreationDate().format(DateTimeFormatter.ISO_DATE_TIME);
+        this.creationDateStr = Tools.formatDate(photoEntity.getCreationDate());
         this.gpsCoordinates = photoEntity.getGpsCoordinates();
         this.published = photoEntity.getPublished();
     }

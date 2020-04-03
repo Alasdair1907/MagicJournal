@@ -46,6 +46,14 @@ body.admin {
     font-family: "Courier New", Courier, monospace;
 }
 
+.text-black {
+    color: black;
+    font-size: 2vh;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    font-family: "Courier New", Courier, monospace;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -99,6 +107,10 @@ body.admin {
     margin-left: 0.5vh;
     margin-right: 0.5vh;
     font-size: 1.5vh;
+}
+
+.btn-radio {
+    margin-left: -0.4vw !important;
 }
 
 .button-fa-white-large {

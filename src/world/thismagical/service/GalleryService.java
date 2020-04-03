@@ -52,15 +52,13 @@ public class GalleryService {
 
         if (galleryVO.imageVOList != null && !galleryVO.imageVOList.isEmpty()){
             List<ImageVO> galleryRepresentation = new ArrayList<>();
-            // TODO: consider a better way of selecting gallery representation images
             int i = 4;
             if (galleryVO.imageVOList.size() < 4){
                 i = galleryVO.imageVOList.size();
             }
 
-            while (i > 0){
-                galleryRepresentation.add(galleryVO.imageVOList.get(i-1));
-                i--;
+            for (int t = 0; t < i; t++){
+                galleryRepresentation.add(galleryVO.imageVOList.get(t));
             }
 
             galleryVO.galleryRepresentation = galleryRepresentation;
@@ -121,9 +119,8 @@ public class GalleryService {
 
         if (galleryEntity == null) {
             galleryEntity = new GalleryEntity();
+            galleryEntity.setAuthor(currentAuthorEntity);
         }
-
-        galleryEntity.setAuthor(currentAuthorEntity);
 
         if (galleryEntity.getCreationDate() == null){
             galleryEntity.setCreationDate(LocalDateTime.now());
