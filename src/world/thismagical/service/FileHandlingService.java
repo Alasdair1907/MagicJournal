@@ -127,7 +127,7 @@ public class FileHandlingService {
 
         try {
             // TODO: verify ownership
-            if (imageAttribution.equals(PostAttribution.PHOTO)){
+            if (imageAttribution.equals(PostAttribution.PHOTO) || imageAttribution.equals(PostAttribution.PROFILE)){
                 List<ImageVO> existingImages = FileDao.getImages(imageAttribution, Collections.singletonList(imageUploadTO.parentObjectId), session);
                 deleteImages(existingImages, session);
             }

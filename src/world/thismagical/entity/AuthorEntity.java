@@ -25,6 +25,15 @@ public class AuthorEntity implements Serializable {
     @Column(name="privilege_level")
     private Short privilegeLevel;
 
+    @Column(name="bio")
+    private String bio;
+
+    @Column(name="email")
+    private String email;
+
+    @Column(name="personal_website")
+    private String personalWebsite;
+
     public long getAuthorId() {
         return authorId;
     }
@@ -64,5 +73,30 @@ public class AuthorEntity implements Serializable {
     public void setPrivilegeLevel(PrivilegeLevel privilegeLevel) {
         this.privilegeLevel = privilegeLevel.getId();
     }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPersonalWebsite() {
+        return personalWebsite;
+    }
+
+    public void setPersonalWebsite(String personalWebsite) {
+        this.personalWebsite = personalWebsite;
+    }
+
 
 }

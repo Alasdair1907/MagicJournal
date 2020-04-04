@@ -102,7 +102,7 @@ galleryEditSelect += confirmDeleteGallery;
 let galleryNewOrEdit = `
 <div>
 
-<div class="item-container transparent width-medium highres-line-item">
+<div class="item-container transparent width-medium highres-line-item item-left float-separator-bottom">
 <span class="item-container-heading">Edit</span>
 
 <input type="hidden" data-role="data-id" value="{{galleryVO.id}}">
@@ -119,12 +119,12 @@ let galleryNewOrEdit = `
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
 </div>
 
-<div class="highres-line-item width-medium">
+<div class="highres-line-item width-medium item-right float-separator-bottom">
     <div data-role="gallery-tag-editor"></div>
     <div data-role="gallery-relation-editor"></div>
 </div>
 
 </div>
 
-<div data-role="gallery-image-manager" class="width-full"></div>
+<div data-role="gallery-image-manager" class="width-full afterfloat"></div>
 `;

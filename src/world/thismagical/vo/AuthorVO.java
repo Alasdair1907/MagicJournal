@@ -19,6 +19,7 @@ package world.thismagical.vo;
 
 import org.hibernate.Session;
 import world.thismagical.entity.AuthorEntity;
+import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.service.AuthorService;
 import world.thismagical.to.PostsTO;
 import world.thismagical.util.PrivilegeLevel;
@@ -32,8 +33,15 @@ public class AuthorVO {
     public String privilegeLevelName;
     public String privilegeLevelDescription;
 
+    public String pictureFileName;
+    public String bio;
+    public String email;
+    public String website;
+
     public PostsTO postsTO;
     public boolean hasPosts;
+
+    public AuthorVO(){}
 
     public AuthorVO(AuthorEntity authorEntity){
         this(authorEntity, false, null);
@@ -54,6 +62,11 @@ public class AuthorVO {
         this.privilegeLevelId = privilegeLevel.getId();
         this.privilegeLevelName = privilegeLevel.getName();
         this.privilegeLevelDescription = privilegeLevel.getDescription();
+
+        this.bio = authorEntity.getBio();
+        this.email = authorEntity.getEmail();
+        this.website = authorEntity.getPersonalWebsite();
+
 
         if (providePosts && session != null){
             this.postsTO = AuthorService.getAuthorPostsVOs(authorEntity.getAuthorId(), session).data;

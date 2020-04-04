@@ -3,11 +3,14 @@ package world.thismagical.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.AuthorDao;
+import world.thismagical.dao.FileDao;
 import world.thismagical.dao.SessionDao;
 import world.thismagical.entity.AuthorEntity;
+import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.SessionEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostsTO;
+import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.ArticleVO;
@@ -16,12 +19,38 @@ import world.thismagical.vo.GalleryVO;
 import world.thismagical.vo.PhotoVO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static world.thismagical.dao.AuthorDao.getAuthorEntityByLogin;
 
 public class AuthorService {
+
+    public static void loadProfilePicture(AuthorVO authorVO, Session session){
+        List<ImageFileEntity> profilePicture = FileDao.getImageEntities(PostAttribution.PROFILE, Collections.singletonList(authorVO.id), session);
+        if (profilePicture != null && !profilePicture.isEmpty()){
+            authorVO.pictureFileName = profilePicture.get(0).getThumbnailFileName();
+        }
+    }
+
+    public static JsonAdminResponse<AuthorVO> getAuthorVOByGuid(String guid, Session session){
+        if (guid == null){
+            return JsonAdminResponse.fail("null guid");
+        }
+
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+
+        if (authorEntity == null){
+            return JsonAdminResponse.fail("invalid session guid");
+        }
+
+        AuthorVO authorVO = new AuthorVO(authorEntity);
+        loadProfilePicture(authorVO, session);
+
+        return JsonAdminResponse.success(authorVO);
+    }
+
     public static List<AuthorVO> getAllAuthorsVOList(Session session){
         List<AuthorEntity> authorEntities = AuthorDao.listAllAuthors(session);
         List<AuthorVO> authorVOList = new ArrayList<>();
@@ -126,7 +155,6 @@ public class AuthorService {
         if (guid == null){
             return JsonAdminResponse.fail("authorization error");
         }
-
         if (authorId == null){
             return JsonAdminResponse.fail("null authorId");
         }
@@ -137,11 +165,9 @@ public class AuthorService {
         if (currentAuthorEntity == null){
             return JsonAdminResponse.fail("authorization error");
         }
-
         if (targetAuthorEntity == null){
             return JsonAdminResponse.fail("invalid target author id");
         }
-
         if (!AuthorizationService.checkPrivileges(targetAuthorEntity, currentAuthorEntity)){
             return JsonAdminResponse.fail("unauthorized action");
         }
@@ -164,6 +190,31 @@ public class AuthorService {
         }
         session.delete(targetAuthorEntity);
 
+        session.flush();
+        return JsonAdminResponse.success(null);
+    }
+
+    public static JsonAdminResponse<Void> updateAuthorProfile(String guid, AuthorVO authorVO, Session session){
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+
+        if (authorEntity == null){
+            return JsonAdminResponse.fail("unauthorized action");
+        }
+
+        if (!authorEntity.getLogin().equals(authorVO.login)){
+            Tools.log("[ERROR] updateAuthorProfile: requested change for "+authorVO.login+" by "+authorEntity.getLogin());
+            return JsonAdminResponse.fail("invalid operation");
+        }
+
+        authorEntity.setBio(authorVO.bio);
+        authorEntity.setEmail(authorVO.email);
+        authorEntity.setPersonalWebsite(authorVO.website);
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.update(authorEntity);
         session.flush();
 
         return JsonAdminResponse.success(null);

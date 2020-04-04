@@ -63,7 +63,7 @@ let photoEditSelect = `
 `;
 
 let photoNewOrEdit = `
-<div class="item-container transparent highres-line-item width-medium">
+<div class="item-container transparent highres-line-item width-medium item-left float-separator-bottom">
 <span class="item-container-heading">Edit</span>
 
 <input type="hidden" data-role="data-id" value="{{photoVO.id}}">
@@ -81,13 +81,13 @@ let photoNewOrEdit = `
 <img src="/getImage.jsp?filename={{photoVO.imageVO.preview}}" class="photo-edit-image" data-role="photo-image"><br />
 
 <span class="text">Upload image:</span><br />
-<input type="file" data-role="data-file"/><br />
+<input type="file" class="text" data-role="data-file"/><br />
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-upload-image" {{#if testUser}}disabled="disabled"{{/if}}>Upload</button>
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
 </div>
 
 
-<div class="highres-line-item width-medium">
+<div class="highres-line-item width-medium item-right float-separator-bottom">
     <div data-role="photo-tag-editor"></div>
     <div data-role="photo-relation-manager"></div>
 </div>

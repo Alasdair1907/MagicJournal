@@ -249,6 +249,27 @@ public class JsonApi {
         return jsonAdminResponse;
     }
 
+    public static JsonAdminResponse<AuthorVO> getAuthorVOByGuid(String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return AuthorService.getAuthorVOByGuid(guid, session);
+        } catch (Exception ex) {
+            Tools.log("[ERROR] " + ex.getMessage() + Tools.getStackTraceStr(ex));
+            return JsonAdminResponse.fail("unable to load author data");
+        }
+
+    }
+
+    public static JsonAdminResponse<Void> updateAuthorProfile(String guid, AuthorVO authorVO, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()) {
+            return AuthorService.updateAuthorProfile(guid, authorVO, session);
+        } catch (Exception ex) {
+            Tools.log("[ERROR] " + ex.getMessage() + Tools.getStackTraceStr(ex));
+            return JsonAdminResponse.fail("unable to update author profile");
+        }
+    }
+
+
     public static JsonAdminResponse<PhotoVO> getPhotoVOByPhotoId(Long id, SessionFactory sessionFactory){
         Session session = sessionFactory.openSession();
         PhotoVO photoVO = null;

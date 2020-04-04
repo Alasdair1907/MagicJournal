@@ -90,6 +90,19 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        // author profile
+
+        if (action.equals("getAuthorVOByGuid")){
+            JsonAdminResponse<AuthorVO> res = JsonApi.getAuthorVOByGuid(guid, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("updateAuthorProfile")){
+            AuthorVO authorVO = objectMapper.readValue(data, AuthorVO.class);
+            JsonAdminResponse<Void> res = JsonApi.updateAuthorProfile(guid, authorVO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         // photos edit
 
         if (action.equals("saveOrUpdatePhoto")){

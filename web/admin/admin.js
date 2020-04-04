@@ -77,6 +77,8 @@ $.widget("admin.editorPanel", {
         let $photosEditButton = self.element.find('[data-role=edit-photos');
         let $galleriesEditButton = self.element.find('[data-role=edit-galleries]');
         let $articlesEditButton = self.element.find('[data-role=edit-articles]');
+
+        let $profileEdit = self.element.find('[data-role="edit-profile"]');
         let $logout = self.element.find('[data-role=logout]');
 
         $authorsEditButton.unbind();
@@ -101,6 +103,12 @@ $.widget("admin.editorPanel", {
         $articlesEditButton.click(function(){
             $board.html("");
             $board.articlesWidget();
+        });
+
+        $profileEdit.unbind();
+        $profileEdit.click(function(){
+            $board.html("");
+            $board.authorProfile();
         });
 
         $logout.unbind();

@@ -9,7 +9,8 @@ import world.thismagical.entity.PostEntity;
 public enum PostAttribution {
     GALLERY(Tools.int2short(0), "Gallery", GalleryEntity.class),
     PHOTO(Tools.int2short(1), "Photo", PhotoEntity.class),
-    ARTICLE(Tools.int2short(2), "Article", ArticleEntity.class);
+    ARTICLE(Tools.int2short(2), "Article", ArticleEntity.class),
+    PROFILE(Tools.int2short(3), "Author Profile", null);
 
     private Short id;
     private String readable;

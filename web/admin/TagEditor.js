@@ -19,7 +19,7 @@ $.widget("admin.TagEditor", {
 <div class="item-container transparent width-100-pc">
 <span class="item-container-heading">Tag Editor</span>
 <span class="text">Tags, comma separated list:</span><br />
-<input type="text" class="input width-100-pc" value="{{tagListStr}}" data-role="tagsinput"/><br />
+<input type="text" class="form-control input width-100-pc" value="{{tagListStr}}" data-role="tagsinput"/><br />
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="save-or-update-tags">Save or Update</button>
 </div>
     `,

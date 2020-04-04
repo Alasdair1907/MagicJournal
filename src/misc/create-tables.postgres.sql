@@ -4,7 +4,9 @@ display_name varchar(128),
 login varchar(128),
 password varchar(128),
 privilege_level smallint,
-bio varchar(5120);
+bio varchar(1024),
+email varchar(256),
+personal_website varchar(256)
 );
 
 CREATE TABLE sessions (

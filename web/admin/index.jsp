@@ -53,6 +53,7 @@
     <script src="admin-photos-widgets.js"></script>
     <script src="admin-gallery-widget.js"></script>
     <script src="admin-articles-widgets.js"></script>
+    <script src="author-profile-editor.js"></script>
 
     <script src="TagEditor.js"></script>
     <script src="ImageManager.js"></script>

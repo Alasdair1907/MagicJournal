@@ -46,7 +46,8 @@ let administrationRoot = `
 </div>
 <div class="admin-panel-right-side">
 <span class="text">You are logged in as: {{login}}</span>
-<button type="button" class="btn btn-dark btn-std" data-role="logout">Log Out</button>
+<button type="button" class="btn btn-dark btn-std" data-role="edit-profile">My Profile</button>
+<button type="button" class="btn btn-primary btn-std" data-role="logout">Log Out</button>
 </div>
 </div>
 
