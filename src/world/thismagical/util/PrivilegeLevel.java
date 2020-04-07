@@ -17,6 +17,11 @@ package world.thismagical.util;
                                                                                                    
 */
 
+import world.thismagical.vo.PrivilegeVO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum PrivilegeLevel {
     PRIVILEGE_TEST(0, "test","Can not modify or create any content or users."),
     PRIVILEGE_USER(1,"user","Can create new content, modify own content and own user."),
@@ -55,4 +60,19 @@ public enum PrivilegeLevel {
 
         throw new IllegalArgumentException("unknown privilege level: "+id);
     }
+
+    public static List<PrivilegeVO> getPrivilegesList(){
+        List<PrivilegeVO> privilegeVOS = new ArrayList<>();
+        for (PrivilegeLevel privilegeLevel : PrivilegeLevel.values()){
+            PrivilegeVO privilegeVO = new PrivilegeVO();
+            privilegeVO.id = privilegeLevel.getId().intValue();
+            privilegeVO.name = privilegeLevel.getName();
+            privilegeVO.description = privilegeLevel.getDescription();
+
+            privilegeVOS.add(privilegeVO);
+        }
+
+        return privilegeVOS;
+    }
+
 }

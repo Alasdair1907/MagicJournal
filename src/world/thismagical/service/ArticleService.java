@@ -14,7 +14,9 @@ package world.thismagical.service;
 
 */
 
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import world.thismagical.dao.FileDao;
 import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.TagDao;
@@ -23,6 +25,7 @@ import world.thismagical.entity.ArticleEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
 import world.thismagical.util.PostAttribution;
+import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.ArticleVO;
@@ -40,6 +43,17 @@ public class ArticleService {
         articleVO.titleImageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
 
         return articleVO;
+    }
+
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsUserFilter(String guid, Session session){
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity authorFilter = null;
+
+        if (authorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
+            authorFilter = authorEntity;
+        }
+
+        return JsonAdminResponse.success(listAllArticleVOs(authorFilter, session));
     }
 
     @SuppressWarnings("unchecked")
@@ -121,7 +135,22 @@ public class ArticleService {
         return JsonAdminResponse.success(articleEntity.getId());
     }
 
+    public static JsonAdminResponse<ImageVO> getArticleTitleImageVO(Long parentObjectId, Session session){
+
+        if (parentObjectId == null){
+            return JsonAdminResponse.fail("getArticleTitleImageVO: no article ID provided");
+        }
+
+        ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(parentObjectId, ArticleEntity.class, session);
+        return JsonAdminResponse.success(FileDao.getImageById(articleEntity.getTitleImageId(), session));
+    }
+
     public static JsonAdminResponse<Void> deleteArticle(Long id, String guid, Session session){
+
+        if (id == null){
+            return JsonAdminResponse.fail("deleteArticle: no id provided");
+        }
+
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(id, ArticleEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 

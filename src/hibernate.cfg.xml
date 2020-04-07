@@ -25,6 +25,7 @@
         <mapping class="world.thismagical.entity.GalleryEntity"/>
         <mapping class="world.thismagical.entity.ArticleEntity"/>
         <mapping class="world.thismagical.entity.RelationEntity"/>
+        <mapping class="world.thismagical.entity.KeyValueEntity"/>
 
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

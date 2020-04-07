@@ -24,6 +24,7 @@ import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.TagTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
+import world.thismagical.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,32 +32,29 @@ import java.util.List;
 public class TagService {
     public static JsonAdminResponse<List<TagEntity>> listTagsForObject(PostAttribution objectAttribution, Long objectId, Session session){
 
-        JsonAdminResponse<List<TagEntity>> jsonAdminResponse = new JsonAdminResponse<>();
-        List<TagEntity> tagEntityList = null;
-
         if (objectAttribution == null || objectId == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "null arguments!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("listTagsForObject: null argument!");
         }
 
         try {
-            tagEntityList = TagDao.listTags(objectAttribution, objectId, session);
+            return JsonAdminResponse.success(TagDao.listTags(objectAttribution, objectId, session));
         } catch (Exception ex){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "unable to load list of tags";
-            return jsonAdminResponse;
+            Tools.handleException(ex);
         }
 
-        jsonAdminResponse.success = true;
-        jsonAdminResponse.data = tagEntityList;
-
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error listing tags for object");
     }
 
-    public static JsonAdminResponse<TagTO> listTagsForObjectStr(PostAttribution objectAttribution, Long objectId, Session session){
+    public static JsonAdminResponse<TagTO> listTagsForObjectStr(TagTO request, Session session){
+
+        if (request == null || request.attribution == null || request.objectId == null){
+            return JsonAdminResponse.fail("listTagsForObjectStr: null argument");
+        }
+
+        PostAttribution objectAttribution = PostAttribution.getPostAttribution(request.attribution);
+        Long objectId = request.objectId;
+
         JsonAdminResponse<List<TagEntity>> tagEntityList = listTagsForObject(objectAttribution, objectId, session);
-        JsonAdminResponse<TagTO> res = new JsonAdminResponse<>();
 
         List<String> tagList = new ArrayList<>();
         if (tagEntityList.success){
@@ -69,60 +67,28 @@ public class TagService {
             tagTO.objectId = objectId;
             tagTO.tagListStr = String.join(", ", tagList);
 
-            res.success = true;
-            res.data = tagTO;
-            return res;
+            return JsonAdminResponse.success(tagTO);
         }
 
-        res.success = false;
-        res.errorDescription = tagEntityList.errorDescription;
-        return res;
+        return JsonAdminResponse.fail(tagEntityList.errorDescription);
     }
 
     public static JsonAdminResponse<Void> saveOrUpdateTags(TagTO tagTO, String guid, Session session){
-        JsonAdminResponse<Void> jsonAdminResponse = null;
+
+        if (tagTO == null || tagTO.attribution == null || tagTO.objectId == null){
+            return JsonAdminResponse.fail("saveOrUpdateTags: null argument");
+        }
 
         AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
         if (authorEntity == null){
-            jsonAdminResponse = new JsonAdminResponse<>();
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "author session not found!";
-            return jsonAdminResponse;
-        }
-
-        if (authorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
-            jsonAdminResponse = new JsonAdminResponse<>();
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "not authorized for that action!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("author session not found!");
         }
 
         PostEntity postEntity = PostDao.getPostEntityById(tagTO.objectId, PostAttribution.getPostAttribution(tagTO.attribution).getAssociatedClass(), session);
         AuthorEntity postAuthor = postEntity.getAuthor();
 
-        /* TODO test & remove kebab
-        if (tagTO.attribution.equals(PostAttribution.PHOTO.getId())){
-            PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(tagTO.objectId, PhotoEntity.class, session);
-            postAuthor = photoEntity.getAuthor();
-        }
-
-        if (tagTO.attribution.equals(PostAttribution.GALLERY.getId())){
-            GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(tagTO.objectId, GalleryEntity.class, session);
-            postAuthor = galleryEntity.getAuthor();
-        }
-
-        if (tagTO.attribution.equals(PostAttribution.ARTICLE.getId())){
-            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(tagTO.objectId, ArticleEntity.class, session);
-            postAuthor = articleEntity.getAuthor();
-        }*/
-
-        if (postAuthor.getAuthorId() != authorEntity.getAuthorId()){
-            if (authorEntity.getPrivilegeLevel() != PrivilegeLevel.PRIVILEGE_SUPER_USER){
-                jsonAdminResponse = new JsonAdminResponse<>();
-                jsonAdminResponse.success = false;
-                jsonAdminResponse.errorDescription = "not authorized for that action!";
-                return jsonAdminResponse;
-            }
+        if (!AuthorizationService.checkPrivileges(postAuthor, authorEntity)){
+            return JsonAdminResponse.fail("not authorized for this action!");
         }
 
         String[] tagsArray = tagTO.tagListStr.split(",");
@@ -142,9 +108,7 @@ public class TagService {
             }
         }
 
-        jsonAdminResponse = new JsonAdminResponse<>();
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.success(null);
     }
 
 }

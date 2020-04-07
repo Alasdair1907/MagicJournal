@@ -37,8 +37,6 @@
     <script src="/external/image-picker.min.js"></script>
     <link rel="stylesheet" href="/external/image-picker.css">
 
-    <script src="/external/tagsinput/bootstrap-tagsinput.js"></script>
-    <link rel="stylesheet" href="/external/tagsinput/bootstrap-tagsinput.css">
 
     <script src="helper.js"></script>
 

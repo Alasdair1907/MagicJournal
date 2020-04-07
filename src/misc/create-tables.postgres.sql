@@ -77,4 +77,10 @@ dst_object_id bigint,
 relation_class smallint
 );
 
+CREATE TABLE keys_values (
+key varchar(128) PRIMARY KEY,
+small_value varchar(256),
+large_value text
+);
+
 INSERT INTO authors (login, password, privilege_level) VALUES ('admin','5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', 2);

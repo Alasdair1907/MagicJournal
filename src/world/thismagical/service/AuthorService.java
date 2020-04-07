@@ -27,6 +27,61 @@ import static world.thismagical.dao.AuthorDao.getAuthorEntityByLogin;
 
 public class AuthorService {
 
+
+
+    public static JsonAdminResponse<Void> changeBasicAuthorParams(String guid, Long targetAuthorId, String newDisplayName, String newPassword, Short newAccessLevelId, Session session){
+
+        if (targetAuthorId == null){
+            return JsonAdminResponse.fail("illegal argument");
+        }
+
+        if (newDisplayName == null && newPassword == null && newAccessLevelId == null){
+            return JsonAdminResponse.fail("nothing to do");
+        }
+
+        if (newDisplayName != null && newDisplayName.isEmpty()){
+            return JsonAdminResponse.fail("display name can not be empty");
+        }
+
+        if (newPassword != null && newPassword.isEmpty()){
+            return JsonAdminResponse.fail("password can not be empty");
+        }
+
+
+        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        if (currentAuthorEntity == null){
+            return JsonAdminResponse.fail("no valid session found");
+        }
+
+        AuthorEntity targetAuthorEntity = AuthorDao.getAuthorEntityById(targetAuthorId, session);
+
+        if (!AuthorizationService.checkPrivileges(targetAuthorEntity, currentAuthorEntity)){
+            return JsonAdminResponse.fail("not enough privileges to perform this action");
+        }
+
+        if (newDisplayName != null) {
+            targetAuthorEntity.setDisplayName(newDisplayName);
+        }
+
+        if (newPassword != null) {
+            targetAuthorEntity.setPasswd(Tools.sha256(newPassword));
+        }
+
+        if (newAccessLevelId != null){
+            PrivilegeLevel privilegeLevel = PrivilegeLevel.getPrivilegeLevel(newAccessLevelId);
+            targetAuthorEntity.setPrivilegeLevel(privilegeLevel);
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.update(targetAuthorEntity);
+        session.flush();
+
+        return JsonAdminResponse.success(null);
+    }
+
     public static void loadProfilePicture(AuthorVO authorVO, Session session){
         List<ImageFileEntity> profilePicture = FileDao.getImageEntities(PostAttribution.PROFILE, Collections.singletonList(authorVO.id), session);
         if (profilePicture != null && !profilePicture.isEmpty()){
@@ -70,53 +125,22 @@ public class AuthorService {
 
     public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, Session session){
 
-        if (!session.getTransaction().isActive()){
-            session.beginTransaction();
+
+        if (!AuthorizationService.isSessionValid(guid, PrivilegeLevel.PRIVILEGE_SUPER_USER, session)){
+            return JsonAdminResponse.fail("only superuser can do that");
         }
 
-        JsonAdminResponse<Void> res = new JsonAdminResponse<>();
-
-        try {
-            if (!AuthorizationService.isSessionValid(guid, PrivilegeLevel.PRIVILEGE_SUPER_USER, session)){
-                throw new IllegalAccessException();
-            }
-        } catch (Exception e) {
-            session.close();
-            res.success = false;
-            res.errorDescription = "Not authorized!";
-            return res;
+        if (newAuthor.getLogin() == null || newAuthor.getPasswd() == null || newAuthor.getDisplayName() == null || newAuthor.getPrivilegeLevel() == null){
+            JsonAdminResponse.fail("createNewAuthor: null argument");
         }
 
-        boolean illegalArgument = false;
-        if (newAuthor.getLogin() == null){
-            illegalArgument = true;
-        }
-
-        if (newAuthor.getPasswd() == null){
-            illegalArgument = true;
-        }
-
-        if (newAuthor.getDisplayName() == null){
-            illegalArgument = true;
-        }
-
-        if (newAuthor.getPrivilegeLevel() == null){
-            illegalArgument = true;
-        }
-
-        if (illegalArgument){
-            session.close();
-            res.success = false;
-            res.errorDescription = "Illegal argument!";
-            return res;
+        if (newAuthor.getLogin().isEmpty() || newAuthor.getPasswd().isEmpty() || newAuthor.getDisplayName().isEmpty()){
+            JsonAdminResponse.fail("Can not create new author: all parameters must be filled");
         }
 
         AuthorEntity existingAuthor = AuthorDao.getAuthorEntityByLogin(newAuthor.getLogin(), session);
         if (existingAuthor != null){
-            session.close();
-            res.success = false;
-            res.errorDescription = "Login already exists!";
-            return res;
+            JsonAdminResponse.fail("user with this login already exists");
         }
 
         String plainTextPassword = newAuthor.getPasswd();
@@ -126,8 +150,7 @@ public class AuthorService {
         session.save(newAuthor);
         session.flush();
 
-        res.success = true;
-        return res;
+        return JsonAdminResponse.success(null);
     }
 
 

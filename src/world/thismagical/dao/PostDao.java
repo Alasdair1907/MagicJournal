@@ -95,7 +95,7 @@ public class PostDao {
             postEntity = session.createQuery(cq).getSingleResult();
         } catch (Exception ex){
             Tools.log("[WARN] Can't get entity with id "+id+" type "+clazz.getName());
-            Tools.log(Tools.getStackTraceStr(ex));
+            Tools.handleException(ex);
         }
 
         return postEntity;

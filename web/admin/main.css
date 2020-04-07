@@ -280,6 +280,7 @@ button.close {
     border-style: dashed;
     border-width: 0.1vw;
     border-color: lightgray;
+    margin-bottom: 0.3vh;
 }
 
 .image-select-preview-img {

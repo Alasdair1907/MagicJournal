@@ -10,243 +10,105 @@ import world.thismagical.entity.SessionEntity;
 import world.thismagical.service.*;
 import world.thismagical.to.*;
 import world.thismagical.vo.*;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class JsonApi {
 
 
     public static JsonAdminResponse<Void> verifySessionGuid(String guid, SessionFactory sessionFactory){
-        Session session = Tools.getNewSession(sessionFactory);
-        session.beginTransaction();
 
-        Boolean verified = false;
-        try {
-            verified = AuthorizationService.isSessionValid(guid, session);
-        } finally {
-            session.close();
+        try (Session session = sessionFactory.openSession()) {
+            if (AuthorizationService.isSessionValid(guid, session)){
+                return JsonAdminResponse.success(null);
+            }
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        JsonAdminResponse<Void> res = new JsonAdminResponse<Void>();
-        res.success = verified;
-        return res;
+        return JsonAdminResponse.fail("can't verify session guid");
     }
 
 
     public static JsonAdminResponse<AuthorizedVO> authorize(String login, String passwordHash, SessionFactory sessionFactory){
 
-        Session session = sessionFactory.openSession();
-        session.getTransaction().begin();
-        SessionEntity authorSession = null;
-
-        try {
-            authorSession = AuthorizationService.authorize(login, passwordHash, session);
-        } finally {
-            session.getTransaction().commit();
-            session.close();
+        try (Session session = sessionFactory.openSession()){
+            return AuthorizationService.authorize(login, passwordHash, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        JsonAdminResponse<AuthorizedVO> res = new JsonAdminResponse<>();
-        if (authorSession == null){
-            res.success = false;
-            res.errorDescription = "Can not authorize user!";
-            return res;
-        }
-
-        AuthorizedVO authorizedVO = new AuthorizedVO();
-        authorizedVO.guid = authorSession.getSessionGuid();
-        authorizedVO.privilegeLevelName = authorSession.getPrivilegeLevel().getName();
-        authorizedVO.displayName = authorSession.getDisplayName();
-        authorizedVO.authorId = authorSession.getAuthorId();
-
-        res.success = true;
-        res.data = authorizedVO;
-
-        return res;
+        return JsonAdminResponse.fail("can not authorize user");
     }
 
 
-    public static JsonAdminResponse<List<AuthorVO>> listAllAuthorsVO(String guid, SessionFactory sessionFactory){
+    public static JsonAdminResponse<List<AuthorVO>> listAllAuthorsVO(SessionFactory sessionFactory){
 
-        Session session = sessionFactory.openSession();
-        List<AuthorVO> authorsVOList = null;
-        JsonAdminResponse<List<AuthorVO>> res = new JsonAdminResponse<>();
+        try (Session session = sessionFactory.openSession()){
+            return JsonAdminResponse.success(AuthorService.getAllAuthorsVOList(session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
 
-         try {
-             if (!AuthorizationService.isSessionValid(guid, session)) {
-                 res.success = false;
-                 res.errorDescription = "Not authorized!";
-                 return res;
-             }
-
-             authorsVOList = AuthorService.getAllAuthorsVOList(session);
-         } finally {
-             session.close();
-         }
-
-         res.success = true;
-         res.data = authorsVOList;
-         return res;
+        return JsonAdminResponse.fail("can not obtain list of authors");
     }
+
 
     public static JsonAdminResponse<List<PrivilegeVO>> listPrivileges(){
-        List<PrivilegeVO> privilegeVOS = new ArrayList<>();
-        for (PrivilegeLevel privilegeLevel : PrivilegeLevel.values()){
-            PrivilegeVO privilegeVO = new PrivilegeVO();
-            privilegeVO.id = privilegeLevel.getId().intValue();
-            privilegeVO.name = privilegeLevel.getName();
-            privilegeVO.description = privilegeLevel.getDescription();
-
-            privilegeVOS.add(privilegeVO);
-        }
-
-        JsonAdminResponse<List<PrivilegeVO>> res = new JsonAdminResponse<>();
-        res.data = privilegeVOS;
-        return res;
+        return JsonAdminResponse.success(PrivilegeLevel.getPrivilegesList());
     }
 
     public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
 
-        JsonAdminResponse<Void> jsonAdminResponse;
-
-        try {
-            jsonAdminResponse = AuthorService.createNewAuthor(guid, newAuthor, session);
+        try (Session session = sessionFactory.openSession()) {
+            return AuthorService.createNewAuthor(guid, newAuthor, session);
         } catch (Exception ex){
-            Tools.log("createNewAuthor: "+ex.getMessage()+"\r\n"+Tools.getStackTraceStr(ex));
-            jsonAdminResponse = JsonAdminResponse.fail("createNewAuthor error");
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error creating new author");
     }
 
     public static JsonAdminResponse<Void> deleteAuthor(String guid, Long targetAuthorId, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
 
-        JsonAdminResponse<Void> jsonAdminResponse = null;
-
-        try {
-            jsonAdminResponse = AuthorService.deleteAuthor(guid, targetAuthorId, session);
+        try (Session session = sessionFactory.openSession()){
+            return AuthorService.deleteAuthor(guid, targetAuthorId, session);
         } catch (Exception ex){
-            Tools.log("deleteAuthor: "+ex.getMessage()+"\r\n"+Tools.getStackTraceStr(ex));
-            return JsonAdminResponse.fail("error deleting author");
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error deleting author");
     }
 
     public static JsonAdminResponse<Void> changeDisplayName(String guid, Long targetAuthorId, String newDisplayName, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
 
-        if (targetAuthorId == null || newDisplayName == null || newDisplayName.isEmpty()){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Illegal argument!";
-            return jsonAdminResponse;
+        try (Session session = sessionFactory.openSession()){
+            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, newDisplayName, null, null, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        try {
-            SessionEntity sessionEntity = SessionDao.getSessionEntityByGuid(guid, session);
-            if (!sessionEntity.getAuthorId().equals(targetAuthorId)){
-                if (!sessionEntity.getPrivilegeLevel().equals(PrivilegeLevel.PRIVILEGE_SUPER_USER)){
-                    throw new IllegalAccessException();
-                }
-            }
-
-            AuthorEntity authorEntity = AuthorDao.getAuthorEntityById(targetAuthorId, session);
-            authorEntity.setDisplayName(newDisplayName);
-            session.update(authorEntity);
-            session.flush();
-        } catch (Exception e){
-            jsonAdminResponse.success = false;
-        } finally {
-            session.close();
-        }
-
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error changing display name");
     }
 
     public static JsonAdminResponse<Void> changePassword(String guid, Long targetAuthorId, String newUnhashedPassword, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-        if (targetAuthorId == null || newUnhashedPassword == null || newUnhashedPassword.isEmpty()){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Illegal argument!";
-            return jsonAdminResponse;
+        try (Session session = sessionFactory.openSession()){
+            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, null, newUnhashedPassword, null, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        try {
-            SessionEntity sessionEntity = SessionDao.getSessionEntityByGuid(guid, session);
-            if (!sessionEntity.getAuthorId().equals(targetAuthorId)){
-                if (!sessionEntity.getPrivilegeLevel().equals(PrivilegeLevel.PRIVILEGE_SUPER_USER)){
-                    throw new IllegalAccessException();
-                }
-            }
-
-            AuthorEntity authorEntity = AuthorDao.getAuthorEntityById(targetAuthorId, session);
-
-            String newHashedPassword = Tools.sha256(newUnhashedPassword);
-            authorEntity.setPasswd(newHashedPassword);
-            session.update(authorEntity);
-            session.flush();
-        } catch (Exception e){
-            jsonAdminResponse.success = false;
-            return jsonAdminResponse;
-        } finally {
-            session.close();
-        }
-
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error changing password");
     }
 
     public static JsonAdminResponse<Void> changeAccessLevel(String guid, Long targetAuthorId, Short newAccessLevelId, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> jsonAdminResponse = new JsonAdminResponse<>();
-        if (targetAuthorId == null || newAccessLevelId == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "Illegal argument!";
-            return jsonAdminResponse;
+        try (Session session = sessionFactory.openSession()){
+            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, null, null, newAccessLevelId, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        try {
-            SessionEntity sessionEntity = SessionDao.getSessionEntityByGuid(guid, session);
-            if (!sessionEntity.getPrivilegeLevel().equals(PrivilegeLevel.PRIVILEGE_SUPER_USER)){
-                throw new IllegalAccessException();
-            }
-
-            AuthorEntity authorEntity = AuthorDao.getAuthorEntityById(targetAuthorId, session);
-            PrivilegeLevel privilegeLevel = PrivilegeLevel.getPrivilegeLevel(newAccessLevelId);
-
-            if (privilegeLevel == null){
-                throw new IllegalAccessException();
-            }
-
-            authorEntity.setPrivilegeLevel(privilegeLevel);
-            session.update(authorEntity);
-            session.flush();
-        } catch (Exception e){
-            jsonAdminResponse.success = false;
-            return jsonAdminResponse;
-        } finally {
-            session.close();
-        }
-
-        jsonAdminResponse.success = true;
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error changing access level");
     }
 
     public static JsonAdminResponse<AuthorVO> getAuthorVOByGuid(String guid, SessionFactory sessionFactory){
@@ -254,9 +116,10 @@ public class JsonApi {
         try (Session session = sessionFactory.openSession()) {
             return AuthorService.getAuthorVOByGuid(guid, session);
         } catch (Exception ex) {
-            Tools.log("[ERROR] " + ex.getMessage() + Tools.getStackTraceStr(ex));
-            return JsonAdminResponse.fail("unable to load author data");
+            Tools.handleException(ex);
         }
+
+        return JsonAdminResponse.fail("unable to load author data");
 
     }
 
@@ -264,330 +127,349 @@ public class JsonApi {
         try (Session session = sessionFactory.openSession()) {
             return AuthorService.updateAuthorProfile(guid, authorVO, session);
         } catch (Exception ex) {
-            Tools.log("[ERROR] " + ex.getMessage() + Tools.getStackTraceStr(ex));
-            return JsonAdminResponse.fail("unable to update author profile");
+            Tools.handleException(ex);
         }
+
+        return JsonAdminResponse.fail("unable to update author profile");
     }
 
 
     public static JsonAdminResponse<PhotoVO> getPhotoVOByPhotoId(Long id, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        PhotoVO photoVO = null;
-        JsonAdminResponse<PhotoVO> res = new JsonAdminResponse<>();
 
-        try {
-            photoVO = PhotoService.getPhotoVObyPhotoId(id, session);
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(PhotoService.getPhotoVObyPhotoId(id, session));
         } catch (Exception ex){
-            Tools.log("[ERROR] getPhotoVOByPhotoId: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error loading photo object";
-
-            return res;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        res.success = true;
-        res.data = photoVO;
-
-        return res;
+        return JsonAdminResponse.fail("error getting photo by id");
     }
 
     public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOsNoFilter(SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
 
-        List<PhotoVO> photoVOList = null;
-        JsonAdminResponse<List<PhotoVO>> res = new JsonAdminResponse<>();
-
-        try {
-            photoVOList = PhotoService.listAllPhotoVOs(null, session);
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(PhotoService.listAllPhotoVOs(null, session));
         } catch (Exception ex){
-            Tools.log("[ERROR] listAllPhotoVOs: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of photos";
-
-            return res;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        res.success = true;
-        res.data = photoVOList;
-
-        return res;
+        return JsonAdminResponse.fail("error listing photos (no filter)");
     }
 
     public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOs(String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
-        AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (currentAuthor.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
-            authorFilter = currentAuthor;
-        }
-
-        List<PhotoVO> photoVOList = null;
-        JsonAdminResponse<List<PhotoVO>> res = new JsonAdminResponse<>();
-
-        try {
-            photoVOList = PhotoService.listAllPhotoVOs(authorFilter, session);
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(PhotoService.listAllPhotoVOsUserFilter(guid, session));
         } catch (Exception ex){
-            Tools.log("[ERROR] listAllPhotoVOs: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of photos";
-
-            return res;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        res.success = true;
-        res.data = photoVOList;
-
-        return res;
+        return JsonAdminResponse.fail("error listing photos");
     }
 
     public static JsonAdminResponse<ImageVO> getPhotoImageVO(Long parentObjectId, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
         ImageVO imageVO = null;
 
-        try {
+        try (Session session = sessionFactory.openSession()) {
             List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(parentObjectId), session);
             if (imageVOList != null){
                 imageVO = imageVOList.get(0);
             }
-        } finally {
-            session.close();
+            return JsonAdminResponse.success(imageVO);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        JsonAdminResponse<ImageVO> jsonAdminResponse = new JsonAdminResponse<>();
-        jsonAdminResponse.success = true;
-        jsonAdminResponse.data = imageVO;
-
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error getting image for photo");
     }
 
     public static JsonAdminResponse<Long> saveOrUpdatePhoto(PhotoTO photoTO, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Long> res = null;
 
-        try {
-            res = PhotoService.createOrUpdatePhoto(photoTO, session);
-        } finally {
-            session.close();
+        try (Session session = sessionFactory.openSession()) {
+            return PhotoService.createOrUpdatePhoto(photoTO, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        return res;
+        return JsonAdminResponse.fail("error saving or updating photo");
     }
 
     public static JsonAdminResponse<Void> togglePhotoPublish(Long id, String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Void> res = null;
 
-        try {
-            res = PhotoService.togglePhotoPublish(id, guid, session);
-        } finally {
-            session.close();
+        try (Session session = sessionFactory.openSession()) {
+            return PhotoService.togglePhotoPublish(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        return res;
+        return JsonAdminResponse.fail("error toggling photo publish status");
     }
 
     public static JsonAdminResponse<Void> deletePhoto(Long id, String guid, SessionFactory sessionFactory){
 
-        JsonAdminResponse<Void> res = null;
-
-        if (id == null){
-            res = new JsonAdminResponse<>();
-            res.success = false;
-            res.errorDescription = "No photo ID provided!";
-            return res;
+        try (Session session = sessionFactory.openSession()) {
+            return PhotoService.deletePhoto(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = PhotoService.deletePhoto(id, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
+        return JsonAdminResponse.fail("error deleting photo");
     }
 
     public static JsonAdminResponse<TagTO> listTagsForObject(TagTO request, SessionFactory sessionFactory){
 
-        JsonAdminResponse<TagTO> res = null;
-
-        if (request == null || request.objectId == null || request.attribution == null){
-            res = new JsonAdminResponse<>();
-            res.success = false;
-            res.errorDescription = "Invalid parameters in TagTO request!";
-            return res;
+        try (Session session = sessionFactory.openSession()) {
+            return TagService.listTagsForObjectStr(request, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = TagService.listTagsForObjectStr(PostAttribution.getPostAttribution(request.attribution), request.objectId, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
+        return JsonAdminResponse.fail("error listing tags for object");
     }
 
     public static JsonAdminResponse<Void> saveOrUpdateTags(TagTO tagTO, String guid, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> jar = null;
-        if (tagTO == null || tagTO.attribution == null || tagTO.objectId == null){
-            jar = new JsonAdminResponse<>();
-            jar.success = false;
-            jar.errorDescription = "saveOrUpdateTags() invalid argument";
-            return jar;
+
+        try (Session session = sessionFactory.openSession()) {
+            return TagService.saveOrUpdateTags(tagTO, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        Session session = sessionFactory.openSession();
-
-        try {
-            jar = TagService.saveOrUpdateTags(tagTO, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return jar;
+        return JsonAdminResponse.fail("error saving or updating tags");
     }
 
     /**
      * Image Manager - list gallery/article images
      */
     public static JsonAdminResponse<List<ImageVO>> listImageVOs(Short postAttribution, Long objId, SessionFactory sessionFactory){
-        JsonAdminResponse<List<ImageVO>> jsonAdminResponse = new JsonAdminResponse<>();
 
-        if (postAttribution == null || objId == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "listImageVOs: null argument";
-            return jsonAdminResponse;
-        }
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.getPostAttribution(postAttribution), Collections.singletonList(objId), session);
-            jsonAdminResponse.success = true;
-            jsonAdminResponse.data = imageVOList;
+        try (Session session = sessionFactory.openSession()) {
+            return FileDao.getImages(postAttribution, objId, session);
         } catch (Exception ex){
-            jsonAdminResponse.errorDescription = "something went wrong (listImageVOs API)";
-            jsonAdminResponse.success = false;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error listing images");
     }
 
     public static  JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsNoFilter(SessionFactory sessionFactory) {
-        Session session = sessionFactory.openSession();
 
-        List<GalleryVO> galleryVOList;
-        JsonAdminResponse<List<GalleryVO>> res = new JsonAdminResponse<>();
-
-        try {
-            galleryVOList = GalleryService.listAllGalleryVOs(null, session);
+        try (Session session = sessionFactory.openSession()) {
+             return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(null, session));
         } catch (Exception ex){
-            Tools.log("[ERROR] listAllGalleryVOsNoFilter: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of photos";
-
-            return res;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        res.success = true;
-        res.data = galleryVOList;
-
-        return res;
+        return JsonAdminResponse.fail("error obtaining list of photos");
     }
 
-    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOs(String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
-        AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (currentAuthor.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
-            authorFilter = currentAuthor;
+    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOs(String guid, SessionFactory sessionFactory) {
+        try (Session session = sessionFactory.openSession()) {
+            return GalleryService.listAllGalleryVOsUserFilter(guid, session);
+        } catch (Exception ex) {
+            Tools.handleException(ex);
         }
 
-        List<GalleryVO> galleryVOList = null;
-        JsonAdminResponse<List<GalleryVO>> res = new JsonAdminResponse<>();
-
-        try {
-            galleryVOList = GalleryService.listAllGalleryVOs(authorFilter, session);
-        } catch (Exception ex){
-            Tools.log("[ERROR] listAllGalleryVOs: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of photos";
-
-            return res;
-        } finally {
-            session.close();
-        }
-
-        res.success = true;
-        res.data = galleryVOList;
-
-        return res;
+        return JsonAdminResponse.fail("error listing galleries");
     }
 
     public static JsonAdminResponse<Long> saveOrUpdateGallery(GalleryTO galleryTO, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Long> res;
 
-        try {
-            res = GalleryService.createOrUpdateGallery(galleryTO, session);
-        } finally {
-            session.close();
+        try (Session session = sessionFactory.openSession()) {
+            return GalleryService.createOrUpdateGallery(galleryTO, session);
+        } catch (Exception ex) {
+            Tools.handleException(ex);
         }
 
-        return res;
+        return JsonAdminResponse.fail("error saving or updating gallery");
     }
 
     public static JsonAdminResponse<GalleryVO> getGalleryVOByGalleryId(Long id, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        GalleryVO galleryVO = null;
-        JsonAdminResponse<GalleryVO> res = new JsonAdminResponse<>();
 
-        try {
-            galleryVO = GalleryService.getGalleryVOByGalleryId(id, session);
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(GalleryService.getGalleryVOByGalleryId(id, session));
         } catch (Exception ex){
-            Tools.log("[ERROR] getGalleryVOByGalleryId: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error loading gallery object";
-
-            return res;
-        } finally {
-            session.close();
+            Tools.handleException(ex);
         }
 
-        res.success = true;
-        res.data = galleryVO;
+        return JsonAdminResponse.fail("error loading gallery object");
+    }
 
-        return res;
+    public static JsonAdminResponse<Void> toggleGalleryPublish(Long id, String guid, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()) {
+            return GalleryService.togglePostPublish(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error toggling gallery publish status");
+    }
+
+    public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return GalleryService.deleteGallery(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error deleting gallery");
+    }
+
+    // articles
+
+    public static JsonAdminResponse<ImageVO> getArticleTitleImageVO(Long parentObjectId, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return ArticleService.getArticleTitleImageVO(parentObjectId, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error loading article title image");
+    }
+
+    public static JsonAdminResponse<ArticleVO> getArticleVOByArticleId(Long id, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error loading article data");
+    }
+
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOs(String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()){
+            return ArticleService.listAllArticleVOsUserFilter(guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing articles");
+    }
+
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(null, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing articles");
+    }
+
+    public static JsonAdminResponse<Long> saveOrUpdateArticle(ArticleTO articleTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return ArticleService.createOrUpdateArticle(articleTO, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error saving or updating article");
+    }
+
+    public static JsonAdminResponse<Void> toggleArticlePublish(Long id, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return ArticleService.toggleArticlePublish(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error toggling article publish status");
+    }
+
+    public static JsonAdminResponse<Void> deleteArticle(Long id, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return ArticleService.deleteArticle(id, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error deleting article");
+    }
+
+    public static JsonAdminResponse<Void> setArticleTitleImageId(ArticleTO articleTO, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return ArticleService.setArticleTitleImageId(articleTO, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error setting article title image id");
+    }
+
+
+    public static JsonAdminResponse<RelationTO> listRelationsForPost(PostTO postTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return RelationService.getRelationTO(postTO, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing relations for post");
+    }
+
+    public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVOPartial, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return RelationService.createNewRelation(guid, relationVOPartial, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error creating new relation");
+    }
+
+    public static JsonAdminResponse<Void> deleteRelation(String guid, Long relationId, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return RelationService.deleteRelation(guid, relationId, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error deleting relation");
+    }
+    
+    public static JsonAdminResponse<List<ArticleVO>> listConcernedArticlesVOs(PostTO postTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing concerned articles for relation");
+    }
+
+    public static JsonAdminResponse<List<PhotoVO>> listConcernedPhotosVOs(PostTO postTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing concerned articles for photo");
+    }
+
+    public static JsonAdminResponse<List<GalleryVO>> listConcernedGalleryVOs(PostTO postTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error listing concerned galleries for relation");
     }
 
     public static String toString(Object object, ObjectMapper objectMapper){
@@ -601,314 +483,6 @@ public class JsonApi {
             res = objectMapper.writeValueAsString(object);
         } catch (Exception e){
             throw new RuntimeException(e.getMessage());
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> toggleGalleryPublish(Long id, String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Void> res = null;
-
-        try {
-            res = GalleryService.togglePostPublish(id, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, SessionFactory sessionFactory){
-
-        JsonAdminResponse<Void> res = null;
-
-        if (id == null){
-            res = new JsonAdminResponse<>();
-            res.success = false;
-            res.errorDescription = "No gallery ID provided!";
-            return res;
-        }
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = GalleryService.deleteGallery(id, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    // articles
-
-    public static JsonAdminResponse<ImageVO> getArticleTitleImageVO(Long parentObjectId, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
-        ImageVO imageVO = null;
-
-        try {
-            ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(parentObjectId, ArticleEntity.class, session);
-            imageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
-        } finally {
-            session.close();
-        }
-
-        JsonAdminResponse<ImageVO> jsonAdminResponse = new JsonAdminResponse<>();
-        jsonAdminResponse.success = true;
-        jsonAdminResponse.data = imageVO;
-
-        return jsonAdminResponse;
-    }
-
-    public static JsonAdminResponse<ArticleVO> getArticleVOByArticleId(Long id, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        ArticleVO articleVO = null;
-        JsonAdminResponse<ArticleVO> res = new JsonAdminResponse<>();
-
-        try {
-            articleVO = ArticleService.getArticleVObyArticleId(id, session);
-        } catch (Exception ex){
-            Tools.log("[ERROR] getArticleVOByArticleId: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error loading article object";
-
-            return res;
-        } finally {
-            session.close();
-        }
-
-        res.success = true;
-        res.data = articleVO;
-
-        return res;
-    }
-
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOs(String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
-        AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (currentAuthor.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
-            authorFilter = currentAuthor;
-        }
-
-        List<ArticleVO> articleVOList = null;
-        JsonAdminResponse<List<ArticleVO>> res = new JsonAdminResponse<>();
-
-        try {
-            articleVOList = ArticleService.listAllArticleVOs(authorFilter, session);
-        } catch (Exception ex){
-            Tools.log("[ERROR] listAllArticleVOs: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of articles";
-
-            return res;
-        } finally {
-            session.close();
-        }
-
-        res.success = true;
-        res.data = articleVOList;
-
-        return res;
-    }
-
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-
-        List<ArticleVO> articleVOList = null;
-        JsonAdminResponse<List<ArticleVO>> res = new JsonAdminResponse<>();
-
-        try {
-            articleVOList = ArticleService.listAllArticleVOs(null, session);
-        } catch (Exception ex){
-            Tools.log("[ERROR] listAllArticleVOsNoFilter: "+ex.getMessage());
-            ex.printStackTrace();
-
-            res.success = false;
-            res.errorDescription = "error obtaining list of articles";
-
-            return res;
-        } finally {
-            session.close();
-        }
-
-        res.success = true;
-        res.data = articleVOList;
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Long> saveOrUpdateArticle(ArticleTO articleTO, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Long> res = null;
-
-        try {
-            res = ArticleService.createOrUpdateArticle(articleTO, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> toggleArticlePublish(Long id, String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<Void> res = null;
-
-        try {
-            res = ArticleService.toggleArticlePublish(id, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> deleteArticle(Long id, String guid, SessionFactory sessionFactory){
-
-        JsonAdminResponse<Void> res = null;
-
-        if (id == null){
-            res = new JsonAdminResponse<>();
-            res.success = false;
-            res.errorDescription = "No article ID provided!";
-            return res;
-        }
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = ArticleService.deleteArticle(id, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> setArticleTitleImageId(ArticleTO articleTO, String guid, SessionFactory sessionFactory){
-
-        JsonAdminResponse<Void> res = null;
-
-        if (articleTO == null || articleTO.id == null || articleTO.titleImageId == null){
-            res = new JsonAdminResponse<>();
-            res.success = false;
-            res.errorDescription = "No article ID provided!";
-            return res;
-        }
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = ArticleService.setArticleTitleImageId(articleTO, guid, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-
-    public static JsonAdminResponse<RelationTO> listRelationsForPost(PostTO postTO, SessionFactory sessionFactory){
-
-        JsonAdminResponse<RelationTO> res = new JsonAdminResponse<>();
-
-        if (postTO.postAttributionClass == null || postTO.postObjectId == null){
-            res.success = false;
-            res.errorDescription = "listRelationsForPost: null argument";
-            return res;
-        }
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res.data = RelationService.getRelationTO(postTO, session);
-            res.success = true;
-        } /*catch (Exception ex) {
-            res.success = false;
-            res.errorDescription = "can't load relations for post "+postTO.postObjectId+" of class "+postTO.postAttributionClass;
-            Tools.log("listRelationsForPost: " + ex.getMessage());
-        }*/ finally {
-            session.close();
-        }
-
-        return res;
-
-    }
-
-    public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVOPartial, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> res;
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = RelationService.createNewRelation(guid, relationVOPartial, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<Void> deleteRelation(String guid, Long relationId, SessionFactory sessionFactory){
-        JsonAdminResponse<Void> res;
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = RelationService.deleteRelation(guid, relationId, session);
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-    
-    public static JsonAdminResponse<List<ArticleVO>> listConcernedArticlesVOs(PostTO postTO, SessionFactory sessionFactory){
-        JsonAdminResponse<List<ArticleVO>> res;
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, session));
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<List<PhotoVO>> listConcernedPhotosVOs(PostTO postTO, SessionFactory sessionFactory){
-        JsonAdminResponse<List<PhotoVO>> res;
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, session));
-        } finally {
-            session.close();
-        }
-
-        return res;
-    }
-
-    public static JsonAdminResponse<List<GalleryVO>> listConcernedGalleryVOs(PostTO postTO, SessionFactory sessionFactory){
-        JsonAdminResponse<List<GalleryVO>> res;
-
-        Session session = sessionFactory.openSession();
-
-        try {
-            res = JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, session));
-        } finally {
-            session.close();
         }
 
         return res;

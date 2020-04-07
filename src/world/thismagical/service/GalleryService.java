@@ -67,6 +67,17 @@ public class GalleryService {
         return galleryVO;
     }
 
+    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsUserFilter(String guid, Session session){
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity authorFilter = null;
+
+        if (authorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
+            authorFilter = authorEntity;
+        }
+
+        return JsonAdminResponse.success(listAllGalleryVOs(authorFilter, session));
+    }
+
     @SuppressWarnings("unchecked")
     public static List<GalleryVO> listAllGalleryVOs(AuthorEntity authorFilter, Session session){
         List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(authorFilter, GalleryEntity.class, session);
@@ -142,6 +153,11 @@ public class GalleryService {
     }
 
     public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, Session session){
+
+        if (id == null){
+            return JsonAdminResponse.fail("deleteGallery: no gallery id provided");
+        }
+
         GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(id, GalleryEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 

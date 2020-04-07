@@ -24,6 +24,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import world.thismagical.entity.ImageFileEntity;
+import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
@@ -151,6 +152,16 @@ public class FileDao {
 
         ImageVO imageVO = new ImageVO(imageFileEntityList.get(0));
         return imageVO;
+    }
+
+    public static JsonAdminResponse<List<ImageVO>> getImages(Short imageAttributionId, Long parentObjectId, Session session){
+        if (imageAttributionId == null || parentObjectId == null){
+            return JsonAdminResponse.fail("getImages: null argument");
+        }
+
+        PostAttribution postAttribution = PostAttribution.getPostAttribution(imageAttributionId);
+
+        return JsonAdminResponse.success(getImages(postAttribution, Collections.singletonList(parentObjectId), session));
     }
 
     public static List<ImageVO> getImages(PostAttribution imageAttribution, List<Long> parentObjectIdList, Session session){

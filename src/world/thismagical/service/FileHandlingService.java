@@ -277,7 +277,6 @@ public class FileHandlingService {
         JsonAdminResponse<Void> jsonAdminResponse;
 
         try {
-
             jsonAdminResponse = verifyPrivileges(imageFileDescrTO.imageEntityId, guid, session);
             if (Boolean.FALSE.equals(jsonAdminResponse.success)){
                 return jsonAdminResponse;
@@ -304,32 +303,25 @@ public class FileHandlingService {
     }
 
     public static JsonAdminResponse<ImageFileDescrTO> getImageFileDescrTO(Long id, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
-        JsonAdminResponse<ImageFileDescrTO> jsonAdminResponse = new JsonAdminResponse<>();
 
         if (id == null){
-            jsonAdminResponse.success = false;
-            jsonAdminResponse.errorDescription = "getImageFileDescrTO null id!";
-            return jsonAdminResponse;
+            return JsonAdminResponse.fail("getImageFileDescrTO: null argument");
         }
 
-        try {
+        try (Session session = sessionFactory.openSession()) {
             List<ImageFileEntity> imageFileEntityList = FileDao.getImageEntitiesByIds(Collections.singletonList(id), session);
             if (imageFileEntityList == null || imageFileEntityList.isEmpty()){
-                jsonAdminResponse.errorDescription = "ImageFileEntity not found!";
-                jsonAdminResponse.success = false;
-                return jsonAdminResponse;
+                return JsonAdminResponse.fail("ImageFileEntity not found");
             }
 
             ImageFileEntity imageFileEntity = imageFileEntityList.get(0);
-            ImageFileDescrTO imageFileDescrTO = new ImageFileDescrTO(imageFileEntity);
-            jsonAdminResponse.data = imageFileDescrTO;
-            jsonAdminResponse.success = true;
-        } finally {
-            session.close();
+            return JsonAdminResponse.success(new ImageFileDescrTO(imageFileEntity));
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        return jsonAdminResponse;
+        return JsonAdminResponse.fail("error getting image file description");
+
     }
 
 

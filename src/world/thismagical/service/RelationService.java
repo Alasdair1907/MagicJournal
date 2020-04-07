@@ -26,11 +26,16 @@ import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
 
 public class RelationService {
 
-    public static RelationTO getRelationTO(PostTO postTO, Session session){
+    public static JsonAdminResponse<RelationTO> getRelationTO(PostTO postTO, Session session){
+
+        if (postTO == null || postTO.postAttributionClass == null || postTO.postObjectId == null){
+            return JsonAdminResponse.fail("getRelationTO: null argument");
+        }
+
         List<RelationVO> relationVOList = listRelationsForPost(PostAttribution.getPostAttribution(postTO.postAttributionClass), postTO.postObjectId, session);
 
         if (relationVOList == null || relationVOList.isEmpty()){
-            return RelationTO.getEmpty(postTO);
+            return JsonAdminResponse.success(RelationTO.getEmpty(postTO));
         }
 
         List<RelationVO> postsReferToThis = new ArrayList<>();
@@ -48,7 +53,7 @@ public class RelationService {
         relationTO.postsReferToThis = postsReferToThis;
         relationTO.currentPostRelatesTo = currentPostRelatesTo;
 
-        return relationTO;
+        return JsonAdminResponse.success(relationTO);
 
     }
 

@@ -25,6 +25,10 @@ import java.util.regex.Pattern;
 
 public class Tools {
 
+    public static void handleException(Exception ex){
+        log(ex.getMessage() + "\r\n" + getStackTraceStr(ex));
+    }
+
     public static String getStackTraceStr(Exception ex){
         StringWriter sw = new StringWriter();
         ex.printStackTrace(new PrintWriter(sw));

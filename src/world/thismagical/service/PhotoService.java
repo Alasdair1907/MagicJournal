@@ -52,6 +52,17 @@ public class PhotoService {
         return photoVO;
     }
 
+    public static List<PhotoVO> listAllPhotoVOsUserFilter(String guid, Session session){
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity authorFilter = null;
+
+        if (authorEntity.getPrivilegeLevel().equals(PrivilegeLevel.PRIVILEGE_USER)){
+            authorFilter = authorEntity;
+        }
+
+        return listAllPhotoVOs(authorFilter, session);
+    }
+
     @SuppressWarnings("unchecked")
     public static List<PhotoVO> listAllPhotoVOs(AuthorEntity authorFilter, Session session){
         List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(authorFilter, PhotoEntity.class, session);
@@ -131,6 +142,11 @@ public class PhotoService {
     }
 
     public static JsonAdminResponse<Void> deletePhoto(Long id, String guid, Session session){
+
+        if (id == null){
+            return JsonAdminResponse.fail("deletePhoto error: no id provided");
+        }
+
         PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(id, PhotoEntity.class, session);
         AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 

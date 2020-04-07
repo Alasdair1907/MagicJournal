@@ -51,7 +51,7 @@
         // authors edit
 
         if (action.equals("listAllAuthorsVO")){
-            JsonAdminResponse<List<AuthorVO>> res = JsonApi.listAllAuthorsVO(guid, sessionFactory);
+            JsonAdminResponse<List<AuthorVO>> res = JsonApi.listAllAuthorsVO(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

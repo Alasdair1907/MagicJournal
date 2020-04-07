@@ -25,6 +25,7 @@ import world.thismagical.entity.SessionEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
+import world.thismagical.vo.AuthorizedVO;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -33,15 +34,22 @@ import java.util.List;
 
 public class AuthorizationService {
 
-    public static SessionEntity authorize(String login, String password, Session session){
+
+    public static JsonAdminResponse<AuthorizedVO> authorize(String login, String password, Session session){
         AuthorEntity author = checkLoginPassword(login, password, session);
         if (author == null){
-            return null;
+            return JsonAdminResponse.fail("can not authorize user!");
         }
 
         SessionEntity authorSession = SessionDao.createNewSession(author, session);
 
-        return authorSession;
+        AuthorizedVO authorizedVO = new AuthorizedVO();
+        authorizedVO.guid = authorSession.getSessionGuid();
+        authorizedVO.privilegeLevelName = authorSession.getPrivilegeLevel().getName();
+        authorizedVO.displayName = authorSession.getDisplayName();
+        authorizedVO.authorId = authorSession.getAuthorId();
+
+        return JsonAdminResponse.success(authorizedVO);
     }
 
     public static Boolean isSessionValid(String sessionGuid, Session session){
@@ -128,6 +136,10 @@ public class AuthorizationService {
             return null;
         }
 
+        if (!isSessionValid(sessionGuid, session)){
+            return null;
+        }
+
         SessionEntity sessionEntity = SessionDao.getSessionEntityByGuid(sessionGuid, session);
 
         if (sessionEntity == null || sessionEntity.getAuthorId() == null){
@@ -161,7 +173,7 @@ public class AuthorizationService {
             return false;
         }
 
-        // both users and superusers can remove test users' objects
+        // both users and superusers can change test users' objects
 
         if (objectAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
             if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_SUPER_USER || currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
