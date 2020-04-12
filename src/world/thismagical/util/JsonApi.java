@@ -472,6 +472,61 @@ public class JsonApi {
         return JsonAdminResponse.fail("error listing concerned galleries for relation");
     }
 
+    public static JsonAdminResponse<Void> saveKeyValue(KeyValueTO keyValueTO, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()){
+            return KeyValueService.setValue(keyValueTO.key, keyValueTO.value, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error saving key-value");
+    }
+
+    public static JsonAdminResponse<KeyValueTO> getKeyValue(String key, String guid, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()){
+            return KeyValueService.getValue(key, guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error getting key-value");
+    }
+
+    public static JsonAdminResponse<Void> saveSettings(String guid, SettingsTO settingsTO, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()){
+            return SettingsService.saveSettings(guid, settingsTO, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error saving settings");
+    }
+
+    public static JsonAdminResponse<SettingsTO> getSettingsAuthed(String guid, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()) {
+            return SettingsService.getSettingsAuthed(guid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error getting settings");
+    }
+
+    public static JsonAdminResponse<SettingsTO> getSettingsNoAuth(SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()) {
+            return SettingsService.getSettingsNoAuth(session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error getting settings");
+    }
+
+
+
     public static String toString(Object object, ObjectMapper objectMapper){
 
         if (object == null){

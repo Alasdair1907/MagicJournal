@@ -37,33 +37,35 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
     let $imageSelectPreviewImg = $modalJQueryElement.find('[data-role="image-select-preview-img"]');
 
-    $articleSrc.unbind();
-    $articleSrc.click(await async function(){
-        $imageSelectMain.html(modalSpinner);
-        let imageVOList = await getImageVOList(articleId, 2);
-        $imageSelectMain.html("");
+    if (articleId !== undefined) {
+        $articleSrc.unbind();
+        $articleSrc.click(await async function () {
+            $imageSelectMain.html(modalSpinner);
+            let imageVOList = await getImageVOList(articleId, 2);
+            $imageSelectMain.html("");
 
-        let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
-        $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
+            let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
+            $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
 
-        let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
+            let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
 
-        $imageSelectList.unbind();
-        $imageSelectList.click(function(){
-            $imageInsertSubmit.prop("disabled", false);
-            $imageSelectList.removeClass("div-image-selected");
+            $imageSelectList.unbind();
+            $imageSelectList.click(function () {
+                $imageInsertSubmit.prop("disabled", false);
+                $imageSelectList.removeClass("div-image-selected");
 
-            let imageId = $(this).data("id");
-            let previewFile = $(this).data("preview");
-            $(this).addClass("div-image-selected");
+                let imageId = $(this).data("id");
+                let previewFile = $(this).data("preview");
+                $(this).addClass("div-image-selected");
 
-            $selectedImgInfo.data("id", imageId);
+                $selectedImgInfo.data("id", imageId);
 
-            $imageSelectPreviewImg.attr("src", "/getImage.jsp?filename="+previewFile);
-            $imageSelectPreviewImg.show();
+                $imageSelectPreviewImg.attr("src", "/getImage.jsp?filename=" + previewFile);
+                $imageSelectPreviewImg.show();
+            });
+
         });
-
-    });
+    }
 
     $photoSrc.unbind();
     $photoSrc.click(await async function(){

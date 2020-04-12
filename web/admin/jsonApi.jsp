@@ -15,6 +15,7 @@
 <%@ page import="world.thismagical.service.TagService" %>
 <%@ page import="world.thismagical.to.*" %>
 <%@ page import="world.thismagical.service.FileHandlingService" %>
+<%@ page import="org.hibernate.cfg.Settings" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -43,7 +44,7 @@
         }
 
         if (action.equals("authorize")){
-            AuthVO authVO = objectMapper.readValue(data, AuthVO.class); // TODO: make sure that json from the frontend can't be broken
+            AuthVO authVO = objectMapper.readValue(data, AuthVO.class);
             JsonAdminResponse<AuthorizedVO> res = JsonApi.authorize(authVO.login, authVO.passwordHash, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
@@ -160,6 +161,7 @@
         }
 
         // gallery edit
+
         if (action.equals("listAllGalleryVOsNoFilter")){
             JsonAdminResponse<List<GalleryVO>> res = JsonApi.listAllGalleryVOsNoFilter(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
@@ -268,6 +270,8 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        // relations
+
         if (action.equals("listRelationsForPost")){
             PostTO postTO = objectMapper.readValue(data, PostTO.class);
             JsonAdminResponse<RelationTO> res = JsonApi.listRelationsForPost(postTO, sessionFactory);
@@ -301,6 +305,40 @@
         if (action.equals("listConcernedGalleryVOs")){
             PostTO postTO = objectMapper.readValue(data, PostTO.class);
             JsonAdminResponse<List<GalleryVO>> res = JsonApi.listConcernedGalleryVOs(postTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        // key value service - settings etc.
+
+        if (action.equals("saveKeyValue")){
+            KeyValueTO keyValueTO = objectMapper.readValue(data, KeyValueTO.class);
+            JsonAdminResponse<Void> res = JsonApi.saveKeyValue(keyValueTO, guid, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("loadKeyValue")){
+            JsonAdminResponse<KeyValueTO> res = JsonApi.getKeyValue(data, guid, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("saveSettings")){
+            SettingsTO settingsTO = objectMapper.readValue(data, SettingsTO.class);
+            JsonAdminResponse<Void> res = JsonApi.saveSettings(guid, settingsTO, sessionFactory);
+
+            if (res.success){
+                application.setAttribute("settingsTO", settingsTO);
+            }
+
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("getSettingsAuthed")){
+            JsonAdminResponse<SettingsTO> res = JsonApi.getSettingsAuthed(guid, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("getSettingsNoAuth")){
+            JsonAdminResponse<SettingsTO> res = JsonApi.getSettingsNoAuth(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
     }

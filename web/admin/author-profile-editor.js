@@ -21,7 +21,7 @@ $.widget("admin.authorProfile", {
         <span class="item-container-heading">User Profile Editor</span>
     </div>
 
-    <div class="width-100vw">
+    <div class="width-100vw flex-main">
         <div class="item-container transparent width-medium item-left">
             <span class="text">Profile Picture:</span><br />
             <img src="/getImage.jsp?filename=imgAdminPlaceholder.png" alt="Profile Picture" class="photo-edit-image" data-role="profile-picture"><br />

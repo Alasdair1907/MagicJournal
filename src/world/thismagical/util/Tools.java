@@ -141,4 +141,12 @@ public class Tools {
 
         return input;
     }
+
+    public static String getPath(String path){
+            if (!path.endsWith("\\") && !path.endsWith("/")){
+                return path + "/";
+            } else {
+                return path;
+            }
+    }
 }

@@ -23,11 +23,13 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Settings;
 import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.to.ImageFileDescrTO;
 import world.thismagical.to.ImageUploadTO;
 import world.thismagical.to.JsonAdminResponse;
+import world.thismagical.to.SettingsTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
@@ -48,46 +50,40 @@ import java.util.UUID;
 
 public class FileHandlingService {
 
-    // TODO: move this to web.xml !!!!!!
-    public static String storagePath = "C:\\code\\thismagicalworld\\web\\imageStorage\\";
-    public static String tempRepository = "C:\\tmp";
     public static Integer sizeThreshold = 54428800;
     public static Integer sizeMax = 54428800;
 
-    public static Integer maxWidthForHorizontalPreview = 1280;
-    public static Integer maxHeightForVerticalPreview = 1280;
-
-    public static Integer maxWidthForHorizontalThumbnail = 800;
-    public static Integer maxHeightForVerticalThumbnail = 800;
-
     public static void deleteImages(List<ImageVO> imageVOList, Session session){
 
-        if (imageVOList != null && !imageVOList.isEmpty()){
+        if (imageVOList == null || imageVOList.isEmpty()) {
+            return;
+        }
 
-            if (!session.getTransaction().isActive()){
-                session.beginTransaction();
-            }
+        SettingsTO settingsTO = SettingsService.getSettings(session);
 
-            for (ImageVO imageVO : imageVOList){
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
 
-                List<String> fileNames = imageVO.getAllFilesList();
+        for (ImageVO imageVO : imageVOList){
 
-                for (String fileName : fileNames){
-                    Query query = session.createQuery("delete from ImageFileEntity where parentObjectId= :pObjId and fileName= :fName");
-                    query.setParameter("pObjId", imageVO.parentObjId);
-                    query.setParameter("fName", fileName);
+            List<String> fileNames = imageVO.getAllFilesList();
 
-                    query.executeUpdate();
+            for (String fileName : fileNames){
+                Query query = session.createQuery("delete from ImageFileEntity where parentObjectId= :pObjId and fileName= :fName");
+                query.setParameter("pObjId", imageVO.parentObjId);
+                query.setParameter("fName", fileName);
 
-                    File exFile = new File(storagePath + fileName);
+                query.executeUpdate();
 
-                    if (exFile.exists()){
-                        exFile.delete();
-                    }
+                File exFile = new File(Tools.getPath(settingsTO.imageStoragePath) + fileName);
+
+                if (exFile.exists()){
+                    exFile.delete();
                 }
             }
-            session.flush();
         }
+        session.flush();
     }
 
     public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, ImageUploadTO imageUploadTO, SessionFactory sessionFactory){
@@ -103,6 +99,7 @@ public class FileHandlingService {
         }
 
         Session session = sessionFactory.openSession();
+        SettingsTO settingsTO = SettingsService.getSettings(session);
 
         List<PrivilegeLevel> allowedPrivileges = new ArrayList<>();
         allowedPrivileges.add(PrivilegeLevel.PRIVILEGE_SUPER_USER);
@@ -118,7 +115,7 @@ public class FileHandlingService {
         imageFileEntityStub.setImageAttributionClass(imageAttribution);
         imageFileEntityStub.setParentObjectId(imageUploadTO.parentObjectId);
 
-        List<ImageFileEntity> imageFileEntityList = handleUpload(servletContext, request, imageFileEntityStub);
+        List<ImageFileEntity> imageFileEntityList = handleUpload(servletContext, request, imageFileEntityStub, settingsTO);
 
         if (imageFileEntityList.size() == 0){
             session.close();
@@ -126,10 +123,30 @@ public class FileHandlingService {
         }
 
         try {
-            // TODO: verify ownership
             if (imageAttribution.equals(PostAttribution.PHOTO) || imageAttribution.equals(PostAttribution.PROFILE)){
                 List<ImageVO> existingImages = FileDao.getImages(imageAttribution, Collections.singletonList(imageUploadTO.parentObjectId), session);
-                deleteImages(existingImages, session);
+
+                if (existingImages != null && !existingImages.isEmpty()){
+                    // verify ownership
+
+                    if (imageAttribution.equals(PostAttribution.PHOTO)){
+                        if (!verifyPrivileges(existingImages.get(0).thisObjId, imageUploadTO.sessionGuid, session).success){
+                            return Boolean.FALSE;
+                        }
+                    }
+                    if (imageAttribution.equals(PostAttribution.PROFILE)){
+                        AuthorEntity authorEntity = AuthorDao.getAuthorEntityById(existingImages.get(0).parentObjId, session);
+                        if (authorEntity == null){
+                            return Boolean.FALSE;
+                        }
+                        AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(imageUploadTO.sessionGuid, session);
+                        if (!AuthorizationService.checkPrivileges(authorEntity, currentAuthor)){
+                            return Boolean.FALSE;
+                        }
+                    }
+
+                    deleteImages(existingImages, session);
+                }
             }
             FileDao.flushList(imageFileEntityList, session);
         } catch (Exception e){
@@ -144,10 +161,10 @@ public class FileHandlingService {
         return Boolean.TRUE;
     }
 
-    public static List<ImageFileEntity> handleUpload(ServletContext servletContext, HttpServletRequest request, ImageFileEntity imageFileEntityStub){
+    public static List<ImageFileEntity> handleUpload(ServletContext servletContext, HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(sizeThreshold);
-        factory.setRepository(new File(tempRepository));
+        factory.setRepository(new File(settingsTO.temporaryFolderPath));
         ServletFileUpload upload = new ServletFileUpload(factory);
 
         upload.setFileSizeMax(sizeMax);
@@ -177,11 +194,11 @@ public class FileHandlingService {
                     String newFileNamePreview = newFileNameBase + "_preview." + extension;
                     String newFileNameThumbnail = newFileNameBase + "_thumb." + extension;
 
-                    Path path = Paths.get(storagePath, newFileName);
+                    Path path = Paths.get(settingsTO.imageStoragePath, newFileName);
                     if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0){
 
-                        ImageResizingService.resize(storagePath + newFileName, storagePath + newFileNamePreview, maxWidthForHorizontalPreview, maxHeightForVerticalPreview);
-                        ImageResizingService.resize(storagePath + newFileName, storagePath + newFileNameThumbnail, maxWidthForHorizontalThumbnail, maxHeightForVerticalThumbnail);
+                        ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
+                        ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
 
                         ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
                         fileEntity.setFileName(newFileName);
@@ -234,6 +251,7 @@ public class FileHandlingService {
     public static JsonAdminResponse<Void> deleteFile(Long id, String guid, SessionFactory sessionFactory){
 
         Session session = sessionFactory.openSession();
+        SettingsTO settingsTO = SettingsService.getSettings(session);
         JsonAdminResponse<Void> jsonAdminResponse;
 
         try {
@@ -256,7 +274,7 @@ public class FileHandlingService {
             fileNames.add(imageFileEntity.getPreviewFileName());
             fileNames.add(imageFileEntity.getThumbnailFileName());
             for (String fName : fileNames){
-                File file = new File(storagePath + fName);
+                File file = new File(Tools.getPath(settingsTO.imageStoragePath) + fName);
                 if (file.exists()){
                     file.delete();
                 }

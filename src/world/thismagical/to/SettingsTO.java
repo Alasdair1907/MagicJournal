@@ -1,7 +1,7 @@
-package world.thismagical.entity;
+package world.thismagical.to;
 /*
   User: Alasdair
-  Date: 4/7/2020
+  Date: 4/10/2020
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -16,37 +16,26 @@ package world.thismagical.entity;
                                                                                                    
 */
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+public class SettingsTO {
 
-@Entity
-@Table(name="keys_values")
-public class KeyValueEntity implements Serializable {
+    public String about;
+    public String headerInjection;
 
-    @Id
-    @Column(name="key")
-    private String key;
+    public String imageStoragePath;
+    public String temporaryFolderPath;
 
-    @Column(name="value")
-    private String value;
+    public Integer previewX;
+    public Integer previewY;
 
-    public String getKey() {
-        return key;
-    }
+    public Integer thumbX;
+    public Integer thumbY;
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+    public Boolean showCookieWarning;
+    public String cookieWarningMessage;
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
+    public String twitterProfile;
+    public String facebookProfile;
+    public String instagramProfile;
+    public String pinterestProfile;
 
 }

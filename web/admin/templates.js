@@ -15,7 +15,8 @@
 */
 
 let loginForm = `
-<div class="transparent item-container col-lg-4 center-element login-widget">
+<div class="flex-container-perfect-center full-viewport">
+<div class="transparent item-container-flex-ready width-small">
 <span class="item-container-heading">
 Content Management
 </span>
@@ -34,6 +35,7 @@ Content Management
 <button type="button" class="btn btn-dark" data-role="perform_login">Log In</button>
 </span>
 </div>
+</div>
 `;
 
 let administrationRoot = `
@@ -43,6 +45,7 @@ let administrationRoot = `
 <button type="button" class="btn btn-dark btn-std" data-role="edit-photos">Photos</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-galleries">Galleries</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-authors">Authors</button>
+<button type="button" class="btn btn-dark btn-std" data-role="edit-settings">Settings</button>
 </div>
 <div class="admin-panel-right-side">
 <span class="text">You are logged in as: {{login}}</span>

@@ -59,11 +59,11 @@ let photoEditSelect = `
 <button type="button" class="btn btn-light btn-std btn-vertical" data-id="{{this.id}}" data-role="photo-post-new">Create new photo</button>
 </div>
 
-<div data-role="photo-post-new-edit"></div>
+<div data-role="photo-post-new-edit" class="width-100-pc flex-main"></div>
 `;
 
 let photoNewOrEdit = `
-<div class="item-container transparent highres-line-item width-medium item-left float-separator-bottom">
+<div class="item-container transparent highres-line-item width-medium item-left">
 <span class="item-container-heading">Edit</span>
 
 <input type="hidden" data-role="data-id" value="{{photoVO.id}}">
@@ -87,7 +87,7 @@ let photoNewOrEdit = `
 </div>
 
 
-<div class="highres-line-item width-medium item-right float-separator-bottom">
+<div class="highres-line-item width-medium item-right">
     <div data-role="photo-tag-editor"></div>
     <div data-role="photo-relation-manager"></div>
 </div>

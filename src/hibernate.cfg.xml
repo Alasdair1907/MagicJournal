@@ -17,6 +17,8 @@
         <property name="show_sql">false</property>
         <property name="format_sql">true</property>
 
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
         <mapping class="world.thismagical.entity.AuthorEntity"/>
         <mapping class="world.thismagical.entity.SessionEntity"/>
         <mapping class="world.thismagical.entity.ImageFileEntity"/>
@@ -28,6 +30,6 @@
         <mapping class="world.thismagical.entity.KeyValueEntity"/>
 
         <!-- DB schema will be updated if needed -->
-        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+
     </session-factory>
 </hibernate-configuration>

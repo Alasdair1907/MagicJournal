@@ -34,9 +34,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
 
-    <script src="/external/image-picker.min.js"></script>
-    <link rel="stylesheet" href="/external/image-picker.css">
-
 
     <script src="helper.js"></script>
 
@@ -52,11 +49,13 @@
     <script src="admin-gallery-widget.js"></script>
     <script src="admin-articles-widgets.js"></script>
     <script src="author-profile-editor.js"></script>
+    <script src="settings-editor.js"></script>
 
     <script src="TagEditor.js"></script>
     <script src="ImageManager.js"></script>
     <script src="ImageSelectJs.js"></script>
     <script src="RelationManager.js"></script>
+    <script src="NoFuckingBullshitCheckbox.js"></script>
 
     <link rel="stylesheet" href="/admin/main.css">
     <!-- <link rel="stylesheet" media="screen and (min-aspect-ratio: 1000/1000)" href="/admin/main.css"> -->

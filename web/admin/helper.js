@@ -34,3 +34,15 @@ let unSpinButton = function($buttonElem, text){
     $buttonElem.html(text);
     $buttonElem.prop("disabled", false);
 };
+
+function isNumericOrEmpty(value) {
+    if (value === null){
+        return true;
+    }
+
+    if (value === ""){
+        return true;
+    }
+
+    return new RegExp('^[0-9]+$').test(value);
+}
