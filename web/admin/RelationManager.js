@@ -53,7 +53,7 @@ $.widget("admin.RelationManager", {
   
     <!-- Modal Header -->
     <div class="modal-header">
-      <h4 class="modal-title">Select the post to link</h4>
+      <span class="modal-h1">Select the post to link</span>
       <button type="button" class="close" data-dismiss="modal">&times;</button>
     </div>
     
@@ -64,7 +64,7 @@ $.widget("admin.RelationManager", {
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-article" data-id="2">Articles</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-photo" data-id="1">Photos</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-gallery" data-id="0">Galleries</button> <br />
-      
+      <hr class="hr-black">
       <div data-role="modal-relation-select-main"></div>
       
     </div>

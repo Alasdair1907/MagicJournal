@@ -190,6 +190,14 @@ body.admin {
     font-size: 2vh !important;
 }
 
+.modal-h1 {
+    font-size: 3vh !important;
+}
+
+.modal-h2 {
+    font-size: 2.5vh !important;
+}
+
 button.close {
     font-size: 3vh !important;
 }
@@ -329,6 +337,11 @@ button.close {
     border-width: 0.2vh;
 }
 
+.hr-black {
+    border-color: black;
+    border-width: 0.2vh;
+}
+
 .highres-line-item {
     /*display: inline-block;*/
     vertical-align: top;
@@ -362,6 +375,20 @@ button.close {
 
 .width-100vw {
     width: 100%;
+}
+
+.table-lgray {
+    border-color: lightgray;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 1.5vh;
+    padding: 0.3vh;
+}
+
+.table-lgray-heading {
+    background: lightskyblue;
+    font-weight: bold;
+    text-align: center;
 }
 
 @media (max-width: 1200px) {

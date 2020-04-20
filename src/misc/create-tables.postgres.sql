@@ -82,4 +82,13 @@ key varchar(128) PRIMARY KEY,
 value text
 );
 
+CREATE TABLE other_files (
+id bigserial PRIMARY KEY,
+author_id bigint,
+original_file_name varchar(256),
+file_name varchar(256),
+description varchar(256),
+display_name varchar(256)
+);
+
 INSERT INTO authors (login, password, privilege_level) VALUES ('admin','5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', 2);

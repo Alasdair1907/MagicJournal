@@ -154,12 +154,21 @@ $.widget("admin.articlesWidget", {
         // image select
 
         let $imageInsertButton = self.element.find('[data-role="image-insert-button"]');
+        let $fileInsertbutton = self.element.find('[data-role="file-insert-button"]')
 
         $imageInsertButton.unbind();
         $imageInsertButton.click(await async function(){
             let currentText = $textElem.val();
             let selectedImgId = await imageSelect($modalAnchor, articleVO.id);
             currentText = currentText + "\n[img id=" + selectedImgId + "]\n";
+            $textElem.val(currentText);
+        });
+
+        $fileInsertbutton.unbind();
+        $fileInsertbutton.click(await async function(){
+            let currentText = $textElem.val();
+            let selectedFileId = await fileSelect($modalAnchor);
+            currentText = currentText + "\n[file id=" + selectedFileId + "]\n";
             $textElem.val(currentText);
         });
     },

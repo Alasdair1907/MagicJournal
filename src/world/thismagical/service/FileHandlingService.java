@@ -23,21 +23,19 @@ import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Settings;
 import world.thismagical.dao.*;
 import world.thismagical.entity.*;
-import world.thismagical.to.ImageFileDescrTO;
-import world.thismagical.to.ImageUploadTO;
-import world.thismagical.to.JsonAdminResponse;
-import world.thismagical.to.SettingsTO;
+import world.thismagical.to.*;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
+import world.thismagical.vo.OtherFileVO;
 
 import javax.persistence.Query;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.tools.Tool;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,7 +84,49 @@ public class FileHandlingService {
         session.flush();
     }
 
-    public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, ImageUploadTO imageUploadTO, SessionFactory sessionFactory){
+    public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, OtherFileTO otherFileTO, Session session) throws Exception {
+
+        if (otherFileTO == null){
+            return Boolean.FALSE;
+        }
+
+        SettingsTO settingsTO = SettingsService.getSettings(session);
+
+        if (settingsTO.otherFilesStoragePath == null || settingsTO.otherFilesStoragePath.isEmpty()){
+            throw new FileNotFoundException("File storage path is not set!");
+        }
+
+        List<PrivilegeLevel> allowedPrivileges = new ArrayList<>();
+        allowedPrivileges.add(PrivilegeLevel.PRIVILEGE_SUPER_USER);
+        allowedPrivileges.add(PrivilegeLevel.PRIVILEGE_USER);
+
+        if (!AuthorizationService.isSessionValid(otherFileTO.guid, allowedPrivileges, session)){
+            return Boolean.FALSE;
+        }
+
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(otherFileTO.guid, session);
+
+        OtherFileEntity otherFileEntity = handleUploadOtherFile(servletContext, request, authorEntity, settingsTO);
+
+        if (otherFileEntity == null){
+            return Boolean.FALSE;
+        }
+
+        otherFileEntity.setAuthorEntity(authorEntity);
+        otherFileEntity.setDescription(otherFileTO.description);
+        otherFileEntity.setDisplayName(otherFileTO.name);
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.saveOrUpdate(otherFileEntity);
+        session.flush();
+
+        return Boolean.TRUE;
+    }
+
+    public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, ImageUploadTO imageUploadTO, Session session) throws Exception {
 
         if (imageUploadTO == null){
             return Boolean.FALSE;
@@ -98,15 +138,17 @@ public class FileHandlingService {
             return Boolean.FALSE;
         }
 
-        Session session = sessionFactory.openSession();
         SettingsTO settingsTO = SettingsService.getSettings(session);
+
+        if (settingsTO.imageStoragePath == null || settingsTO.imageStoragePath.isEmpty()){
+            throw new FileNotFoundException("Image storage path is not set!");
+        }
 
         List<PrivilegeLevel> allowedPrivileges = new ArrayList<>();
         allowedPrivileges.add(PrivilegeLevel.PRIVILEGE_SUPER_USER);
         allowedPrivileges.add(PrivilegeLevel.PRIVILEGE_USER);
 
         if (!AuthorizationService.isSessionValid(imageUploadTO.sessionGuid, allowedPrivileges, session)){
-            session.close();
             return Boolean.FALSE;
         }
 
@@ -115,10 +157,9 @@ public class FileHandlingService {
         imageFileEntityStub.setImageAttributionClass(imageAttribution);
         imageFileEntityStub.setParentObjectId(imageUploadTO.parentObjectId);
 
-        List<ImageFileEntity> imageFileEntityList = handleUpload(servletContext, request, imageFileEntityStub, settingsTO);
+        List<ImageFileEntity> imageFileEntityList = handleUploadImage(servletContext, request, imageFileEntityStub, settingsTO);
 
         if (imageFileEntityList.size() == 0){
-            session.close();
             return Boolean.FALSE;
         }
 
@@ -152,16 +193,52 @@ public class FileHandlingService {
         } catch (Exception e){
             Tools.log("Error processing file upload:");
             Tools.log(e.getMessage());
-            session.getTransaction().rollback();
             return  Boolean.FALSE;
-        } finally {
-            session.close();
         }
 
         return Boolean.TRUE;
     }
 
-    public static List<ImageFileEntity> handleUpload(ServletContext servletContext, HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
+    // expects only one uploaded file. returns partial OtherFileEntity with original file name and the new file name.
+    public static OtherFileEntity handleUploadOtherFile(ServletContext servletContext, HttpServletRequest request, AuthorEntity uploadAuthor, SettingsTO settingsTO){
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(sizeThreshold);
+        factory.setRepository(new File(settingsTO.otherFilesStoragePath));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+
+        upload.setFileSizeMax(sizeMax);
+
+        OtherFileEntity res = null;
+
+        try {
+            FileItemIterator fileItemIterator = upload.getItemIterator(request);
+            while (fileItemIterator.hasNext()){
+
+                FileItemStream fis = fileItemIterator.next();
+
+                if (!fis.isFormField()){
+
+                    String fName = fis.getName();
+                    InputStream is = fis.openStream();
+                    String newFileName = UUID.randomUUID().toString();
+                    Path path = Paths.get(settingsTO.otherFilesStoragePath, newFileName);
+
+                    if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0){
+                        res = new OtherFileEntity();
+                        res.setFileName(newFileName);
+                        res.setOriginalFileName(fName);
+                    }
+                    is.close();
+                }
+            }
+        } catch (Exception ex){
+            Tools.log(ex.getMessage());
+        }
+
+        return res;
+    }
+
+    public static List<ImageFileEntity> handleUploadImage(ServletContext servletContext, HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(sizeThreshold);
         factory.setRepository(new File(settingsTO.temporaryFolderPath));
@@ -341,6 +418,70 @@ public class FileHandlingService {
         return JsonAdminResponse.fail("error getting image file description");
 
     }
+
+    public static JsonAdminResponse<List<OtherFileVO>> listOtherFiles(SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            List<OtherFileEntity> otherFileEntityList = session.createQuery("from OtherFileEntity order by id desc", OtherFileEntity.class).list();
+            if (otherFileEntityList == null){
+                return JsonAdminResponse.success(new ArrayList<>());
+            }
+
+            List<OtherFileVO> otherFileVOList = new ArrayList<>();
+
+            for (OtherFileEntity otherFileEntity : otherFileEntityList){
+                otherFileVOList.add(new OtherFileVO(otherFileEntity));
+            }
+
+            return JsonAdminResponse.success(otherFileVOList);
+
+
+        } catch (Exception ex){
+            Tools.handleException(ex);
+            return JsonAdminResponse.fail("error obtaining list of files");
+        }
+    }
+
+    public static JsonAdminResponse<Void> deleteOtherFile(String guid, Long id, SessionFactory sessionFactory){
+
+        if (id == null){
+            return JsonAdminResponse.fail("null argument");
+        }
+
+        try (Session session = sessionFactory.openSession()){
+            AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+
+            if (authorEntity == null){
+                return JsonAdminResponse.fail("not authorized for this action!");
+            }
+
+            OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, id);
+
+            if (otherFileEntity == null){
+                return JsonAdminResponse.fail("file with this id not found!");
+            }
+
+            if (!AuthorizationService.checkPrivileges(otherFileEntity.getAuthorEntity(), authorEntity)){
+                return JsonAdminResponse.fail("not authorized for this action!");
+            }
+
+            SettingsTO settingsTO = SettingsService.getSettings(session);
+            Files.delete(Paths.get(settingsTO.otherFilesStoragePath, otherFileEntity.getFileName()));
+
+            if (!session.getTransaction().isActive()){
+                session.beginTransaction();
+            }
+
+            session.delete(otherFileEntity);
+            session.flush();
+
+            return JsonAdminResponse.success(null);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+            return JsonAdminResponse.fail("unknown error");
+        }
+    }
+
+
 
 
 }

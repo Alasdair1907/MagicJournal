@@ -198,42 +198,44 @@ let getImageVOList = async function(objectId, imageAttributionClass){
 let imageSelectionModal = `
 
 <div class="modal" data-role="image-select-modal">
-<div class="modal-dialog modal-window-huge">
-  <div class="modal-content">
-  
-    <!-- Modal Header -->
-    <div class="modal-header">
-      <h4 class="modal-title">Select an image to insert</h4>
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <div class="modal-dialog modal-window-huge">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <span class="modal-h1">Select an image to insert</span>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <span class="modal-title">Select source</span><br />
+
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-article" data-id="2">This article</button>
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-photo" data-id="1">Photos</button>
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button> <br />
+                
+                <hr class="hr-black"><br />
+
+                <input type="hidden" data-role="selected-img-info">
+                <div data-role="modal-imageselect-main"></div>
+
+            </div>
+
+            <!-- Preview -->
+
+            <div class="image-select-preview-div">
+                <img src="" data-role="image-select-preview-img" class="image-select-preview-img" style="display: none">
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-std" data-role="image-insert" disabled="disabled">Insert selected image</button>
+                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
     </div>
-    
-    <!-- Modal body -->
-    <div class="modal-body">
-      <span class="modal-title">Select source</span><br />
-      
-      <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-article" data-id="2">This article</button>
-      <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-photo" data-id="1">Photos</button>
-      <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button> <br />
-      
-      <input type="hidden" data-role="selected-img-info">
-      <div data-role="modal-imageselect-main"></div>
-      
-    </div>
-    
-    <!-- Preview -->
-    
-    <div class="image-select-preview-div">
-       <img src="" data-role="image-select-preview-img" class="image-select-preview-img" style="display: none">
-    </div>
-    
-    <!-- Modal footer -->
-    <div class="modal-footer">
-      <button type="button" class="btn btn-success btn-std" data-role="image-insert" disabled="disabled">Insert selected image</button>
-      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
-    </div>
-    
-  </div>
-</div>
 </div>
 `;
 

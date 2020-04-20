@@ -8,7 +8,8 @@
 <%@ page import="org.hibernate.SessionFactory" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>
 <%@ page import="org.hibernate.Session" %>
-<%@ page import="world.thismagical.service.SettingsService" %><%--
+<%@ page import="world.thismagical.service.SettingsService" %>
+<%@ page import="java.io.FileNotFoundException" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 1/2/2020
@@ -40,6 +41,10 @@
 
 
     String imageStorage = settingsTO.imageStoragePath;
+
+    if (imageStorage == null || imageStorage.isEmpty()){
+        throw new FileNotFoundException("Image storage path is not set!");
+    }
 
     String fileName = request.getParameter("filename");
 

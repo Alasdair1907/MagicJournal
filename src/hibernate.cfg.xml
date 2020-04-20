@@ -28,6 +28,7 @@
         <mapping class="world.thismagical.entity.ArticleEntity"/>
         <mapping class="world.thismagical.entity.RelationEntity"/>
         <mapping class="world.thismagical.entity.KeyValueEntity"/>
+        <mapping class="world.thismagical.entity.OtherFileEntity"/>
 
         <!-- DB schema will be updated if needed -->
 

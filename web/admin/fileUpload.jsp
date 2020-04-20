@@ -1,21 +1,15 @@
 <%@page trimDirectiveWhitespaces="true"%>
-<%@ page import="java.io.File" %>
-<%@ page import="org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory" %>
-<%@ page import="org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="org.apache.tomcat.util.http.fileupload.FileItem" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.apache.tomcat.util.http.fileupload.FileItemIterator" %>
-<%@ page import="org.apache.tomcat.util.http.fileupload.FileItemStream" %>
-<%@ page import="world.thismagical.service.FileHandlingService" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="world.thismagical.entity.ImageFileEntity" %>
+<%@ page import="org.hibernate.Session" %>
 <%@ page import="org.hibernate.SessionFactory" %>
+<%@ page import="world.thismagical.service.FileHandlingService" %>
+<%@ page import="world.thismagical.to.ImageUploadTO" %>
+<%@ page import="world.thismagical.to.OtherFileTO" %>
 <%@ page import="world.thismagical.util.Tools" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="world.thismagical.to.ImageUploadTO" %>
-<%@ page import="world.thismagical.util.PostAttribution" %>
-<%@ page import="java.util.Base64" %><%
+<%@ page import="java.util.Base64" %>
+<%@ page import="java.util.List" %>
+<%
 
     SessionFactory sessionFactory = (SessionFactory) application.getAttribute("sessionFactory");
     if (sessionFactory == null){
@@ -33,17 +27,36 @@
     String imageUploadTOJson = null;
     ImageUploadTO imageUploadTO;
 
+    String otherFileTOJson = null;
+    OtherFileTO otherFileTO;
+
     for (Cookie cookie : cookies){
         if (cookie.getName().equals("imageUploadTOJson")){
             imageUploadTOJson = cookie.getValue();
         }
+
+        if (cookie.getName().equals("otherFileTOJson")){
+            otherFileTOJson = cookie.getValue();
+        }
     }
 
     Boolean res = Boolean.FALSE;
-    if (imageUploadTOJson != null){
-        String imageUploadTOJsonDecoded = new String(Base64.getDecoder().decode(imageUploadTOJson));
-        imageUploadTO = objectMapper.readValue(imageUploadTOJsonDecoded, ImageUploadTO.class);
-        res = FileHandlingService.processUpload(context, request, imageUploadTO, sessionFactory);
+
+    try (Session sessionFileUpload = sessionFactory.openSession()) {
+
+        if (imageUploadTOJson != null) {
+            String imageUploadTOJsonDecoded = new String(Base64.getDecoder().decode(imageUploadTOJson));
+            imageUploadTO = objectMapper.readValue(imageUploadTOJsonDecoded, ImageUploadTO.class);
+            res = FileHandlingService.processUpload(context, request, imageUploadTO, sessionFileUpload);
+        }
+
+        if (otherFileTOJson != null) {
+            String otherFileTOJsonDecoded = new String(Base64.getDecoder().decode(otherFileTOJson));
+            otherFileTO = objectMapper.readValue(otherFileTOJsonDecoded, OtherFileTO.class);
+            res = FileHandlingService.processUpload(context, request, otherFileTO, sessionFileUpload);
+        }
+    } catch (Exception ex){
+        Tools.handleException(ex);
     }
 
     if (res){

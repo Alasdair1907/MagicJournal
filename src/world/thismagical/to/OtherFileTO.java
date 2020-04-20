@@ -1,7 +1,8 @@
 package world.thismagical.to;
 /*
   User: Alasdair
-  Date: 4/10/2020
+  Date: 4/13/2020
+
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -16,27 +17,12 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class SettingsTO {
+/**
+ * Data for uploading new non-image file
+ */
 
-    public String about;
-    public String headerInjection;
-
-    public String imageStoragePath;
-    public String temporaryFolderPath;
-    public String otherFilesStoragePath;
-
-    public Integer previewX;
-    public Integer previewY;
-
-    public Integer thumbX;
-    public Integer thumbY;
-
-    public Boolean showCookieWarning;
-    public String cookieWarningMessage;
-
-    public String twitterProfile;
-    public String facebookProfile;
-    public String instagramProfile;
-    public String pinterestProfile;
-
+public class OtherFileTO {
+    public String guid;
+    public String name;
+    public String description;
 }

@@ -341,5 +341,18 @@
             JsonAdminResponse<SettingsTO> res = JsonApi.getSettingsNoAuth(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
+
+        // non-image files
+
+        if (action.equals("listOtherFiles")){
+            JsonAdminResponse<List<OtherFileVO>> res = FileHandlingService.listOtherFiles(sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("deleteOtherFile")){
+            Long id = Long.parseLong(data);
+            JsonAdminResponse<Void> res = FileHandlingService.deleteOtherFile(guid, id, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
     }
 %>

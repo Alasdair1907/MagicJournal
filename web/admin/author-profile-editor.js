@@ -109,6 +109,7 @@ $.widget("admin.authorProfile", {
                 processData: false
             });
 
+            Cookies.remove("imageUploadTOJson");
             // refresh the picture
 
             let authorVOUpdate = await ajax({guid: guid, action: "getAuthorVOByGuid"}, "error loading author info");

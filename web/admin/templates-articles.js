@@ -77,7 +77,8 @@ let articleNewOrEdit = `
 
 <span class="text">Article Text:</span><br />
 
-<i class="fas fa-image button-fa-white-large" data-role="image-insert-button"></i><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="image-insert-button"><i class="fa fa-image"></i> Insert image</button>
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="file-insert-button"><i class="fa fa-file"></i> Insert file</button>
 
 <textarea class="input-textarea-text width-100-pc" data-role="data-article-text">{{articleVO.articleText}}</textarea>
 

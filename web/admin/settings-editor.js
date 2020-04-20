@@ -23,7 +23,7 @@ $.widget('admin.settingsEditor', {
     <div class="item-container transparent width-medium item-left">
         <span class="text">About:</span><br />
         
-        <i class="fas fa-image button-fa-white-large" data-role="image-insert-button"></i><br />
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="image-insert-button"><i class="fa fa-image"></i> Insert image</button>
         <textarea class="width-100-pc input-textarea-text-smaller" data-role="settings-about" disabled="disabled"></textarea><br />
 
         <span class="text">Header injection: (e.g. for google analytics)</span>
@@ -36,7 +36,9 @@ $.widget('admin.settingsEditor', {
         <span class="text">Image Storage Path:</span><br/><span class="smalltext">must point to imageStorage folder in the installation directory</span><br />
         <input type="text" class="form-control input width-100-pc" value="" data-role="settings-image-storage"  disabled="disabled"/><br />
         <span class="text">Temporary folder:</span><br/><span class="smalltext">for processing images</span><br />
-        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-image-tmp"  disabled="disabled"/>
+        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-image-tmp"  disabled="disabled"/><br />
+        <span class="text">Storage Path for Non-Image Files:</span><br/>
+        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-other-storage" disabled="disabled"/>
         <br />
         
         <span class="text">Max. dimensions for preview images:</span><br/>
@@ -107,6 +109,7 @@ $.widget('admin.settingsEditor', {
 
         let $imageStoragePath = self.element.find('[data-role="settings-image-storage"]');
         let $tempPath =  self.element.find('[data-role="settings-image-tmp"]');
+        let $otherStoragePath = self.element.find('[data-role="settings-other-storage"]');
 
         let $previewX = self.element.find('[data-role="setting-image-preview-x"]');
         let $previewY = self.element.find('[data-role="setting-image-preview-y"]');
@@ -129,6 +132,7 @@ $.widget('admin.settingsEditor', {
         $headerInjection.val(settingsTO.headerInjection);
         $imageStoragePath.val(settingsTO.imageStoragePath);
         $tempPath.val(settingsTO.temporaryFolderPath);
+        $otherStoragePath.val(settingsTO.otherFilesStoragePath);
         $previewX.val(settingsTO.previewX);
         $previewY.val(settingsTO.previewY);
         $thumbnailX.val(settingsTO.thumbX);
@@ -153,6 +157,7 @@ $.widget('admin.settingsEditor', {
             $headerInjection.prop("disabled", false);
             $imageStoragePath.prop("disabled", false);
             $tempPath.prop("disabled", false);
+            $otherStoragePath.prop("disabled", false);
             $previewX.prop("disabled", false);
             $previewY.prop("disabled", false);
             $thumbnailX.prop("disabled", false);
@@ -198,6 +203,7 @@ $.widget('admin.settingsEditor', {
                     headerInjection: $headerInjection.val(),
                     imageStoragePath: $imageStoragePath.val(),
                     temporaryFolderPath: $tempPath.val(),
+                    otherFilesStoragePath: $otherStoragePath.val(),
                     previewX: $previewX.val(),
                     previewY: $previewY.val(),
                     thumbX: $thumbnailX.val(),

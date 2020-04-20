@@ -267,6 +267,7 @@ $.widget("admin.ImageManager", {
                 processData: false
             });
 
+            Cookies.remove("imageUploadTOJson");
             await self._refreshImageList(self, ops);
 
             $fileElem.val('');

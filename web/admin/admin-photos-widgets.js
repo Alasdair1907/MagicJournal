@@ -96,6 +96,7 @@ $.widget("admin.photosWidget", {
                 processData: false
             });
 
+            Cookies.remove("imageUploadTOJson");
             unSpinButton($photoImageUploadElem, buttonText);
 
             let imageVO = await self._getPhotoImageVO(photoVO.id);
