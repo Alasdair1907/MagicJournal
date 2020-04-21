@@ -67,7 +67,7 @@ $.widget("admin.authorsEdit", {
             privilegeLevel: newAuthorPrivilegeId
         };
 
-        let res = await ajax({guid: guid, data: JSON.stringify(newAuthor), action: "createNewAuthor"}, "error creating user");
+        let res = await ajax({guid: Cookies.get('guid'), data: JSON.stringify(newAuthor), action: "createNewAuthor"}, "error creating user");
         if (res === undefined){
             unSpinButton($button, buttonText);
             return;
@@ -89,7 +89,7 @@ $.widget("admin.authorsEdit", {
             $.ajax({
                 url: '/admin/jsonApi.jsp',
                 method: 'POST',
-                data: {guid: guid, action: "listAllAuthorsVO"},
+                data: {guid: Cookies.get("guid"), action: "listAllAuthorsVO"},
                 success: function(adminResponseJson){
                     listAllAuthorsVOResponse = JSON.parse(adminResponseJson);
                 }
@@ -179,7 +179,7 @@ $.widget("admin.authorsEdit", {
                         let changePassword = $.ajax({
                             url: '/admin/jsonApi.jsp',
                             method: 'POST',
-                            data: {guid: guid, data: JSON.stringify(changeAuthorDataRequest), action: "changePassword"}
+                            data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changePassword"}
                         });
 
                         changePassword.done(function(adminResponseJson){
@@ -221,7 +221,7 @@ $.widget("admin.authorsEdit", {
                         let changeDisplayName = $.ajax({
                             url: '/admin/jsonApi.jsp',
                             method: 'POST',
-                            data: {guid: guid, data: JSON.stringify(changeAuthorDataRequest), action: "changeDisplayName"}
+                            data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changeDisplayName"}
                         });
 
                         changeDisplayName.done(function(adminResponseJson){
@@ -261,7 +261,7 @@ $.widget("admin.authorsEdit", {
                         let changeAccessLevel = $.ajax({
                             url: '/admin/jsonApi.jsp',
                             method: 'POST',
-                            data: {guid: guid, data: JSON.stringify(changeAuthorDataRequest), action: "changeAccessLevel"}
+                            data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changeAccessLevel"}
                         });
 
                         changeAccessLevel.done(function(adminResponseJson){
@@ -291,7 +291,7 @@ $.widget("admin.authorsEdit", {
                         let deleteUser = $.ajax({
                             url: '/admin/jsonApi.jsp',
                             method: 'POST',
-                            data: {guid: guid, data: targetUserId, action: "deleteUser"}
+                            data: {guid: Cookies.get("guid"), data: targetUserId, action: "deleteUser"}
                         });
 
                         deleteUser.done(function(adminResponseJson){

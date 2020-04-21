@@ -42,7 +42,7 @@ $.widget("admin.ImageManager", {
 </tr>
 
 <tr>
-<td class="td-tall"><span class="text">GPS coordinates:</span></td><td class="td-tall"><input type="text" data-role="selected-img-gps" class="input width-full" disabled="disabled"></td>
+<td class="td-tall"><span class="text">Coordinates: (latitude, longitude)</span></td><td class="td-tall"><input type="text" data-role="selected-img-gps" class="input width-full" disabled="disabled"></td>
 </tr>
 
 <tr>
@@ -195,6 +195,10 @@ $.widget("admin.ImageManager", {
             let title = $selectedImgTitle.val();
             let gps = $selectedImgGps.val();
             let orderNumber = $selectedImgOrder.val();
+
+            if (!checkCoordinates(gps)){
+                return;
+            }
 
             let imageFileDescrTO = {
                 imageEntityId: id,

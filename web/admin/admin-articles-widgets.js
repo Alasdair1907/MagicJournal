@@ -113,6 +113,10 @@ $.widget("admin.articlesWidget", {
         $submitElem.unbind();
         $submitElem.click(await async function(){
 
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
+
             let buttonText = spinButton($submitElem);
 
             let articleTO = {
@@ -132,6 +136,10 @@ $.widget("admin.articlesWidget", {
 
         $submitElemClose.unbind();
         $submitElemClose.click(await async function(){
+
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
 
             let buttonText = spinButton($submitElemClose);
 

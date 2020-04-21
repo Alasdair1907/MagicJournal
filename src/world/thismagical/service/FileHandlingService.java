@@ -480,8 +480,4 @@ public class FileHandlingService {
             return JsonAdminResponse.fail("unknown error");
         }
     }
-
-
-
-
 }

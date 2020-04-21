@@ -202,6 +202,10 @@ $.widget("admin.galleriesWidget", {
         $submitElem.unbind();
         $submitElem.click(await async function(){
 
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
+
             spinButton($submitElem);
 
             let galleryTO = {

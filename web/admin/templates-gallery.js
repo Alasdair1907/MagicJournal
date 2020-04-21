@@ -113,7 +113,7 @@ let galleryNewOrEdit = `
         <span class="text">Description:</span><br />
         <textarea class="input-textarea-description width-100-pc" maxlength="1000" rows="20" data-role="data-description">{{galleryVO.description}}</textarea><br />
 
-        <span class="text">GPS coordinates:</span>
+        <span class="text">Coordinates: (latitude, longitude)</span>
         <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{galleryVO.gpsCoordinates}}"><br />
 
         <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>

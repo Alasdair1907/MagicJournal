@@ -45,7 +45,7 @@
 
         if (fileIdStr != null) {
 
-            Integer fileId = Integer.parseInt(fileIdStr);
+            Long fileId = Long.parseLong(fileIdStr);
             OtherFileEntity otherFileEntity = sessionGetFile.get(OtherFileEntity.class, fileId);
 
             if (otherFileEntity == null){
@@ -59,11 +59,11 @@
             if (!file.exists()) {
                 Tools.log("[WARN] File " + fileName + " doesn't exist!");
             } else {
-                Path path = Paths.get(fileStorage, fileIdStr);
+                Path path = Paths.get(fileStorage, fileName);
                 byte[] fileData = Files.readAllBytes(path);
 
                 response.setContentType("application/octet-stream");
-                response.setHeader("Content-Disposition", "attachment; fileId=\""+otherFileEntity.getDisplayName()+"\"");
+                response.setHeader("Content-Disposition", "attachment; filename=\""+otherFileEntity.getDisplayName()+"\"");
                 response.getOutputStream().write(fileData);
                 response.getOutputStream().flush();
                 response.getOutputStream().close();

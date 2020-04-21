@@ -239,7 +239,7 @@ button.close {
 
 /* elements within td one under another */
 .structure {
-    display: grid;
+    white-space: pre-wrap;
 }
 
 .photo-entry {

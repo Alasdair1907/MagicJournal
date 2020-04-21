@@ -47,20 +47,34 @@ let fileSelect = async function($modalAnchor){
         });
 
         $deleteButton.click(await async function(){
-            let $thisButton = $(this);
-            let buttonText = $thisButton.html();
-            $thisButton.html("Click again to confirm.");
 
-            $thisButton.click(await async function(){
-                spinButton($thisButton);
-                let res = await ajax({guid: Cookies.get("guid"), data: $(this).data("id"), action: "deleteOtherFile"});
-                unSpinButton($thisButton, buttonText);
+            let $confirmDeleteAnchor = $fileManagerMain.find('[data-role="confirm-delete-anchor"]');
+            $confirmDeleteAnchor.html(confirmDeleteFile);
+
+            let $confirmDeleteModal = $confirmDeleteAnchor.find('[data-role="delete-file-confirm"]');
+            $confirmDeleteModal.modal();
+
+            let $deleteConfirmButton = $confirmDeleteAnchor.find('[data-role="file-delete-confirm"]');
+            $deleteConfirmButton.unbind();
+            $deleteConfirmButton.click(await async function(){
+                let txt = spinButton($deleteConfirmButton);
+                let res = await ajax({guid: Cookies.get("guid"), data: $deleteButton.data("id"), action: "deleteOtherFile"});
+                unSpinButton($deleteConfirmButton, txt);
                 if (res !== undefined){
+                    $confirmDeleteModal.modal('hide');
+                    $confirmDeleteAnchor.html('');
                     $selectFileButton.click();
                 }
             });
-        });
 
+            let $noDeleteButton = $confirmDeleteAnchor.find('[data-role="file-delete-no"]');
+            $noDeleteButton.unbind();
+            $noDeleteButton.click(function(){
+                $confirmDeleteModal.modal('hide');
+                $confirmDeleteAnchor.html('');
+                $selectFileButton.click();
+            });
+        });
     });
 
     $uploadNewFile.unbind();
@@ -193,10 +207,40 @@ let fileListingTemplate = `
         <td class="table-lgray">{{this.originalFileName}}</td>
         <td class="table-lgray">{{this.authorVO.displayName}}</td>
         <td class="table-lgray center-text">
+            <button type="button" class="btn btn-primary btn-std btn-vertical" onclick="location.href='/getFile.jsp?id={{this.fileId}}'">Download</button>
             <button type="button" class="btn btn-danger btn-std btn-vertical" data-role="file-delete" data-id="{{this.fileId}}">Delete</button>
             <button type="button" class="btn btn-success btn-std" data-role="image-insert" data-id="{{this.fileId}}">Insert</button>
         </td>
     </tr>
     {{/each}}
 </table>
+
+<div data-role="confirm-delete-anchor"></div>
+`;
+
+let confirmDeleteFile = `
+<div class="modal" data-role="delete-file-confirm">
+<div class="modal-dialog">
+  <div class="modal-content">
+  
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h4 class="modal-title">Confirm Deletion</h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    
+    <!-- Modal body -->
+    <div class="modal-body">
+      <span>This will permanently delete the file. Continue?</span>
+    </div>
+    
+    <!-- Modal footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-std" data-role="file-delete-confirm">Yes, delete!</button>
+      <button type="button" class="btn btn-primary btn-std" data-role="file-delete-no">No</button>
+    </div>
+    
+  </div>
+</div>
+</div>
 `;

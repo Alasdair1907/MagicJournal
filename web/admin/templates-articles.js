@@ -82,7 +82,7 @@ let articleNewOrEdit = `
 
 <textarea class="input-textarea-text width-100-pc" data-role="data-article-text">{{articleVO.articleText}}</textarea>
 
-<span class="text">GPS coordinates:</span>
+<span class="text">Coordinates: (latitude, longitude)</span>
 <input type="text" class="form-control input" data-role="data-gps-coordinates" value="{{articleVO.gpsCoordinates}}"><br />
 
 <div style="display: flex">
