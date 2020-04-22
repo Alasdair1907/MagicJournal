@@ -63,3 +63,11 @@ function checkCoordinates(coordinates){
     return true;
 
 }
+
+function isDemo(){
+    if (Cookies.get("privilegeLevelName") === "demo"){
+        return true;
+    }
+
+    return false;
+}

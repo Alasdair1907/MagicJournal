@@ -36,7 +36,7 @@ let articleEditSelect = `
 <span class="text">Created: {{this.creationDateStr}}</span>
 </td>
 
-<td class="list-entry"><img src="/getImage.jsp?filename={{this.titleImageVO.thumbnail}}" alt="[no image]" class="photo-entry"></td>
+<td class="list-entry"><img src="../getImage.jsp?filename={{this.titleImageVO.thumbnail}}" alt="[no image]" class="photo-entry"></td>
 
 <td class="list-entry center-text">
 {{#if this.published}}
@@ -44,7 +44,7 @@ let articleEditSelect = `
 {{else}}
 <span class="text">NOT published</span>
 {{/if}}
-<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="article-publish-toggle" {{#if testUser}}disabled="disabled"{{/if}}>Toggle</button>
+<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="article-publish-toggle" {{#if demoUser}}disabled="disabled"{{/if}}>Toggle</button>
 </td>
 
 <td class="list-entry center-text">
@@ -86,14 +86,14 @@ let articleNewOrEdit = `
 <input type="text" class="form-control input" data-role="data-gps-coordinates" value="{{articleVO.gpsCoordinates}}"><br />
 
 <div style="display: flex">
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save article</button><br />
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update-close" {{#if testUser}}disabled="disabled"{{/if}}>Save article & Close</button><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save article</button><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update-close" {{#if demoUser}}disabled="disabled"{{/if}}>Save article & Close</button><br />
 </div>
 
 <hr class="hr-white">
 
 <span class="text">Title Image:</span><br />
-<img src="/getImage.jsp?filename={{articleVO.titleImageVO.preview}}" class="photo-edit-image" data-role="article-title-image" alt="Article Title Image"><br />
+<img src="../getImage.jsp?filename={{articleVO.titleImageVO.preview}}" class="photo-edit-image" data-role="article-title-image" alt="Article Title Image"><br />
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-update-image">Change image</button><br />
 
 </div>
@@ -124,8 +124,8 @@ let confirmDeleteArticle = `
     
     <!-- Modal footer -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if testUser}}disabled="disabled"{{/if}}>Yes, delete!</button>
-      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if testUser}}disabled="disabled"{{/if}}>No</button>
+      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if demoUser}}disabled="disabled"{{/if}}>Yes, delete!</button>
+      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if demoUser}}disabled="disabled"{{/if}}>No</button>
     </div>
     
   </div>

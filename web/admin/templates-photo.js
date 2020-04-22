@@ -35,7 +35,7 @@ let photoEditSelect = `
 <span class="text">Created: {{this.creationDateStr}}</span>
 </td>
 
-<td class="list-entry"><img src="/getImage.jsp?filename={{this.imageVO.thumbnail}}" alt="[no image]" class="photo-entry"></td>
+<td class="list-entry"><img src="../getImage.jsp?filename={{this.imageVO.thumbnail}}" alt="[no image]" class="photo-entry"></td>
 
 <td class="list-entry center-text">
 {{#if this.published}}
@@ -43,7 +43,7 @@ let photoEditSelect = `
 {{else}}
 <span class="text">NOT published</span>
 {{/if}}
-<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="photo-publish-toggle" {{#if testUser}}disabled="disabled"{{/if}}>Toggle</button>
+<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="photo-publish-toggle" {{#if demoUser}}disabled="disabled"{{/if}}>Toggle</button>
 </td>
 
 <td class="list-entry center-text">
@@ -78,12 +78,12 @@ let photoNewOrEdit = `
 <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{photoVO.gpsCoordinates}}"><br />
 
 <span class="text">Image:</span><br />
-<img src="/getImage.jsp?filename={{photoVO.imageVO.preview}}" class="photo-edit-image" data-role="photo-image"><br />
+<img src="../getImage.jsp?filename={{photoVO.imageVO.preview}}" class="photo-edit-image" data-role="photo-image"><br />
 
 <span class="text">Upload image:</span><br />
 <input type="file" class="text" data-role="data-file"/><br />
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-upload-image" {{#if testUser}}disabled="disabled"{{/if}}>Upload</button>
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-upload-image" {{#if demoUser}}disabled="disabled"{{/if}}>Upload</button>
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save</button>
 </div>
 
 
@@ -113,8 +113,8 @@ let confirmDelete = `
     
     <!-- Modal footer -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if testUser}}disabled="disabled"{{/if}}>Yes, delete!</button>
-      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if testUser}}disabled="disabled"{{/if}}>No</button>
+      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if demoUser}}disabled="disabled"{{/if}}>Yes, delete!</button>
+      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if demoUser}}disabled="disabled"{{/if}}>No</button>
     </div>
     
   </div>

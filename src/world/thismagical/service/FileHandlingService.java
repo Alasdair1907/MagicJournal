@@ -223,12 +223,18 @@ public class FileHandlingService {
                     String newFileName = UUID.randomUUID().toString();
                     Path path = Paths.get(settingsTO.otherFilesStoragePath, newFileName);
 
-                    if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0){
-                        res = new OtherFileEntity();
-                        res.setFileName(newFileName);
-                        res.setOriginalFileName(fName);
+                    try {
+                        if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
+                            res = new OtherFileEntity();
+                            res.setFileName(newFileName);
+                            res.setOriginalFileName(fName);
+                        }
+                        is.close();
+                    } catch (Exception ex){
+                        is.close();
+                        Files.deleteIfExists(path);
+                        throw ex;
                     }
-                    is.close();
                 }
             }
         } catch (Exception ex){
@@ -272,20 +278,27 @@ public class FileHandlingService {
                     String newFileNameThumbnail = newFileNameBase + "_thumb." + extension;
 
                     Path path = Paths.get(settingsTO.imageStoragePath, newFileName);
-                    if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0){
 
-                        ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
-                        ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
+                    try {
+                        if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
 
-                        ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
-                        fileEntity.setFileName(newFileName);
-                        fileEntity.setPreviewFileName(newFileNamePreview);
-                        fileEntity.setThumbnailFileName(newFileNameThumbnail);
-                        fileEntity.setOriginalFileName(fName);
+                            ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
+                            ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
 
-                        fileEntities.add(fileEntity);
+                            ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
+                            fileEntity.setFileName(newFileName);
+                            fileEntity.setPreviewFileName(newFileNamePreview);
+                            fileEntity.setThumbnailFileName(newFileNameThumbnail);
+                            fileEntity.setOriginalFileName(fName);
+
+                            fileEntities.add(fileEntity);
+                        }
+                        is.close();
+                    } catch (Exception ex){
+                        is.close();
+                        Files.deleteIfExists(path);
+                        throw ex;
                     }
-                    is.close();
                 }
             }
         } catch (Exception ex){

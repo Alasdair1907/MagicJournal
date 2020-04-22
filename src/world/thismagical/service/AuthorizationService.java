@@ -2,7 +2,7 @@ package world.thismagical.service;
 /*
   User: Alasdair
   Date: 12/15/2019
-  Time: 4:30 PM                                                                                                    
+
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -23,6 +23,7 @@ import world.thismagical.dao.SessionDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.SessionEntity;
 import world.thismagical.to.JsonAdminResponse;
+import world.thismagical.to.SettingsTO;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.AuthorizedVO;
@@ -31,8 +32,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AuthorizationService {
+
+    public static final String ANONYMOUS_DEMO_PREFIX = "demo_";
 
 
     public static JsonAdminResponse<AuthorizedVO> authorize(String login, String password, Session session){
@@ -49,7 +53,57 @@ public class AuthorizationService {
         authorizedVO.displayName = authorSession.getDisplayName();
         authorizedVO.authorId = authorSession.getAuthorId();
 
+        truncateOutdatedDemos(session);
+
         return JsonAdminResponse.success(authorizedVO);
+    }
+
+    public static void truncateOutdatedDemos(Session session){
+        List<SessionEntity> outdatedSessions = SessionDao.getSessionOlderThan(4, session);
+
+        if (outdatedSessions == null){
+            return;
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        for (SessionEntity sessionEntity : outdatedSessions){
+            if (sessionEntity.getLogin().startsWith(ANONYMOUS_DEMO_PREFIX)){
+                AuthorEntity demoAuthorEntity = AuthorDao.getAuthorEntityByLogin(sessionEntity.getLogin(), session);
+                session.delete(demoAuthorEntity);
+
+            }
+        }
+
+        session.flush();
+    }
+
+    public static JsonAdminResponse<AuthorizedVO> authorizeDemo(Session session){
+        SettingsTO settingsTO = SettingsService.getSettings(session);
+
+        if (!Boolean.TRUE.equals(settingsTO.allowDemoAnon)){
+            return JsonAdminResponse.fail("Anonymous demo login has been disabled by the admin.");
+        }
+
+        String rand = UUID.randomUUID().toString().substring(0,5);
+        String name = ANONYMOUS_DEMO_PREFIX + rand;
+
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setDisplayName(name);
+        authorEntity.setLogin(name);
+        authorEntity.setPasswd(Tools.sha256(rand));
+        authorEntity.setPrivilegeLevel(PrivilegeLevel.PRIVILEGE_DEMO);
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.save(authorEntity);
+        session.flush();
+
+        return authorize(authorEntity.getLogin(), rand, session);
     }
 
     public static Boolean isSessionValid(String sessionGuid, Session session){
@@ -173,9 +227,9 @@ public class AuthorizationService {
             return false;
         }
 
-        // both users and superusers can change test users' objects
+        // both users and superusers can change demo users' objects
 
-        if (objectAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
+        if (objectAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_DEMO){
             if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_SUPER_USER || currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
                 return true;
             } else {
@@ -192,8 +246,8 @@ public class AuthorizationService {
             }
 
         } else {
-            // test users aren't allowed to make any changes whatsoever
-            if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_TEST){
+            // demo users aren't allowed to make any changes whatsoever
+            if (currentAuthorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_DEMO){
                 return false;
             }
         }

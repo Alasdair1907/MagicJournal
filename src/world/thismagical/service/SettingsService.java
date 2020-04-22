@@ -59,6 +59,7 @@ public class SettingsService {
         SettingsTO settingsTO = getSettings(session);
         settingsTO.imageStoragePath = null;
         settingsTO.temporaryFolderPath = null;
+        settingsTO.otherFilesStoragePath = null;
 
         return JsonAdminResponse.success(settingsTO);
     }

@@ -29,8 +29,11 @@ public class JsonApi {
         return JsonAdminResponse.fail("can't verify session guid");
     }
 
-
     public static JsonAdminResponse<AuthorizedVO> authorize(String login, String passwordHash, SessionFactory sessionFactory){
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ex){
+        }
 
         try (Session session = sessionFactory.openSession()){
             return AuthorizationService.authorize(login, passwordHash, session);
@@ -41,6 +44,21 @@ public class JsonApi {
         return JsonAdminResponse.fail("can not authorize user");
     }
 
+    public static JsonAdminResponse<AuthorizedVO> authorizeDemo(SessionFactory sessionFactory){
+
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ex){
+        }
+
+        try (Session session = sessionFactory.openSession()){
+            return AuthorizationService.authorizeDemo(session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("can not create demo user");
+    }
 
     public static JsonAdminResponse<List<AuthorVO>> listAllAuthorsVO(SessionFactory sessionFactory){
 

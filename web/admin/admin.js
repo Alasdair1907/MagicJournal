@@ -15,14 +15,42 @@
 */
 
 $.widget("admin.loginPanel", {
-    _create: function() {
+    _create: async function() {
         let self = this;
+
+        let settingsTO = await ajax({action: "getSettingsNoAuth"});
+        let demoAllowed = false;
+
+        if (settingsTO !== undefined && settingsTO.allowDemoAnon){
+            demoAllowed = true;
+        }
 
         self.element.html(loginForm);
 
+        if (demoAllowed){
+            let $demoAnonForm = self.element.find('[data-role="demo-log-in"]');
+            $demoAnonForm.removeAttr('hidden');
+            let $demoLogInButton = $demoAnonForm.find('[data-role="demo_perform_login"]');
+
+            $demoLogInButton.click(await async function(){
+                let bt = spinButton($demoLogInButton);
+
+                let authorizedVO = await ajax({action: "authorizeDemo"}, "can not perform authorization");
+                if (authorizedVO){
+                    Cookies.set('guid', authorizedVO.guid);
+                    Cookies.set('privilegeLevelName', authorizedVO.privilegeLevelName);
+                    Cookies.set('displayName', authorizedVO.displayName);
+                    Cookies.set('authorId', authorizedVO.authorId);
+                    self.element.editorPanel();
+                }
+
+                unSpinButton($demoLogInButton, bt);
+            });
+        }
+
         let $userLoginForm = self.element.find('[data-role=author_login]');
-        let $userPasswordForm = self.element.find('[data-role=author_password');
-        let $loginButton = self.element.find('[data-role=perform_login');
+        let $userPasswordForm = self.element.find('[data-role=author_password]');
+        let $loginButton = self.element.find('[data-role=perform_login]');
 
         $userLoginForm.keyup(function(event){
             if (event.key == "Enter"){ $loginButton.click()}
@@ -33,6 +61,9 @@ $.widget("admin.loginPanel", {
         });
 
         $loginButton.click(function () {
+
+            let bt = spinButton($loginButton);
+
             var loginInfo = {
                 login: $userLoginForm.val(),
                 passwordHash: $userPasswordForm.val()
@@ -56,7 +87,11 @@ $.widget("admin.loginPanel", {
                     Cookies.set('authorId', authorizedVO.authorId);
                     self.element.editorPanel();
                 }
+
+                unSpinButton($loginButton, bt);
             });
+
+
         });
 
     }

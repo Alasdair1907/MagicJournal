@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum PrivilegeLevel {
-    PRIVILEGE_TEST(0, "test","Can not modify or create any content or users."),
+    PRIVILEGE_DEMO(0, "demo","Can not modify or create any content or users."),
     PRIVILEGE_USER(1,"user","Can create new content, modify own content and own user."),
     PRIVILEGE_SUPER_USER(2,"superuser", "Can create new content and users, or modify any content and users.");
 

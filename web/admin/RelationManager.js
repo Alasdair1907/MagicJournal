@@ -237,7 +237,9 @@ $.widget("admin.RelationManager", {
             $linkSelection.removeClass("active");
             $(this).addClass("active");
             currentlySelectedLinkId = $(this).data('id');
-            $deleteLinkButton.prop("disabled", false);
+            if (!isDemo()) {
+                $deleteLinkButton.prop("disabled", false);
+            }
         });
 
         $deleteLinkButton.unbind();

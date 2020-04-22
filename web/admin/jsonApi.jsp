@@ -1,21 +1,13 @@
 <%@page trimDirectiveWhitespaces="true"%>
-<%@ page import="java.util.List" %>
-<%@ page import="world.thismagical.entity.ArticleEntity" %>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@ page import="org.hibernate.SessionFactory" %>
 <%@ page import="world.thismagical.entity.AuthorEntity" %>
-<%@ page import="world.thismagical.dao.AuthorDao" %>
+<%@ page import="world.thismagical.service.FileHandlingService" %>
+<%@ page import="world.thismagical.to.*" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="world.thismagical.util.Tools" %>
-<%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="world.thismagical.util.PrivilegeLevel" %>
-<%@ page import="world.thismagical.entity.PhotoEntity" %>
-<%@ page import="world.thismagical.dao.PhotoDao" %>
 <%@ page import="world.thismagical.vo.*" %>
-<%@ page import="world.thismagical.service.PhotoService" %>
-<%@ page import="world.thismagical.service.TagService" %>
-<%@ page import="world.thismagical.to.*" %>
-<%@ page import="world.thismagical.service.FileHandlingService" %>
-<%@ page import="org.hibernate.cfg.Settings" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -46,6 +38,11 @@
         if (action.equals("authorize")){
             AuthVO authVO = objectMapper.readValue(data, AuthVO.class);
             JsonAdminResponse<AuthorizedVO> res = JsonApi.authorize(authVO.login, authVO.passwordHash, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("authorizeDemo")){
+            JsonAdminResponse<AuthorizedVO> res = JsonApi.authorizeDemo(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

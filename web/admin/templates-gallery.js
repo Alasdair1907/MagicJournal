@@ -37,7 +37,7 @@ let galleryEditSelect = `
 
 <td class="list-entry center-text">
 {{#each this.galleryRepresentation}}
-<img src="/getImage.jsp?filename={{this.thumbnail}}" class="gallery-image-list-item" >
+<img src="../getImage.jsp?filename={{this.thumbnail}}" class="gallery-image-list-item" >
 {{/each}}
 </td>
 
@@ -48,7 +48,7 @@ let galleryEditSelect = `
 <span class="text">NOT published</span>
 {{/if}}
 
-<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="gallery-publish-toggle" {{#if testUser}}disabled="disabled"{{/if}}>Toggle</button>
+<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="gallery-publish-toggle" {{#if demoUser}}disabled="disabled"{{/if}}>Toggle</button>
 </td>
 
 <td class="list-entry center-text">
@@ -87,8 +87,8 @@ let confirmDeleteGallery = `
     
     <!-- Modal footer -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if testUser}}disabled="disabled"{{/if}}>Yes, delete it all!</button>
-      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if testUser}}disabled="disabled"{{/if}}>No</button>
+      <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm" {{#if demoUser}}disabled="disabled"{{/if}}>Yes, delete it all!</button>
+      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal" {{#if demoUser}}disabled="disabled"{{/if}}>No</button>
     </div>
     
   </div>
@@ -116,7 +116,7 @@ let galleryNewOrEdit = `
         <span class="text">Coordinates: (latitude, longitude)</span>
         <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{galleryVO.gpsCoordinates}}"><br />
 
-        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if testUser}}disabled="disabled"{{/if}}>Save</button>
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save</button>
     </div>
 
     <div class="highres-line-item width-medium item-right">

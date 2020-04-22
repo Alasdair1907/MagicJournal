@@ -58,7 +58,7 @@
     <script src="NoFuckingBullshitCheckbox.js"></script>
     <script src="FileSelect.js"></script>
 
-    <link rel="stylesheet" href="/admin/main.css">
+    <link rel="stylesheet" href="main.css">
     <!-- <link rel="stylesheet" media="screen and (min-aspect-ratio: 1000/1000)" href="/admin/main.css"> -->
     <!--<link rel="stylesheet" media="screen and (max-aspect-ratio: 999/1000)" href="/main-vertical.css">-->
 

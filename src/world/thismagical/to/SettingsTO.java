@@ -20,6 +20,9 @@ public class SettingsTO {
 
     public String about;
     public String headerInjection;
+    public String bingApiKey;
+    public String mapTypeIdStr;
+    public Boolean allowDemoAnon;
 
     public String imageStoragePath;
     public String temporaryFolderPath;

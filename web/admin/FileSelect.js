@@ -113,13 +113,19 @@ let fileSelect = async function($modalAnchor){
             let otherFileTOJson = btoa(JSON.stringify(otherFileTO));
             Cookies.set("otherFileTOJson", otherFileTOJson);
 
-            let res = await $.ajax({
-                url: '/admin/fileUpload.jsp',
-                type: 'post',
-                data: fileData,
-                contentType: false,
-                processData: false
-            });
+            let res = "";
+
+            try {
+                res = await $.ajax({
+                    url: '/admin/fileUpload.jsp',
+                    type: 'post',
+                    data: fileData,
+                    contentType: false,
+                    processData: false
+                });
+            } catch (err){
+                console.error(err);
+            }
 
             Cookies.remove("imageUploadTOJson");
             unSpinButton($uploadAndSaveButton, buttonText);
@@ -207,7 +213,7 @@ let fileListingTemplate = `
         <td class="table-lgray">{{this.originalFileName}}</td>
         <td class="table-lgray">{{this.authorVO.displayName}}</td>
         <td class="table-lgray center-text">
-            <button type="button" class="btn btn-primary btn-std btn-vertical" onclick="location.href='/getFile.jsp?id={{this.fileId}}'">Download</button>
+            <button type="button" class="btn btn-primary btn-std btn-vertical" onclick="location.href='../getFile.jsp?id={{this.fileId}}'">Download</button>
             <button type="button" class="btn btn-danger btn-std btn-vertical" data-role="file-delete" data-id="{{this.fileId}}">Delete</button>
             <button type="button" class="btn btn-success btn-std" data-role="image-insert" data-id="{{this.fileId}}">Insert</button>
         </td>

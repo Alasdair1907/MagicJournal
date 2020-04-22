@@ -112,7 +112,7 @@ $.widget("admin.authorsEdit", {
                 self.element.html(authorsEditRoot);
 
                 let userIsSuperuser = currentUserPrivilegeLevelName === "superuser";
-                let userIsTest = currentUserPrivilegeLevelName === "test";
+                let userIsDemo = currentUserPrivilegeLevelName === "demo";
 
 
                 let hRegisteredAuthorsPanel = Handlebars.compile(registeredAuthorsPanel);
@@ -138,8 +138,10 @@ $.widget("admin.authorsEdit", {
                 } else {
                     let authorId = Cookies.get('authorId');
 
-                    $('button[data-role=change-display-name][data-id='+authorId+']').prop("disabled", false);
-                    $('button[data-role=change-password][data-id='+authorId+']').prop("disabled", false);
+                    if (!isDemo()) {
+                        $('button[data-role=change-display-name][data-id=' + authorId + ']').prop("disabled", false);
+                        $('button[data-role=change-password][data-id=' + authorId + ']').prop("disabled", false);
+                    }
                 }
 
                 /**
@@ -282,6 +284,11 @@ $.widget("admin.authorsEdit", {
                  */
 
                 let $deleteButton = self.element.find('[data-role=delete-user]');
+
+                if (isDemo()){
+                    $deleteButton.prop("disabled", true);
+                }
+
                 $deleteButton.click(function(){
                     let targetUserId = $(this).data("id");
                     $('[data-role="delete-user-confirm"]').modal();

@@ -24,7 +24,7 @@ $.widget("admin.authorProfile", {
     <div class="width-100vw flex-main">
         <div class="item-container transparent width-medium item-left">
             <span class="text">Profile Picture:</span><br />
-            <img src="/getImage.jsp?filename=imgAdminPlaceholder.png" alt="Profile Picture" class="photo-edit-image" data-role="profile-picture"><br />
+            <img src="../getImage.jsp?filename=imgAdminPlaceholder.png" alt="Profile Picture" class="photo-edit-image" data-role="profile-picture"><br />
     
             <span class="text">Upload image:</span><br />
             <input type="file" class="text" data-role="data-file"/><br />
@@ -76,7 +76,12 @@ $.widget("admin.authorProfile", {
         let $profileSaveButton = self.element.find('[data-role="profile-save"]');
 
         if (authorVO.pictureFileName) {
-            $profilePictureImg.attr("src", "/getImage.jsp?filename=" + authorVO.pictureFileName);
+            $profilePictureImg.attr("src", "../getImage.jsp?filename=" + authorVO.pictureFileName);
+        }
+
+        if (isDemo()){
+            $updateImageButton.prop("disabled", true);
+            $profileSaveButton.prop("disabled", true);
         }
 
         $profileBioTextarea.val(authorVO.bio);
@@ -114,7 +119,7 @@ $.widget("admin.authorProfile", {
 
             let authorVOUpdate = await ajax({guid: guid, action: "getAuthorVOByGuid"}, "error loading author info");
             if (authorVOUpdate.pictureFileName) {
-                $profilePictureImg.attr("src", "/getImage.jsp?filename=" + authorVOUpdate.pictureFileName);
+                $profilePictureImg.attr("src", "../getImage.jsp?filename=" + authorVOUpdate.pictureFileName);
             }
 
             unSpinButton($updateImageButton, buttonText);

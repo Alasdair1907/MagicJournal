@@ -73,5 +73,9 @@ $.widget("admin.TagEditor", {
             await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagTOSave)}, "error saving tags");
             unSpinButton($saveOrUpdateButton, buttonText);
         });
+
+        if (isDemo()){
+            $saveOrUpdateButton.prop("disabled", true);
+        }
     }
 });

@@ -55,8 +55,12 @@ $.widget("admin.articlesWidget", {
 
     _edit: async function(element, articleVO, self){
         let hArticleNewOrEdit = Handlebars.compile(articleNewOrEdit);
-        let testUser = Cookies.get("privilegeLevelName") === "test";
-        element.html(hArticleNewOrEdit({articleVO: articleVO, testUser: testUser}));
+        let demoUser = Cookies.get("privilegeLevelName") === "demo";
+        element.html(hArticleNewOrEdit({articleVO: articleVO, demoUser: demoUser}));
+
+        $('html, body').animate({
+            scrollTop: element.offset().top
+        }, 500);
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
@@ -107,7 +111,7 @@ $.widget("admin.articlesWidget", {
                 alert("can't load image for article!");
             }
 
-            $articleImageElem.attr("src", "/getImage.jsp?filename="+titleImageVO.thumbnail);
+            $articleImageElem.attr("src", "../getImage.jsp?filename="+titleImageVO.thumbnail);
         });
 
         $submitElem.unbind();
@@ -233,8 +237,8 @@ $.widget("admin.articlesWidget", {
             alert("can't list articles: "+adminResponse.errorDescription);
         } else {
             let hArticleEditSelect = Handlebars.compile(articleEditSelect);
-            let testUser = Cookies.get("privilegeLevelName") === "test";
-            self.element.html(hArticleEditSelect({articlePosts: adminResponse.data, testUser: testUser}));
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hArticleEditSelect({articlePosts: adminResponse.data, demoUser: demoUser}));
 
             let $articlePostEditButtons = self.element.find('[data-role="article-post-edit"]');
             let $articleDeleteButtons = self.element.find('[data-role="article-post-delete"]');
@@ -314,6 +318,10 @@ $.widget("admin.articlesWidget", {
                 });
             });
 
+            if (isDemo()){
+                $articlePostPublishToggle.prop("disabled", true);
+                $createNewArticleButton.prop("disabled", true);
+            }
 
         }
     }

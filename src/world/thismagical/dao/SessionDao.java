@@ -18,6 +18,7 @@ package world.thismagical.dao;
 */
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.SessionEntity;
 import world.thismagical.util.PrivilegeLevel;
@@ -27,24 +28,46 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class SessionDao {
-    public static SessionEntity getSessionEntity(String login, Session session){
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<SessionEntity> criteriaQuery = cb.createQuery(SessionEntity.class);
-        Root<SessionEntity> root = criteriaQuery.from(SessionEntity.class);
-        CriteriaBuilder.In<String> inClause = cb.in(root.get("login"));
-        inClause.value(login);
-        CriteriaQuery<SessionEntity> cq = criteriaQuery.select(root).where(inClause);
-        SessionEntity authorSession;
+
+    public static List<SessionEntity> getSessionOlderThan(Integer hours, Session session){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        localDateTime = localDateTime.minusHours(hours);
+
+        Query<SessionEntity> query = session.createQuery("from SessionEntity where sessionStarted <= :localDateTime", SessionEntity.class);
+        query.setParameter("localDateTime", localDateTime);
+
+        List<SessionEntity> sessionEntityList = null;
+
         try {
-            authorSession = session.createQuery(cq).getSingleResult();
-        } catch (Exception e){
-            authorSession = null;
+            sessionEntityList = query.getResultList();
+        } catch (Exception ex){
+            return null;
         }
 
-        return authorSession;
+        return sessionEntityList;
+    }
+
+    public static SessionEntity getSessionEntity(String login, Session session){
+
+        if (login == null){
+            return null;
+        }
+
+        Query<SessionEntity> query = session.createQuery("from SessionEntity where login = :login", SessionEntity.class);
+        query.setParameter("login", login);
+        SessionEntity sessionEntity = null;
+
+        try {
+            sessionEntity = query.getSingleResult();
+        } catch (Exception ex){
+            return null;
+        }
+
+        return sessionEntity;
     }
 
     public static void updateSession(SessionEntity sessionEntity, Session session){
@@ -53,19 +76,20 @@ public class SessionDao {
     }
 
     public static SessionEntity getSessionEntityByGuid(String guid, Session session){
-        CriteriaBuilder cb = session.getCriteriaBuilder();
 
-        CriteriaQuery<SessionEntity> criteriaQuery = cb.createQuery(SessionEntity.class);
-        Root<SessionEntity> root = criteriaQuery.from(SessionEntity.class);
-        CriteriaBuilder.In<String> inClause = cb.in(root.get("sessionGuid"));
-        inClause.value(guid);
-        CriteriaQuery<SessionEntity> cq = criteriaQuery.select(root).where(inClause);
-        SessionEntity authorSession;
+        if (guid == null){
+            return null;
+        }
+
+        Query<SessionEntity> query = session.createQuery("from SessionEntity where sessionGuid = :guid", SessionEntity.class);
+        query.setParameter("guid", guid);
+
+        SessionEntity authorSession = null;
 
         try {
-            authorSession = session.createQuery(cq).getSingleResult();
+            authorSession = query.getSingleResult();
         } catch (Exception e){
-            authorSession = null;
+            return null;
         }
 
         if (authorSession != null) {

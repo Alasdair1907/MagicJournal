@@ -2,6 +2,7 @@ package world.thismagical.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.service.AuthorizationService;
 import world.thismagical.util.PrivilegeLevel;
@@ -14,7 +15,6 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class AuthorDao {
-
 
     public static AuthorEntity getArticleAuthor(Long articleId, Session session){
         CriteriaBuilder cb = session.getCriteriaBuilder();

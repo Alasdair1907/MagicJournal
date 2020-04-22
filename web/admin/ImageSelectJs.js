@@ -51,7 +51,10 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
             $imageSelectList.unbind();
             $imageSelectList.click(function () {
-                $imageInsertSubmit.prop("disabled", false);
+
+                if (!isDemo()){
+                    $imageInsertSubmit.prop("disabled", false);
+                }
                 $imageSelectList.removeClass("div-image-selected");
 
                 let imageId = $(this).data("id");
@@ -60,7 +63,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
                 $selectedImgInfo.data("id", imageId);
 
-                $imageSelectPreviewImg.attr("src", "/getImage.jsp?filename=" + previewFile);
+                $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename=" + previewFile);
                 $imageSelectPreviewImg.show();
             });
 
@@ -100,7 +103,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
             $selectedImgInfo.data("id", imageId);
 
-            $imageSelectPreviewImg.attr("src", "/getImage.jsp?filename="+previewFile);
+            $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
             $imageSelectPreviewImg.show();
         });
     });
@@ -150,7 +153,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
                 $selectedImgInfo.data("id", imageId);
 
-                $imageSelectPreviewImg.attr("src", "/getImage.jsp?filename="+previewFile);
+                $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
                 $imageSelectPreviewImg.show();
             });
         });
@@ -245,13 +248,13 @@ let modalSpinner = `
 
 let imageVOListDisplay = `
 {{#each imageVOList}}
-<div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('/getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 
 let photoVOListDisplay = `
 {{#each photoVOList}}
-<div data-id="{{this.imageVO.thisObjId}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('/getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.imageVO.thisObjId}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 

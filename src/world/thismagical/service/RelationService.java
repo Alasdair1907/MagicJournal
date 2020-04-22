@@ -100,8 +100,6 @@ public class RelationService {
 
             relationVO.isAuto = relationVO.relationClass.getIsAuto();
 
-            // TODO simplify
-
             switch (relationVO.srcAttributionClass){
                 case ARTICLE:
                     relationVO.srcObjectTitle = entities.articleEntities.stream()

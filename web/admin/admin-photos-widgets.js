@@ -52,8 +52,12 @@ $.widget("admin.photosWidget", {
 
     _edit: async function(element, photoVO, self){
         let hPhotoNewOrEdit = Handlebars.compile(photoNewOrEdit);
-        let testUser = Cookies.get("privilegeLevelName") === "test";
-        element.html(hPhotoNewOrEdit({photoVO: photoVO, testUser: testUser}));
+        let demoUser = Cookies.get("privilegeLevelName") === "demo";
+        element.html(hPhotoNewOrEdit({photoVO: photoVO, demoUser: demoUser}));
+
+        $('html, body').animate({
+            scrollTop: element.offset().top
+        }, 500);
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
@@ -104,7 +108,7 @@ $.widget("admin.photosWidget", {
                 alert("can't load image for photo!");
             }
 
-            $photoImageElem.attr("src", "/getImage.jsp?filename="+imageVO.thumbnail);
+            $photoImageElem.attr("src", "../getImage.jsp?filename="+imageVO.thumbnail);
         });
 
         $submitElem.unbind();
@@ -194,8 +198,8 @@ $.widget("admin.photosWidget", {
             alert("can't list photos: "+adminResponse.errorDescription);
         } else {
             let hPhotoEditSelect = Handlebars.compile(photoEditSelect);
-            let testUser = Cookies.get("privilegeLevelName") === "test";
-            self.element.html(hPhotoEditSelect({photoPosts: adminResponse.data, testUser: testUser}));
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hPhotoEditSelect({photoPosts: adminResponse.data, demoUser: demoUser}));
 
             let $photoPostEditButtons = self.element.find('[data-role="photo-post-edit"]');
             let $photoDeleteButtons = self.element.find('[data-role="photo-post-delete"]');
@@ -271,6 +275,11 @@ $.widget("admin.photosWidget", {
                 });
 
             });
+
+            if (isDemo()){
+                $photoPostPublishToggle.prop("disabled", true);
+                $createNewPhotoButton.prop("disabled", true);
+            }
         }
     }
 

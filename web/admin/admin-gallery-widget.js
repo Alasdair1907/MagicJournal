@@ -40,8 +40,8 @@ $.widget("admin.galleriesWidget", {
             alert("can't list galleries: "+adminResponse.errorDescription);
         } else {
             let hGalleryEditSelect = Handlebars.compile(galleryEditSelect);
-            let testUser = Cookies.get("privilegeLevelName") === "test";
-            self.element.html(hGalleryEditSelect({galleryVOs: adminResponse.data, testUser: testUser}));
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hGalleryEditSelect({galleryVOs: adminResponse.data, demoUser: demoUser}));
 
             let $galleryEditButtons = self.element.find('[data-role="gallery-edit"]');
             let $galleryDeleteButtons = self.element.find('[data-role="gallery-delete"]');
@@ -125,6 +125,11 @@ $.widget("admin.galleriesWidget", {
                 });
 
             });
+
+            if (isDemo()){
+                $galleryPublishToggle.prop("disabled", true);
+                $createNewGalleryButton.prop("disabled", true);
+            }
         }
     },
 
@@ -182,8 +187,12 @@ $.widget("admin.galleriesWidget", {
 
     _edit: async function(element, galleryVO, self){
         let hGalleryNewOrEdit = Handlebars.compile(galleryNewOrEdit);
-        let testUser = Cookies.get("privilegeLevelName") === "test";
-        element.html(hGalleryNewOrEdit({galleryVO: galleryVO, testUser: testUser}));
+        let demoUser = Cookies.get("privilegeLevelName") === "demo";
+        element.html(hGalleryNewOrEdit({galleryVO: galleryVO, demoUser: demoUser}));
+
+        $('html, body').animate({
+            scrollTop: element.offset().top
+        }, 500);
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');

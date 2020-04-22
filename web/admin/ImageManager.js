@@ -32,7 +32,7 @@ $.widget("admin.ImageManager", {
 </td>
 
 <td class="td-tall" style="width:67%;">
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-image-upload" {{#if testUser}}disabled="disabled"{{/if}}>Upload</button>
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-image-upload" {{#if demoUser}}disabled="disabled"{{/if}}>Upload</button>
 </td>
 
 </tr>
@@ -56,7 +56,7 @@ $.widget("admin.ImageManager", {
 </td>
 
 <td>
-<img src="/getImage.jsp?filename=imgAdminPlaceholder.png" data-role="selected-img" class="selected-img" alt="Select an image to preview.">
+<img src="../getImage.jsp?filename=imgAdminPlaceholder.png" data-role="selected-img" class="selected-img" alt="Select an image to preview.">
 
 
 </div>
@@ -73,7 +73,7 @@ $.widget("admin.ImageManager", {
     _imageListTemplate: `
     <div></div>
     {{#each imageVOList}}
-    <div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="gallery-images" class="image-manager-tile" style="background-image:url('/getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
+    <div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="gallery-images" class="image-manager-tile" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
     {{/each}}
     </div>
     `,
@@ -147,15 +147,18 @@ $.widget("admin.ImageManager", {
             let previewFile = $(this).data("preview");
             $(this).addClass("div-image-selected");
 
-            $selectedImgElem.attr("src", "/getImage.jsp?filename="+previewFile);
+            $selectedImgElem.attr("src", "../getImage.jsp?filename="+previewFile);
             $selectedImgElem.data("id", imageId);
 
 
             $selectedImgTitle.prop("disabled", false);
             $selectedImgGps.prop("disabled", false);
             $selectedImgOrder.prop("disabled", false);
-            $selectedImgDelete.prop("disabled", false);
-            $selectedImgUpdate.prop("disabled", false);
+
+            if (!isDemo()) {
+                $selectedImgDelete.prop("disabled", false);
+                $selectedImgUpdate.prop("disabled", false);
+            }
 
             let res = await ajax({data: imageId, action: "getImageFileDescrTO"}, "error obtaining file information");
             if (res === undefined){
@@ -232,9 +235,9 @@ $.widget("admin.ImageManager", {
         let hTemplate = Handlebars.compile(this._template);
 
         let currentUserPrivilegeLevelName = Cookies.get("privilegeLevelName");
-        let testUser = currentUserPrivilegeLevelName === "test";
+        let demoUser = currentUserPrivilegeLevelName === "demo";
 
-        self.element.html(hTemplate({testUser: testUser}));
+        self.element.html(hTemplate({demoUser: demoUser}));
         await self._refreshImageList(self, ops);
 
         let $fileElem = self.element.find('[data-role="data-file"]');
