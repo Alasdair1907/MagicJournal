@@ -22,6 +22,7 @@ import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.TagDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ArticleEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
 import world.thismagical.util.PostAttribution;
@@ -45,20 +46,9 @@ public class ArticleService {
         return articleVO;
     }
 
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsUserFilter(String guid, Session session){
-        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (authorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
-            authorFilter = authorEntity;
-        }
-
-        return JsonAdminResponse.success(listAllArticleVOs(authorFilter, session));
-    }
-
     @SuppressWarnings("unchecked")
-    public static List<ArticleVO> listAllArticleVOs(AuthorEntity authorFilter, Session session){
-        List<ArticleEntity> articleEntityList = (List<ArticleEntity>) (List) ArticleDao.listAllPosts(authorFilter, ArticleEntity.class, session);
+    public static List<ArticleVO> listAllArticleVOs(BasicPostFilter basicPostFilter, Session session){
+        List<ArticleEntity> articleEntityList = (List<ArticleEntity>) (List) ArticleDao.listAllPosts(basicPostFilter, ArticleEntity.class, session);
 
         List<ArticleVO> articleVOList = new ArrayList<>();
         List<Long> imageIds = articleEntityList.stream().map(ArticleEntity::getTitleImageId).collect(Collectors.toList());

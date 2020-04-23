@@ -26,6 +26,7 @@ import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.GalleryEntity;
 import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.PhotoEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.GalleryTO;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
@@ -67,20 +68,10 @@ public class GalleryService {
         return galleryVO;
     }
 
-    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsUserFilter(String guid, Session session){
-        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (authorEntity.getPrivilegeLevel() == PrivilegeLevel.PRIVILEGE_USER){
-            authorFilter = authorEntity;
-        }
-
-        return JsonAdminResponse.success(listAllGalleryVOs(authorFilter, session));
-    }
 
     @SuppressWarnings("unchecked")
-    public static List<GalleryVO> listAllGalleryVOs(AuthorEntity authorFilter, Session session){
-        List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(authorFilter, GalleryEntity.class, session);
+    public static List<GalleryVO> listAllGalleryVOs(BasicPostFilter basicPostFilter, Session session){
+        List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(basicPostFilter, GalleryEntity.class, session);
         List<GalleryVO> galleryVOList = new ArrayList<>();
 
         for (GalleryEntity galleryEntity : galleryEntityList){

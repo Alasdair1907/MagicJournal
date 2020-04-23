@@ -395,6 +395,10 @@ button.close {
     text-align: center;
 }
 
+.td-search {
+    padding-right: 2%;
+}
+
 @media (max-width: 1200px) {
 
     .width-small {

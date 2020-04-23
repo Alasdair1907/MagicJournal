@@ -16,6 +16,13 @@
 
 
 let articleEditSelect = `
+
+<div data-role="search-anchor" class="width-large"></div>
+
+<div class="item-container transparent width-large center-text">
+<button type="button" class="btn btn-primary btn-std btn-vertical" data-id="{{this.id}}" data-role="article-post-new">Create new article</button>
+</div>
+
 <div class="item-container transparent width-large">
 <span class="item-container-heading">Existing Article Posts</span>
 <table class="width-100-pc">
@@ -57,10 +64,8 @@ let articleEditSelect = `
 {{/each}}
 </table>
 
-<button type="button" class="btn btn-light btn-std btn-vertical" data-id="{{this.id}}" data-role="article-post-new">Create new article</button>
 </div>
 
-<div data-role="article-post-new-edit"></div>
 `;
 
 let articleNewOrEdit = `

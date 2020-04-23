@@ -72,8 +72,8 @@ public class AuthorizationService {
         for (SessionEntity sessionEntity : outdatedSessions){
             if (sessionEntity.getLogin().startsWith(ANONYMOUS_DEMO_PREFIX)){
                 AuthorEntity demoAuthorEntity = AuthorDao.getAuthorEntityByLogin(sessionEntity.getLogin(), session);
+                session.delete(sessionEntity);
                 session.delete(demoAuthorEntity);
-
             }
         }
 

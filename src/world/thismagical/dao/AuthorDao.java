@@ -36,16 +36,17 @@ public class AuthorDao {
 
     public static AuthorEntity getAuthorEntityByLogin(String login, Session session){
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<AuthorEntity> criteriaQuery = cb.createQuery(AuthorEntity.class);
-        Root<AuthorEntity> root = criteriaQuery.from(AuthorEntity.class);
-        CriteriaBuilder.In<String> inClause = cb.in(root.get("login"));
-        inClause.value(login);
-        CriteriaQuery<AuthorEntity> cq = criteriaQuery.select(root).where(inClause);
+        if (login == null || login.isEmpty()){
+            return null;
+        }
 
         AuthorEntity author;
+
+        Query<AuthorEntity> query = session.createQuery("from AuthorEntity  where login = :login", AuthorEntity.class);
+        query.setParameter("login", login);
+
         try {
-            author = session.createQuery(cq).getSingleResult();
+            author = query.getSingleResult();
         } catch (Exception e){
             author = null;
         }

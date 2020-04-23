@@ -26,6 +26,7 @@ import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.PhotoEntity;
 import world.thismagical.entity.PostEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
 import world.thismagical.util.PostAttribution;
@@ -52,20 +53,9 @@ public class PhotoService {
         return photoVO;
     }
 
-    public static List<PhotoVO> listAllPhotoVOsUserFilter(String guid, Session session){
-        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-        AuthorEntity authorFilter = null;
-
-        if (authorEntity.getPrivilegeLevel().equals(PrivilegeLevel.PRIVILEGE_USER)){
-            authorFilter = authorEntity;
-        }
-
-        return listAllPhotoVOs(authorFilter, session);
-    }
-
     @SuppressWarnings("unchecked")
-    public static List<PhotoVO> listAllPhotoVOs(AuthorEntity authorFilter, Session session){
-        List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(authorFilter, PhotoEntity.class, session);
+    public static List<PhotoVO> listAllPhotoVOs(BasicPostFilter basicPostFilter, Session session){
+        List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(basicPostFilter, PhotoEntity.class, session);
         List<Long> parentObjectIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, parentObjectIds, session);
 

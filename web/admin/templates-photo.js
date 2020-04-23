@@ -15,6 +15,13 @@
 */
 
 let photoEditSelect = `
+
+<div data-role="search-anchor" class="width-full"></div>
+
+<div class="item-container transparent width-full center-text">
+<button type="button" class="btn btn-primary btn-std btn-vertical" data-id="{{this.id}}" data-role="photo-post-new">Create new photo</button>
+</div>
+
 <div class="item-container transparent width-full">
 <span class="item-container-heading">Existing Photo Posts</span>
 <table class="width-100-pc">
@@ -56,13 +63,14 @@ let photoEditSelect = `
 {{/each}}
 </table>
 
-<button type="button" class="btn btn-light btn-std btn-vertical" data-id="{{this.id}}" data-role="photo-post-new">Create new photo</button>
 </div>
 
-<div data-role="photo-post-new-edit" class="width-100-pc flex-main"></div>
 `;
 
 let photoNewOrEdit = `
+
+<div data-role="photo-post-new-edit" class="width-100-pc flex-main">
+
 <div class="item-container transparent highres-line-item width-medium item-left">
 <span class="item-container-heading">Edit</span>
 
@@ -83,13 +91,15 @@ let photoNewOrEdit = `
 <span class="text">Upload image:</span><br />
 <input type="file" class="text" data-role="data-file"/><br />
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-upload-image" {{#if demoUser}}disabled="disabled"{{/if}}>Upload</button>
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save</button>
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-photo-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save & Close</button>
 </div>
 
 
 <div class="highres-line-item width-medium item-right">
     <div data-role="photo-tag-editor"></div>
     <div data-role="photo-relation-manager"></div>
+</div>
+
 </div>
 
 `;

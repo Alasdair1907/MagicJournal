@@ -8,6 +8,7 @@ import world.thismagical.dao.SessionDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ImageFileEntity;
 import world.thismagical.entity.SessionEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostsTO;
 import world.thismagical.util.PostAttribution;
@@ -161,9 +162,12 @@ public class AuthorService {
             return JsonAdminResponse.fail("author with this id not found");
         }
 
-        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(authorEntity, session);
-        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(authorEntity, session);
-        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(authorEntity, session);
+        BasicPostFilter basicPostFilter = new BasicPostFilter();
+        basicPostFilter.authorEntity = authorEntity;
+
+        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(basicPostFilter, session);
+        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(basicPostFilter, session);
+        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(basicPostFilter, session);
 
         PostsTO postsTO = new PostsTO();
         postsTO.articles = articleVOList;

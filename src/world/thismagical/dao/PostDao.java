@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.PostEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.util.Tools;
 
 import javax.persistence.Query;
@@ -28,6 +29,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostDao {
@@ -62,7 +64,12 @@ public class PostDao {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends PostEntity> List<PostEntity> listAllPosts(AuthorEntity authorFilter, Class<T> clazz, Session session){
+    public static <T extends PostEntity> List<PostEntity> listAllPosts(BasicPostFilter basicPostFilter, Class<T> clazz, Session session){
+
+        if (basicPostFilter != null && Boolean.TRUE.equals(basicPostFilter.returnEmpty)){
+            return new ArrayList<>();
+        }
+
         List<PostEntity> list = null;
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -70,9 +77,31 @@ public class PostDao {
         Root<T> root = cq.from(clazz);
         cq.orderBy(cb.desc(root.get("creationDate")));
 
-        if (authorFilter != null){
-            Predicate authorPredicate = cb.equal(root.get("author"), authorFilter);
-            cq.select(root).where(authorPredicate);
+        if (basicPostFilter != null){
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (basicPostFilter.authorEntity != null){
+                Predicate authorPredicate = cb.equal(root.get("author"), basicPostFilter.authorEntity);
+                predicates.add(authorPredicate);
+            }
+
+            if (basicPostFilter.fromDateTime != null){
+                Predicate fromDateTime = cb.greaterThanOrEqualTo(root.get("creationDate"), basicPostFilter.fromDateTime);
+                predicates.add(fromDateTime);
+            }
+
+            if (basicPostFilter.toDateTime != null){
+                Predicate toDateTime = cb.lessThanOrEqualTo(root.get("creationDate"), basicPostFilter.toDateTime);
+                predicates.add(toDateTime);
+            }
+
+            if (basicPostFilter.titleContains != null && !basicPostFilter.titleContains.isEmpty()){
+                Predicate titleContains = cb.like(root.get("title"), '%' + basicPostFilter.titleContains + '%');
+                predicates.add(titleContains);
+            }
+
+            Predicate and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            cq.select(root).where(and);
         } else {
             cq.select(root);
         }

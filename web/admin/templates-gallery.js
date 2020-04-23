@@ -15,6 +15,13 @@
 */
 
 let galleryEditSelect = `
+
+<div data-role="search-anchor" class="width-full"></div>
+
+<div class="item-container transparent width-full center-text">
+<button type="button" class="btn btn-primary btn-std btn-vertical" data-id="{{this.id}}" data-role="gallery-new">Create new gallery</button>
+</div>
+
 <div class="item-container transparent width-full">
 <span class="item-container-heading">Existing Galleries</span>
 <table class="width-100-pc">
@@ -62,7 +69,7 @@ let galleryEditSelect = `
 {{/each}}
 </table>
 
-<button type="button" class="btn btn-light btn-std btn-vertical" data-id="{{this.id}}" data-role="gallery-new">Create new gallery</button>
+
 </div>
 
 <div data-role="gallery-new-edit"></div>
@@ -116,7 +123,7 @@ let galleryNewOrEdit = `
         <span class="text">Coordinates: (latitude, longitude)</span>
         <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{galleryVO.gpsCoordinates}}"><br />
 
-        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save</button>
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save & Close</button>
     </div>
 
     <div class="highres-line-item width-medium item-right">

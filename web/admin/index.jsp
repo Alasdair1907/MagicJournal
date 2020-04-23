@@ -57,6 +57,7 @@
     <script src="RelationManager.js"></script>
     <script src="NoFuckingBullshitCheckbox.js"></script>
     <script src="FileSelect.js"></script>
+    <script src="PostFilter.js"></script>
 
     <link rel="stylesheet" href="main.css">
     <!-- <link rel="stylesheet" media="screen and (min-aspect-ratio: 1000/1000)" href="/admin/main.css"> -->

@@ -8,6 +8,7 @@
 <%@ page import="world.thismagical.util.Tools" %>
 <%@ page import="world.thismagical.vo.*" %>
 <%@ page import="java.util.List" %>
+<%@ page import="world.thismagical.filter.BasicPostFilter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -115,7 +116,11 @@
         }
 
         if (action.equals("listAllPhotoVOs")){
-            JsonAdminResponse<List<PhotoVO>> res = JsonApi.listAllPhotoVOs(guid, sessionFactory);
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (data != null && !data.isEmpty()){
+                basicPostFilterTO = objectMapper.readValue(data, BasicPostFilterTO.class);
+            }
+            JsonAdminResponse<List<PhotoVO>> res = JsonApi.listAllPhotoVOsFilter(basicPostFilterTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
@@ -165,7 +170,11 @@
         }
 
         if (action.equals("listAllGalleryVOs")){
-            JsonAdminResponse<List<GalleryVO>> res = JsonApi.listAllGalleryVOs(guid, sessionFactory);
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (data != null && !data.isEmpty()){
+                basicPostFilterTO = objectMapper.readValue(data, BasicPostFilterTO.class);
+            }
+            JsonAdminResponse<List<GalleryVO>> res = JsonApi.listAllGalleryVOsFilter(basicPostFilterTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
@@ -228,7 +237,11 @@
         }
 
         if (action.equals("listAllArticleVOs")){
-            JsonAdminResponse<List<ArticleVO>> res = JsonApi.listAllArticleVOs(guid, sessionFactory);
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (data != null && !data.isEmpty()){
+                basicPostFilterTO = objectMapper.readValue(data, BasicPostFilterTO.class);
+            }
+            JsonAdminResponse<List<ArticleVO>> res = JsonApi.listAllArticleVOsFilter(basicPostFilterTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

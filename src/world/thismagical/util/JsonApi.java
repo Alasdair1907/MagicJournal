@@ -7,6 +7,7 @@ import world.thismagical.dao.*;
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.SessionEntity;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.service.*;
 import world.thismagical.to.*;
 import world.thismagical.vo.*;
@@ -174,9 +175,12 @@ public class JsonApi {
         return JsonAdminResponse.fail("error listing photos (no filter)");
     }
 
-    public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOs(String guid, SessionFactory sessionFactory){
+
+    public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
+
         try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(PhotoService.listAllPhotoVOsUserFilter(guid, session));
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
+            return JsonAdminResponse.success(PhotoService.listAllPhotoVOs(basicPostFilter, session));
         } catch (Exception ex){
             Tools.handleException(ex);
         }
@@ -280,14 +284,16 @@ public class JsonApi {
         return JsonAdminResponse.fail("error obtaining list of photos");
     }
 
-    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOs(String guid, SessionFactory sessionFactory) {
+    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
+
         try (Session session = sessionFactory.openSession()) {
-            return GalleryService.listAllGalleryVOsUserFilter(guid, session);
-        } catch (Exception ex) {
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
+            return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(basicPostFilter, session));
+        } catch (Exception ex){
             Tools.handleException(ex);
         }
 
-        return JsonAdminResponse.fail("error listing galleries");
+        return JsonAdminResponse.fail("error listing gallerys");
     }
 
     public static JsonAdminResponse<Long> saveOrUpdateGallery(GalleryTO galleryTO, SessionFactory sessionFactory){
@@ -357,10 +363,10 @@ public class JsonApi {
         return JsonAdminResponse.fail("error loading article data");
     }
 
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOs(String guid, SessionFactory sessionFactory){
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
 
-        try (Session session = sessionFactory.openSession()){
-            return ArticleService.listAllArticleVOsUserFilter(guid, session);
+        try (Session session = sessionFactory.openSession()) {
+            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(null, session));
         } catch (Exception ex){
             Tools.handleException(ex);
         }
@@ -368,10 +374,11 @@ public class JsonApi {
         return JsonAdminResponse.fail("error listing articles");
     }
 
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
-
+    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
+        
         try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(null, session));
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
+            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(basicPostFilter, session));
         } catch (Exception ex){
             Tools.handleException(ex);
         }
