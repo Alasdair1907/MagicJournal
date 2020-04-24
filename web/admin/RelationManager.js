@@ -65,6 +65,8 @@ $.widget("admin.RelationManager", {
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-photo" data-id="1">Photos</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-gallery" data-id="0">Galleries</button> <br />
       <hr class="hr-black">
+      
+      <div data-role="modal-posts-search"></div><br />
       <div data-role="modal-relation-select-main"></div>
       
     </div>
@@ -79,9 +81,25 @@ $.widget("admin.RelationManager", {
 </div>
     `,
     _modalListingTemplate: `
-{{#each postVOList}}
-<button type="button" class="width-medium btn btn-light btn-std" data-role="relation-target-selected" data-id="{{this.id}}" data-class="{{../class}}">{{this.title}} / {{this.authorVO.displayName}}</button><br />
-{{/each}}
+<table class="width-100-pc modal-list">
+    <tr>
+        <td class="table-lgray table-lgray-heading">Post Title</td>
+        <td class="table-lgray table-lgray-heading">Author</td>
+        <td class="table-lgray table-lgray-heading">Date</td>
+        <td class="table-lgray table-lgray-heading"></td>
+    </tr>
+
+    {{#each postVOList}}
+    <tr>
+        <td class="table-lgray">{{this.title}}</td>
+        <td class="table-lgray">{{this.authorVO.displayName}} ({{this.authorVO.login}})</td>
+        <td class="table-lgray">{{this.creationDateStr}}</td>
+        <td class="table-lgray center-text">
+            <button type="button" class="btn btn-success btn-std" data-role="relation-target-selected" data-id="{{this.id}}" data-class="{{../class}}">Select</button>
+        </td>
+    </tr>
+    {{/each}}
+</table>
     `,
 
     _create: async function(){
@@ -105,77 +123,112 @@ $.widget("admin.RelationManager", {
 
     _relationAdd: async function(self, ops, $modalElem){
         let $mainElem = self.element.find('[data-role="modal-relation-select-main"]');
+        let $searchAnchor = self.element.find('[data-role="modal-posts-search"]');
 
         let $articleSrc = self.element.find('[data-role="relation-article"]');
         let $photoSrc = self.element.find('[data-role="relation-photo"]');
         let $gallerySrc = self.element.find('[data-role="relation-gallery"]');
 
-        let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId};
-        let postTOJson = JSON.stringify(postTO);
+
 
         $articleSrc.unbind();
         $articleSrc.click(await async function(){
-            let articleVOList = await ajax({action: "listConcernedArticlesVOs", data: postTOJson}, "error listing articles");
-            if (articleVOList === undefined){
-                return;
-            }
 
-            let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
-            $mainElem.html(hModalListingTemplate({postVOList: articleVOList, class: "2"}));
 
-            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
-            $selectables.unbind();
-            $selectables.click(await async function(){
-                let dstObjectId = $(this).data('id');
-                let dstObjectClassShort = $(this).data('class');
+            let articleDisplay = async function(ignore, basicPostFilterTO){
 
-                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId, basicPostFilterTO: basicPostFilterTO};
+                let postTOJson = JSON.stringify(postTO);
 
-            });
+                let articleVOList = await ajax({action: "listConcernedArticlesVOs", data: postTOJson}, "error listing articles");
+                if (articleVOList === undefined){
+                    return;
+                }
+
+                let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
+                $mainElem.html(hModalListingTemplate({postVOList: articleVOList, class: "2"}));
+
+                let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+                $selectables.unbind();
+                $selectables.click(await async function(){
+                    let dstObjectId = $(this).data('id');
+                    let dstObjectClassShort = $(this).data('class');
+
+                    await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                });
+            };
+
+            $mainElem.html('');
+            postFilter($searchAnchor, null, articleDisplay, null);
+
         });
 
         $photoSrc.unbind();
         $photoSrc.click(await async function(){
 
-            let photoVOList = await ajax({action: "listConcernedPhotosVOs", data: postTOJson}, "error listing photos");
-            if (photoVOList === undefined){
-                return;
-            }
+            let photoDisplay = async function(ignore, basicPostFilterTO) {
 
-            let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
-            $mainElem.html(hModalListingTemplate({postVOList: photoVOList, class: 1}));
+                let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId, basicPostFilterTO: basicPostFilterTO};
+                let postTOJson = JSON.stringify(postTO);
 
-            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
-            $selectables.unbind();
-            $selectables.click(await async function(){
-                let dstObjectId = $(this).data('id');
-                let dstObjectClassShort = $(this).data('class');
+                let photoVOList = await ajax({
+                    action: "listConcernedPhotosVOs",
+                    data: postTOJson
+                }, "error listing photos");
+                if (photoVOList === undefined) {
+                    return;
+                }
 
-                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
+                $mainElem.html(hModalListingTemplate({postVOList: photoVOList, class: 1}));
 
-            });
+                let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+                $selectables.unbind();
+                $selectables.click(await async function () {
+                    let dstObjectId = $(this).data('id');
+                    let dstObjectClassShort = $(this).data('class');
+
+                    await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+
+                });
+            };
+
+            $mainElem.html('');
+            postFilter($searchAnchor, null, photoDisplay, null);
 
         });
 
         $gallerySrc.unbind();
         $gallerySrc.click(await async function() {
-            let galleryVOList = await ajax({action: "listConcernedGalleryVOs", data: postTOJson}, "error listing galleries");
-            if (galleryVOList === undefined){
-                return;
-            }
 
-            let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
-            $mainElem.html(hModalListingTemplate({postVOList: galleryVOList, class: 0}));
+            let galleryDisplay = async function(ignore, basicPostFilterTO) {
 
-            let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
-            $selectables.unbind();
-            $selectables.click(await async function(){
-                let dstObjectId = $(this).data('id');
-                let dstObjectClassShort = $(this).data('class');
+                let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId, basicPostFilterTO: basicPostFilterTO};
+                let postTOJson = JSON.stringify(postTO);
 
-                await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                let galleryVOList = await ajax({
+                    action: "listConcernedGalleryVOs",
+                    data: postTOJson
+                }, "error listing galleries");
+                if (galleryVOList === undefined) {
+                    return;
+                }
 
-            });
+                let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
+                $mainElem.html(hModalListingTemplate({postVOList: galleryVOList, class: 0}));
+
+                let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+                $selectables.unbind();
+                $selectables.click(await async function () {
+                    let dstObjectId = $(this).data('id');
+                    let dstObjectClassShort = $(this).data('class');
+
+                    await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                });
+            };
+
+            $mainElem.html('');
+            postFilter($searchAnchor, null, galleryDisplay, null);
 
         });
 

@@ -26,6 +26,8 @@ let imageSelect = async function($modalJQueryElement, articleId){
     let $imageSelectModal = $modalJQueryElement.find('[data-role="image-select-modal"]');
     let $imageSelectMain = $modalJQueryElement.find('[data-role="modal-imageselect-main"]');
 
+    let $imageSelectFilterAnchor = $modalJQueryElement.find('[data-role="modal-post-filter"]');
+
     $imageSelectModal.modal();
 
     let $articleSrc = $modalJQueryElement.find('[data-role="image-select-article"]');
@@ -40,6 +42,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
     if (articleId !== undefined) {
         $articleSrc.unbind();
         $articleSrc.click(await async function () {
+            $imageSelectFilterAnchor.html("");
             $imageSelectMain.html(modalSpinner);
             let imageVOList = await getImageVOList(articleId, 2);
             $imageSelectMain.html("");
@@ -72,73 +75,14 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
     $photoSrc.unbind();
     $photoSrc.click(await async function(){
-        $imageSelectMain.html(modalSpinner);
 
-        let adminResponseJson = await $.ajax({
-            url: '/admin/jsonApi.jsp',
-            method: 'POST',
-            data: {action: "listAllPhotoVOsNoFilter"}
-        });
-
-        let adminResponse = adminResponseJson ? JSON.parse(adminResponseJson) : {data: null};
-
-        if (adminResponse.success === false){
-            alert("can't list photos: "+adminResponse.errorDescription);
-            return;
-        }
-
-        let hPhotoVOListDisplay = Handlebars.compile(photoVOListDisplay);
-        $imageSelectMain.html(hPhotoVOListDisplay({photoVOList: adminResponse.data}));
-
-        let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
-
-        $imageSelectList.unbind();
-        $imageSelectList.click(function(){
-            $imageInsertSubmit.prop("disabled", false);
-            $imageSelectList.removeClass("div-image-selected");
-
-            let imageId = $(this).data("id");
-            let previewFile = $(this).data("preview");
-            $(this).addClass("div-image-selected");
-
-            $selectedImgInfo.data("id", imageId);
-
-            $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
-            $imageSelectPreviewImg.show();
-        });
-    });
-
-    $gallerySrc.unbind();
-    $gallerySrc.click(await async function(){
-        $imageSelectMain.html(modalSpinner);
-
-        let adminResponseJson = await $.ajax({
-            url: '/admin/jsonApi.jsp',
-            method: 'POST',
-            data: {action: "listAllGalleryVOsNoFilter"}
-        });
-
-        let adminResponse = adminResponseJson ? JSON.parse(adminResponseJson) : {data: null};
-
-        if (adminResponse.success === false){
-            alert("can't list galleries: "+adminResponse.errorDescription);
-            return;
-        }
-
-        let hGalleryVOListDisplay = Handlebars.compile(galleryVOListDisplay);
-        $imageSelectMain.html(hGalleryVOListDisplay({galleryVOList: adminResponse.data}));
-
-        let $gallerySelectButtons = $modalJQueryElement.find('[data-role="image-select-gallery-select"]');
-
-        $gallerySelectButtons.unbind();
-        $gallerySelectButtons.click(await async function(){
-            let chosenGalleryId = $(this).data("id");
+        let photoDisplay = async function(ignore, basicPostFilterTO){
             $imageSelectMain.html(modalSpinner);
-            let imageVOList = await getImageVOList(chosenGalleryId, 0);
-            $imageSelectMain.html("");
 
-            let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
-            $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
+            let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO)});
+
+            let hPhotoVOListDisplay = Handlebars.compile(photoVOListDisplay);
+            $imageSelectMain.html(hPhotoVOListDisplay({photoVOList: photoVOList}));
 
             let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
 
@@ -156,7 +100,56 @@ let imageSelect = async function($modalJQueryElement, articleId){
                 $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
                 $imageSelectPreviewImg.show();
             });
-        });
+        };
+
+        $imageSelectMain.html('');
+        await postFilter($imageSelectFilterAnchor, null, photoDisplay, null);
+    });
+
+    $gallerySrc.unbind();
+    $gallerySrc.click(await async function(){
+
+        let galleryDisplay = async function(ignore, basicPostFilterTO){
+            $imageSelectMain.html(modalSpinner);
+
+            let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO)});
+
+            let hGalleryVOListDisplay = Handlebars.compile(galleryVOListDisplay);
+            $imageSelectMain.html(hGalleryVOListDisplay({galleryVOList: galleryVOList}));
+
+            let $gallerySelectButtons = $modalJQueryElement.find('[data-role="image-select-gallery-select"]');
+
+            $gallerySelectButtons.unbind();
+            $gallerySelectButtons.click(await async function(){
+                let chosenGalleryId = $(this).data("id");
+                $imageSelectMain.html(modalSpinner);
+                let imageVOList = await getImageVOList(chosenGalleryId, 0);
+                $imageSelectMain.html("");
+
+                let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
+                $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
+
+                let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
+
+                $imageSelectList.unbind();
+                $imageSelectList.click(function(){
+                    $imageInsertSubmit.prop("disabled", false);
+                    $imageSelectList.removeClass("div-image-selected");
+
+                    let imageId = $(this).data("id");
+                    let previewFile = $(this).data("preview");
+                    $(this).addClass("div-image-selected");
+
+                    $selectedImgInfo.data("id", imageId);
+
+                    $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
+                    $imageSelectPreviewImg.show();
+                });
+            });
+        };
+
+        $imageSelectMain.html("");
+        postFilter($imageSelectFilterAnchor, null, galleryDisplay, null);
     });
 
     let selectedId = null;
@@ -216,9 +209,11 @@ let imageSelectionModal = `
 
                 <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-article" data-id="2">This article</button>
                 <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-photo" data-id="1">Photos</button>
-                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button> <br />
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button>
                 
-                <hr class="hr-black"><br />
+                <hr class="hr-black">
+                
+                <div data-role="modal-post-filter"></div><br />
 
                 <input type="hidden" data-role="selected-img-info">
                 <div data-role="modal-imageselect-main"></div>
@@ -259,7 +254,23 @@ let photoVOListDisplay = `
 `;
 
 let galleryVOListDisplay = `
-{{#each galleryVOList}}
-<button type="button" class="width-medium btn btn-light btn-std" data-role="image-select-gallery-select" data-id="{{this.id}}">{{this.title}} / {{this.authorVO.displayName}}</button><br />
-{{/each}}
+<table class="width-100-pc modal-list">
+    <tr>
+        <td class="table-lgray table-lgray-heading">Post Title</td>
+        <td class="table-lgray table-lgray-heading">Author</td>
+        <td class="table-lgray table-lgray-heading">Date</td>
+        <td class="table-lgray table-lgray-heading"></td>
+    </tr>
+
+    {{#each galleryVOList}}
+    <tr>
+        <td class="table-lgray">{{this.title}}</td>
+        <td class="table-lgray">{{this.authorVO.displayName}} ({{this.authorVO.login}})</td>
+        <td class="table-lgray">{{this.creationDateStr}}</td>
+        <td class="table-lgray center-text">
+            <button type="button" class="btn btn-success btn-std" data-role="image-select-gallery-select" data-id="{{this.id}}">Select</button>            
+        </td>
+    </tr>
+    {{/each}}
+</table>
 `;

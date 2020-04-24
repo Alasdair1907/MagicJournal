@@ -21,5 +21,6 @@ public class AuthorizedVO {
     public String guid;
     public String privilegeLevelName;
     public String displayName;
+    public String login;
     public Long authorId;
 }

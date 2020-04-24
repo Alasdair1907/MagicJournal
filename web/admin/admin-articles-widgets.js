@@ -220,7 +220,7 @@ $.widget("admin.articlesWidget", {
         }
     },
 
-    _display: async function(self, basicPostFilterTO){
+    _display: async function(self, basicPostFilterTO, refreshSearch){
 
         let articleVOList = await ajax({action: "listAllArticleVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 
@@ -228,8 +228,9 @@ $.widget("admin.articlesWidget", {
         let demoUser = Cookies.get("privilegeLevelName") === "demo";
         self.element.html(hArticleEditSelect({articlePosts: articleVOList, demoUser: demoUser}));
 
+
         let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self);
+        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
 
         let $articlePostEditButtons = self.element.find('[data-role="article-post-edit"]');
         let $articleDeleteButtons = self.element.find('[data-role="article-post-delete"]');
@@ -238,6 +239,16 @@ $.widget("admin.articlesWidget", {
         let $articlePostPublishToggle = self.element.find('[data-role="article-publish-toggle"]');
 
         let $articleDeleteConfirmModal = self.element.find('[data-role="delete-article-confirm"]');
+
+        if (Cookies.get("privilegeLevelName") === "user"){
+            $articlePostPublishToggle.prop("disabled", true);
+            $articleDeleteButtons.prop("disabled", true);
+            $articlePostEditButtons.prop("disabled", true);
+
+            let myLogin = Cookies.get("login");
+            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+            $ownButtons.prop("disabled", false);
+        }
 
         $createNewArticleButton.unbind();
         $createNewArticleButton.click(await async function(){
@@ -277,7 +288,7 @@ $.widget("admin.articlesWidget", {
             if (!toggleResult || !toggleResult.success) {
                 alert("error toggling publish status: " + toggleResult.errorDescription);
             } else {
-                await self._display(self);
+                await self._display(self, basicPostFilterTO, true);
             }
         });
 

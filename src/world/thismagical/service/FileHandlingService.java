@@ -25,6 +25,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
 import world.thismagical.entity.*;
+import world.thismagical.filter.BasicFileFilter;
 import world.thismagical.to.*;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
@@ -33,6 +34,10 @@ import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.OtherFileVO;
 
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.tools.Tool;
@@ -432,10 +437,44 @@ public class FileHandlingService {
 
     }
 
-    public static JsonAdminResponse<List<OtherFileVO>> listOtherFiles(SessionFactory sessionFactory){
+    public static JsonAdminResponse<List<OtherFileVO>> listOtherFiles(BasicFileFilter basicFileFilter, SessionFactory sessionFactory){
         try (Session session = sessionFactory.openSession()){
-            List<OtherFileEntity> otherFileEntityList = session.createQuery("from OtherFileEntity order by id desc", OtherFileEntity.class).list();
-            if (otherFileEntityList == null){
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<OtherFileEntity> cq = cb.createQuery(OtherFileEntity.class);
+            Root<OtherFileEntity> root = cq.from(OtherFileEntity.class);
+            cq.orderBy(cb.desc(root.get("id")));
+
+            if (basicFileFilter != null){
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (basicFileFilter.authorLogin != null && !basicFileFilter.authorLogin.isEmpty()){
+                    AuthorEntity authorEntity = AuthorDao.getAuthorEntityByLogin(basicFileFilter.authorLogin, session);
+                    if (authorEntity == null){
+                        return JsonAdminResponse.success(new ArrayList<>());
+                    }
+
+                    predicates.add(cb.equal(root.get("authorEntity"), authorEntity));
+                }
+
+                if (basicFileFilter.fileDisplayName != null && !basicFileFilter.fileDisplayName.isEmpty()){
+                    predicates.add(cb.like(root.get("displayName"), '%' + basicFileFilter.fileDisplayName + '%'));
+                }
+
+                if (basicFileFilter.fileOriginalName != null && !basicFileFilter.fileOriginalName.isEmpty()){
+                    predicates.add(cb.like(root.get("originalFileName"), '%' + basicFileFilter.fileOriginalName + '%'));
+                }
+
+                Predicate and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                cq.select(root).where(and);
+            } else {
+                cq.select(root);
+            }
+
+            List<OtherFileEntity> otherFileEntityList = session.createQuery(cq).getResultList();
+
+            if (otherFileEntityList == null || otherFileEntityList.isEmpty()){
                 return JsonAdminResponse.success(new ArrayList<>());
             }
 
@@ -446,7 +485,6 @@ public class FileHandlingService {
             }
 
             return JsonAdminResponse.success(otherFileVOList);
-
 
         } catch (Exception ex){
             Tools.handleException(ex);

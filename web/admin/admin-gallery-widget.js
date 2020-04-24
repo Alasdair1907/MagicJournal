@@ -26,7 +26,7 @@ $.widget("admin.galleriesWidget", {
         self._display(self);
     },
 
-    _display: async function(self, basicPostFilterTO){
+    _display: async function(self, basicPostFilterTO, refreshSearch){
 
         let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 
@@ -35,7 +35,7 @@ $.widget("admin.galleriesWidget", {
         self.element.html(hGalleryEditSelect({galleryVOs: galleryVOList, demoUser: demoUser}));
 
         let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self);
+        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
 
         let $galleryEditButtons = self.element.find('[data-role="gallery-edit"]');
         let $galleryDeleteButtons = self.element.find('[data-role="gallery-delete"]');
@@ -45,6 +45,16 @@ $.widget("admin.galleriesWidget", {
         let $galleryPublishToggle = self.element.find('[data-role="gallery-publish-toggle"]');
 
         let $galleryDeleteConfirmModal = self.element.find('[data-role="delete-gallery-confirm"]');
+
+        if (Cookies.get("privilegeLevelName") === "user") {
+            $galleryPublishToggle.prop("disabled", true);
+            $galleryDeleteButtons.prop("disabled", true);
+            $galleryEditButtons.prop("disabled", true);
+
+            let myLogin = Cookies.get("login");
+            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+            $ownButtons.prop("disabled", false);
+        }
 
         $createNewGalleryButton.unbind();
         $createNewGalleryButton.click(await async function(){
@@ -88,7 +98,7 @@ $.widget("admin.galleriesWidget", {
             if (!toggleResult || !toggleResult.success) {
                 alert("error toggling publish status: " + toggleResult.errorDescription);
             } else {
-                await self._display(self);
+                await self._display(self, basicPostFilterTO, true);
             }
         });
 

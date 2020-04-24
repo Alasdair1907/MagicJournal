@@ -77,10 +77,10 @@ public class JsonApi {
         return JsonAdminResponse.success(PrivilegeLevel.getPrivilegesList());
     }
 
-    public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, SessionFactory sessionFactory){
+    public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, String location, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {
-            return AuthorService.createNewAuthor(guid, newAuthor, session);
+            return AuthorService.createNewAuthor(guid, newAuthor, location, session);
         } catch (Exception ex){
             Tools.handleException(ex);
         }

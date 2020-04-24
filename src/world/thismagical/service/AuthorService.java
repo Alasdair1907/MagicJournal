@@ -124,7 +124,7 @@ public class AuthorService {
         return authorVOList;
     }
 
-    public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, Session session){
+    public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, String filesLocation, Session session){
 
 
         if (!AuthorizationService.isSessionValid(guid, PrivilegeLevel.PRIVILEGE_SUPER_USER, session)){
@@ -132,19 +132,28 @@ public class AuthorService {
         }
 
         if (newAuthor.getLogin() == null || newAuthor.getPasswd() == null || newAuthor.getDisplayName() == null || newAuthor.getPrivilegeLevel() == null){
-            JsonAdminResponse.fail("createNewAuthor: null argument");
+            return JsonAdminResponse.fail("Can not create new author: all parameters must be filled");
         }
 
         if (newAuthor.getLogin().isEmpty() || newAuthor.getPasswd().isEmpty() || newAuthor.getDisplayName().isEmpty()){
-            JsonAdminResponse.fail("Can not create new author: all parameters must be filled");
+            return JsonAdminResponse.fail("Can not create new author: all parameters must be filled");
         }
 
         AuthorEntity existingAuthor = AuthorDao.getAuthorEntityByLogin(newAuthor.getLogin(), session);
         if (existingAuthor != null){
-            JsonAdminResponse.fail("user with this login already exists");
+            return JsonAdminResponse.fail("user with this login already exists");
         }
 
         String plainTextPassword = newAuthor.getPasswd();
+
+        try {
+            if (!AuthorizationService.verifyPasswordStrength(filesLocation, plainTextPassword)){
+                return JsonAdminResponse.fail("Password must contain at least 7 characters and must not be commonly used.");
+            }
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
         String hashedPassword = Tools.sha256(plainTextPassword);
         newAuthor.setPasswd(hashedPassword);
 

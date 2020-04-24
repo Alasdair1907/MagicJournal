@@ -14,7 +14,7 @@
     
 */
 
-let postFilter = async function($element, basicPostFilterTO, displayCallback, self) {
+let postFilter = async function($element, basicPostFilterTO, displayCallback, self, autoSearch) {
     $element.html(postFilterTemplate);
 
     let $filterButton = $element.find('[data-role="filter-search"]');
@@ -60,6 +60,10 @@ let postFilter = async function($element, basicPostFilterTO, displayCallback, se
 
         await displayCallback(self, basicPostFilterTO);
     });
+
+    if (autoSearch){
+        $filterButton.click();
+    }
 };
 
 let postFilterTemplate = `<div class="width-100-pc transparent item-container">

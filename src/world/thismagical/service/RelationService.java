@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
 import world.thismagical.entity.*;
+import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostTO;
 import world.thismagical.to.RelationTO;
@@ -269,7 +270,7 @@ public class RelationService {
             throw new IllegalArgumentException();
         }
 
-        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(null, session);
+        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
         if (articleVOList.isEmpty()){
             return new ArrayList<>();
         }
@@ -290,7 +291,7 @@ public class RelationService {
             throw new IllegalArgumentException();
         }
 
-        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(null, session);
+        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
         if (photoVOList.isEmpty()){
             return new ArrayList<>();
         }
@@ -311,7 +312,7 @@ public class RelationService {
             throw new IllegalArgumentException();
         }
 
-        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(null, session);
+        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
         if (galleryVOList.isEmpty()){
             return new ArrayList<>();
         }

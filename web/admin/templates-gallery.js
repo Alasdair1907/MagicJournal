@@ -38,7 +38,7 @@ let galleryEditSelect = `
 
 <td class="list-entry structure">
 <span class="text">Title: {{this.title}}</span>
-<span class="text">Author: {{this.authorVO.displayName}}</span>
+<span class="text">Author: {{this.authorVO.displayName}} ({{this.authorVO.login}})</span>
 <span class="text">Created: {{this.creationDateStr}}</span>
 </td>
 
@@ -55,13 +55,13 @@ let galleryEditSelect = `
 <span class="text">NOT published</span>
 {{/if}}
 
-<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="gallery-publish-toggle" {{#if demoUser}}disabled="disabled"{{/if}}>Toggle</button>
+<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-owner="{{this.authorVO.login}}" data-role="gallery-publish-toggle" {{#if demoUser}}disabled="disabled"{{/if}}>Toggle</button>
 </td>
 
 <td class="list-entry center-text">
 
-<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-role="gallery-edit">Edit</button>
-<button type="button" class="btn btn-danger btn-std" data-id="{{this.id}}" data-role="gallery-delete">Delete</button>
+<button type="button" class="btn btn-light btn-std" data-id="{{this.id}}" data-owner="{{this.authorVO.login}}" data-role="gallery-edit">Edit</button>
+<button type="button" class="btn btn-danger btn-std" data-id="{{this.id}}" data-owner="{{this.authorVO.login}}" data-role="gallery-delete">Delete</button>
 
 </td>
 </tr>

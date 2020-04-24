@@ -41,6 +41,7 @@ $.widget("admin.loginPanel", {
                     Cookies.set('privilegeLevelName', authorizedVO.privilegeLevelName);
                     Cookies.set('displayName', authorizedVO.displayName);
                     Cookies.set('authorId', authorizedVO.authorId);
+                    Cookies.set('login', authorizedVO.login);
                     self.element.editorPanel();
                 }
 
@@ -85,6 +86,7 @@ $.widget("admin.loginPanel", {
                     Cookies.set('privilegeLevelName', authorizedVO.privilegeLevelName);
                     Cookies.set('displayName', authorizedVO.displayName);
                     Cookies.set('authorId', authorizedVO.authorId);
+                    Cookies.set('login', authorizedVO.login);
                     self.element.editorPanel();
                 }
 

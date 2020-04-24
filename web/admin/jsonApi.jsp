@@ -9,6 +9,7 @@
 <%@ page import="world.thismagical.vo.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="world.thismagical.filter.BasicPostFilter" %>
+<%@ page import="world.thismagical.filter.BasicFileFilter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -26,6 +27,7 @@
         String action = request.getParameter("action");
         String data = request.getParameter("data");
         String guid = request.getParameter("guid");
+        String location = request.getSession().getServletContext().getRealPath("/");
 
         Tools.log("admin/jsonApi: action: "+action);
 
@@ -61,7 +63,7 @@
 
         if (action.equals("createNewAuthor")){
             AuthorEntity newAuthor = objectMapper.readValue(data, AuthorEntity.class);
-            JsonAdminResponse<Void> res = JsonApi.createNewAuthor(guid, newAuthor, sessionFactory);
+            JsonAdminResponse<Void> res = JsonApi.createNewAuthor(guid, newAuthor, location, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
@@ -355,7 +357,8 @@
         // non-image files
 
         if (action.equals("listOtherFiles")){
-            JsonAdminResponse<List<OtherFileVO>> res = FileHandlingService.listOtherFiles(sessionFactory);
+            BasicFileFilter basicFileFilter = objectMapper.readValue(data, BasicFileFilter.class);
+            JsonAdminResponse<List<OtherFileVO>> res = FileHandlingService.listOtherFiles(basicFileFilter, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

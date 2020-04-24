@@ -28,9 +28,16 @@ import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
 import world.thismagical.vo.AuthorizedVO;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +45,34 @@ public class AuthorizationService {
 
     public static final String ANONYMOUS_DEMO_PREFIX = "demo_";
 
+    public static Boolean verifyPasswordStrength(String filesLocation, String password) throws Exception {
+
+        if (password == null){
+            return Boolean.FALSE;
+        }
+
+        if (password.length() < 7){
+            return Boolean.FALSE;
+        }
+
+        //https://github.com/danielmiessler/SecLists
+        Path path = Paths.get(filesLocation, "resources", "top-million-pwds.txt");
+        File pwdFile = path.toFile();
+
+        BufferedReader br = new BufferedReader(new FileReader(pwdFile));
+        String st;
+        boolean matched = false;
+        while ((st = br.readLine()) != null){
+            if (st.equals(password)){
+                matched = true;
+                break;
+            }
+        }
+
+        br.close();
+
+        return !matched;
+    }
 
     public static JsonAdminResponse<AuthorizedVO> authorize(String login, String password, Session session){
         AuthorEntity author = checkLoginPassword(login, password, session);
@@ -52,6 +87,7 @@ public class AuthorizationService {
         authorizedVO.privilegeLevelName = authorSession.getPrivilegeLevel().getName();
         authorizedVO.displayName = authorSession.getDisplayName();
         authorizedVO.authorId = authorSession.getAuthorId();
+        authorizedVO.login = authorSession.getLogin();
 
         truncateOutdatedDemos(session);
 

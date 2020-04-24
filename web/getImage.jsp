@@ -27,7 +27,7 @@
     String fileName = request.getParameter("filename");
     if (fileName.equals("imgAdminPlaceholder.png")){
         String imageStorage = request.getSession().getServletContext().getRealPath("/");
-        Path path = Paths.get(imageStorage, fileName);
+        Path path = Paths.get(imageStorage, "resources", fileName);
         byte[] imageData = Files.readAllBytes(path);
 
         response.setContentType("image/png");
@@ -36,7 +36,6 @@
         response.getOutputStream().close();
 
     } else {
-
 
         SettingsTO settingsTO = (SettingsTO) application.getAttribute("settingsTO");
         if (settingsTO == null) {

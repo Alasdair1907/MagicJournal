@@ -184,7 +184,7 @@ $.widget("admin.photosWidget", {
         }
     },
 
-    _display: async function(self, basicPostFilterTO){
+    _display: async function(self, basicPostFilterTO, refreshSearch){
 
         let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")}, "error listing photos");
 
@@ -193,7 +193,7 @@ $.widget("admin.photosWidget", {
         self.element.html(hPhotoEditSelect({photoPosts: photoVOList, demoUser: demoUser}));
 
         let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self);
+        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
 
         let $photoPostEditButtons = self.element.find('[data-role="photo-post-edit"]');
         let $photoDeleteButtons = self.element.find('[data-role="photo-post-delete"]');
@@ -203,6 +203,16 @@ $.widget("admin.photosWidget", {
         let $photoPostPublishToggle = self.element.find('[data-role="photo-publish-toggle"]');
 
         let $photoDeleteConfirmModal = self.element.find('[data-role="delete-photo-confirm"]');
+
+        if (Cookies.get("privilegeLevelName") === "user") {
+            $photoPostPublishToggle.prop("disabled", true);
+            $photoDeleteButtons.prop("disabled", true);
+            $photoPostEditButtons.prop("disabled", true);
+
+            let myLogin = Cookies.get("login");
+            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+            $ownButtons.prop("disabled", false);
+        }
 
         $createNewPhotoButton.unbind();
         $createNewPhotoButton.click(await async function(){
@@ -238,7 +248,7 @@ $.widget("admin.photosWidget", {
             if (!toggleResult || !toggleResult.success) {
                 alert("error toggling publish status: " + toggleResult.errorDescription);
             } else {
-                await self._display(self);
+                await self._display(self, basicPostFilterTO, true);
             }
         });
 

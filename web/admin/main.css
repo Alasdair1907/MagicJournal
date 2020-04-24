@@ -195,11 +195,11 @@ body.admin {
 }
 
 .modal-h1 {
-    font-size: 3vh !important;
+    font-size: 2.5vh !important;
 }
 
 .modal-h2 {
-    font-size: 2.5vh !important;
+    font-size: 2.25vh !important;
 }
 
 button.close {
@@ -342,7 +342,7 @@ button.close {
 }
 
 .hr-black {
-    border-color: black;
+    border-color: lightgray;
     border-width: 0.2vh;
 }
 

@@ -23,13 +23,15 @@ let fileSelect = async function($modalAnchor){
     $modal.modal();
 
     let $fileManagerMain = $modalAnchor.find('[data-role="file-manager-main"]');
+    let $fileSearchAnchor = $modalAnchor.find('[data-role="file-search"]');
 
     let $selectFileButton = $modalAnchor.find('[data-role="select-a-file"]');
     let $uploadNewFile = $modalAnchor.find('[data-role="upload-new-file"]');
 
-    $selectFileButton.unbind();
-    $selectFileButton.click(await async function(){
-        let otherFileVOs = await ajax({action: "listOtherFiles"});
+
+    let displayFiles = async function(ignore, basicFileFilterTO) {
+
+        let otherFileVOs = await ajax({action: "listOtherFiles", data: JSON.stringify(basicFileFilterTO)});
         if (otherFileVOs === undefined){
             return;
         }
@@ -48,6 +50,8 @@ let fileSelect = async function($modalAnchor){
 
         $deleteButton.click(await async function(){
 
+            let id = $(this).data("id");
+
             let $confirmDeleteAnchor = $fileManagerMain.find('[data-role="confirm-delete-anchor"]');
             $confirmDeleteAnchor.html(confirmDeleteFile);
 
@@ -58,12 +62,12 @@ let fileSelect = async function($modalAnchor){
             $deleteConfirmButton.unbind();
             $deleteConfirmButton.click(await async function(){
                 let txt = spinButton($deleteConfirmButton);
-                let res = await ajax({guid: Cookies.get("guid"), data: $deleteButton.data("id"), action: "deleteOtherFile"});
+                let res = await ajax({guid: Cookies.get("guid"), data: id, action: "deleteOtherFile"});
                 unSpinButton($deleteConfirmButton, txt);
                 if (res !== undefined){
                     $confirmDeleteModal.modal('hide');
-                    $confirmDeleteAnchor.html('');
-                    $selectFileButton.click();
+                    $fileManagerMain.html("");
+                    fileFilter($fileSearchAnchor, null, displayFiles, null, true);
                 }
             });
 
@@ -71,14 +75,21 @@ let fileSelect = async function($modalAnchor){
             $noDeleteButton.unbind();
             $noDeleteButton.click(function(){
                 $confirmDeleteModal.modal('hide');
-                $confirmDeleteAnchor.html('');
-                $selectFileButton.click();
             });
         });
+    };
+
+    $selectFileButton.unbind();
+    $selectFileButton.click(await async function(){
+        $fileManagerMain.html("");
+        fileFilter($fileSearchAnchor, null, displayFiles, null, false);
     });
+
 
     $uploadNewFile.unbind();
     $uploadNewFile.click(await async function(){
+
+        $fileSearchAnchor.html('');
         $fileManagerMain.html(uploadNewfile);
 
         let $displayNameInput = $fileManagerMain.find('[data-role="file-displayname"]');
@@ -171,6 +182,7 @@ let fileSelectModal = `
 
                 <hr class="hr-black">
                 
+                <div data-role="file-search"></div><br />
                 <div data-role="file-manager-main"></div>
 
             </div>
@@ -199,19 +211,19 @@ let uploadNewfile = `
 `;
 
 let fileListingTemplate = `
-<table class="width-100-pc">
+<table class="width-100-pc modal-list">
     <tr>
-        <td class="table-lgray table-lgray-heading">File Display Name</td>
-        <td class="table-lgray table-lgray-heading">Original File Name</td>
-        <td class="table-lgray table-lgray-heading">Author</td>
-        <td class="table-lgray table-lgray-heading">Actions</td>
+        <td class="table-lgray table-lgray-heading" style="width:25%;">File Display Name</td>
+        <td class="table-lgray table-lgray-heading" style="width:25%;">Original File Name</td>
+        <td class="table-lgray table-lgray-heading" style="width:30%;">Author</td>
+        <td class="table-lgray table-lgray-heading" style="width:20%;">Actions</td>
     </tr>
 
     {{#each otherFileVOList}}
     <tr>
         <td class="table-lgray">{{this.displayName}}</td>
         <td class="table-lgray">{{this.originalFileName}}</td>
-        <td class="table-lgray">{{this.authorVO.displayName}}</td>
+        <td class="table-lgray">{{this.authorVO.displayName}} ({{this.authorVO.login}})</td>
         <td class="table-lgray center-text">
             <button type="button" class="btn btn-primary btn-std btn-vertical" onclick="location.href='../getFile.jsp?id={{this.fileId}}'">Download</button>
             <button type="button" class="btn btn-danger btn-std btn-vertical" data-role="file-delete" data-id="{{this.fileId}}">Delete</button>
