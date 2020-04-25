@@ -25,6 +25,12 @@ let postFilter = async function($element, basicPostFilterTO, displayCallback, se
     let $creationDateFrom = $element.find('[data-role="date-from-filter"]');
     let $creationDateTo = $element.find('[data-role="date-from-to"]');
 
+    let $meButton = $element.find('[data-role="me"]');
+
+    $meButton.click(function(){
+        $authorLoginFilterInput.val(Cookies.get("login"));
+    });
+
     if (basicPostFilterTO){
         if (basicPostFilterTO.login){
             $authorLoginFilterInput.val(basicPostFilterTO.login);
@@ -73,16 +79,19 @@ let postFilterTemplate = `<div class="width-100-pc transparent item-container">
             <td width="50%;"><span class="text">Title contains: </span></td>
         </tr>
         <tr>
-            <td class="td-search"><input type="text" class="form-control input" size="10" data-role="author-login-filter"></td>
-            <td class="td-search"><input type="text" class="form-control input" size="15" data-role="title-contains-filter"></td>
+            <td class="td-search">
+                <input type="text" class="form-control input" style="display:inline; width:75% !important;" data-role="author-login-filter">
+                <button type="button" class="btn btn-light btn-std" style="display:inline; width:20% !important;" data-role="me">Me</button>
+            </td>
+            <td class="td-search"><input type="text" class="form-control input" data-role="title-contains-filter"></td>
         </tr>
         <tr>
             <td><span class="text">Date from: (yyyy-MM-dd) </span></td>
             <td><span class="text">Date to: (yyyy-MM-dd)</span></td>
         </tr>
         <tr>
-            <td class="td-search"><input type="text" class="form-control input" size="10" data-role="date-from-filter"></td>
-            <td class="td-search"><input type="text" class="form-control input" size="10" data-role="date-from-to"></td>
+            <td class="td-search"><input type="text" class="form-control input" data-role="date-from-filter"></td>
+            <td class="td-search"><input type="text" class="form-control input" data-role="date-from-to"></td>
         </tr>
         <tr>
             <td class="td-search" style="text-align: right;"><button type="button" class="btn btn-light btn-std" data-role="filter-search" style="width:30%; margin-top:1vh !important;">Search</button></td>
