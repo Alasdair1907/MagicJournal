@@ -46,6 +46,17 @@ body.admin {
     font-family: "Courier New", Courier, monospace;
 }
 
+.link {
+    color: lightskyblue;
+    font-size: 2vh;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    font-family: "Courier New", Courier, monospace;
+}
+
 .login-demo {
     margin-top: 2vh;
 }
@@ -128,6 +139,7 @@ body.admin {
     margin-left: 0.5vh;
     margin-right: 0.5vh;
     font-size: 1.5vh;
+    vertical-align: baseline;
 }
 
 .btn-radio {

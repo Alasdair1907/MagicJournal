@@ -82,7 +82,7 @@ let photoNewOrEdit = `
 <span class="text">Description:</span><br />
 <textarea class="input-textarea-description width-100-pc" maxlength="1000" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />
 
-<span class="text">Coordinates: (latitude, longitude)</span>
+<span class="text">Coordinates: (latitude, longitude)</span> <span data-role="select-on-map" class="link"> select on map</span>
 <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{photoVO.gpsCoordinates}}"><br />
 
 <span class="text">Image:</span><br />
@@ -99,6 +99,8 @@ let photoNewOrEdit = `
     <div data-role="photo-tag-editor"></div>
     <div data-role="photo-relation-manager"></div>
 </div>
+
+<div data-role="map-modal-anchor"></div>
 
 </div>
 

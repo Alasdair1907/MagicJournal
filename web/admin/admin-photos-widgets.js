@@ -58,7 +58,11 @@ $.widget("admin.photosWidget", {
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
         let $descrElem = element.find('[data-role=data-description]');
+
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
+        let $mapSelectLink = element.find('[data-role="select-on-map"]');
+        let $modalMapAnchor = element.find('[data-role="map-modal-anchor"]');
+
         let $fileElem = element.find('[data-role="data-file"]');
         let $submitElem = element.find('[data-role="data-photo-save-or-update"]');
         let $photoImageElem = element.find('[data-role="photo-image"]');
@@ -69,6 +73,10 @@ $.widget("admin.photosWidget", {
 
         $tagEditorDiv.TagEditor({attributionClass: 1, objectId: photoVO.id});
         $relationManagerDiv.RelationManager({attributionClass: 1, objectId: photoVO.id});
+
+        $mapSelectLink.click(function(){
+            mapPick($modalMapAnchor, $gpsElem, $gpsElem.val());
+        });
 
         $photoImageUploadElem.unbind();
         $photoImageUploadElem.click(await async function(){
