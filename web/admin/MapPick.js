@@ -28,9 +28,10 @@ let mapPickTemplate = `
             <!-- Modal body -->
             <div class="modal-body">
             
-            <input type="text" class="input" style="width:75%;" data-role="mapPickSearch">
-            <button type="button" class="btn btn-success btn-std" style="width:20%;" data-role="search-submit">Search</button>
-            
+            <div style="display: flex; justify-content: space-between;">
+                <input type="text" class="input form-control" style="width:77%;" data-role="mapPickSearch">
+                <button type="button" class="btn btn-success btn-std" style="width:20%;" data-role="search-submit">Search</button>
+            </div>
             <div data-role="mapPickMain" class="width-100-pc" style="height: 60vh; margin-top: 1vh;"></div>
             
             </div>
@@ -45,112 +46,132 @@ let mapPickTemplate = `
 </div>
 `;
 
-let mapPick = function($modalAnchor, $inputElem, currentCoordinates){
+let mapPick = async function($modalAnchor, $inputElem, currentCoordinates){
 
     $modalAnchor.html(mapPickTemplate);
-    let $mapAnchor = $modalAnchor.find('[data-role="mapPickMain"]');
-    let $modal = $modalAnchor.find('[data-role="map-pick-modal"]');
-    let $locationInsertButton = $modalAnchor.find('[data-role="location-insert"]');
 
-    let $searchInput = $modalAnchor.find('[data-role="mapPickSearch"]');
-    let $searchSubmit = $modalAnchor.find('[data-role="search-submit"]');
+    try {
+        let $mapAnchor = $modalAnchor.find('[data-role="mapPickMain"]');
+        let $modal = $modalAnchor.find('[data-role="map-pick-modal"]');
+        let $locationInsertButton = $modalAnchor.find('[data-role="location-insert"]');
 
-    $modal.modal();
-    let coordinates = null;
+        let $searchInput = $modalAnchor.find('[data-role="mapPickSearch"]');
+        let $searchSubmit = $modalAnchor.find('[data-role="search-submit"]');
 
-    $locationInsertButton.click(function(){
-        $inputElem.val(coordinates);
-        $modal.modal('hide');
-        $modalAnchor.html('');
-    });
+        $modal.modal();
+        let coordinates = null;
 
-    document.addEventListener('bingMapApiLoaded', function(ev) {
-
-        let searchManager = null;
-        let location = null;
-        if (checkCoordinates(currentCoordinates)){
-            location = new Microsoft.Maps.Location.parseLatLong(currentCoordinates);
-        } else {
-            location = new Microsoft.Maps.Location(48.57, 7.75);
-        }
-
-        let mapTypeId = Microsoft.Maps.MapTypeId.aerial;
-        let map = new Microsoft.Maps.Map($mapAnchor.get(0), {
-            center: location,
-            zoom: 4,
-            mapTypeId: mapTypeId
+        $locationInsertButton.click(function () {
+            $inputElem.val(coordinates);
+            $modal.modal('hide');
+            $modalAnchor.html('');
         });
 
-        let putPin = function(e){
-            removePins();
+        let f = function (ev) {
 
-            let point = new Microsoft.Maps.Point(e.getX(), e.getY());
-            let location = e.target.tryPixelToLocation(point);
-            //let location = new Microsoft.Maps.Location(locWhatsit.latitude, locWhatsit.longitude);
-            let pin = new Microsoft.Maps.Pushpin(location, {text:'+',color:'red'});
-
-            $locationInsertButton.prop("disabled", false);
-            coordinates = location.latitude + ", " + location.longitude;
-
-            map.entities.push(pin);
-        };
-
-        let removePins = function(){
-            for (var i = map.entities.getLength() - 1; i >= 0; i--){
-                var pushpin = map.entities.get(i);
-                if (pushpin instanceof Microsoft.Maps.Pushpin){
-                    map.entities.removeAt(i);
-                }
+            let searchManager = null;
+            let location = null;
+            if (currentCoordinates && checkCoordinates(currentCoordinates)) {
+                location = new Microsoft.Maps.Location.parseLatLong(currentCoordinates);
+            } else {
+                location = new Microsoft.Maps.Location(48.57, 7.75);
             }
-        };
 
-        let geocode = function(query){
-            let searchRequest = {
-                where: query,
-                callback: function(r){
-                    if (r && r.results && r.results.length > 0){
-                        map.setView({
-                            center: r.results[0].location,
-                            zoom: 15
-                        });
+            let mapTypeId = Microsoft.Maps.MapTypeId.aerial;
+            let map = new Microsoft.Maps.Map($mapAnchor.get(0), {
+                center: location,
+                zoom: 4,
+                mapTypeId: mapTypeId
+            });
+
+            let putPin = function (e) {
+                removePins();
+
+                let point = new Microsoft.Maps.Point(e.getX(), e.getY());
+                let location = e.target.tryPixelToLocation(point);
+                let pin = new Microsoft.Maps.Pushpin(location, {text: '+', color: 'red'});
+
+                $locationInsertButton.prop("disabled", false);
+                coordinates = location.latitude + ", " + location.longitude;
+
+                map.entities.push(pin);
+            };
+
+            let removePins = function () {
+                for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+                    var pushpin = map.entities.get(i);
+                    if (pushpin instanceof Microsoft.Maps.Pushpin) {
+                        map.entities.removeAt(i);
                     }
-                },
-                errorCallback: function(t){
-                    alert("No results found.");
                 }
             };
 
-            searchManager.geocode(searchRequest);
-        };
+            let geocode = function (query) {
+                let searchRequest = {
+                    where: query,
+                    callback: function (r) {
+                        if (r && r.results && r.results.length > 0) {
+                            map.setView({
+                                center: r.results[0].location,
+                                zoom: 15
+                            });
+                        }
+                    },
+                    errorCallback: function (t) {
+                        alert("No results found.");
+                    }
+                };
 
-        let search = function(){
-            if (!searchManager){
-                Microsoft.Maps.loadModule('Microsoft.Maps.Search', function(){
-                    searchManager = new Microsoft.Maps.Search.SearchManager(map);
-                    search();
-                });
-            } else {
-                let query = $searchInput.val();
-                geocode(query);
+                searchManager.geocode(searchRequest);
+            };
+
+            let search = function () {
+                if (!searchManager) {
+                    Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+                        searchManager = new Microsoft.Maps.Search.SearchManager(map);
+                        search();
+                    });
+                } else {
+                    let query = $searchInput.val();
+                    geocode(query);
+                }
+            };
+
+            $searchSubmit.click(function () {
+                search();
+            });
+            Microsoft.Maps.Events.addHandler(map, 'click', putPin);
+
+            if (currentCoordinates && checkCoordinates(currentCoordinates)) {
+                map.entities.push(new Microsoft.Maps.Pushpin(location, {text: '+', color: 'red'}));
             }
         };
 
-        $searchSubmit.click(function(){
-            search();
-        });
-        Microsoft.Maps.Events.addHandler(map, 'click', putPin);
-
-        if (checkCoordinates(currentCoordinates)){
-            map.entities.push(new Microsoft.Maps.Pushpin(location, {text:'+',color:'red'}));
+        if (func){
+            document.removeEventListener('bingMapApiLoaded', func);
         }
-    });
+        func = f;
+        document.addEventListener('bingMapApiLoaded', f);
 
-    var mapScriptUrl = 'https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AoM1pkle7vDJa6ftRBk7dl2u2Xld11jSpRugxaXnnS_nkLS9SDLA8yJDTRdB98dF';
-    var script = document.createElement("script");
-    script.setAttribute('defer', '');
-    script.setAttribute('async', '');
-    script.setAttribute("type", "text/javascript");
-    script.setAttribute("src", mapScriptUrl);
-    document.body.appendChild(script);
+        let settingsTO = await ajax({action: "getSettingsNoAuth"},"error loading settings");
+        if (settingsTO === undefined){
+            return;
+        }
 
+        if (!settingsTO.bingApiKey){
+            alert("Bing API Key is required for this action. It can be set in Settings.");
+            return;
+        }
+
+        var mapScriptUrl = 'https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key='+settingsTO.bingApiKey;
+        var script = document.createElement("script");
+        script.setAttribute('defer', '');
+        script.setAttribute('async', '');
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", mapScriptUrl);
+        document.body.appendChild(script);
+
+    } catch (e){
+        console.log(e);
+    }
 };

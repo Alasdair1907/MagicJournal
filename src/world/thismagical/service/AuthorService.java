@@ -146,12 +146,14 @@ public class AuthorService {
 
         String plainTextPassword = newAuthor.getPasswd();
 
-        try {
-            if (!AuthorizationService.verifyPasswordStrength(filesLocation, plainTextPassword)){
-                return JsonAdminResponse.fail("Password must contain at least 7 characters and must not be commonly used.");
+        if (newAuthor.getPrivilegeLevel() != PrivilegeLevel.PRIVILEGE_DEMO) {
+            try {
+                if (!AuthorizationService.verifyPasswordStrength(filesLocation, plainTextPassword)) {
+                    return JsonAdminResponse.fail("Password must contain at least 7 characters and must not be commonly used.");
+                }
+            } catch (Exception ex) {
+                Tools.handleException(ex);
             }
-        } catch (Exception ex){
-            Tools.handleException(ex);
         }
 
         String hashedPassword = Tools.sha256(plainTextPassword);

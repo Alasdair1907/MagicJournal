@@ -42,7 +42,9 @@ $.widget("admin.ImageManager", {
 </tr>
 
 <tr>
-<td class="td-tall"><span class="text">Coordinates: (latitude, longitude)</span></td><td class="td-tall"><input type="text" data-role="selected-img-gps" class="input width-full" disabled="disabled"></td>
+<td class="td-tall"><span class="text">Coordinates: (latitude, longitude)</span>
+ <span data-role="select-on-map" class="link">select on map</span>
+</td><td class="td-tall"><input type="text" data-role="selected-img-gps" class="input width-full" disabled="disabled"></td>
 </tr>
 
 <tr>
@@ -68,6 +70,7 @@ $.widget("admin.ImageManager", {
 <br />
 <div data-role="image-list"></div>
 </div>
+<div data-role="img-manager-modal-anchor"></div>
         `,
 
     _imageListTemplate: `
@@ -126,6 +129,8 @@ $.widget("admin.ImageManager", {
             alert("can't load imageVOList for object "+objectId+" of class "+attributionClass);
         }
 
+        let enabled = false;
+
         let hImageListTemplate = Handlebars.compile(this._imageListTemplate);
         $imageListElem.html(hImageListTemplate({imageVOList: imageVOList}));
 
@@ -137,6 +142,14 @@ $.widget("admin.ImageManager", {
         let $selectedImgOrder = self.element.find('[data-role="selected-img-order-number"]');
         let $selectedImgDelete = self.element.find('[data-role="selected-img-delete"]');
         let $selectedImgUpdate = self.element.find('[data-role="selected-img-update"]');
+
+        let $mapPickLink = self.element.find('[data-role="select-on-map"]');
+        let $mapPickModalAnchor = self.element.find('[data-role="img-manager-modal-anchor"]');
+        $mapPickLink.click(await async function(){
+            if (enabled){
+                await mapPick($mapPickModalAnchor, $selectedImgGps, $selectedImgGps.val());
+            }
+        });
 
         $galleryImages.unbind();
         $galleryImages.click(await async function () {
@@ -154,6 +167,8 @@ $.widget("admin.ImageManager", {
             $selectedImgTitle.prop("disabled", false);
             $selectedImgGps.prop("disabled", false);
             $selectedImgOrder.prop("disabled", false);
+
+            enabled = true;
 
             if (!isDemo()) {
                 $selectedImgDelete.prop("disabled", false);

@@ -58,24 +58,30 @@ $.widget("admin.articlesWidget", {
         let demoUser = Cookies.get("privilegeLevelName") === "demo";
         element.html(hArticleNewOrEdit({articleVO: articleVO, demoUser: demoUser}));
 
+        let $modalAnchor = self.element.find('[data-role="modal-anchor"]');
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
         let $descrElem = element.find('[data-role=data-description]');
         let $textElem = element.find('[data-role="data-article-text"]');
+
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
+        let $coordinatesSelectLink = element.find('[data-role="select-on-map"]');
+        $coordinatesSelectLink.click(await async function(){
+            await mapPick($modalAnchor, $gpsElem, $gpsElem.val());
+        });
+
         let $submitElem = element.find('[data-role="data-article-save-or-update"]');
         let $submitElemClose = element.find('[data-role="data-article-save-or-update-close"]');
         let $articleImageElem = element.find('[data-role="article-title-image"]'); // img with the image
         let $tagEditorDiv = element.find('[data-role="article-tag-editor"]');
         let $relationEditorDiv = element.find('[data-role="article-relation-editor"]');
         let $helperImageManager = element.find('[data-role="article-helper-image-manager"]');
-
-        let $modalAnchor = self.element.find('[data-role="modal-anchor"]');
         let $articleUpdateImageButton = element.find('[data-role="data-article-update-image"]');
 
         $tagEditorDiv.TagEditor({attributionClass: 2, objectId: articleVO.id});
         $relationEditorDiv.RelationManager({attributionClass: 2, objectId: articleVO.id});
         $helperImageManager.ImageManager({attributionClass: 2, objectId: articleVO.id});
+
 
         $articleUpdateImageButton.unbind();
         $articleUpdateImageButton.click(await async function(){

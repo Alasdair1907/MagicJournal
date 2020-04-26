@@ -74,8 +74,8 @@ $.widget("admin.photosWidget", {
         $tagEditorDiv.TagEditor({attributionClass: 1, objectId: photoVO.id});
         $relationManagerDiv.RelationManager({attributionClass: 1, objectId: photoVO.id});
 
-        $mapSelectLink.click(function(){
-            mapPick($modalMapAnchor, $gpsElem, $gpsElem.val());
+        $mapSelectLink.click(await async function(){
+            await mapPick($modalMapAnchor, $gpsElem, $gpsElem.val());
         });
 
         $photoImageUploadElem.unbind();

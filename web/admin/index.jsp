@@ -69,8 +69,15 @@
 
     <script type="text/javascript">
 
+        var event = null;
+        var func = null;
+
         function GetMap(){
-            let event = new Event('bingMapApiLoaded');
+
+            if (!event) {
+                event = new Event('bingMapApiLoaded');
+            }
+
             document.dispatchEvent(event);
         }
     </script>

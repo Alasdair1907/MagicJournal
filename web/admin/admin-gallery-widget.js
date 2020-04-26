@@ -41,7 +41,6 @@ $.widget("admin.galleriesWidget", {
         let $galleryDeleteButtons = self.element.find('[data-role="gallery-delete"]');
         let $createNewGalleryButton = self.element.find('[data-role="gallery-new"]');
 
-
         let $galleryPublishToggle = self.element.find('[data-role="gallery-publish-toggle"]');
 
         let $galleryDeleteConfirmModal = self.element.find('[data-role="delete-gallery-confirm"]');
@@ -194,12 +193,19 @@ $.widget("admin.galleriesWidget", {
         let demoUser = Cookies.get("privilegeLevelName") === "demo";
         element.html(hGalleryNewOrEdit({galleryVO: galleryVO, demoUser: demoUser}));
 
+        let $modalAnchor = element.find('[data-role="modal-anchor"]');
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
         let $descrElem = element.find('[data-role=data-description]');
-        let $gpsElem = element.find('[data-role=data-gps-coordinates]');
         let $submitElem = element.find('[data-role="data-gallery-save-or-update"]');
+
+        let $gpsElem = element.find('[data-role=data-gps-coordinates]');
+        let $mapPickLink = element.find('[data-role="select-on-map"]');
+
+        $mapPickLink.click(await async function(){
+            await mapPick($modalAnchor, $gpsElem, $gpsElem.val());
+        });
 
         let $tagEditorDiv = element.find('[data-role="gallery-tag-editor"]');
         let $relationEditorDiv = element.find('[data-role="gallery-relation-editor"]');
