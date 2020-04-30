@@ -1,8 +1,20 @@
-let  ajax = async function(data, errDescrDefault) {
+let ajaxCda = async function(data, errDescrDefault){
+    return await ajax(data, errDescrDefault, true);
+};
+
+let ajax = async function(data, errDescrDefault, client) {
     let adminResponseJson;
+    let url;
+
+    if (client){
+        url = 'admin/jsonApi.jsp';
+    } else {
+        url = 'jsonApi.jsp';
+    }
+
     try {
         adminResponseJson = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: url,
             method: 'POST',
             data: data
         });

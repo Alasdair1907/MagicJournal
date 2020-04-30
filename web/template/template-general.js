@@ -1,8 +1,4 @@
-package world.thismagical.to;
-/*
-  User: Alasdair
-  Date: 4/23/2020
-  Time: 6:26 PM                                                                                                    
+/**
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -14,14 +10,28 @@ package world.thismagical.to;
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                   
+                                                                                                     
+    
 */
 
-public class BasicPostFilterTO {
-    public String login;
-    public String from;
-    public String to;
-    public String titleContains;
-    public Integer limit;
-    public Integer fromCount;
-}
+let homepageListing = `
+<div class="width-100-pc" style="display: flex">
+    
+    <div class="main-listing-column">
+    
+        <div class="container-primary container-primary-element">
+            <span class="item-container-heading">Latest articles</span>
+        </div>
+    
+        {{#each articleVOList}}
+            ${articleRepresentation}
+        {{/each}}
+    </div>
+    
+    <div class="main-listing-column">
+        ${tagListMenu}
+        ${photoListingHomepage}
+    </div>
+    
+</div>
+`;

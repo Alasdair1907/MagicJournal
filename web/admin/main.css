@@ -2,13 +2,6 @@ body {
     min-height: 100vh;
 }
 
-body.main {
-    background-color: black;
-    background-image: url("../resources/background.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
 body.admin {
     background-color: white;
     background-image: url("../resources/background-admin.jpg");

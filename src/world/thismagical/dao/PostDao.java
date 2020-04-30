@@ -106,6 +106,17 @@ public class PostDao {
             cq.select(root);
         }
 
+        Query query = session.createQuery(cq);
+
+        if (basicPostFilter != null) {
+            if (basicPostFilter.fromCount != null){
+                query = query.setFirstResult(basicPostFilter.fromCount);
+            }
+            if (basicPostFilter.limit != null){
+                query = query.setMaxResults(basicPostFilter.limit);
+            }
+        }
+
         list = (List<PostEntity>) session.createQuery(cq).list();
 
         return list;

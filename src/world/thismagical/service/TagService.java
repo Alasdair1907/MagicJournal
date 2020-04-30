@@ -25,11 +25,52 @@ import world.thismagical.to.TagTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
+import world.thismagical.vo.TagDigestVO;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.tools.Tool;
+import java.util.*;
 
 public class TagService {
+
+    public static JsonAdminResponse<List<TagDigestVO>> getTagDigestVOList(Session session){
+        Map<String, TagDigestVO> tagMap = new LinkedHashMap<>();
+
+        List<TagEntity> tagEntityList = null;
+        try {
+            tagEntityList = session.createQuery("from TagEntity order by tag asc", TagEntity.class).getResultList();
+        } catch (Exception e){
+            Tools.handleException(e);
+            return JsonAdminResponse.success(new ArrayList<>());
+        }
+
+        for (TagEntity tagEntity : tagEntityList){
+            TagDigestVO tagDigestVO;
+            String tag = tagEntity.getTag();
+            if (tagMap.containsKey(tag)){
+                tagDigestVO = tagMap.get(tag);
+            } else {
+                tagDigestVO = new TagDigestVO(tag);
+                tagMap.put(tag, tagDigestVO);
+            }
+
+            if (tagEntity.getAttributionClass() == PostAttribution.ARTICLE){
+                tagDigestVO.articles += 1;
+                tagDigestVO.totalPosts += 1;
+            } else if (tagEntity.getAttributionClass() == PostAttribution.PHOTO){
+                tagDigestVO.photos += 1;
+                tagDigestVO.totalPosts += 1;
+            } else if (tagEntity.getAttributionClass() == PostAttribution.GALLERY){
+                tagDigestVO.galleries += 1;
+                tagDigestVO.totalPosts += 1;
+            }
+        }
+
+        List<TagDigestVO> tagDigestVOList = new ArrayList<>();
+        tagMap.keySet().forEach( it -> tagDigestVOList.add(tagMap.get(it)));
+
+        return JsonAdminResponse.success(tagDigestVOList);
+    }
+
     public static JsonAdminResponse<List<TagEntity>> listTagsForObject(PostAttribution objectAttribution, Long objectId, Session session){
 
         if (objectAttribution == null || objectId == null){

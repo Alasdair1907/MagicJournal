@@ -1,8 +1,4 @@
-package world.thismagical.to;
-/*
-  User: Alasdair
-  Date: 4/23/2020
-  Time: 6:26 PM                                                                                                    
+/**
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -14,14 +10,41 @@ package world.thismagical.to;
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                   
+                                                                                                     
+    
 */
 
-public class BasicPostFilterTO {
-    public String login;
-    public String from;
-    public String to;
-    public String titleContains;
-    public Integer limit;
-    public Integer fromCount;
-}
+$.widget("magic.homepage", {
+    _init: async function(){
+        await this._display(this);
+    },
+    _display: async function(self){
+        let basicPostFilterTOArticles = {
+            limit: 5
+        };
+
+        // TODO load simultaneously
+        // TODO add spinner
+
+        // TODO add limits
+
+        let articleVOList = await ajaxCda({data: JSON.stringify(basicPostFilterTOArticles), action: "listAllArticleVOs"});
+        if (articleVOList === undefined){
+            // TODO something's wrong - need a handler for this
+        }
+
+        let tagListMenu = await ajaxCda({action: "getTagDigestVOList"});
+        if (tagListMenu === undefined){
+
+        }
+
+        let photoVOList = await ajaxCda({action: "listAllPhotoVOs"});
+        if (photoVOList === undefined){
+
+        }
+
+        let hHomepageListing = Handlebars.compile(homepageListing);
+        self.element.html(hHomepageListing({articleVOList: articleVOList, tagDigestVOList: tagListMenu, photoVOList: photoVOList}));
+
+    }
+});

@@ -1,8 +1,8 @@
-package world.thismagical.to;
+package world.thismagical.vo;
 /*
   User: Alasdair
-  Date: 4/23/2020
-  Time: 6:26 PM                                                                                                    
+  Date: 4/30/2020
+  Time: 8:55 PM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -17,11 +17,20 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class BasicPostFilterTO {
-    public String login;
-    public String from;
-    public String to;
-    public String titleContains;
-    public Integer limit;
-    public Integer fromCount;
+public class TagDigestVO {
+    public String title;
+    public Integer totalPosts;
+    public Integer articles;
+    public Integer photos;
+    public Integer galleries;
+
+    public TagDigestVO(){};
+    public TagDigestVO(String title){
+        this.title = title;
+        this.totalPosts = 0;
+        this.articles = 0;
+        this.photos = 0;
+        this.galleries = 0;
+    }
+
 }

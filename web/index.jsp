@@ -1,11 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%@ page import="java.util.List" %>
-<%@ page import="world.thismagical.dao.AuthorDao" %>
-<%@ page import="world.thismagical.entity.AuthorEntity" %>
-<%@ page import="world.thismagical.util.Tools" %>
-<%@ page import="java.time.LocalDateTime" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
 
 <html>
 <!--
@@ -24,16 +18,23 @@
 -->
   <head>
     <jsp:include page="head-standard.jsp"/>
-    <title>ThisMagical.world</title>
+    <jsp:include page="head-client.jsp"/>
+
+    <title>ThisMagical.world</title> <!-- TODO load from settings -->
+
+    <script src="cda/homepage.js"></script>
+    <script src="cda/header.js"></script>
+
   </head>
-  <body class="main">
+  <body class="cda">
 
-  <jsp:include page="desktop-header.jsp"/>
+  <div data-role="header-main" class="width-100-pc"></div>
+  <div data-role="content-main" class="width-100-pc"></div>
 
-  <br />
-
-  <span class="heading-huge center">Testing page</span>
-
+  <script type="text/javascript">
+    $('[data-role="header-main"]').header();
+    $('[data-role="content-main"]').homepage();
+  </script>
 
   </body>
 </html>

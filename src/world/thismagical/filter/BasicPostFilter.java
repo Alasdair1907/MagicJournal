@@ -31,6 +31,10 @@ public class BasicPostFilter {
     public LocalDateTime fromDateTime;
     public LocalDateTime toDateTime;
     public String titleContains;
+
+    public Integer fromCount;
+    public Integer limit;
+
     public Boolean returnEmpty;
 
     public static BasicPostFilter fromTO(BasicPostFilterTO to, Session session){
@@ -59,6 +63,8 @@ public class BasicPostFilter {
         }
 
         basicPostFilter.titleContains = to.titleContains;
+        basicPostFilter.fromCount = to.fromCount;
+        basicPostFilter.limit = to.limit;
 
         return basicPostFilter;
     }

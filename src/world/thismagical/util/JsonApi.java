@@ -237,6 +237,10 @@ public class JsonApi {
         return JsonAdminResponse.fail("error deleting photo");
     }
 
+    /*
+     * Tags
+     */
+
     public static JsonAdminResponse<TagTO> listTagsForObject(TagTO request, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {
@@ -259,7 +263,17 @@ public class JsonApi {
         return JsonAdminResponse.fail("error saving or updating tags");
     }
 
-    /**
+    public static JsonAdminResponse<List<TagDigestVO>> getTagDigestVOList(SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            return TagService.getTagDigestVOList(session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error obtaining list of tags");
+    }
+
+    /*
      * Image Manager - list gallery/article images
      */
     public static JsonAdminResponse<List<ImageVO>> listImageVOs(Short postAttribution, Long objId, SessionFactory sessionFactory){

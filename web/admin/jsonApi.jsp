@@ -164,6 +164,11 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("getTagDigestVOList")){
+            JsonAdminResponse<List<TagDigestVO>> res = JsonApi.getTagDigestVOList(sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         // gallery edit
 
         if (action.equals("listAllGalleryVOsNoFilter")){
