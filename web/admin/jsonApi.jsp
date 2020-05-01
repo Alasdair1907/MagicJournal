@@ -112,11 +112,6 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
-        if (action.equals("listAllPhotoVOsNoFilter")){
-            JsonAdminResponse<List<PhotoVO>> res = JsonApi.listAllPhotoVOsNoFilter(sessionFactory);
-            out.print(JsonApi.toString(res, objectMapper));
-        }
-
         if (action.equals("listAllPhotoVOs")){
             BasicPostFilterTO basicPostFilterTO = null;
             if (data != null && !data.isEmpty()){
@@ -171,16 +166,12 @@
 
         // gallery edit
 
-        if (action.equals("listAllGalleryVOsNoFilter")){
-            JsonAdminResponse<List<GalleryVO>> res = JsonApi.listAllGalleryVOsNoFilter(sessionFactory);
-            out.print(JsonApi.toString(res, objectMapper));
-        }
-
         if (action.equals("listAllGalleryVOs")){
             BasicPostFilterTO basicPostFilterTO = null;
             if (data != null && !data.isEmpty()){
                 basicPostFilterTO = objectMapper.readValue(data, BasicPostFilterTO.class);
             }
+
             JsonAdminResponse<List<GalleryVO>> res = JsonApi.listAllGalleryVOsFilter(basicPostFilterTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
@@ -249,11 +240,6 @@
                 basicPostFilterTO = objectMapper.readValue(data, BasicPostFilterTO.class);
             }
             JsonAdminResponse<List<ArticleVO>> res = JsonApi.listAllArticleVOsFilter(basicPostFilterTO, sessionFactory);
-            out.print(JsonApi.toString(res, objectMapper));
-        }
-
-        if (action.equals("listAllArticleVOsNoFilter")){
-            JsonAdminResponse<List<ArticleVO>> res = JsonApi.listAllArticleVOsNoFilter(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

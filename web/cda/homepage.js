@@ -20,7 +20,7 @@ $.widget("magic.homepage", {
     },
     _display: async function(self){
         let basicPostFilterTOArticles = {
-            limit: 5
+            limit: 10
         };
 
         // TODO load simultaneously
@@ -38,13 +38,28 @@ $.widget("magic.homepage", {
 
         }
 
-        let photoVOList = await ajaxCda({action: "listAllPhotoVOs"});
+        let basicPostFilterTOPhotos = {
+            limit: 8
+        };
+
+
+        let photoVOList = await ajaxCda({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTOPhotos)});
         if (photoVOList === undefined){
 
         }
 
+        let basicPostFilterTOGalleries = {
+            limit: 3,
+            galleryRepresentationImages: 8
+        };
+
+        let galleryVOList = await ajaxCda({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTOGalleries)});
+        if (galleryVOList === undefined){
+
+        }
+
         let hHomepageListing = Handlebars.compile(homepageListing);
-        self.element.html(hHomepageListing({articleVOList: articleVOList, tagDigestVOList: tagListMenu, photoVOList: photoVOList}));
+        self.element.html(hHomepageListing({articleVOList: articleVOList, tagDigestVOList: tagListMenu, photoVOList: photoVOList, galleryVOList: galleryVOList}));
 
     }
 });

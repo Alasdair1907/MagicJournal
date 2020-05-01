@@ -117,7 +117,7 @@ public class PostDao {
             }
         }
 
-        list = (List<PostEntity>) session.createQuery(cq).list();
+        list = (List<PostEntity>) query.getResultList();
 
         return list;
     }

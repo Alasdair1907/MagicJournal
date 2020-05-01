@@ -44,7 +44,7 @@ body.cda {
 
 .container-primary {
     background: rgba(0, 0, 0, 0.7);
-    padding: 1.5vmin;
+    padding: 1vmin;
     border-radius: 1.5vmin;
 }
 
@@ -67,12 +67,29 @@ body.cda {
     margin-bottom: 1vmin;
 }
 
+.item-heading {
+    color: white;
+    font-size: 2.7vmin;
+    font-family: Candara, Verdana, sans-serif;
+    text-align: center;
+    margin-bottom: 1vmin;
+    display: block;
+    text-align: center;
+}
+
 
 .text-main {
     color: white;
     font-size: 1.9vmin;
     font-family: Candara, Verdana, sans-serif;
 }
+
+.text-details {
+    color: white;
+    font-size: 1.4vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
 
 .item-image-div {
     border-radius: 1.5vmin;
@@ -95,6 +112,7 @@ body.cda {
 
 .tag-cloud-a {
     text-decoration: none;
+    margin-left: 1vw;
 }
 
 .tag-cloud-a:hover {
@@ -108,17 +126,73 @@ body.cda {
     text-decoration: none;
 }
 
+.general-a {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.general-a:hover {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.general-a:visited {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.main-a {
+    color: white;
+    text-decoration: underline;
+    outline: none;
+}
+
+.main-a:hover {
+    color:white;
+    text-decoration: underline;
+    outline: none;
+}
+
+.main-a:visited {
+    color: white;
+    text-decoration: underline;
+    outline: none;
+}
+
+.post-info-line {
+    display: flex;
+    justify-content: space-around;
+}
+
 .photo-image-div {
     /*border-radius: 1.5vmin;*/
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
     background-position: center;
     background-size: cover;
+    display: inline-block;
 }
 
 .photo-listing-div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 44vw;
+    margin: auto;
+    font-size: 0;
+}
+
+.btn-std {
+    height: 2vmin;
+    margin-left: 0.5vh;
+    margin-right: 0.5vh;
+    font-size: 1.9vmin;
+    font-family: Candara, Verdana, sans-serif;
+    vertical-align: baseline;
+}
+
+.td-extra-link {
+    text-align: right;
+    padding-right:5%;
 }
 
 @media (max-width: 1499px) {
@@ -134,9 +208,9 @@ body.cda {
     }
 
     .main-listing-column {
-        width: 46%;
-        margin-left: 2%;
-        margin-right: 2%;
+        width: 48%;
+        margin-left: 1%;
+        margin-right: 1%;
     }
 
     .item-image-div-size {
@@ -146,9 +220,9 @@ body.cda {
     }
 
     .photo-image-div-size {
-        width: 13.08vw;
-        height: 13.08vw;
-        margin: 1vmin;
+        width: 10vw;
+        height: 10vw;
+        margin: 0.5vw;
     }
 }
 
@@ -165,20 +239,30 @@ body.cda {
     }
 
     .main-listing-column {
-        width: 30.33%;
+        /*width: 30.33%;
         margin-left: 1.125%;
-        margin-right: 1.125%;
+        margin-right: 1.125%;*/
+        width: 48%;
+        margin-left: 1%;
+        margin-right: 1%;
     }
 
     .item-image-div-size {
-        width: 7.866vw;
+        /*width: 7.866vw;
         height: 7.866vw;
+        margin-right: 1vw;*/
+        /*width: 17.44vw;*/
+        width: 13.08vw;
+        height: 13.08vw;
         margin-right: 1vw;
     }
 
     .photo-image-div-size {
-        width: 7.866vw;
+        /*width: 7.866vw;
         height: 7.866vw;
-        margin: 1vmin;
+        margin: 1vmin;*/
+        width: 10vw;
+        height: 10vw;
+        margin: 0.5vw;
     }
 }

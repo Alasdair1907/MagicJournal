@@ -61,11 +61,7 @@ public class PhotoService {
 
         List<PhotoVO> photoVOList = new ArrayList<>();
         for (PhotoEntity photoEntity : photoEntityList){
-            ImageVO imageVO = null;
-            Optional<ImageVO> optional = imageVOList.stream().filter( it -> it.parentObjId.equals(photoEntity.getId())).findAny();
-            if (optional.isPresent()) {
-                imageVO = optional.get();
-            }
+            ImageVO imageVO = imageVOList.stream().filter( it -> it.parentObjId.equals(photoEntity.getId())).findAny().orElse(null);
             PhotoVO photoVO = new PhotoVO(photoEntity);
             photoVO.imageVO = imageVO;
 

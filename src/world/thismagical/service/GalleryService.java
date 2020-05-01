@@ -45,41 +45,67 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GalleryService {
-    public static GalleryVO getGalleryVOByGalleryId(Long galleryId, Session session){
-        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(galleryId, GalleryEntity.class, session);
-        GalleryVO galleryVO = new GalleryVO(galleryEntity);
 
-        galleryVO.imageVOList = FileDao.getImages(PostAttribution.GALLERY, Collections.singletonList(galleryEntity.getId()), session);
+    public static List<GalleryVO> entitiesToVos(List<GalleryEntity> galleryEntityList, Integer imagesInRepresentation, Session session){
 
-        if (galleryVO.imageVOList != null && !galleryVO.imageVOList.isEmpty()){
-            List<ImageVO> galleryRepresentation = new ArrayList<>();
-            int i = 4;
-            if (galleryVO.imageVOList.size() < 4){
-                i = galleryVO.imageVOList.size();
-            }
-
-            for (int t = 0; t < i; t++){
-                galleryRepresentation.add(galleryVO.imageVOList.get(t));
-            }
-
-            galleryVO.galleryRepresentation = galleryRepresentation;
+        if (galleryEntityList == null || galleryEntityList.isEmpty()){
+            return null;
         }
 
-        return galleryVO;
+        if (imagesInRepresentation == null){
+            imagesInRepresentation = 0;
+        }
+
+        List<GalleryVO> res = new ArrayList<>();
+
+        List<Long> galleryIds = new ArrayList<>();
+        galleryEntityList.forEach(it -> galleryIds.add(it.getId()));
+        List<ImageVO> imageVOListAll = FileDao.getImages(PostAttribution.GALLERY, galleryIds, session);
+
+        for (GalleryEntity galleryEntity : galleryEntityList){
+            GalleryVO galleryVO = new GalleryVO(galleryEntity);
+            galleryVO.imageVOList = imageVOListAll.stream().filter(it -> it.parentObjId.equals(galleryEntity.getId())).collect(Collectors.toList());
+
+            if (!galleryVO.imageVOList.isEmpty() && imagesInRepresentation > 0) {
+                List<ImageVO> galleryRepresentation = new ArrayList<>();
+
+                int i = imagesInRepresentation;
+                if (galleryVO.imageVOList.size() < imagesInRepresentation) {
+                    i = galleryVO.imageVOList.size();
+                }
+
+                for (int t = 0; t < i; t++) {
+                    galleryRepresentation.add(galleryVO.imageVOList.get(t));
+                }
+
+                galleryVO.galleryRepresentation = galleryRepresentation;
+            }
+
+            res.add(galleryVO);
+        }
+
+        return res;
+    }
+
+    public static GalleryVO getGalleryVOByGalleryId(Long galleryId, Session session){
+        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(galleryId, GalleryEntity.class, session);
+        if (galleryEntity == null){
+            return null;
+        }
+
+        return entitiesToVos(Collections.singletonList(galleryEntity), BasicPostFilter.DEFAULT_GALLERY_REPRESENTATION_IMAGES, session).get(0);
     }
 
 
     @SuppressWarnings("unchecked")
-    public static List<GalleryVO> listAllGalleryVOs(BasicPostFilter basicPostFilter, Session session){
+    public static List<GalleryVO> listAllGalleryVOs(BasicPostFilter basicPostFilter, Integer imagesInRepresentation, Session session){
         List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(basicPostFilter, GalleryEntity.class, session);
-        List<GalleryVO> galleryVOList = new ArrayList<>();
 
-        for (GalleryEntity galleryEntity : galleryEntityList){
-            GalleryVO galleryVO = getGalleryVOByGalleryId(galleryEntity.getId(), session);
-            galleryVOList.add(galleryVO);
+        if (galleryEntityList == null || galleryEntityList.isEmpty()){
+            return new ArrayList<>();
         }
-        
-        return galleryVOList;
+
+        return entitiesToVos(galleryEntityList, imagesInRepresentation, session);
     }
 
     public static JsonAdminResponse<Void> togglePostPublish(Long id,  String guid, Session session){

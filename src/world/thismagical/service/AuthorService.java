@@ -178,7 +178,7 @@ public class AuthorService {
 
         List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(basicPostFilter, session);
         List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(basicPostFilter, session);
-        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(basicPostFilter, session);
+        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(basicPostFilter, 6, session);
 
         PostsTO postsTO = new PostsTO();
         postsTO.articles = articleVOList;

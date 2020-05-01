@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class BasicPostFilter {
+    public static final Integer DEFAULT_GALLERY_REPRESENTATION_IMAGES = 4;
+
     public AuthorEntity authorEntity;
     public LocalDateTime fromDateTime;
     public LocalDateTime toDateTime;
@@ -36,6 +38,8 @@ public class BasicPostFilter {
     public Integer limit;
 
     public Boolean returnEmpty;
+
+    public Integer galleryRepresentationImages;
 
     public static BasicPostFilter fromTO(BasicPostFilterTO to, Session session){
 
@@ -65,6 +69,12 @@ public class BasicPostFilter {
         basicPostFilter.titleContains = to.titleContains;
         basicPostFilter.fromCount = to.fromCount;
         basicPostFilter.limit = to.limit;
+
+        if (to.galleryRepresentationImages == null){
+            basicPostFilter.galleryRepresentationImages = DEFAULT_GALLERY_REPRESENTATION_IMAGES;
+        } else {
+            basicPostFilter.galleryRepresentationImages = to.galleryRepresentationImages;
+        }
 
         return basicPostFilter;
     }

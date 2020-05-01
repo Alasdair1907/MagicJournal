@@ -164,18 +164,6 @@ public class JsonApi {
         return JsonAdminResponse.fail("error getting photo by id");
     }
 
-    public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOsNoFilter(SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(PhotoService.listAllPhotoVOs(null, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing photos (no filter)");
-    }
-
-
     public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {
@@ -287,22 +275,19 @@ public class JsonApi {
         return JsonAdminResponse.fail("error listing images");
     }
 
-    public static  JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsNoFilter(SessionFactory sessionFactory) {
-
-        try (Session session = sessionFactory.openSession()) {
-             return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(null, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error obtaining list of photos");
-    }
 
     public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {
             BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
-            return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(basicPostFilter, session));
+            Integer galleryRepresentationImages;
+            if (basicPostFilter == null){
+                galleryRepresentationImages = BasicPostFilter.DEFAULT_GALLERY_REPRESENTATION_IMAGES;
+            } else {
+                galleryRepresentationImages = basicPostFilter.galleryRepresentationImages;
+            }
+
+            return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(basicPostFilter, galleryRepresentationImages, session));
         } catch (Exception ex){
             Tools.handleException(ex);
         }
@@ -375,17 +360,6 @@ public class JsonApi {
         }
 
         return JsonAdminResponse.fail("error loading article data");
-    }
-
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsNoFilter(SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(null, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing articles");
     }
 
     public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){

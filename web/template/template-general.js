@@ -26,12 +26,31 @@ let homepageListing = `
         {{#each articleVOList}}
             ${articleRepresentation}
         {{/each}}
+        
+        <div class="container-primary container-primary-element">
+            <a class="main-a item-container-heading" href="articles.jsp">View all articles</a>
+        </div>
+        
     </div>
     
     <div class="main-listing-column">
         ${tagListMenu}
         ${photoListingHomepage}
+        
+        <div class="container-primary container-primary-element">
+            <span class="item-container-heading">Latest galleries</span>
+        </div>
+        
+        {{#each galleryVOList}}
+            ${galleryRepresentation}
+        {{/each}}
+        
+        <div class="container-primary container-primary-element">
+            <a class="main-a item-container-heading" href="galleries.jsp">View all galleries</a>
+        </div> 
+        
     </div>
+    
     
 </div>
 `;

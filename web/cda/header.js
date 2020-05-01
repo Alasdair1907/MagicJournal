@@ -21,6 +21,12 @@ $.widget("magic.header", {
     },
 
     _display: async function(self){
-        self.element.html(headerMain);
+        let settingsTO = await ajaxCda({action: "getSettingsNoAuth"});
+        if (settingsTO === undefined){
+            // TODO
+        }
+
+        let hHeaderMain = Handlebars.compile(headerMain);
+        self.element.html(hHeaderMain({settingsTO: settingsTO}));
     }
 });

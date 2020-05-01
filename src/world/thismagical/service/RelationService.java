@@ -312,7 +312,7 @@ public class RelationService {
             throw new IllegalArgumentException();
         }
 
-        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
+        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), 0, session);
         if (galleryVOList.isEmpty()){
             return new ArrayList<>();
         }

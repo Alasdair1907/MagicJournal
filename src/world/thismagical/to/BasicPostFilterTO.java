@@ -24,4 +24,5 @@ public class BasicPostFilterTO {
     public String titleContains;
     public Integer limit;
     public Integer fromCount;
+    public Integer galleryRepresentationImages;
 }
