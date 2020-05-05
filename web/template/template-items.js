@@ -18,17 +18,42 @@
 // to be used at ArticleVO list context
 let articleRepresentation = `
 
-    <div class="container-primary container-primary-element">
-        <a href="articles.jsp?article={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
-        <a href="articles.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
-        <span class="text-main item-text">{{this.description}}</span>
-        <span class="afterfloat">&nbsp;</span>
-        <div class="post-info-line">
+<div class="container-primary container-primary-element">
+    <a href="articles.jsp?article={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
+    <a href="articles.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
+    <div class="item-tags-subheading-container">
+        {{#each this.tagEntityList}}
+        <a href="search.jsp?tag={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        {{/each}}
+    </div>
+    <span class="text-main item-text">{{this.description}}</span>
+    <span class="afterfloat">&nbsp;</span>
+    <div class="post-info-line">
         <div><span class="text-main">Author: </span><a class="main-a text-main" href="search.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>
         <span class="text-main">Date posted: {{this.creationDateStr}}</span>
         <a class="main-a text-main" href="articles.jsp?article={{this.id}}">Read more</a>
-        </div>
     </div>
+</div>
+`;
+
+let articleRepresentationCompact = `
+<div class="container-primary container-primary-element compact-container compact-item-size">
+    <a href="articles.jsp?article={{this.id}}" class="general-a"><div class="compact-item-image-div compact-item-image-div-size" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
+    <a href="articles.jsp?article={{this.id}}" class="general-a"><span class="item-heading">{{this.title}}</span></a>
+    <div class="item-tags-subheading-container">
+        {{#each this.tagEntityList}}
+        <a href="search.jsp?tag={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        {{/each}}
+    </div>
+    <span class="text-main item-text compact-item-text">{{this.description}}</span>
+    <div class="post-info-line">
+        <a class="main-a text-main" href="search.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
+        <span class="text-main">{{this.creationDateStr}}</span>
+    </div>
+    <div class="post-info-line">
+        <a class="main-a text-main" href="articles.jsp?article={{this.id}}">Read more</a>
+    </div>
+</div>
 `;
 
 // requires tagDigestVOList

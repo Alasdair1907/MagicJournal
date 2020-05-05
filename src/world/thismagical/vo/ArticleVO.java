@@ -15,10 +15,11 @@ package world.thismagical.vo;
 */
 
 import world.thismagical.entity.ArticleEntity;
+import world.thismagical.entity.TagEntity;
 import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class ArticleVO {
     public Long id;
@@ -32,6 +33,8 @@ public class ArticleVO {
 
     public String articleText;
     public ImageVO titleImageVO;
+
+    public List<TagEntity> tagEntityList;
 
     public ArticleVO(ArticleEntity articleEntity){
         this.id = articleEntity.getId();

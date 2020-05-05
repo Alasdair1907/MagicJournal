@@ -7,7 +7,7 @@ body.cda {
     min-height: 100vh;
 }
 
-
+/* subdiv for each of the following: menu - logo/title - menu; menu contents get hidden in lower res */
 .header-subdiv {
     width: 33%;
     display: flex;
@@ -18,24 +18,28 @@ body.cda {
     max-height: 17vmin;
 }
 
+/* font-awesome icon */
 .desktop-menu-icon {
     color: white;
     font-size: 4vmin;
     display: block;
 }
 
+/* text under the menu icon */
 .desktop-menu-text {
     color: white;
     font-size: 1.7vmin;
     font-family: Candara, Verdana, sans-serif;
 }
 
+/* div that contains icons */
 .desktop-menu-div {
     display: flex;
     height: min-content;
     width: min-content;
 }
 
+/* contains font-awesome <i> and <span> with text */
 .desktop-menu-item {
     text-align: center;
     margin-left: 1vmin;
@@ -44,7 +48,7 @@ body.cda {
 
 .container-primary {
     background: rgba(0, 0, 0, 0.7);
-    padding: 1vmin;
+    padding: 0.5vw;
     border-radius: 1.5vmin;
 }
 
@@ -57,6 +61,7 @@ body.cda {
     width: 100%;
 }
 
+
 .item-container-heading {
     color: white;
     font-size: 2.7vmin;
@@ -67,16 +72,27 @@ body.cda {
     margin-bottom: 1vmin;
 }
 
+/* span with heading for post item in listings */
 .item-heading {
     color: white;
     font-size: 2.7vmin;
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
-    margin-bottom: 1vmin;
     display: block;
-    text-align: center;
 }
 
+/* div container for tags in items in listings */
+.item-tags-subheading-container {
+    text-align: center;
+    display: block;
+}
+
+/* span inside <a> - tags inside items */
+.item-tag {
+    color: #4a6eff;
+    font-size: 1.9vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
 
 .text-main {
     color: white;
@@ -84,13 +100,7 @@ body.cda {
     font-family: Candara, Verdana, sans-serif;
 }
 
-.text-details {
-    color: white;
-    font-size: 1.4vmin;
-    font-family: Candara, Verdana, sans-serif;
-}
-
-
+/* large square image in items in listings (photos, articles) */
 .item-image-div {
     border-radius: 1.5vmin;
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
@@ -99,6 +109,14 @@ body.cda {
     background-size: cover;
 }
 
+/* large square image in items in compact listings (post listings, search results) */
+.compact-item-image-div {
+    border-radius: 1.5vmin;
+    background-position: center;
+    background-size: cover;
+}
+
+/* text in listing items - description */
 .item-text {
     text-align: justify;
     display: block;
@@ -110,6 +128,7 @@ body.cda {
     line-height: 0;
 }
 
+/* tag cloud on homepage */
 .tag-cloud-a {
     text-decoration: none;
     margin-left: 1vw;
@@ -126,6 +145,7 @@ body.cda {
     text-decoration: none;
 }
 
+/* removes decorations from links */
 .general-a {
     text-decoration: none;
     border: none;
@@ -144,6 +164,7 @@ body.cda {
     outline: none;
 }
 
+/* white underlined link */
 .main-a {
     color: white;
     text-decoration: underline;
@@ -162,40 +183,55 @@ body.cda {
     outline: none;
 }
 
+/* author, date, read more in items */
 .post-info-line {
     display: flex;
     justify-content: space-around;
 }
 
+/* homepage - photos and gallery representations */
 .photo-image-div {
-    /*border-radius: 1.5vmin;*/
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
     background-position: center;
     background-size: cover;
     display: inline-block;
 }
 
+/* div with photo-image-div - homepage listings for photos and galleries */
 .photo-listing-div {
     width: 44vw;
     margin: auto;
     font-size: 0;
 }
 
-.btn-std {
-    height: 2vmin;
-    margin-left: 0.5vh;
-    margin-right: 0.5vh;
-    font-size: 1.9vmin;
-    font-family: Candara, Verdana, sans-serif;
-    vertical-align: baseline;
-}
-
+/* read more for photos and galleries on homepage */
 .td-extra-link {
     text-align: right;
     padding-right:5%;
 }
 
+/* main container for items in dedicated listings (articles, photos, galleries) and search results */
+.item-listing-dedicated {
+    display: flex;
+    flex-wrap: wrap;
+    width: 96vw;
+    margin: auto;
+}
+
+/* div container for items in dedicated/search listings */
+.compact-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* description text - to keep the date/author/read-more element anchored to the bottom of item */
+.compact-item-text {
+    flex-grow: 1;
+}
+
+
 @media (max-width: 1499px) {
+    /* div with either full res menu-logo-menu header, or two divs with logo + menu */
     .header-div {
         display: flex;
         justify-content: center;
@@ -207,26 +243,44 @@ body.cda {
         display: none;
     }
 
+    /* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
     .main-listing-column {
         width: 48%;
         margin-left: 1%;
         margin-right: 1%;
     }
 
+    /* article item on homepage - header image size */
     .item-image-div-size {
         width: 13.08vw;
         height: 13.08vw;
         margin-right: 1vw;
     }
 
+    /* size for photos and gallery images on homepage items */
     .photo-image-div-size {
         width: 10vw;
         height: 10vw;
         margin: 0.5vw;
     }
+
+    /* dedicated/search listings items - size */
+    .compact-item-size {
+        width: 31vw;
+        margin: 0.5vw;
+    }
+
+    /* one image (articles, photos) in d/s listings items - size */
+    .compact-item-image-div-size {
+        width: 30vw;
+        height: 30vw;
+        margin: auto;
+    }
+
 }
 
 @media (min-width: 1500px) {
+    /* div with either full res menu-logo-menu header, or two divs with logo + menu */
     .header-div {
         display: flex;
         justify-content: space-between;
@@ -238,31 +292,37 @@ body.cda {
         display: none;
     }
 
+    /* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
     .main-listing-column {
-        /*width: 30.33%;
-        margin-left: 1.125%;
-        margin-right: 1.125%;*/
         width: 48%;
         margin-left: 1%;
         margin-right: 1%;
     }
 
+    /* article item on homepage - header image size */
     .item-image-div-size {
-        /*width: 7.866vw;
-        height: 7.866vw;
-        margin-right: 1vw;*/
-        /*width: 17.44vw;*/
         width: 13.08vw;
         height: 13.08vw;
         margin-right: 1vw;
     }
 
+    /* size for photos and gallery images on homepage items */
     .photo-image-div-size {
-        /*width: 7.866vw;
-        height: 7.866vw;
-        margin: 1vmin;*/
         width: 10vw;
         height: 10vw;
         margin: 0.5vw;
+    }
+
+    /* dedicated/search listings items - size */
+    .compact-item-size {
+        width: 23vw;
+        margin: 0.5vw;
+    }
+
+    /* one image (articles, photos) in d/s listings items - size */
+    .compact-item-image-div-size {
+        width: 22vw;
+        height: 22vw;
+        margin: auto;
     }
 }

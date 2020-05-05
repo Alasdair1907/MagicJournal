@@ -24,6 +24,7 @@ import world.thismagical.entity.PostEntity;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.util.Tools;
 
+import javax.persistence.Basic;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -63,6 +64,62 @@ public class PostDao {
         return articleEntityList;
     }
 
+    public static <T extends PostEntity> Predicate preparePredicateFromFilter(BasicPostFilter basicPostFilter, CriteriaBuilder cb, Root<T> root){
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (basicPostFilter.authorEntity != null){
+            Predicate authorPredicate = cb.equal(root.get("author"), basicPostFilter.authorEntity);
+            predicates.add(authorPredicate);
+        }
+
+        if (basicPostFilter.fromDateTime != null){
+            Predicate fromDateTime = cb.greaterThanOrEqualTo(root.get("creationDate"), basicPostFilter.fromDateTime);
+            predicates.add(fromDateTime);
+        }
+
+        if (basicPostFilter.toDateTime != null){
+            Predicate toDateTime = cb.lessThanOrEqualTo(root.get("creationDate"), basicPostFilter.toDateTime);
+            predicates.add(toDateTime);
+        }
+
+        if (basicPostFilter.titleContains != null && !basicPostFilter.titleContains.isEmpty()){
+            Predicate titleContains = cb.like(root.get("title"), '%' + basicPostFilter.titleContains + '%');
+            predicates.add(titleContains);
+        }
+
+        return cb.and(predicates.toArray(new Predicate[0]));
+    }
+
+    public static <T extends PostEntity> Long countFilter(BasicPostFilter basicPostFilter, Class<T> clazz, Session session){
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<T> root = cq.from(clazz);
+        Predicate and = preparePredicateFromFilter(basicPostFilter, cb, root);
+        cq.select(cb.count(root)).where(and);
+        return session.createQuery(cq).getSingleResult();
+    }
+
+    public static <T extends PostEntity> Query prepareQueryFromFilter(BasicPostFilter basicPostFilter, Class<T> clazz, Session session){
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(clazz);
+        Root<T> root = cq.from(clazz);
+        cq.orderBy(cb.desc(root.get("creationDate")));
+
+        Predicate and = preparePredicateFromFilter(basicPostFilter, cb, root);
+        cq.select(root).where(and);
+
+        Query query = session.createQuery(cq);
+
+        if (basicPostFilter.fromCount != null){
+            query = query.setFirstResult(basicPostFilter.fromCount);
+        }
+        if (basicPostFilter.limit != null){
+            query = query.setMaxResults(basicPostFilter.limit);
+        }
+
+        return query;
+    }
+
     @SuppressWarnings("unchecked")
     public static <T extends PostEntity> List<PostEntity> listAllPosts(BasicPostFilter basicPostFilter, Class<T> clazz, Session session){
 
@@ -72,49 +129,12 @@ public class PostDao {
 
         List<PostEntity> list = null;
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(clazz);
-        Root<T> root = cq.from(clazz);
-        cq.orderBy(cb.desc(root.get("creationDate")));
-
-        if (basicPostFilter != null){
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (basicPostFilter.authorEntity != null){
-                Predicate authorPredicate = cb.equal(root.get("author"), basicPostFilter.authorEntity);
-                predicates.add(authorPredicate);
-            }
-
-            if (basicPostFilter.fromDateTime != null){
-                Predicate fromDateTime = cb.greaterThanOrEqualTo(root.get("creationDate"), basicPostFilter.fromDateTime);
-                predicates.add(fromDateTime);
-            }
-
-            if (basicPostFilter.toDateTime != null){
-                Predicate toDateTime = cb.lessThanOrEqualTo(root.get("creationDate"), basicPostFilter.toDateTime);
-                predicates.add(toDateTime);
-            }
-
-            if (basicPostFilter.titleContains != null && !basicPostFilter.titleContains.isEmpty()){
-                Predicate titleContains = cb.like(root.get("title"), '%' + basicPostFilter.titleContains + '%');
-                predicates.add(titleContains);
-            }
-
-            Predicate and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-            cq.select(root).where(and);
+        Query query;
+        if (basicPostFilter == null){
+            query = session.createQuery("from "+clazz.getSimpleName()+" order by creationDate desc");
+            list = (List<PostEntity>) query.getResultList();
         } else {
-            cq.select(root);
-        }
-
-        Query query = session.createQuery(cq);
-
-        if (basicPostFilter != null) {
-            if (basicPostFilter.fromCount != null){
-                query = query.setFirstResult(basicPostFilter.fromCount);
-            }
-            if (basicPostFilter.limit != null){
-                query = query.setMaxResults(basicPostFilter.limit);
-            }
+            query = prepareQueryFromFilter(basicPostFilter, clazz, session);
         }
 
         list = (List<PostEntity>) query.getResultList();

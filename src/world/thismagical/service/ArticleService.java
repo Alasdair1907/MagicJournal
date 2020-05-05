@@ -22,6 +22,7 @@ import world.thismagical.dao.ArticleDao;
 import world.thismagical.dao.TagDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ArticleEntity;
+import world.thismagical.entity.TagEntity;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
@@ -42,6 +43,7 @@ public class ArticleService {
         ArticleVO articleVO = new ArticleVO(articleEntity);
 
         articleVO.titleImageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
+        articleVO.tagEntityList = TagService.listTagsForObject(PostAttribution.ARTICLE, articleId, session).data;
 
         return articleVO;
     }
@@ -52,14 +54,20 @@ public class ArticleService {
 
         List<ArticleVO> articleVOList = new ArrayList<>();
         List<Long> imageIds = articleEntityList.stream().map(ArticleEntity::getTitleImageId).collect(Collectors.toList());
+        List<Long> articleIds = articleEntityList.stream().map(ArticleEntity::getId).collect(Collectors.toList());
 
         List<ImageVO> imageVOList = FileDao.getImagesByIds(imageIds, session);
+        List<TagEntity> tagEntityList = TagDao.listTagsForObjects(PostAttribution.ARTICLE, articleIds, session);
 
         for (ArticleEntity articleEntity : articleEntityList){
             ArticleVO articleVO = new ArticleVO(articleEntity);
             if (imageVOList != null) {
                 articleVO.titleImageVO = imageVOList.stream().filter(imageVO -> imageVO.thisObjId.equals(articleEntity.getTitleImageId())).findAny().orElse(null);
             }
+
+            articleVO.tagEntityList = tagEntityList.stream()
+                    .filter(it -> it.getAttributionClass() == PostAttribution.ARTICLE && it.getParentObjectId().equals(articleEntity.getId())).collect(Collectors.toList());
+
             articleVOList.add(articleVO);
         }
 

@@ -54,3 +54,11 @@ let homepageListing = `
     
 </div>
 `;
+
+let articleListing = `
+<div class="width-100pc item-listing-dedicated">
+    {{#each articleVOList}}
+        ${articleRepresentationCompact}
+    {{/each}}
+</div>
+`;

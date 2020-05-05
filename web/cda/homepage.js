@@ -20,7 +20,7 @@ $.widget("magic.homepage", {
     },
     _display: async function(self){
         let basicPostFilterTOArticles = {
-            limit: 10
+            limit: 7
         };
 
         // TODO load simultaneously

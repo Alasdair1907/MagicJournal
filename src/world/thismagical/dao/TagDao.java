@@ -19,16 +19,9 @@ package world.thismagical.dao;
 
 import com.sun.istack.NotNull;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import world.thismagical.entity.TagEntity;
 import world.thismagical.util.PostAttribution;
-import world.thismagical.util.Tools;
-
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TagDao {
@@ -39,22 +32,10 @@ public class TagDao {
             return null;
         }
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<TagEntity> cq = cb.createQuery(TagEntity.class);
-        Root<TagEntity> root = cq.from(TagEntity.class);
+        Query<TagEntity> query = session.createQuery("from TagEntity where id = :tagId", TagEntity.class);
+        query.setParameter("tagId", tagId);
 
-        Predicate eqTagId = cb.equal(root.get("id"), tagId);
-
-        cq.select(root).where(eqTagId);
-
-        TagEntity tagEntity = null;
-        try {
-            tagEntity = session.createQuery(cq).getSingleResult();
-        } catch (Exception e){
-            Tools.log("[WARN] getTag("+tagId+") error: "+e.getMessage());
-        }
-
-        return tagEntity;
+        return query.getSingleResult();
     }
 
     public static List<TagEntity> listTags(PostAttribution objectAttribution, Long objectId, Session session){
@@ -63,28 +44,31 @@ public class TagDao {
             return null;
         }
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<TagEntity> cq = cb.createQuery(TagEntity.class);
-        Root<TagEntity> root = cq.from(TagEntity.class);
+        Query<TagEntity> query = session.createQuery("from TagEntity where attributionClass = :attributionClass and parentObjectId = :parentObjectId", TagEntity.class);
+        query.setParameter("attributionClass", objectAttribution.getId());
+        query.setParameter("parentObjectId", objectId);
 
-        Predicate eqAttribution = cb.equal(root.get("attributionClass"), objectAttribution.getId());
-        Predicate eqObjectId = cb.equal(root.get("parentObjectId"), objectId);
-        Predicate and = cb.and(eqAttribution, eqObjectId);
-
-        cq.select(root).where(and);
-
-        List<TagEntity> tagEntityList = new ArrayList<>();
-
-        try {
-            tagEntityList = session.createQuery(cq).list();
-        } catch (Exception e){
-            Tools.log("[WARN] listTags exception: "+e.getMessage());
-        }
-
-        return tagEntityList;
+        return query.getResultList();
     }
 
-    public static void addOrUpdateTag(@NotNull TagEntity tagEntity, Session session){
+    public static List<TagEntity> listTagsForObjects(PostAttribution attribution, List<Long> objectIds, Session session){
+
+        if (attribution == null || objectIds == null || objectIds.isEmpty()){
+            return null;
+        }
+
+        Query<TagEntity> query = session.createQuery("from TagEntity where attributionClass = :attribution and parentObjectId in :objectIds", TagEntity.class);
+        query.setParameter("attribution", attribution.getId());
+        query.setParameter("objectIds", objectIds);
+
+        return query.getResultList();
+    }
+
+    public static void addOrUpdateTag(TagEntity tagEntity, Session session){
+
+        if (tagEntity == null){
+            return;
+        }
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
@@ -95,7 +79,11 @@ public class TagDao {
         session.flush();
     }
 
-    public static void deleteTag(@NotNull Long tagId, Session session){
+    public static void deleteTag(Long tagId, Session session){
+
+        if (tagId == null){
+            return;
+        }
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
@@ -108,7 +96,12 @@ public class TagDao {
         session.flush();
     }
 
-    public static void truncateTags(@NotNull Long objectId, @NotNull Short attribution, Session session){
+    public static void truncateTags(Long objectId, Short attribution, Session session){
+
+        if (objectId == null || attribution == null){
+            return;
+        }
+
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
         }
