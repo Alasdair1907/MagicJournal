@@ -139,12 +139,14 @@ public class TagService {
         TagDao.truncateTags(tagTO.objectId, tagTO.attribution, session);
 
         if (tagsArray.length != 0){
+            PostIndexItem postIndexItem = PagingDao.getItem(PostAttribution.getPostAttribution(tagTO.attribution), tagTO.objectId, session);
 
             for (String tag : tagsArray){
                 TagEntity tagEntity = new TagEntity();
                 tagEntity.setTag(tag.trim());
                 tagEntity.setAttributionClass(PostAttribution.getPostAttribution(tagTO.attribution));
                 tagEntity.setParentObjectId(tagTO.objectId);
+                tagEntity.setPostIndexItemId(postIndexItem.getId());
 
                 TagDao.addOrUpdateTag(tagEntity, session);
             }

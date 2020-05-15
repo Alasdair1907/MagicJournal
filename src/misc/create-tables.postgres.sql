@@ -43,7 +43,8 @@ CREATE TABLE tags (
 id bigserial PRIMARY KEY,
 tag_name varchar(128),
 attribution_class smallint,
-parent_object_id bigint
+parent_object_id bigint,
+post_index_item_id bigint
 );
 
 CREATE TABLE galleries (

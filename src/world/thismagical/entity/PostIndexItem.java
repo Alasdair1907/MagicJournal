@@ -49,13 +49,14 @@ public class PostIndexItem implements Serializable {
     @Column(name="is_published")
     Boolean isPublished;
 
+    /*
     @OneToMany(fetch = FetchType.EAGER)
     @BatchSize(size = 100)
     @JoinColumns({
             @JoinColumn(updatable = false, insertable = false, referencedColumnName = "post_attribution", name = "attribution_class"),
             @JoinColumn(updatable = false, insertable = false, referencedColumnName = "post_id", name = "parent_object_id")
     })
-    List<TagEntity> tagEntityList;
+    List<TagEntity> tagEntityList;*/
 
     public Long getId() {
         return id;
@@ -105,11 +106,12 @@ public class PostIndexItem implements Serializable {
         isPublished = published;
     }
 
+    /*
     public List<TagEntity> getTagEntityList() {
         return tagEntityList;
     }
 
     public void setTagEntityList(List<TagEntity> tagEntityList) {
         this.tagEntityList = tagEntityList;
-    }
+    }*/
 }

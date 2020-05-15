@@ -22,6 +22,9 @@ public class TagEntity implements Serializable {
     @Column(name="parent_object_id")
     private Long parentObjectId;
 
+    @Column(name="post_index_item_id")
+    private Long postIndexItemId;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +55,13 @@ public class TagEntity implements Serializable {
 
     public void setAttributionClass(PostAttribution attributionClass){
         this.attributionClass = attributionClass.getId();
+    }
+
+    public Long getPostIndexItemId() {
+        return postIndexItemId;
+    }
+
+    public void setPostIndexItemId(Long postIndexItemId) {
+        this.postIndexItemId = postIndexItemId;
     }
 }

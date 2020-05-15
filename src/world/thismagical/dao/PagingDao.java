@@ -30,33 +30,49 @@ import java.util.List;
 
 public class PagingDao {
 
-    public static Predicate preparePredicate(PagingRequestFilter pagingRequestFilter, CriteriaBuilder cb, Root<PostIndexItem> postIndexItemRoot){
+    public static List<Long> preloadTagEntities(PagingRequestFilter pagingRequestFilter, Session session){
+        if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Query query = session.createQuery("select max(postIndexItemId) from TagEntity where tag in :tagList and attributionClass in :attrs group by attributionClass, parentObjectId having count(distinct tag) = :count");
+        query.setParameter("tagList", pagingRequestFilter.tags);
+        query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
+        query.setParameter("count", Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
+
+        return query.getResultList();
+    }
+
+    public static List<Short> gatherPostAttributionList(PagingRequestFilter pagingRequestFilter){
         List<Short> postAttributionList = new ArrayList<>();
 
-        if (pagingRequestFilter.needArticles){
+        if (Boolean.TRUE.equals(pagingRequestFilter.needArticles)){
             postAttributionList.add(PostAttribution.ARTICLE.getId());
         }
 
-        if (pagingRequestFilter.needGalleries){
+        if (Boolean.TRUE.equals(pagingRequestFilter.needGalleries)){
             postAttributionList.add(PostAttribution.GALLERY.getId());
         }
 
-        if (pagingRequestFilter.needPhotos){
+        if (Boolean.TRUE.equals(pagingRequestFilter.needPhotos)){
             postAttributionList.add(PostAttribution.PHOTO.getId());
         }
 
+        return postAttributionList;
+    }
+
+    public static Predicate preparePredicate(PagingRequestFilter pagingRequestFilter, CriteriaBuilder cb, Root<PostIndexItem> postIndexItemRoot, Session session){
 
         List<Predicate> predicates = new ArrayList<>();
 
         if (pagingRequestFilter.tags != null && !pagingRequestFilter.tags.isEmpty()){
-            Join<PostIndexItem, TagEntity> tagEntityJoin = postIndexItemRoot.join("tagEntityList");
-
-            CriteriaBuilder.In<String> tagIn = cb.in(tagEntityJoin.get("tag"));
-            pagingRequestFilter.tags.forEach(tagIn::value);
-
-            predicates.add(tagIn);
+            List<Long> postPreloadList = preloadTagEntities(pagingRequestFilter, session);
+            CriteriaBuilder.In<Long> thisId = cb.in(postIndexItemRoot.get("id"));
+            postPreloadList.forEach(thisId::value);
+            predicates.add(thisId);
         }
 
+        List<Short> postAttributionList = gatherPostAttributionList(pagingRequestFilter);
         CriteriaBuilder.In<Short> attrIn = cb.in(postIndexItemRoot.get("postAttribution"));
         postAttributionList.forEach(attrIn::value);
 
@@ -76,7 +92,7 @@ public class PagingDao {
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<PostIndexItem> postIndexItemRoot = criteriaQuery.from(PostIndexItem.class);
 
-        Predicate all = preparePredicate(pagingRequestFilter, cb, postIndexItemRoot);
+        Predicate all = preparePredicate(pagingRequestFilter, cb, postIndexItemRoot, session);
 
         criteriaQuery.select(cb.count(postIndexItemRoot)).where(all).distinct(true);
         Long res = session.createQuery(criteriaQuery).getSingleResult();
@@ -90,7 +106,7 @@ public class PagingDao {
         Root<PostIndexItem> postIndexItemRoot = criteriaQuery.from(PostIndexItem.class);
         criteriaQuery.orderBy(cb.desc(postIndexItemRoot.get("creationDate")));
 
-        Predicate all = preparePredicate(pagingRequestFilter, cb, postIndexItemRoot);
+        Predicate all = preparePredicate(pagingRequestFilter, cb, postIndexItemRoot, session);
 
         criteriaQuery.select(postIndexItemRoot).where(all).distinct(true);
         Query query = session.createQuery(criteriaQuery).setFirstResult(from).setMaxResults(results);
@@ -112,13 +128,18 @@ public class PagingDao {
         session.flush();
     }
 
-    public static void togglePostPublish(PostAttribution postAttribution, Long objectId, Session session){
-
+    public static PostIndexItem getItem(PostAttribution postAttribution, Long objectId, Session session){
         Query getQuery = session.createQuery("from PostIndexItem where postAttribution = :postAttributionShort and postId = :postId");
         getQuery.setParameter("postAttributionShort", postAttribution.getId());
         getQuery.setParameter("postId", objectId);
 
         PostIndexItem postIndexItem = (PostIndexItem) getQuery.getSingleResult();
+        return postIndexItem;
+    }
+
+    public static void togglePostPublish(PostAttribution postAttribution, Long objectId, Session session){
+
+        PostIndexItem postIndexItem = getItem(postAttribution, objectId, session);
 
         if (postIndexItem == null){
             return;

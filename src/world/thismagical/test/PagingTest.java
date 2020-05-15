@@ -32,9 +32,10 @@ public class PagingTest {
 
             PagingRequestFilter pagingRequestFilter = new PagingRequestFilter();
             pagingRequestFilter.page = 0;
-            pagingRequestFilter.authorLogin = "admin";
+            //pagingRequestFilter.authorLogin = "admin";
             pagingRequestFilter.needArticles = true;
             pagingRequestFilter.needGalleries = true;
+            pagingRequestFilter.needPhotos = true;
             pagingRequestFilter.tags = Arrays.asList("idk", "wtf");
 
             PostVOList postVOList = PagingService.get(pagingRequestFilter, session);

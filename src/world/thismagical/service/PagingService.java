@@ -63,20 +63,20 @@ public class PagingService {
         }
 
         Integer fromResult = pagingRequestFilter.page * settingsTO.itemsPerPage;
-        List<PostIndexItem> postIndexItemList = PagingDao.load(pagingRequestFilter, fromResult, pagingRequestFilter.page, session);
+        List<PostIndexItem> postIndexItemList = PagingDao.load(pagingRequestFilter, fromResult, settingsTO.itemsPerPage, session);
 
         postIndexItemList.forEach(postIndexItem -> {
 
             PostAttribution pa = postIndexItem.getPostAttribution();
             switch (pa){
                 case ARTICLE:
-                    postVOList.articles.ids.add(postIndexItem.getId());
+                    postVOList.articles.ids.add(postIndexItem.getPostId());
                     break;
                 case PHOTO:
-                    postVOList.photos.ids.add(postIndexItem.getId());
+                    postVOList.photos.ids.add(postIndexItem.getPostId());
                     break;
                 case GALLERY:
-                    postVOList.galleries.ids.add(postIndexItem.getId());
+                    postVOList.galleries.ids.add(postIndexItem.getPostId());
                     break;
             }
         });

@@ -14,6 +14,7 @@
 <%@ page import="org.hibernate.Session" %>
 <%@ page import="world.thismagical.filter.PagingRequestFilter" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="world.thismagical.test.PagingTest" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -364,7 +365,7 @@
         }
 
         if (action.equals("test")){
-
+            PagingTest.test(sessionFactory);
         }
     }
 %>
