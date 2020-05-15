@@ -1,7 +1,8 @@
-package world.thismagical.to;
+package world.thismagical.vo;
 /*
   User: Alasdair
-  Date: 4/10/2020
+  Date: 5/13/2020
+  Time: 7:39 PM
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -16,32 +17,28 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class SettingsTO {
+import world.thismagical.util.PostAttribution;
 
-    public String about;
-    public String headerInjection;
-    public String bingApiKey;
-    public String mapTypeIdStr;
-    public Boolean allowDemoAnon;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String imageStoragePath;
-    public String temporaryFolderPath;
-    public String otherFilesStoragePath;
+public class PagingVO {
+    public Integer totalItems;
+    public Integer pages;
 
-    public Integer previewX;
-    public Integer previewY;
+    public PostAttribution attribution;
+    public Boolean isPopulated;
+    public List<Long> ids;
+    public List<Object> page;
 
-    public Integer thumbX;
-    public Integer thumbY;
+    public PagingVO(){}
+    public PagingVO(PostAttribution postAttribution){
+        totalItems = 0;
+        pages = 0;
 
-    public Boolean showCookieWarning;
-    public String cookieWarningMessage;
-
-    public Integer itemsPerPage;
-
-    public String twitterProfile;
-    public String facebookProfile;
-    public String instagramProfile;
-    public String pinterestProfile;
-
+        attribution = postAttribution;
+        isPopulated = false;
+        ids = new ArrayList<>();
+        page = new ArrayList<>();
+    }
 }

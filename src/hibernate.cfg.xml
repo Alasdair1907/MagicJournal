@@ -14,7 +14,7 @@
         <property name="connection.username">tmw</property>
         <property name="connection.password">1234567</property>
 
-        <property name="show_sql">false</property>
+        <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -29,6 +29,7 @@
         <mapping class="world.thismagical.entity.RelationEntity"/>
         <mapping class="world.thismagical.entity.KeyValueEntity"/>
         <mapping class="world.thismagical.entity.OtherFileEntity"/>
+        <mapping class="world.thismagical.entity.PostIndexItem"/>
 
         <!-- DB schema will be updated if needed -->
 

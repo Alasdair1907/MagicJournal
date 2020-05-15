@@ -1,7 +1,8 @@
-package world.thismagical.to;
+package world.thismagical.test;
 /*
   User: Alasdair
-  Date: 4/10/2020
+  Date: 5/15/2020
+  Time: 3:53 AM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -16,32 +17,32 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class SettingsTO {
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import world.thismagical.filter.PagingRequestFilter;
+import world.thismagical.service.PagingService;
+import world.thismagical.util.Tools;
+import world.thismagical.vo.PostVOList;
 
-    public String about;
-    public String headerInjection;
-    public String bingApiKey;
-    public String mapTypeIdStr;
-    public Boolean allowDemoAnon;
+import java.util.Arrays;
 
-    public String imageStoragePath;
-    public String temporaryFolderPath;
-    public String otherFilesStoragePath;
+public class PagingTest {
+    public static void test(SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
 
-    public Integer previewX;
-    public Integer previewY;
+            PagingRequestFilter pagingRequestFilter = new PagingRequestFilter();
+            pagingRequestFilter.page = 0;
+            pagingRequestFilter.authorLogin = "admin";
+            pagingRequestFilter.needArticles = true;
+            pagingRequestFilter.needGalleries = true;
+            pagingRequestFilter.tags = Arrays.asList("idk", "wtf");
 
-    public Integer thumbX;
-    public Integer thumbY;
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
 
-    public Boolean showCookieWarning;
-    public String cookieWarningMessage;
+            Integer breakMe = postVOList.currentPage;
 
-    public Integer itemsPerPage;
-
-    public String twitterProfile;
-    public String facebookProfile;
-    public String instagramProfile;
-    public String pinterestProfile;
-
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+    }
 }

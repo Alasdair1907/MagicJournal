@@ -1,7 +1,8 @@
-package world.thismagical.to;
+package world.thismagical.filter;
 /*
   User: Alasdair
-  Date: 4/10/2020
+  Date: 5/13/2020
+  Time: 8:14 PM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -16,32 +17,15 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class SettingsTO {
+import java.util.List;
 
-    public String about;
-    public String headerInjection;
-    public String bingApiKey;
-    public String mapTypeIdStr;
-    public Boolean allowDemoAnon;
+public class PagingRequestFilter {
+    public Boolean needArticles;
+    public Boolean needPhotos;
+    public Boolean needGalleries;
 
-    public String imageStoragePath;
-    public String temporaryFolderPath;
-    public String otherFilesStoragePath;
+    public Integer page;
 
-    public Integer previewX;
-    public Integer previewY;
-
-    public Integer thumbX;
-    public Integer thumbY;
-
-    public Boolean showCookieWarning;
-    public String cookieWarningMessage;
-
-    public Integer itemsPerPage;
-
-    public String twitterProfile;
-    public String facebookProfile;
-    public String instagramProfile;
-    public String pinterestProfile;
-
+    public List<String> tags;
+    public String authorLogin;
 }

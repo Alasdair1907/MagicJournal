@@ -10,6 +10,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="world.thismagical.filter.BasicPostFilter" %>
 <%@ page import="world.thismagical.filter.BasicFileFilter" %>
+<%@ page import="world.thismagical.service.PagingService" %>
+<%@ page import="org.hibernate.Session" %>
+<%@ page import="world.thismagical.filter.PagingRequestFilter" %>
+<%@ page import="java.util.Arrays" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -357,6 +361,10 @@
             Long id = Long.parseLong(data);
             JsonAdminResponse<Void> res = FileHandlingService.deleteOtherFile(guid, id, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("test")){
+
         }
     }
 %>

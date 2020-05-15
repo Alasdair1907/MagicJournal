@@ -25,6 +25,7 @@ import world.thismagical.to.BasicPostFilterTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class BasicPostFilter {
     public static final Integer DEFAULT_GALLERY_REPRESENTATION_IMAGES = 4;
@@ -40,6 +41,8 @@ public class BasicPostFilter {
     public Boolean returnEmpty;
 
     public Integer galleryRepresentationImages;
+
+    public List<Long> ids;
 
     public static BasicPostFilter fromTO(BasicPostFilterTO to, Session session){
 
@@ -75,6 +78,8 @@ public class BasicPostFilter {
         } else {
             basicPostFilter.galleryRepresentationImages = to.galleryRepresentationImages;
         }
+
+        basicPostFilter.ids = to.ids;
 
         return basicPostFilter;
     }

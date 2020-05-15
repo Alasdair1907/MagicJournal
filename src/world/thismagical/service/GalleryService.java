@@ -18,14 +18,8 @@ package world.thismagical.service;
 */
 
 import org.hibernate.Session;
-import world.thismagical.dao.FileDao;
-import world.thismagical.dao.GalleryDao;
-import world.thismagical.dao.PhotoDao;
-import world.thismagical.dao.TagDao;
-import world.thismagical.entity.AuthorEntity;
-import world.thismagical.entity.GalleryEntity;
-import world.thismagical.entity.ImageFileEntity;
-import world.thismagical.entity.PhotoEntity;
+import world.thismagical.dao.*;
+import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.GalleryTO;
 import world.thismagical.to.JsonAdminResponse;
@@ -118,6 +112,7 @@ public class GalleryService {
         }
 
         GalleryDao.togglePostPublish(id, GalleryEntity.class, session);
+        PagingDao.togglePostPublish(PostAttribution.GALLERY, id, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -145,9 +140,12 @@ public class GalleryService {
             return JsonAdminResponse.fail("unauthorized action");
         }
 
+        Boolean newGallery = false;
+
         if (galleryEntity == null) {
             galleryEntity = new GalleryEntity();
             galleryEntity.setAuthor(currentAuthorEntity);
+            newGallery = true;
         }
 
         if (galleryEntity.getCreationDate() == null){
@@ -165,6 +163,17 @@ public class GalleryService {
 
         session.saveOrUpdate(galleryEntity);
         session.flush();
+
+        if (newGallery){
+            PostIndexItem postIndexItem = new PostIndexItem();
+            postIndexItem.setPostAttribution(PostAttribution.GALLERY);
+            postIndexItem.setPostId(galleryEntity.getId());
+            postIndexItem.setAuthorLogin(galleryEntity.getAuthor().getLogin());
+            postIndexItem.setCreationDate(galleryEntity.getCreationDate());
+
+            session.save(postIndexItem);
+            session.flush();
+        }
 
         return JsonAdminResponse.success(galleryEntity.getId());
     }
@@ -187,6 +196,7 @@ public class GalleryService {
 
         GalleryDao.deleteEntity(id, GalleryEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.GALLERY.getId(), session);
+        PagingDao.deleteIndex(PostAttribution.GALLERY, id, session);
 
         return JsonAdminResponse.success(null);
     }

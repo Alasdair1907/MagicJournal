@@ -87,6 +87,12 @@ public class PostDao {
             predicates.add(titleContains);
         }
 
+        if (basicPostFilter.ids != null && !basicPostFilter.ids.isEmpty()){
+            CriteriaBuilder.In<Long> inIds = cb.in(root.get("id"));
+            basicPostFilter.ids.forEach(inIds::value);
+            predicates.add(inIds);
+        }
+
         return cb.and(predicates.toArray(new Predicate[0]));
     }
 
@@ -175,7 +181,6 @@ public class PostDao {
         }
 
         session.saveOrUpdate(postEntity);
-
         session.flush();
     }
 

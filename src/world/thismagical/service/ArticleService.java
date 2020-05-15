@@ -19,9 +19,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.FileDao;
 import world.thismagical.dao.ArticleDao;
+import world.thismagical.dao.PagingDao;
 import world.thismagical.dao.TagDao;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ArticleEntity;
+import world.thismagical.entity.PostIndexItem;
 import world.thismagical.entity.TagEntity;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
@@ -126,6 +128,18 @@ public class ArticleService {
         session.saveOrUpdate(articleEntity);
         session.flush();
 
+        if (newArticle){
+            PostIndexItem postIndexItem = new PostIndexItem();
+            postIndexItem.setPostAttribution(PostAttribution.ARTICLE);
+            postIndexItem.setPostId(articleEntity.getId());
+            postIndexItem.setAuthorLogin(articleEntityAuthor.getLogin());
+            postIndexItem.setCreationDate(articleEntity.getCreationDate());
+
+            session.save(postIndexItem);
+            session.flush();
+        }
+
+
         if (!newArticle) {
             RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
         }
@@ -161,6 +175,7 @@ public class ArticleService {
 
         ArticleDao.deleteEntity(id, ArticleEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.ARTICLE.getId(), session);
+        PagingDao.deleteIndex(PostAttribution.ARTICLE, id, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -175,6 +190,7 @@ public class ArticleService {
         }
 
         ArticleDao.togglePostPublish(id, ArticleEntity.class, session);
+        PagingDao.togglePostPublish(PostAttribution.ARTICLE, id, session);
 
         return JsonAdminResponse.success(null);
     }

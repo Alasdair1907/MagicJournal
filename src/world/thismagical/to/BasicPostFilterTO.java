@@ -17,6 +17,8 @@ package world.thismagical.to;
                                                                                                    
 */
 
+import java.util.List;
+
 public class BasicPostFilterTO {
     public String login;
     public String from;
@@ -25,4 +27,5 @@ public class BasicPostFilterTO {
     public Integer limit;
     public Integer fromCount;
     public Integer galleryRepresentationImages;
+    public List<Long> ids;
 }

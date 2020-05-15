@@ -20,12 +20,10 @@ package world.thismagical.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.FileDao;
+import world.thismagical.dao.PagingDao;
 import world.thismagical.dao.PhotoDao;
 import world.thismagical.dao.TagDao;
-import world.thismagical.entity.AuthorEntity;
-import world.thismagical.entity.ImageFileEntity;
-import world.thismagical.entity.PhotoEntity;
-import world.thismagical.entity.PostEntity;
+import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PhotoTO;
@@ -94,9 +92,12 @@ public class PhotoService {
             return JsonAdminResponse.fail("unauthorized action");
         }
 
+        Boolean newPhoto = false;
+
         if (photoEntity == null) {
             photoEntity = new PhotoEntity();
             photoEntity.setAuthor(currentAuthorEntity);
+            newPhoto = true;
         }
 
 
@@ -124,6 +125,17 @@ public class PhotoService {
         session.saveOrUpdate(photoEntity);
         session.flush();
 
+        if (newPhoto) {
+            PostIndexItem postIndexItem = new PostIndexItem();
+            postIndexItem.setPostAttribution(PostAttribution.PHOTO);
+            postIndexItem.setPostId(photoEntity.getId());
+            postIndexItem.setAuthorLogin(photoEntity.getAuthor().getLogin());
+            postIndexItem.setCreationDate(photoEntity.getCreationDate());
+
+            session.saveOrUpdate(postIndexItem);
+            session.flush();
+        }
+
         return JsonAdminResponse.success(photoEntity.getId());
     }
 
@@ -145,6 +157,7 @@ public class PhotoService {
 
         PhotoDao.deleteEntity(id, PhotoEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.PHOTO.getId(), session);
+        PagingDao.deleteIndex(PostAttribution.PHOTO, id, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -159,6 +172,7 @@ public class PhotoService {
         }
 
         PhotoDao.togglePostPublish(id, PhotoEntity.class, session);
+        PagingDao.togglePostPublish(PostAttribution.PHOTO, id, session);
 
         return JsonAdminResponse.success(null);
     }

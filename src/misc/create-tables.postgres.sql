@@ -91,4 +91,12 @@ description varchar(256),
 display_name varchar(256)
 );
 
+CREATE TABLE posts_index (
+id bigserial PRIMARY KEY,
+post_attribution smallint,
+post_id bigint,
+author_login varchar(128),
+creation_date timestamp
+);
+
 INSERT INTO authors (login, password, privilege_level) VALUES ('admin','5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', 2);

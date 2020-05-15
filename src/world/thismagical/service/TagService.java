@@ -29,6 +29,7 @@ import world.thismagical.vo.TagDigestVO;
 
 import javax.tools.Tool;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TagService {
 
