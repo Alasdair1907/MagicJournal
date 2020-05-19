@@ -26,8 +26,12 @@ import world.thismagical.filter.PagingRequestFilter;
 import world.thismagical.to.SettingsTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.vo.PagingVO;
+import world.thismagical.vo.PostVO;
 import world.thismagical.vo.PostVOList;
+import world.thismagical.vo.PostVOListUnified;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PagingService {
@@ -107,6 +111,35 @@ public class PagingService {
         }
 
         return postVOList;
+    }
+
+    public static PostVOListUnified unify(PostVOList postVOList){
+        List<PostVO> postVOs = new ArrayList<>();
+
+        postVOs.addAll( (List) postVOList.articles.page);
+        postVOs.addAll( (List) postVOList.photos.page);
+        postVOs.addAll( (List) postVOList.galleries.page);
+
+        postVOs.sort( (postA, postB) -> {
+            if (postA.getCreationDate().isAfter(postB.getCreationDate())){
+                return 1;
+            }
+
+            if (postA.getCreationDate().isBefore(postB.getCreationDate())){
+                return -1;
+            }
+
+            return 0;
+        });
+
+        PostVOListUnified postVOListUnified = new PostVOListUnified();
+        postVOListUnified.currentPage = postVOList.currentPage;
+        postVOListUnified.totalItems = postVOList.totalItems;
+        postVOListUnified.totalPages = postVOList.totalPages;
+
+        postVOListUnified.posts = postVOs;
+
+        return postVOListUnified;
     }
 
 }

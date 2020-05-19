@@ -229,6 +229,32 @@ body.cda {
     flex-grow: 1;
 }
 
+/* pager */
+.pager-link-normal {
+    color: #4a6eff;
+    font-size: 2.5vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.pager-link-current {
+    color: #b2e5ff;
+    font-weight: bold;
+    font-size: 2.5vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.paging-info-line {
+    text-align: right;
+    padding-right: 5%;
+}
+
+.pager-container {
+    width: 80vw;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 5vmin;
+    margin-top: 2.5vmin;
+}
 
 @media (max-width: 1499px) {
     /* div with either full res menu-logo-menu header, or two divs with logo + menu */

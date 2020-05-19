@@ -8,6 +8,7 @@ import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.SessionEntity;
 import world.thismagical.filter.BasicPostFilter;
+import world.thismagical.filter.PagingRequestFilter;
 import world.thismagical.service.*;
 import world.thismagical.to.*;
 import world.thismagical.vo.*;
@@ -536,6 +537,28 @@ public class JsonApi {
         }
 
         return JsonAdminResponse.fail("error getting settings");
+    }
+
+    public static JsonAdminResponse<PostVOList> processPagingRequest(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            return JsonAdminResponse.success(PagingService.get(pagingRequestFilter, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error processing paging request");
+    }
+
+    public static JsonAdminResponse<PostVOListUnified> processPagingRequestUnified(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
+            PostVOListUnified postVOListUnified = PagingService.unify(postVOList);
+            return JsonAdminResponse.success(postVOListUnified);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error processing paging request");
     }
 
 

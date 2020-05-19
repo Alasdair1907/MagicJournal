@@ -364,8 +364,23 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        // cda
+
+        if (action.equals("processPagingRequest")){
+            PagingRequestFilter pagingRequestFilter = objectMapper.readValue(data, PagingRequestFilter.class);
+            JsonAdminResponse<PostVOList> res = JsonApi.processPagingRequest(pagingRequestFilter, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("processPagingRequestUnified")){
+            PagingRequestFilter pagingRequestFilter = objectMapper.readValue(data, PagingRequestFilter.class);
+            JsonAdminResponse<PostVOListUnified> res = JsonApi.processPagingRequestUnified(pagingRequestFilter, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        /*
         if (action.equals("test")){
             PagingTest.test(sessionFactory);
-        }
+        }*/
     }
 %>

@@ -46,6 +46,7 @@ public class PhotoService {
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(photoEntity.getId()), session);
         if (imageVOList != null && !imageVOList.isEmpty()){
             photoVO.imageVO = imageVOList.get(0);
+            photoVO.tagEntityList = TagService.listTagsForObject(PostAttribution.PHOTO, photoId, session).data;
         }
 
         return photoVO;
@@ -57,11 +58,17 @@ public class PhotoService {
         List<Long> parentObjectIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, parentObjectIds, session);
 
+        List<Long> photoIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
+        List<TagEntity> tagEntityList = TagDao.listTagsForObjects(PostAttribution.PHOTO, photoIds, session);
+
         List<PhotoVO> photoVOList = new ArrayList<>();
         for (PhotoEntity photoEntity : photoEntityList){
             ImageVO imageVO = imageVOList.stream().filter( it -> it.parentObjId.equals(photoEntity.getId())).findAny().orElse(null);
             PhotoVO photoVO = new PhotoVO(photoEntity);
             photoVO.imageVO = imageVO;
+
+            photoVO.tagEntityList = tagEntityList.stream()
+                    .filter(it -> it.getAttributionClass() == PostAttribution.PHOTO && it.getParentObjectId().equals(photoEntity.getId())).collect(Collectors.toList());
 
             photoVOList.add(photoVO);
         }

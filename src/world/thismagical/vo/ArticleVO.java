@@ -16,12 +16,13 @@ package world.thismagical.vo;
 
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.TagEntity;
+import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class ArticleVO {
+public class ArticleVO implements PostVO {
     public Long id;
     public String title;
     public String description;
@@ -30,6 +31,9 @@ public class ArticleVO {
     public String creationDateStr;
     public String gpsCoordinates;
     public Boolean published;
+
+    public String postAttributionStr;
+    public Boolean isArticle;
 
     public String articleText;
     public ImageVO titleImageVO;
@@ -46,6 +50,39 @@ public class ArticleVO {
         this.gpsCoordinates = articleEntity.getGpsCoordinates();
         this.published = articleEntity.getPublished();
         this.articleText = articleEntity.getArticleText();
+        this.postAttributionStr = PostAttribution.ARTICLE.getReadable();
+        this.isArticle = true;
     }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public AuthorVO getAuthorVO() {
+        return authorVO;
+    }
+
+    @Override
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    @Override
+    public String getPostAttributionStr() {
+        return postAttributionStr;
+    }
+
+    @Override
+    public void setPostAttributionStr(String postAttributionStr) {
+        this.postAttributionStr = postAttributionStr;
+    }
+
 
 }

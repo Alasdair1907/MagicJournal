@@ -28,7 +28,7 @@ let homepageListing = `
         {{/each}}
         
         <div class="container-primary container-primary-element">
-            <a class="main-a item-container-heading" href="articles.jsp">View all articles</a>
+            <a class="main-a item-container-heading" href="posts.jsp?articles=true">View all articles</a>
         </div>
         
     </div>
@@ -46,7 +46,7 @@ let homepageListing = `
         {{/each}}
         
         <div class="container-primary container-primary-element">
-            <a class="main-a item-container-heading" href="galleries.jsp">View all galleries</a>
+            <a class="main-a item-container-heading" href="posts.jsp?galleries=true">View all galleries</a>
         </div> 
         
     </div>
@@ -55,10 +55,35 @@ let homepageListing = `
 </div>
 `;
 
-let articleListing = `
-<div class="width-100pc item-listing-dedicated">
-    {{#each articleVOList}}
-        ${articleRepresentationCompact}
-    {{/each}}
+
+let pagingInfoLine = `
+<div class="width-100pc paging-info-line" >
+<span class="text-main">Total items: {{totalItems}}</span>
 </div>
 `;
+
+let postListingTemplate = `
+${pagingInfoLine}
+<div class="width-100pc item-listing-dedicated">
+    {{#each postVOList}}
+    
+    {{#if this.isArticle}}
+        ${articleRepresentationCompact}
+    {{/if}}
+    
+    {{#if this.isPhoto}}
+        ${photoRepresentationCompact}
+    {{/if}}
+    
+    {{#if this.isGallery}}
+        ${galleryRepresentationCompact}
+    {{/if}}
+    
+    {{/each}}
+</div>
+
+<div data-role="paging-anchor"></div>
+`;
+
+
+

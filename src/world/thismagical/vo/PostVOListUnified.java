@@ -1,8 +1,8 @@
 package world.thismagical.vo;
 /*
   User: Alasdair
-  Date: 5/13/2020
-  Time: 7:39 PM
+  Date: 5/18/2020
+  Time: 3:23 AM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -17,24 +17,12 @@ package world.thismagical.vo;
                                                                                                    
 */
 
-import world.thismagical.util.PostAttribution;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class PagingVO {
+public class PostVOListUnified {
+    public Integer totalItems;
+    public Integer totalPages;
+    public Integer currentPage;
 
-    public PostAttribution attribution;
-    public Boolean isPopulated;
-    public List<Long> ids;
-    public List<Object> page;
-
-    public PagingVO(){}
-    public PagingVO(PostAttribution postAttribution){
-
-        attribution = postAttribution;
-        isPopulated = false;
-        ids = new ArrayList<>();
-        page = new ArrayList<>();
-    }
+    public List<PostVO> posts;
 }

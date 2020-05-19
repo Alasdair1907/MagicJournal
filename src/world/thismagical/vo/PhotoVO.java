@@ -18,12 +18,15 @@ package world.thismagical.vo;
 */
 
 import world.thismagical.entity.PhotoEntity;
+import world.thismagical.entity.TagEntity;
+import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-public class PhotoVO {
+public class PhotoVO implements PostVO {
     public Long id;
     public String title;
     public String description;
@@ -32,6 +35,10 @@ public class PhotoVO {
     public String creationDateStr;
     public String gpsCoordinates;
     public Boolean published;
+    public List<TagEntity> tagEntityList;
+
+    public String postAttributionStr;
+    public Boolean isPhoto;
 
     public ImageVO imageVO;
 
@@ -44,6 +51,38 @@ public class PhotoVO {
         this.creationDateStr = Tools.formatDate(photoEntity.getCreationDate());
         this.gpsCoordinates = photoEntity.getGpsCoordinates();
         this.published = photoEntity.getPublished();
+        this.postAttributionStr = PostAttribution.PHOTO.getReadable();
+        isPhoto = true;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public AuthorVO getAuthorVO() {
+        return authorVO;
+    }
+
+    @Override
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    @Override
+    public String getPostAttributionStr() {
+        return postAttributionStr;
+    }
+
+    @Override
+    public void setPostAttributionStr(String postAttributionStr) {
+        this.postAttributionStr = postAttributionStr;
     }
 
 }

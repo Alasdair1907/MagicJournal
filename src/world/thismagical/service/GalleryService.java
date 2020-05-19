@@ -56,6 +56,8 @@ public class GalleryService {
         galleryEntityList.forEach(it -> galleryIds.add(it.getId()));
         List<ImageVO> imageVOListAll = FileDao.getImages(PostAttribution.GALLERY, galleryIds, session);
 
+        List<TagEntity> tagEntityList = TagDao.listTagsForObjects(PostAttribution.GALLERY, galleryIds, session);
+
         for (GalleryEntity galleryEntity : galleryEntityList){
             GalleryVO galleryVO = new GalleryVO(galleryEntity);
             galleryVO.imageVOList = imageVOListAll.stream().filter(it -> it.parentObjId.equals(galleryEntity.getId())).collect(Collectors.toList());
@@ -74,6 +76,9 @@ public class GalleryService {
 
                 galleryVO.galleryRepresentation = galleryRepresentation;
             }
+
+            galleryVO.tagEntityList = tagEntityList.stream()
+                    .filter(it -> it.getAttributionClass() == PostAttribution.GALLERY && it.getParentObjectId().equals(galleryEntity.getId())).collect(Collectors.toList());
 
             res.add(galleryVO);
         }

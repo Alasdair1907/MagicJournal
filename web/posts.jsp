@@ -28,18 +28,24 @@
 
     <title>ThisMagical.world</title> <!-- TODO load from settings -->
 
-    <script src="cda/articles.js"></script>
+    <script src="cda/posts.js"></script>
     <script src="cda/header.js"></script>
 
 </head>
+
+
 <body class="cda">
 
 <div data-role="header-main" class="width-100-pc"></div>
 <div data-role="content-main" class="width-100-pc"></div>
 
 <script type="text/javascript">
+
+    let params = new URLSearchParams(window.location.search);
+
+
     $('[data-role="header-main"]').header();
-    $('[data-role="content-main"]').articles();
+    $('[data-role="content-main"]').posts();
 </script>
 
 </body>
