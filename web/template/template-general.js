@@ -58,7 +58,7 @@ let homepageListing = `
 
 let pagingInfoLine = `
 <div class="width-100pc paging-info-line" >
-<span class="text-main">Total items: {{totalItems}}</span>
+<span class="text-main container-primary"> Total items: {{totalItems}} </span>
 </div>
 `;
 

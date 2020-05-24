@@ -116,6 +116,19 @@ body.cda {
     background-size: cover;
 }
 
+/* images for compact gallery representation */
+.compact-gallery-image-div {
+    background-position: center;
+    background-size: cover;
+}
+
+/* container div for images for compact gallery representation */
+.gallery-representation-compact-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 /* text in listing items - description */
 .item-text {
     text-align: justify;
@@ -132,6 +145,7 @@ body.cda {
 .tag-cloud-a {
     text-decoration: none;
     margin-left: 1vw;
+    white-space: nowrap;
 }
 
 .tag-cloud-a:hover {
@@ -303,6 +317,12 @@ body.cda {
         margin: auto;
     }
 
+    .compact-gallery-image-div-size {
+        width: 14.75vw;
+        height: 14.75vw;
+        margin-bottom: 0.5vw;
+    }
+
 }
 
 @media (min-width: 1500px) {
@@ -339,7 +359,7 @@ body.cda {
         margin: 0.5vw;
     }
 
-    /* dedicated/search listings items - size */
+    /* compact listings items - size */
     .compact-item-size {
         width: 23vw;
         margin: 0.5vw;
@@ -350,5 +370,11 @@ body.cda {
         width: 22vw;
         height: 22vw;
         margin: auto;
+    }
+
+    .compact-gallery-image-div-size {
+        width: 10.75vw;
+        height: 10.75vw;
+        margin-bottom: 0.5vw;
     }
 }

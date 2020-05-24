@@ -17,7 +17,6 @@
 $.widget('magic.pager', {
 
     options: {
-        filter: {needArticles: true, needPhotos: true, needGalleries: true, page: 0},
         pagesTotal: 1
     },
 

@@ -84,9 +84,9 @@ let photoRepresentationCompact = `
 let galleryRepresentationCompact = `
 <div class="container-primary container-primary-element compact-container compact-item-size">
 
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <div class="gallery-representation-compact-images">
         {{#each this.galleryRepresentation}}
-            <a href="posts.jsp?gallery={{this.id}}" class="general-a"><img src="getImage.jsp?filename={{this.thumbnail}}" style="height: 10vw; width: 10vw;"></a>
+            <a href="posts.jsp?gallery={{../id}}" class="general-a"><div class="compact-gallery-image-div compact-gallery-image-div-size" style="background-image: url('getImage.jsp?filename={{this.thumbnail}}')"></div></a>
         {{/each}}
     </div>
     

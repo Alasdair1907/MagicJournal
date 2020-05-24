@@ -37,6 +37,12 @@ $.widget("magic.posts", {
         let postVOList = await ajaxCda({action: "processPagingRequestUnified", data: JSON.stringify(pagingRequestFilter) });
 
         let hArticleListing = Handlebars.compile(postListingTemplate);
+
+        /*
+        for (let i = 0; i < postVOList.posts.length; i++){
+            postVOList.posts[i].description = shrinkDescription(postVOList.posts[i].description);
+        }*/
+
         self.element.html(hArticleListing({postVOList: postVOList.posts, totalItems: postVOList.totalItems}));
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');

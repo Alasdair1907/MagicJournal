@@ -98,3 +98,10 @@ let getParamsStrFromPagingRequestFilter = function(base, filter) {
 
     return request;
 };
+
+let shrinkDescription = function(description){
+    if (description.length > 170){
+        description = description.substring(0,168) + "...";
+    }
+    return description;
+}
