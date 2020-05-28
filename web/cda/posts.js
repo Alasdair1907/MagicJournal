@@ -43,7 +43,8 @@ $.widget("magic.posts", {
             postVOList.posts[i].description = shrinkDescription(postVOList.posts[i].description);
         }*/
 
-        self.element.html(hArticleListing({postVOList: postVOList.posts, totalItems: postVOList.totalItems}));
+        let locationHeader = getLocationHeaderByFilter(pagingRequestFilter);
+        self.element.html(hArticleListing({postVOList: postVOList.posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');
         $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter});

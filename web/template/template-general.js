@@ -57,9 +57,15 @@ let homepageListing = `
 
 
 let pagingInfoLine = `
-<div class="width-100pc paging-info-line" >
-<span class="text-main container-primary"> Total items: {{totalItems}} </span>
-</div>
+
+<table class="width-100-pc">
+<tr>
+<td style='width: 33%; text-align: center;'>&nbsp;</td>
+<td style='width: 33%; text-align: center;'><span class="compact-location-heading">{{locationHeader}}</span></td>
+<td style='width: 33%; text-align: center;'><span class="compact-listing-count">Total items: {{totalItems}}</span></td>
+</tr>
+</table>
+
 `;
 
 let postListingTemplate = `

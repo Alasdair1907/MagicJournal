@@ -23,7 +23,7 @@ let articleRepresentation = `
     <a href="posts.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
     <div class="item-tags-subheading-container">
         {{#each this.tagEntityList}}
-        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
         {{/each}}
     </div>
     <span class="text-main item-text">{{this.description}}</span>
@@ -43,7 +43,9 @@ let articleRepresentationCompact = `
     <a href="posts.jsp?article={{this.id}}" class="general-a"><span class="item-heading">{{this.title}}</span></a>
     <div class="item-tags-subheading-container">
         {{#each this.tagEntityList}}
-        <a href="search.jsp?tag={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        
+        <a href="search.jsp?tag={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
+       
         {{/each}}
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
@@ -52,7 +54,7 @@ let articleRepresentationCompact = `
         <span class="text-main">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">Read article</a>
+        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">READ ARTICLE</a>
     </div>
 </div>
 `;
@@ -65,7 +67,7 @@ let photoRepresentationCompact = `
     <a href="posts.jsp?photo={{this.id}}" class="general-a"><span class="item-heading">{{this.title}}</span></a>
     <div class="item-tags-subheading-container">
         {{#each this.tagEntityList}}
-        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="photo-tag">#{{this.tag}}</span></a>&nbsp;
         {{/each}}
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
@@ -74,7 +76,7 @@ let photoRepresentationCompact = `
         <span class="text-main">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">View photo</a>
+        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">VIEW PHOTO</a>
     </div>
 </div>
 `;
@@ -93,7 +95,7 @@ let galleryRepresentationCompact = `
     <a href="posts.jsp?gallery={{this.id}}" class="general-a"><span class="item-heading">{{this.title}}</span></a>
     <div class="item-tags-subheading-container">
         {{#each this.tagEntityList}}
-        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="item-tag">#{{this.tag}}</span></a>&nbsp;
+        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="gallery-tag">#{{this.tag}}</span></a>&nbsp;
         {{/each}}
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
@@ -102,7 +104,7 @@ let galleryRepresentationCompact = `
         <span class="text-main">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">View gallery</a>
+        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">VIEW GALLERY</a>
     </div>
 </div>
 `;

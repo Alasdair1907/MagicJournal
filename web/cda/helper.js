@@ -104,4 +104,31 @@ let shrinkDescription = function(description){
         description = description.substring(0,168) + "...";
     }
     return description;
-}
+};
+
+let getLocationHeaderByFilter = function(filter) {
+    if (filter.tags){
+        return "Tags: "+filter.tags.join(", ");
+    }
+    if (filter.authorLogin){
+        return "Posts by Author";
+    }
+
+    let needs = [!!filter.needArticles, !!filter.needPhotos, !!filter.needGalleries];
+
+    if (arrEqual(needs, [true, false, false])) {
+        return "Articles";
+    }
+
+    if (arrEqual(needs, [false, true, false])) {
+        return "Photos";
+    }
+    if (arrEqual(needs, [false, false, true])) {
+        return "Galleries";
+    }
+    return "";
+};
+
+let arrEqual = function(a, b){
+    return JSON.stringify(a) === JSON.stringify(b);
+};

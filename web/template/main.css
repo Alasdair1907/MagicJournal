@@ -88,8 +88,20 @@ body.cda {
 }
 
 /* span inside <a> - tags inside items */
-.item-tag {
+.article-tag {
     color: #4a6eff;
+    font-size: 1.9vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.photo-tag {
+    color: #43ff6a;
+    font-size: 1.9vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.gallery-tag {
+    color: #ff3a65;
     font-size: 1.9vmin;
     font-family: Candara, Verdana, sans-serif;
 }
@@ -241,6 +253,19 @@ body.cda {
 /* description text - to keep the date/author/read-more element anchored to the bottom of item */
 .compact-item-text {
     flex-grow: 1;
+}
+
+/* location (articles,photos,galleries,tags,posts by author) heading in the compact item listing */
+.compact-location-heading {
+    color: white;
+    font-size: 3.5vmin;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.compact-listing-count {
+    color: white;
+    font-size: 2.3vmin;
+    font-family: Candara, Verdana, sans-serif;
 }
 
 /* pager */
