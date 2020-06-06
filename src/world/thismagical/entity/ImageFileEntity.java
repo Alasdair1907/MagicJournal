@@ -58,6 +58,9 @@ public class ImageFileEntity implements Serializable {
     @Column(name="order_num")
     private Long orderNumber;
 
+    @Column(name="aspect_ratio")
+    private Double aspectRatio;
+
     public ImageFileEntity(ImageFileEntity imageFileEntity){
         this.imageAttributionClass = imageFileEntity.getImageAttributionClass().getId();
         this.parentObjectId = imageFileEntity.getParentObjectId();
@@ -146,5 +149,13 @@ public class ImageFileEntity implements Serializable {
 
     public void setOrderNumber(Long orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public Double getAspectRatio() {
+        return aspectRatio;
+    }
+
+    public void setAspectRatio(Double aspectRatio) {
+        this.aspectRatio = aspectRatio;
     }
 }

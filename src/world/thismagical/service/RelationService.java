@@ -1,26 +1,33 @@
 package world.thismagical.service;
 
+/*
+                                        `.------:::--...``.`
+                                    `-:+hmmoo+++dNNmo-.``/dh+...
+                                   .+/+mNmyo++/+hmmdo-.``.odmo -/`
+                                 `-//+ooooo++///////:---..``.````-``
+                           `````.----:::/::::::::::::--------.....--..`````
+           ```````````...............---:::-----::::---..------------------........```````
+        `:/+ooooooosssssssyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysssssssssssssssssssssssssssoo+/:`
+          ``..-:/++ossyhhddddddddmmmmmarea51mbobmlazarmmmmmmmddddddddddddddhhyysoo+//:-..``
+                      ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````
+                                 ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`
+                                       `.-/+oossssyysssoo+/-.`
+
+*/
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
-import world.thismagical.to.JsonAdminResponse;
-import world.thismagical.to.PostTO;
-import world.thismagical.to.RelationTO;
+import world.thismagical.to.*;
 import world.thismagical.util.BBCodeExtractor;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
-import world.thismagical.vo.ArticleVO;
-import world.thismagical.vo.GalleryVO;
-import world.thismagical.vo.PhotoVO;
-import world.thismagical.vo.RelationVO;
+import world.thismagical.vo.*;
 
 import javax.management.relation.Relation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
@@ -58,6 +65,88 @@ public class RelationService {
 
     }
 
+    public static void fillRelevantPosts(SidePanelPostsTO sidePanelPostsTO, SidePanelRequestTO sidePanelRequestTO, Session session){
+        List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(PostAttribution.getPostAttribution(sidePanelRequestTO.postAttribution), sidePanelRequestTO.postId, session);
+
+        if (relationEntities == null || relationEntities.isEmpty()){
+            return;
+        }
+
+        Set<Long> articleIds = new HashSet<>();
+        Set<Long> galleryIds = new HashSet<>();
+        Set<Long> photoIds = new HashSet<>();
+
+        Map<String, PostTO> associated = new HashMap<>();
+        Map<String, PostTO> related = new HashMap<>();
+
+        for (RelationEntity relationEntity : relationEntities){
+
+            PostTO postTO = relationEntity.getForeignPostTO(sidePanelRequestTO.postAttribution, sidePanelRequestTO.postId);
+            PostAttribution foreignAttribution = PostAttribution.getPostAttribution(postTO.postAttributionClass);
+
+            if (foreignAttribution == PostAttribution.ARTICLE){ articleIds.add(postTO.postObjectId); }
+            if (foreignAttribution == PostAttribution.GALLERY){ galleryIds.add(postTO.postObjectId); }
+            if (foreignAttribution == PostAttribution.PHOTO){ photoIds.add(postTO.postObjectId); }
+
+            String foreignHash = foreignAttribution.getReadable() + "#" + postTO.postObjectId.toString();
+
+            if (Boolean.TRUE.equals(relationEntity.getRelationClass().getIsAuto())){
+                associated.put(foreignHash, postTO);
+            } else {
+                related.put(foreignHash, postTO);
+            }
+        }
+
+        associated.keySet().forEach(related::remove);
+
+
+        Map<Long, ArticleVO> articleVOMap = new HashMap<>();
+        Map<Long, PhotoVO> photoVOMap = new HashMap<>();
+        Map<Long, GalleryVO> galleryVOMap = new HashMap<>();
+
+        if (articleIds != null && !articleIds.isEmpty()) {
+            articleVOMap.putAll(ArticleService.listAllArticleVOs(BasicPostFilter.fromIdList(new ArrayList<>(articleIds)), session)
+                    .stream().collect(Collectors.toMap(ArticleVO::getId, articleVO -> articleVO)));
+        }
+
+        if (photoIds != null && !photoIds.isEmpty()) {
+            photoVOMap.putAll(PhotoService.listAllPhotoVOs(BasicPostFilter.fromIdList(new ArrayList<>(photoIds)), session)
+                    .stream().collect(Collectors.toMap(PhotoVO::getId, photoVO -> photoVO)));
+        }
+
+        if (galleryIds != null && !galleryIds.isEmpty()) {
+            galleryVOMap.putAll(GalleryService.listAllGalleryVOs(BasicPostFilter.fromIdList(new ArrayList<>(galleryIds)), 1, session)
+                    .stream().collect(Collectors.toMap(GalleryVO::getId, galleryVO -> galleryVO)));
+        }
+
+        List<PostVO> associatedVOList = new ArrayList<>();
+        List<PostVO> relatedVOList = new ArrayList<>();
+        
+        associated.forEach((String key, PostTO postTO) -> {
+            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass)){
+                associatedVOList.add(articleVOMap.get(postTO.postObjectId));
+            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass)){
+                associatedVOList.add(photoVOMap.get(postTO.postObjectId));
+            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass)){
+                associatedVOList.add(galleryVOMap.get(postTO.postObjectId));
+            }
+        });
+
+        related.forEach((String key, PostTO postTO) -> {
+            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass)){
+                relatedVOList.add(articleVOMap.get(postTO.postObjectId));
+            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass)){
+                relatedVOList.add(photoVOMap.get(postTO.postObjectId));
+            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass)){
+                relatedVOList.add(galleryVOMap.get(postTO.postObjectId));
+            }
+        });
+
+        sidePanelPostsTO.associated = associatedVOList;
+        sidePanelPostsTO.related = relatedVOList;
+    }
+
+
     public static List<RelationVO> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postAttribution, postId, session);
 
@@ -65,15 +154,14 @@ public class RelationService {
             return null;
         }
 
-        return relationEntityListToVo(relationEntities, session);
+        Entities entities = gatherRelationsEntities(relationEntities, session);
+        return relationEntityListToVo(relationEntities, entities, session);
     }
 
-    public static List<RelationVO> relationEntityListToVo(List<RelationEntity> relationEntityList, Session session){
+    public static List<RelationVO> relationEntityListToVo(List<RelationEntity> relationEntityList, Entities entities, Session session){
         if (relationEntityList == null){
             throw new IllegalArgumentException("relationEntityListToVo: null argument");
         }
-
-        Entities entities = gatherRelationsEntities(relationEntityList, session);
 
         if (entities == null){
             return null;
@@ -406,6 +494,7 @@ public class RelationService {
 
         return relationEntity;
     }
+
 
     public static class Entities {
         List<ArticleEntity> articleEntities;

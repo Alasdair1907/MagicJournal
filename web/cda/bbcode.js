@@ -1,14 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Alasdair
-  Date: 5/2/2020
-  Time: 5:56 PM
-                                                                                                
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<!--
+/**
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -20,30 +10,16 @@
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                 
--->
-<head>
-    <jsp:include page="head-standard.jsp"/>
-    <jsp:include page="head-client.jsp"/>
+                                                                                                     
+    
+*/
 
-    <title>ThisMagical.world</title> <!-- TODO load from settings -->
+let render = function(input){
+    let text = newlineToBr(input);
 
-    <script src="cda/posts.js"></script>
-    <script src="cda/header.js"></script>
+    return text;
+};
 
-</head>
-
-
-<body class="cda">
-
-<div data-role="header-main" class="width-100-pc"></div>
-<div data-role="content-main" class="width-100-pc"></div>
-
-<script type="text/javascript">
-
-    $('[data-role="header-main"]').header();
-    $('[data-role="content-main"]').posts();
-</script>
-
-</body>
-</html>
+let newlineToBr = function(input){
+    return input.replace(/(?:\r\n|\r|\n)/g, '<br>');
+};

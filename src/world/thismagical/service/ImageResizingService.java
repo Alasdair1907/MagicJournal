@@ -29,13 +29,15 @@ import java.nio.file.StandardCopyOption;
 
 public class ImageResizingService {
 
-    public static void resize(String inputFileName, String outputFileName, Integer maxWidthForHorizontal, Integer maxHeightForVertical){
+    public static Double resize(String inputFileName, String outputFileName, Integer maxWidthForHorizontal, Integer maxHeightForVertical){
         try {
             File inputFile = new File(inputFileName);
             BufferedImage inputImage = ImageIO.read(inputFile);
 
             Integer x = inputImage.getWidth();
             Integer y = inputImage.getHeight();
+
+            Double aspectRatio = (double) x / (double) y;
 
             Integer newX = null;
             Integer newY = null;
@@ -47,7 +49,7 @@ public class ImageResizingService {
 
                 if (maxWidthForHorizontal >= x){
                     copy(inputFileName, outputFileName);
-                    return;
+                    return aspectRatio;
                 }
 
                 ratio = ( x.doubleValue() / maxWidthForHorizontal.doubleValue());
@@ -60,7 +62,7 @@ public class ImageResizingService {
 
                 if (maxHeightForVertical >= y){
                     copy(inputFileName, outputFileName);
-                    return;
+                    return aspectRatio;
                 }
 
                 ratio = y.doubleValue() / maxHeightForVertical.doubleValue();
@@ -77,9 +79,13 @@ public class ImageResizingService {
 
             ImageIO.write(outputImage, Tools.getExtension(inputFileName), new File(outputFileName));
 
+            return aspectRatio;
+
         } catch (Exception ex){
             Tools.log("resize() error: "+ex.getMessage());
         }
+
+        return null;
     }
 
     private static void copy(String inputFileName, String outputFileName){

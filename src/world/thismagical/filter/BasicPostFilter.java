@@ -83,4 +83,10 @@ public class BasicPostFilter {
 
         return basicPostFilter;
     }
+
+    public static BasicPostFilter fromIdList(List<Long> ids){
+        BasicPostFilter basicPostFilter = new BasicPostFilter();
+        basicPostFilter.ids = ids;
+        return basicPostFilter;
+    }
 }

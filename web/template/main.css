@@ -69,7 +69,7 @@ body.cda {
     display: inline-block;
     width: 100%;
     text-align: center;
-    margin-bottom: 1vmin;
+    /*margin-bottom: 1vmin;*/
 }
 
 /* span with heading for post item in listings */
@@ -115,7 +115,6 @@ body.cda {
 /* large square image in items in listings (photos, articles) */
 .item-image-div {
     border-radius: 1.5vmin;
-    margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
     float: left;
     background-position: center;
     background-size: cover;
@@ -319,14 +318,14 @@ body.cda {
     .item-image-div-size {
         width: 13.08vw;
         height: 13.08vw;
-        margin-right: 1vw;
+        margin-right: 0.5vw;
     }
 
     /* size for photos and gallery images on homepage items */
     .photo-image-div-size {
-        width: 10vw;
-        height: 10vw;
-        margin: 0.5vw;
+        width: 10.8vw;
+        height: 10.8vw;
+        margin: 0.1vw;
     }
 
     /* dedicated/search listings items - size */
@@ -356,7 +355,7 @@ body.cda {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 2vmin 2vmin;
+        padding: 1vmin 2vmin 1vmin 2vmin;
     }
 
     .lower {
@@ -374,14 +373,14 @@ body.cda {
     .item-image-div-size {
         width: 13.08vw;
         height: 13.08vw;
-        margin-right: 1vw;
+        margin-right: 0.5vw;
     }
 
     /* size for photos and gallery images on homepage items */
     .photo-image-div-size {
-        width: 10vw;
-        height: 10vw;
-        margin: 0.5vw;
+        width: 10.8vw;
+        height: 10.8vw;
+        margin: 0.1vw;
     }
 
     /* compact listings items - size */
@@ -398,8 +397,8 @@ body.cda {
     }
 
     .compact-gallery-image-div-size {
-        width: 10.75vw;
-        height: 10.75vw;
-        margin-bottom: 0.5vw;
+        width: 10.9vw;
+        height: 10.9vw;
+        margin-bottom: 0.2vw;
     }
 }

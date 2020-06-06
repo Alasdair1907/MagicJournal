@@ -57,6 +57,10 @@ public class GalleryVO implements PostVO {
         this.isGallery = true;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String getTitle() {
         return title;

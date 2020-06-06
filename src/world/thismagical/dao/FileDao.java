@@ -59,26 +59,9 @@ public class FileDao {
             throw new IllegalArgumentException("getImageEntitiesByIDs: imageEntityId is NULL");
         }
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<ImageFileEntity> cq = cb.createQuery(ImageFileEntity.class);
-        Root<ImageFileEntity> root = cq.from(ImageFileEntity.class);
-
-        CriteriaBuilder.In<Long> idIn = cb.in(root.get("id"));
-        for (Long id: imageEntityIds){
-            idIn.value(id);
-        }
-        cq.select(root).where(idIn);
-
-        List<ImageFileEntity> files;
-
-        try {
-            files = session.createQuery(cq).getResultList();
-        } catch (Exception ex){
-            Tools.log("[WARN] getImageEntitiesByIds: "+ex.getMessage());
-            return null;
-        }
-
-        return files;
+        Query query = session.createQuery("from ImageFileEntity where id in :ids");
+        query.setParameter("ids", imageEntityIds);
+        return query.getResultList();
     }
 
     public static List<ImageFileEntity> getImageEntities(PostAttribution imageAttribution, List<Long> parentObjectIdList, Session session){

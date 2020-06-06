@@ -28,4 +28,15 @@ public class PagingRequestFilter {
 
     public List<String> tags;
     public String authorLogin;
+
+    public Integer itemsPerPage;
+
+    public static PagingRequestFilter latest(Integer count){
+        PagingRequestFilter pagingRequestFilter = new PagingRequestFilter();
+        pagingRequestFilter.needArticles = true;
+        pagingRequestFilter.needPhotos = true;
+        pagingRequestFilter.needGalleries = true;
+        pagingRequestFilter.itemsPerPage = count;
+        return pagingRequestFilter;
+    }
 }

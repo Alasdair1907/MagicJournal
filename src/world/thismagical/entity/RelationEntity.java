@@ -17,6 +17,7 @@ package world.thismagical.entity;
                                                                                                    
 */
 
+import world.thismagical.to.PostTO;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.RelationClass;
 import world.thismagical.vo.RelationVO;
@@ -94,5 +95,15 @@ public class RelationEntity implements Serializable {
     public void setRelationClass(RelationClass relationClass) {
         this.relationClass = relationClass.getId();
     }
+
+    @Transient
+    public PostTO getForeignPostTO(Short thisAttribution, Long thisObjectId){
+        if (this.srcAttributionClass.equals(thisAttribution) && this.srcObjectId.equals(thisObjectId)){
+            return new PostTO(this.dstAttributionClass, this.getDstObjectId());
+        }
+
+        return new PostTO(this.srcAttributionClass, this.getSrcObjectId());
+    }
+
 
 }

@@ -287,7 +287,7 @@ public class FileHandlingService {
                     try {
                         if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
 
-                            ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
+                            Double aspectRatio = ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
                             ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
 
                             ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
@@ -295,6 +295,7 @@ public class FileHandlingService {
                             fileEntity.setPreviewFileName(newFileNamePreview);
                             fileEntity.setThumbnailFileName(newFileNameThumbnail);
                             fileEntity.setOriginalFileName(fName);
+                            fileEntity.setAspectRatio(aspectRatio);
 
                             fileEntities.add(fileEntity);
                         }

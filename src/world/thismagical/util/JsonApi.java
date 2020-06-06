@@ -352,10 +352,15 @@ public class JsonApi {
         return JsonAdminResponse.fail("error loading article title image");
     }
 
-    public static JsonAdminResponse<ArticleVO> getArticleVOByArticleId(Long id, SessionFactory sessionFactory){
+    public static JsonAdminResponse<ArticleVO> getArticleVOByArticleId(Long id, Boolean preprocessed, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, session));
+            if (preprocessed){
+                return JsonAdminResponse.success(ArticleService.getArticleVObyArticleIdPreprocessed(id, session));
+            } else {
+                return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, session));
+            }
+
         } catch (Exception ex){
             Tools.handleException(ex);
         }
@@ -559,6 +564,27 @@ public class JsonApi {
         }
 
         return JsonAdminResponse.fail("error processing paging request");
+    }
+
+    public static JsonAdminResponse<SidePanelPostsTO> getSidePanelPosts(SidePanelRequestTO sidePanelRequestTO, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+
+            SidePanelPostsTO sidePanelPostsTO = new SidePanelPostsTO();
+
+            PagingRequestFilter pagingRequestFilter = PagingRequestFilter.latest(sidePanelRequestTO.limitLatest);
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
+            PostVOListUnified postVOListUnified = PagingService.unify(postVOList);
+            sidePanelPostsTO.latest = postVOListUnified.posts;
+
+            RelationService.fillRelevantPosts(sidePanelPostsTO, sidePanelRequestTO, session);
+
+            return JsonAdminResponse.success(sidePanelPostsTO);
+
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error assembling sidepanel posts");
     }
 
 

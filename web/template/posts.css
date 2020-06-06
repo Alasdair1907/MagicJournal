@@ -1,0 +1,67 @@
+/* main container for articles, inside which rendered article text is displayed */
+.post-main {
+    text-align: justify;
+    margin-top: 1vmin;
+}
+
+.article-image-container {
+    width: 100%;
+    text-align: center;
+}
+
+.article-image {
+    max-width: 80%;
+    max-height: 60vh;
+    margin-top: 1vmin;
+    margin-bottom: 1vmin;
+    border-radius: 1vmin;
+}
+
+.post-content-and-panel-container {
+    width: 100%;
+    display: flex;
+}
+
+@media (min-width: 1500px) {
+    .post-container {
+        margin-left: 1%;
+        margin-right: 0.5%;
+        width: 68.5%;
+    }
+
+    .side-container {
+        margin-left: 0.5%;
+        margin-right: 1%;
+        width: 28.5%;
+    }
+}
+
+
+/* https://stackoverflow.com/questions/41504162/is-it-possible-to-implement-a-flickr-like-justified-gallery-in-pure-css  */
+
+.jg {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.jg > a, .jg::after {
+    --ratio: var(--r);
+    --row-height: 30vh;
+    flex-basis: calc(var(--ratio) * var(--row-height));
+}
+
+.jg > a {
+    margin: 0.25vmin;
+    flex-grow: calc(var(--ratio) * 100);
+}
+
+.jg::after {
+    --ratio: 2;
+    content: '';
+    flex-grow: 1000000;
+}
+
+.jg > a > img {
+    display: block;
+    width: 100%;
+}

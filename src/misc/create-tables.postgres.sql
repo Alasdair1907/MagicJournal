@@ -26,7 +26,8 @@ title varchar(128),
 gps_coordinates varchar(128),
 image_attribution_class smallint,
 parent_object_id bigint,
-order_num bigint
+order_num bigint,
+aspect_ratio float8
 );
 
 CREATE TABLE photos (

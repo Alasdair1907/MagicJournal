@@ -55,6 +55,10 @@ public class PhotoVO implements PostVO {
         isPhoto = true;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String getTitle() {
         return title;

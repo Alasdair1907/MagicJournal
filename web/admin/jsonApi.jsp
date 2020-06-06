@@ -250,7 +250,13 @@
 
         if (action.equals("getArticleVOByArticleId")){
             Long id = Long.parseLong(data);
-            JsonAdminResponse<ArticleVO> res = JsonApi.getArticleVOByArticleId(id, sessionFactory);
+            JsonAdminResponse<ArticleVO> res = JsonApi.getArticleVOByArticleId(id, false, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("getArticleVOByArticleIdPreprocessed")){
+            Long id = Long.parseLong(data);
+            JsonAdminResponse<ArticleVO> res = JsonApi.getArticleVOByArticleId(id, true, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
@@ -375,6 +381,12 @@
         if (action.equals("processPagingRequestUnified")){
             PagingRequestFilter pagingRequestFilter = objectMapper.readValue(data, PagingRequestFilter.class);
             JsonAdminResponse<PostVOListUnified> res = JsonApi.processPagingRequestUnified(pagingRequestFilter, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("getSidePanelPosts")){
+            SidePanelRequestTO sidePanelRequestTO = objectMapper.readValue(data, SidePanelRequestTO.class);
+            JsonAdminResponse<SidePanelPostsTO> res = JsonApi.getSidePanelPosts(sidePanelRequestTO, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 

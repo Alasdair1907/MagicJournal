@@ -52,7 +52,9 @@ public class PagingService {
         PostVOList postVOList = new PostVOList();
 
         Integer totalItems = PagingDao.count(pagingRequestFilter, session);
-        double dPages = totalItems.doubleValue() / settingsTO.itemsPerPage.doubleValue();
+        Integer itemsPerPage = (pagingRequestFilter.itemsPerPage == null) ? settingsTO.itemsPerPage : pagingRequestFilter.itemsPerPage;
+
+        double dPages = totalItems.doubleValue() / itemsPerPage.doubleValue();
 
         postVOList.totalPages = (int) Math.ceil(dPages);
         postVOList.totalItems = totalItems;
@@ -66,8 +68,8 @@ public class PagingService {
             return postVOList;
         }
 
-        Integer fromResult = pagingRequestFilter.page * settingsTO.itemsPerPage;
-        List<PostIndexItem> postIndexItemList = PagingDao.load(pagingRequestFilter, fromResult, settingsTO.itemsPerPage, session);
+        Integer fromResult = pagingRequestFilter.page * itemsPerPage;
+        List<PostIndexItem> postIndexItemList = PagingDao.load(pagingRequestFilter, fromResult, itemsPerPage, session);
 
         postIndexItemList.forEach(postIndexItem -> {
 

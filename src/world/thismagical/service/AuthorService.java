@@ -1,5 +1,20 @@
 package world.thismagical.service;
 
+/*
+                                        `.------:::--...``.`
+                                    `-:+hmmoo+++dNNmo-.``/dh+...
+                                   .+/+mNmyo++/+hmmdo-.``.odmo -/`
+                                 `-//+ooooo++///////:---..``.````-``
+                           `````.----:::/::::::::::::--------.....--..`````
+           ```````````...............---:::-----::::---..------------------........```````
+        `:/+ooooooosssssssyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysssssssssssssssssssssssssssoo+/:`
+          ``..-:/++ossyhhddddddddmmmmmarea51mbobmlazarmmmmmmmddddddddddddddhhyysoo+//:-..``
+                      ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````
+                                 ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`
+                                       `.-/+oossssyysssoo+/-.`
+
+*/
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.AuthorDao;

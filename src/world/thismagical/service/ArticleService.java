@@ -28,6 +28,7 @@ import world.thismagical.entity.TagEntity;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
+import world.thismagical.util.BBCodeExtractor;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 
 public class ArticleService {
 
+
     public static ArticleVO getArticleVObyArticleId(Long articleId, Session session){
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(articleId, ArticleEntity.class, session);
         ArticleVO articleVO = new ArticleVO(articleEntity);
@@ -47,6 +49,12 @@ public class ArticleService {
         articleVO.titleImageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
         articleVO.tagEntityList = TagService.listTagsForObject(PostAttribution.ARTICLE, articleId, session).data;
 
+        return articleVO;
+    }
+
+    public static ArticleVO getArticleVObyArticleIdPreprocessed(Long articleId, Session session){
+        ArticleVO articleVO = getArticleVObyArticleId(articleId, session);
+        articleVO.articleText = BBCodeExtractor.preprocess(articleVO.articleText, session);
         return articleVO;
     }
 

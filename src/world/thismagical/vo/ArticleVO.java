@@ -54,6 +54,8 @@ public class ArticleVO implements PostVO {
         this.isArticle = true;
     }
 
+    public Long getId() { return id; }
+
     @Override
     public String getTitle() {
         return title;
