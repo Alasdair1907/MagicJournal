@@ -83,5 +83,11 @@ $.widget("magic.posts", {
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
         self.element.html(hGalleryTemplate({galleryVO: galleryVO}));
 
+
+        let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
+        $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
+
+
     }
+
 });

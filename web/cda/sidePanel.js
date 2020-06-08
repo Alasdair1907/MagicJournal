@@ -17,7 +17,7 @@
 $.widget("magic.sidePanel", {
 
     options: {
-        latestPostsCount: 10,
+        latestPostsCount: 15,
         postAttributionClass: POST_ATTRIBUTION_ARTICLE,
         postId: 0
     },

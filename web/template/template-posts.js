@@ -46,18 +46,33 @@ let galleryTemplate = `
 </div>`;
 
 let sidePanelArticleTemplate = `
-<span class="text-main">ARTICLE</span><br />
-<span class="text-main">{{this.title}}</span><br />
+<a class="general-a" href="posts.jsp?article={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="article-tag side-panel-tag">article</span><br />
+    <div class="side-panel-image-div side-panel-image-div-size" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')"></div>
+    <span class="text-main side-panel-title">{{this.title}}</span><br />
+</div>
+</a>
 `;
 
 let sidePanelPhotoTemplate = `
-<span class="text-main">PHOTO</span><br />
-<span class="text-main">{{this.title}}</span><br />
+<a class="general-a" href="posts.jsp?photo={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="photo-tag side-panel-tag">photo</span><br />
+    <div class="side-panel-image-div side-panel-image-div-size" style="background-image: url('getImage.jsp?filename={{this.imageVO.thumbnail}}')"></div>
+    <span class="text-main side-panel-title">{{this.title}}</span><br />
+</div>
+</a>
 `;
 
 let sidePanelGalleryTemplate = `
-<span class="text-main">GALLERY</span><br />
-<span class="text-main">{{this.title}}</span><br />
+<a class="general-a" href="posts.jsp?gallery={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="gallery-tag side-panel-tag">gallery</span><br />
+    <div class="side-panel-image-div side-panel-image-div-size" style="background-image: url('getImage.jsp?filename={{this.galleryRepresentation.[0].thumbnail}}')"></div>
+    <span class="text-main side-panel-title">{{this.title}}</span><br />
+</div>
+</a>
 `;
 
 let sidePanelClassSwitch = `
@@ -78,23 +93,23 @@ ${sidePanelGalleryTemplate}
 let sidePanelBase = `
 {{#if associated}}
 <span class="item-heading">Associated posts:</span>
-{{#each associated}}
-${sidePanelClassSwitch}
-{{/each}}
+    {{#each associated}}
+    ${sidePanelClassSwitch}
+    {{/each}}
 {{/if}}
 
 {{#if related}}
 <span class="item-heading">Related posts:</span>
-{{#each related}}
-${sidePanelClassSwitch}
-{{/each}}
+    {{#each related}}
+    ${sidePanelClassSwitch}
+    {{/each}}
 {{/if}}
 
 <span class="item-heading">Latest posts:</span>
 {{#if latest}}
-{{#each latest}}
-${sidePanelClassSwitch}
-{{/each}}
+    {{#each latest}}
+    ${sidePanelClassSwitch}
+    {{/each}}
 {{/if}}
 `;
 
