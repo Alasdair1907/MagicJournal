@@ -313,7 +313,14 @@ public class FileHandlingService {
 
         return fileEntities;
     }
-    
+
+    /**
+     *
+     * @param id id of ImageFileEntity
+     * @param guid user guid
+     * @param session hibernate session
+     * @return JsonAdminResponse with success set to either true or false
+     */
     private static JsonAdminResponse<Void> verifyPrivileges(Long id, String guid, Session session){
 
         if (id == null || guid == null){

@@ -46,8 +46,8 @@ public class RelationService {
             return JsonAdminResponse.success(RelationTO.getEmpty(postTO));
         }
 
-        List<RelationVO> postsReferToThis = new ArrayList<>();
-        List<RelationVO> currentPostRelatesTo = new ArrayList<>();
+        List<RelationVO> postsReferToThis;
+        List<RelationVO> currentPostRelatesTo;
 
         postsReferToThis = relationVOList.stream()
                 .filter(relationVO -> relationVO.dstAttributionClass.getId().equals(postTO.postAttributionClass) && relationVO.dstObjectId.equals(postTO.postObjectId))

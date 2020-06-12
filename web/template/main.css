@@ -294,6 +294,8 @@ body.cda {
     margin-top: 2.5vmin;
 }
 
+
+
 @media (max-width: 1499px) {
     /* div with either full res menu-logo-menu header, or two divs with logo + menu */
     .header-div {

@@ -24,6 +24,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import world.thismagical.entity.ImageFileEntity;
+import world.thismagical.entity.OtherFileEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
@@ -188,5 +189,11 @@ public class FileDao {
         }
 
         session.flush();
+    }
+
+    public static List<OtherFileEntity> getOtherFilesByIds(List<Long> ids, Session session){
+        Query query = session.createQuery("from OtherFileEntity where id in :ids");
+        query.setParameter("ids", ids);
+        return query.getResultList();
     }
 }

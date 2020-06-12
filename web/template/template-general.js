@@ -91,5 +91,8 @@ ${pagingInfoLine}
 <div data-role="paging-anchor"></div>
 `;
 
+let showImageTemplate = `
+
+`;
 
 

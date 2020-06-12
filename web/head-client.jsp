@@ -9,6 +9,7 @@
 <script src="template/template-general.js"></script>
 <script src="template/template-header.js"></script>
 <script src="template/template-posts.js"></script>
+<script src="template/template-bbcode.js"></script>
 
 
 <script src="cda/pager.js"></script>

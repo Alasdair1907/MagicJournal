@@ -1,14 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Alasdair
-  Date: 4/30/2020
-  Time: 10:12 PM
-                                                                                                
---%>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<!--
+/**
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -20,12 +10,19 @@
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                 
--->
-<head>
-    <title>Title</title>
-</head>
-<body>
+                                                                                                     
+    
+*/
 
-</body>
-</html>
+let bbInlineImage = `
+<img src="getImage.jsp?filename={{preview}}" class="article-image" data-role="inline-image" data-image="{{imageSrc}}" data-title="{{title}}">
+`;
+
+let bbInlineFile = `
+<div class="attached-file-container attached-file-container-size">
+
+<i class="fas fa-file-download attached-file-icon"></i>
+<span class="text-main">{{displayName}}</span>
+
+</div>
+`;

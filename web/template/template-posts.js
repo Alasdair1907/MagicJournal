@@ -20,7 +20,7 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
     <div class="container-primary container-primary-element post-container">
         <span class="item-heading">{{articleVO.title}}</span>
         <div class="text-main post-main">
-            {{{articleVO.articleText}}}
+            {{{articleText}}}
         </div>
     </div>
 
@@ -113,3 +113,15 @@ let sidePanelBase = `
 {{/if}}
 `;
 
+let fullScreenImageOverlay = `
+<div class="image-show-base-overlay">
+    <div class="image-show-container">
+        <div>
+            <img src="getImage.jsp?filename={{imageSrc}}" class="image-show-image">
+            <div class="image-show-title text-main">{{title}}</div>
+            <i class="fas fa-times image-show-close" data-role="image-show-close"></i>
+        </div>
+    </div>
+</div>
+
+`;

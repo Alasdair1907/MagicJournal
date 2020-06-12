@@ -61,17 +61,10 @@ $.widget("magic.posts", {
         let articleVO = await ajaxCda({action: "getArticleVOByArticleIdPreprocessed", data: articleId});
         
         let hArticleTemplate = Handlebars.compile(articleTemplate);
-        self.element.html(hArticleTemplate({articleVO: articleVO}));
-        
-        let $imageDivs = self.element.find('[data-type=image]');
-        $imageDivs.each(function(){
-            let imageID = $(this).data("id");
-            let preview = $(this).data("preview");
-            let image = $(this).data("image");
-            let title = $(this).data("title");
+        self.element.html(hArticleTemplate({articleVO: articleVO, articleText: render(articleVO.articleText) }));
 
-            $(this).html(`<img src="getImage.jsp?filename=${preview}" class="article-image">`);
-        });
+        postRender(self.element);
+        self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_ARTICLE, postId: articleId});
@@ -83,11 +76,31 @@ $.widget("magic.posts", {
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
         self.element.html(hGalleryTemplate({galleryVO: galleryVO}));
 
-
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
+    },
 
+    _handleClickableImages: function(self){
+        let clickableImages = self.element.find('[data-role="inline-image"]');
 
+        clickableImages.unbind();
+        clickableImages.click(function(){
+            let imageSrc = $(this).data("image");
+            let title = $(this).data("title");
+
+            let hFullScreenImageOverlay = Handlebars.compile(fullScreenImageOverlay);
+            let overlayHtml = hFullScreenImageOverlay({imageSrc: imageSrc, title: title});
+
+            let $newElem = $(overlayHtml);
+            $newElem.appendTo("body");
+            $("body").css("overflow", "hidden");
+
+            let $imageShowClose = $newElem.find('[data-role="image-show-close"]');
+            $imageShowClose.click(function(){
+                $newElem.remove();
+                $("body").css("overflow","auto");
+            });
+        });
     }
 
 });

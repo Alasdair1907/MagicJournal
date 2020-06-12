@@ -15,12 +15,13 @@
     margin-top: 1vmin;
     margin-bottom: 1vmin;
     border-radius: 1vmin;
+    cursor: pointer;
 }
 
 .post-content-and-panel-container {
     width: 100%;
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
 }
 
 .side-panel-container {
@@ -31,6 +32,19 @@
     border-width: 1px;
     border-style: solid;
     border-color: grey;
+}
+
+.attached-file-container {
+    border-width: 1px;
+    border-style: solid;
+    border-color: grey;
+    margin: auto;
+}
+
+.attached-file-icon {
+    color: white;
+    font-size: 4vmin;
+    margin: 1.5vmin;
 }
 
 /* the post type tag (article/photo/gallery) */
@@ -46,6 +60,53 @@
 
 .side-panel-title {
     flex-shrink: 1000;
+}
+
+.image-show-base-overlay {
+    background-color: #292929;
+    overflow: hidden;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.image-show-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.image-show-image {
+    max-width: 100vw;
+    max-height: 95vh;
+    width: 100%;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+}
+
+.image-show-title {
+    width: 100vw;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 5vw;
+    padding-left: 5vw;
+    text-align: center;
+}
+
+.image-show-close {
+    font-size: 4.5vh;
+    color: white;
+    position: absolute;
+    right: 1vw;
+    bottom: 0.5vh;
 }
 
 @media (min-width: 1500px) {
@@ -71,6 +132,15 @@
     }
 
     .side-panel-container-size {
+        padding-top: 0.2vw;
+        padding-bottom: 0.2vw;
+        margin-top: 0.2vw;
+        margin-bottom: 0.2vw;
+        border-radius: 1.5vmin;
+    }
+
+    .attached-file-container-size {
+        width: 50%;
         padding-top: 0.2vw;
         padding-bottom: 0.2vw;
         margin-top: 0.2vw;
