@@ -18,6 +18,16 @@
     cursor: pointer;
 }
 
+.article-image-title {
+    display: block;
+    color: white;
+    font-size: 1.8vmin;
+    font-style: italic;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+
+
 .post-content-and-panel-container {
     width: 100%;
     display: flex;
@@ -29,12 +39,24 @@
     display: flex;
     align-items: center;
 
-    border-width: 1px;
-    border-style: solid;
-    border-color: grey;
+    border-width: 0;
+    /*border-style: solid;
+    border-color: #80808000;*/
+
+    background-color: rgba(240, 248, 255, 0.13);
+
+
+
+}
+
+.file-container {
+    display: block;
+    margin-bottom: -1.9vmin;
+    margin-top: 0.9vmin;
 }
 
 .attached-file-container {
+    display: flex;
     border-width: 1px;
     border-style: solid;
     border-color: grey;
@@ -45,6 +67,50 @@
     color: white;
     font-size: 4vmin;
     margin: 1.5vmin;
+}
+
+.attached-file-info-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.attached-file-description {
+    color: white;
+    font-size: 1.8vmin;
+    font-style: italic;
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.bb-bold {
+    font-weight: bold;
+}
+
+.bb-italic {
+    font-style: italic;
+}
+
+.bb-heading {
+    font-size: 2.3vmin;
+    color: white;
+    font-family: Candara, Verdana, sans-serif;
+    text-align: center;
+    display: block;
+    margin-bottom: -1.9vmin; /* The rumour has it that Kevin Mitnick wrote this himself. */
+    margin-top: 1.4vmin;
+}
+
+.bb-youtube-embed {
+    display: block;
+    margin: auto;
+    margin-top: 2vmin;
+}
+
+.bb-quote {
+    border-left-color: lightgray;
+    border-left-style: solid;
+    font-style: italic;
+    font-size: 1.9vmin;
+    font-family: Candara, Verdana, sans-serif;
 }
 
 /* the post type tag (article/photo/gallery) */
@@ -107,6 +173,7 @@
     position: absolute;
     right: 1vw;
     bottom: 0.5vh;
+    cursor: pointer;
 }
 
 @media (min-width: 1500px) {
@@ -146,6 +213,20 @@
         margin-top: 0.2vw;
         margin-bottom: 0.2vw;
         border-radius: 1.5vmin;
+    }
+
+    .bb-youtube-embed-size {
+        width: 50vw;
+        height: 28vw;
+    }
+
+    .bb-quote-size {
+        width: 60%;
+        border-width: 1vw;
+        padding-left: 1vw;
+        margin-top: 1.9vmin;
+        margin-bottom: -1.9vmin;
+        margin-left: 1vw;
     }
 }
 

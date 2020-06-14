@@ -22,6 +22,7 @@ package world.thismagical.to;
  */
 
 public class OtherFileTO {
+    public Long fileId;
     public String guid;
     public String name;
     public String description;

@@ -110,10 +110,16 @@ public class BBCodeExtractor {
             Long imageId = bbCodeData.imgIds.get(i);
             ImageFileEntity imageFileEntity = imageFileEntityMap.get(imageId);
 
-            String imageHtml = String.format("<div class='article-image-container' data-type='image' data-id='%d' data-preview='%s' data-image='%s' data-title='%s'></div>",
-                    imageId, imageFileEntity.getPreviewFileName(), imageFileEntity.getFileName(), escapeSingleQuotes(imageFileEntity.getTitle()));
+            String imageHtml = "";
+
+            if (imageFileEntity != null) {
+
+                imageHtml = String.format("<div class='article-image-container' data-type='image' data-id='%d' data-preview='%s' data-image='%s' data-title='%s'></div>",
+                        imageId, imageFileEntity.getPreviewFileName(), imageFileEntity.getFileName(), escapeSingleQuotes(imageFileEntity.getTitle()));
+            }  // todo: alert user that the image he used has been deleted
 
             text = text.replaceAll(Pattern.quote(bbCodeData.imgExpressions.get(i)), imageHtml);
+
         }
 
         return text;
@@ -136,10 +142,14 @@ public class BBCodeExtractor {
             Long fileId = bbCodeData.fileIds.get(i);
             OtherFileEntity otherFileEntity = otherFileEntityMap.get(fileId);
 
-            String fileHtml = String.format("<div class='file-container' data-type='file' data-id='%d' data-displayname='%s' data-description='%s'></div>",
-                    fileId, otherFileEntity.getDisplayName(), escapeSingleQuotes(otherFileEntity.getDescription()));
+            String fileHtml = "";
+            if (otherFileEntity != null) {
+                fileHtml = String.format("<div class='file-container' data-type='file' data-id='%d' data-displayname='%s' data-description='%s'></div>",
+                        fileId, otherFileEntity.getDisplayName(), escapeSingleQuotes(otherFileEntity.getDescription()));
+            } // todo: alert user that the file he used has been deleted
 
             text = text.replaceAll(Pattern.quote(bbCodeData.fileExpressions.get(i)), fileHtml);
+
         }
 
         return text;

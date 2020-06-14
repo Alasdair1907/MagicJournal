@@ -46,10 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class FileHandlingService {
 
@@ -538,5 +535,65 @@ public class FileHandlingService {
             Tools.handleException(ex);
             return JsonAdminResponse.fail("unknown error");
         }
+    }
+
+    public static JsonAdminResponse<OtherFileVO> getOtherFileById(Long id, SessionFactory sessionFactory){
+
+        if (id == null){
+            return JsonAdminResponse.fail("null argument");
+        }
+
+        try (Session session = sessionFactory.openSession()){
+            List<OtherFileEntity> otherFileEntityList = FileDao.getOtherFilesByIds(Collections.singletonList(id), session);
+            if (otherFileEntityList != null && !otherFileEntityList.isEmpty()){
+                return JsonAdminResponse.success(new OtherFileVO(otherFileEntityList.get(0)));
+            }
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error getting file by id");
+    }
+
+    public static JsonAdminResponse<Void> updateOtherFileInfo(OtherFileTO otherFileTO, SessionFactory sessionFactory){
+
+        if (otherFileTO.guid == null || otherFileTO.fileId == null){
+            return JsonAdminResponse.fail("null arguments");
+        }
+
+        if (otherFileTO.name == null){
+            return JsonAdminResponse.fail("file display name must be filled!");
+        }
+
+        try (Session session = sessionFactory.openSession()){
+            OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, otherFileTO.fileId);
+
+            if (otherFileEntity == null){
+                return JsonAdminResponse.fail("file not found");
+            }
+
+            AuthorEntity originalAuthor = otherFileEntity.getAuthorEntity();
+            AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(otherFileTO.guid, session);
+            if (!AuthorizationService.checkPrivileges(originalAuthor, currentAuthor)){
+                return JsonAdminResponse.fail("not authorized");
+            }
+
+            if (!session.getTransaction().isActive()){
+                session.beginTransaction();
+            }
+
+            otherFileEntity.setDisplayName(otherFileTO.name);
+            otherFileEntity.setDescription(otherFileTO.description);
+
+            session.update(otherFileEntity);
+            session.flush();
+
+            return JsonAdminResponse.success(null);
+
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error updating file info");
     }
 }

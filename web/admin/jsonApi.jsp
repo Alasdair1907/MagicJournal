@@ -370,6 +370,18 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("getOtherFileById")){
+            Long id = Long.parseLong(data);
+            JsonAdminResponse<OtherFileVO> res = FileHandlingService.getOtherFileById(id, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("updateOtherFileInfo")){
+            OtherFileTO otherFileTO = objectMapper.readValue(data, OtherFileTO.class);
+            JsonAdminResponse<Void> res = FileHandlingService.updateOtherFileInfo(otherFileTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         // cda
 
         if (action.equals("processPagingRequest")){
