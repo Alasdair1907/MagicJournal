@@ -7,13 +7,13 @@
 .article-image-container {
     width: 100%;
     text-align: center;
+    margin-top: 2.0vmin;
+    margin-bottom: 2.0vmin;
 }
 
 .article-image {
     max-width: 80%;
     max-height: 60vh;
-    margin-top: 1vmin;
-    margin-bottom: 1vmin;
     border-radius: 1vmin;
     cursor: pointer;
 }
@@ -38,21 +38,14 @@
     width: 100%;
     display: flex;
     align-items: center;
-
     border-width: 0;
-    /*border-style: solid;
-    border-color: #80808000;*/
-
-    background-color: rgba(240, 248, 255, 0.13);
-
-
-
+    background-color: rgba(240, 248, 255, 0.09);
 }
 
 .file-container {
     display: block;
-    margin-bottom: -1.9vmin;
-    margin-top: 0.9vmin;
+    margin-top: 2.0vmin;
+    margin-bottom: 2.0vmin;
 }
 
 .attached-file-container {
@@ -95,14 +88,13 @@
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
     display: block;
-    margin-bottom: -1.9vmin; /* The rumour has it that Kevin Mitnick wrote this himself. */
-    margin-top: 1.4vmin;
+    margin-top: 2.2vmin;
+    margin-bottom: 1.5vmin;
 }
 
 .bb-youtube-embed {
     display: block;
     margin: auto;
-    margin-top: 2vmin;
 }
 
 .bb-quote {
@@ -111,6 +103,19 @@
     font-style: italic;
     font-size: 1.9vmin;
     font-family: Candara, Verdana, sans-serif;
+}
+
+.bb-bullet-list {
+    display: flex;
+    align-items: baseline;
+    margin-top: 0.7vmin;
+    margin-bottom: 0.7vmin;
+}
+
+.bb-bullet {
+    margin-right: 0.5vmin;
+    font-size: 2.0vmin;
+    color: white;
 }
 
 /* the post type tag (article/photo/gallery) */
@@ -218,15 +223,33 @@
     .bb-youtube-embed-size {
         width: 50vw;
         height: 28vw;
+        margin-top: 2vmin;
+        margin-bottom: 2vmin;
     }
 
     .bb-quote-size {
         width: 60%;
         border-width: 1vw;
         padding-left: 1vw;
-        margin-top: 1.9vmin;
-        margin-bottom: -1.9vmin;
         margin-left: 1vw;
+        margin-top: 1.5vmin;
+        margin-bottom: 1.5vmin;
+    }
+
+    .bb-bullet-1 {
+        margin-left: 1vw;
+    }
+    .bb-bullet-2 {
+        margin-left: 3vw;
+    }
+    .bb-bullet-3 {
+        margin-left: 5vw;
+    }
+    .bb-bullet-4 {
+        margin-left: 7vw;
+    }
+    .bb-bullet-5 {
+        margin-left: 9vw;
     }
 }
 

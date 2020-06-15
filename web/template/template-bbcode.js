@@ -41,3 +41,7 @@ let bbInlineFile = `
 let bbYouTube = `
 <iframe class="bb-youtube-embed-size bb-youtube-embed" src="https://www.youtube.com/embed/{{videoCode}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 `;
+
+let bulletListOpen = `
+<div class="bb-bullet-list bb-bullet-{{count}}"><i class="fas fa-dot-circle bb-bullet"></i><span class="text-main">
+`;

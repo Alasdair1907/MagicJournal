@@ -31,8 +31,9 @@ import java.util.regex.Pattern;
 
 public class BBCodeExtractor {
 
-    public static String REGEX_IMG_ID = "\\[\\s*img\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]"; // \[\s*img\s*id\s*\=\s*([0-9]+)\s*\]
-    public static String REGEX_FILE_ID = "\\[\\s*file\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]";
+    // these should be rendered as display:block, therefore, we are removing any whitespaces before and after the elements
+    public static String REGEX_IMG_ID = "\\s*\\[\\s*img\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*"; // \[\s*img\s*id\s*\=\s*([0-9]+)\s*\]
+    public static String REGEX_FILE_ID = "\\s*\\[\\s*file\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*";
 
     private final static Pattern regexImgId = Pattern.compile(REGEX_IMG_ID);
     private final static Pattern regexFileId = Pattern.compile(REGEX_FILE_ID);
