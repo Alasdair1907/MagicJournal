@@ -31,6 +31,12 @@ let quoteCloseTag = new RegExp(/\[\s*\/\s*quote\s*\]\s*(?:<br>)*/, 'g'); // [/qu
 let bulletListOpenTag = new RegExp(/\[\s*(x+)\s*\]\s*(?:<br>)*/, 'g'); // [x]
 let bulletListCloseTag = new RegExp(/\[\s*\/\s*x+\s*\]\s*(?:<br>)*/, 'g'); // [/x]
 
+let lineBreakTag = new RegExp(/\[\s*br\s*\]\s*(?:<br>)*/, 'g'); // [br]
+
+//[url=http://www.example.org?var=foo&bar=23&q= W00t123]Blah blah[/url]
+// group 1 - link
+// group 2 - link text
+let hypertextLinkTag = new RegExp(/\[\s*url\s*=\s*(.+?)\s*\](.+?)(?:\[\s*\/\s*url\s*])/, 'g');
 
 /*
 Transforming data divs into what we want to see
@@ -113,6 +119,8 @@ let render = function(text){
 
     text = text.replace(bulletListCloseTag, "</span></div>");
 
+    text = text.replace(lineBreakTag, "<br>" );
+
     return text;
 };
 
@@ -132,14 +140,58 @@ let basicRender = function(text){
     text = text.replace(subHeadingOpenTag, "<span class='bb-heading'>");
     text = text.replace(subHeadingCloseTag, "</span>");
 
+    // links
+    let urlTags = [];
+    let urls = [];
+    let texts = [];
+
+    let urlMatch = hypertextLinkTag.exec(text);
+    while (urlMatch != null){
+        urlTags.push(urlMatch[0]);
+        urls.push(urlMatch[1]);
+        texts.push(urlMatch[2]);
+
+        urlMatch = hypertextLinkTag.exec(text);
+    }
+
+    for (let i = 0; i < urlTags.length; i++){
+        let hHyperLinkTemplate = Handlebars.compile(hyperLinkTemplate);
+        text = text.split(urlTags[i]).join(hHyperLinkTemplate({url: urls[i], text: texts[i]}));
+    }
+
     return text;
 };
 
 /*
 we dont want to render basic bbcode when descriptions are being displayed in the lists - so we just hide the code
  */
+
 let basicNotRender = function (text){
-    // todo
+
+    text = text.replace(boldOpenTag, "");
+    text = text.replace(boldCloseTag, "");
+
+    text = text.replace(italicOpenTag, "");
+    text = text.replace(italicCloseTag, "");
+
+    text = text.replace(subHeadingOpenTag, "");
+    text = text.replace(subHeadingCloseTag, "");
+
+    // links
+    let urlTags = [];
+    let texts = [];
+
+    let urlMatch = hypertextLinkTag.exec(text);
+    while (urlMatch != null){
+        urlTags.push(urlMatch[0]);
+        texts.push(urlMatch[2]);
+
+        urlMatch = hypertextLinkTag.exec(text);
+    }
+
+    for (let i = 0; i < urlTags.length; i++){
+        text = text.split(urlTags[i]).join(texts[i]);
+    }
     return text;
 };
 

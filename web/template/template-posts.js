@@ -19,6 +19,18 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
 <div class="post-content-and-panel-container">
     <div class="container-primary container-primary-element post-container">
         <span class="item-heading">{{articleVO.title}}</span>
+
+        <div class="post-render-info-line">
+            Author: <a class="main-a" href="author.jsp?author={{articleVO.authorVO.login}}">{{articleVO.authorVO.displayName}}</a>, 
+            date posted: {{articleVO.creationDateStr}}</span>
+        </div>
+
+        <div class="item-tags-subheading-container">
+            {{#each articleVO.tagEntityList}}
+            <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
+            {{/each}}
+        </div>
+
         <div class="text-main post-main">
             {{{articleText}}}
         </div>
@@ -123,5 +135,4 @@ let fullScreenImageOverlay = `
         </div>
     </div>
 </div>
-
 `;

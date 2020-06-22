@@ -1,7 +1,7 @@
 /* main container for articles, inside which rendered article text is displayed */
 .post-main {
     text-align: justify;
-    margin-top: 1vmin;
+    margin-top: 2vmin;
 }
 
 .article-image-container {
@@ -181,6 +181,15 @@
     cursor: pointer;
 }
 
+.post-render-info-line {
+    display: block;
+    text-align: center;
+    font-size: 1.9vmin;
+    font-style: italic;
+    color: white;
+    font-family: Candara, Verdana, sans-serif;
+}
+
 @media (min-width: 1500px) {
     .post-container {
         margin-left: 1%;
@@ -232,8 +241,8 @@
         border-width: 1vw;
         padding-left: 1vw;
         margin-left: 1vw;
-        margin-top: 1.5vmin;
-        margin-bottom: 1.5vmin;
+        margin-top: 2.0vmin;
+        margin-bottom: 2.0vmin;
     }
 
     .bb-bullet-1 {
@@ -250,6 +259,14 @@
     }
     .bb-bullet-5 {
         margin-left: 9vw;
+    }
+
+    .bb-inline-hyperlink {
+        color: deepskyblue;
+        font-weight: bold;
+        text-decoration: none;
+        border: none;
+        outline: none;
     }
 }
 
