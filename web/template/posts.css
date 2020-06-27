@@ -118,6 +118,14 @@
     color: white;
 }
 
+.bb-inline-hyperlink {
+    color: deepskyblue;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
 /* the post type tag (article/photo/gallery) */
 .side-panel-tag {
     writing-mode: vertical-rl;
@@ -188,6 +196,19 @@
     font-style: italic;
     color: white;
     font-family: Candara, Verdana, sans-serif;
+}
+
+.gallery-image-breadcrumb {
+    cursor: pointer;
+}
+
+.photo-image {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 1.5vmin;
+    cursor: pointer;
+    display: block;
+    margin: auto;
 }
 
 @media (min-width: 1500px) {
@@ -261,13 +282,7 @@
         margin-left: 9vw;
     }
 
-    .bb-inline-hyperlink {
-        color: deepskyblue;
-        font-weight: bold;
-        text-decoration: none;
-        border: none;
-        outline: none;
-    }
+
 }
 
 
@@ -278,13 +293,13 @@
     flex-wrap: wrap;
 }
 
-.jg > a, .jg::after {
+.jg > span, .jg::after {
     --ratio: var(--r);
     --row-height: 30vh;
     flex-basis: calc(var(--ratio) * var(--row-height));
 }
 
-.jg > a {
+.jg > span {
     margin: 0.25vmin;
     flex-grow: calc(var(--ratio) * 100);
 }
@@ -295,7 +310,7 @@
     flex-grow: 1000000;
 }
 
-.jg > a > img {
+.jg > span > img {
     display: block;
     width: 100%;
 }

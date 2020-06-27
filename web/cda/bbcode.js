@@ -166,7 +166,11 @@ let basicRender = function(text){
 we dont want to render basic bbcode when descriptions are being displayed in the lists - so we just hide the code
  */
 
-let basicNotRender = function (text){
+let basicNotRender = function(text){
+
+    if (!text){
+        return "";
+    }
 
     text = text.replace(boldOpenTag, "");
     text = text.replace(boldCloseTag, "");
@@ -201,4 +205,22 @@ let newlineToBr = function(input){
 
 let clearExcessiveLineBreaks = function(input){
     return input.replace(/(?:<br>)+/g, '<br>');
+};
+
+let shrinkDescription = function(description){
+
+    if (!description){
+        return "";
+    }
+
+    if (description.length > 300){
+        description = description.substring(0,297).trim() + "...";
+    }
+    return description;
+};
+
+let prepareCompactDescription = function(description){
+    description = basicNotRender(description);
+    description = shrinkDescription(description);
+    return description;
 };

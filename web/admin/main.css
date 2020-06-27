@@ -216,6 +216,11 @@ button.close {
     font-size: 2vh !important;
 }
 
+.input-textarea-description-article {
+    font-size: 2vh;
+    height: 10vh;
+}
+
 .input-textarea-description {
     font-size: 2vh;
     height: 30vh;

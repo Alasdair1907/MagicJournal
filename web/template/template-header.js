@@ -10,7 +10,7 @@ let headerMain = `
     <div class="container-primary desktop-menu-div higher">
         
 
-        <a class="general-a" href="index.jsp">
+        <a class="general-a desktop-menu-item-a" href="index.jsp">
         <div class="desktop-menu-item">
             <i class="fas fa-home desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">home</span>
@@ -18,35 +18,35 @@ let headerMain = `
         </a>
 
 
-        <a class="general-a" href="posts.jsp?articles=true">
+        <a class="general-a desktop-menu-item-a" href="posts.jsp?articles=true">
         <div class="desktop-menu-item">
             <i class="far fa-file-alt desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">articles</span>
         </div>
         </a>
 
-        <a class="general-a" href="posts.jsp?photos=true">
+        <a class="general-a desktop-menu-item-a" href="posts.jsp?photos=true">
         <div class="desktop-menu-item">
             <i class="far fa-file-image desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">photos</span>
         </div>
         </a>
 
-        <a class="general-a" href="posts.jsp?galleries=true">
+        <a class="general-a desktop-menu-item-a" href="posts.jsp?galleries=true">
         <div class="desktop-menu-item">
             <i class="fas fa-images desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">galleries</span>
         </div>
         </a>
 
-        <a class="general-a" href="about.jsp">
+        <a class="general-a desktop-menu-item-a" href="about.jsp">
         <div class="desktop-menu-item">
             <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">about</span>
         </div>
         </a>
 
-        <a class="general-a" href="map.jsp">
+        <a class="general-a desktop-menu-item-a" href="map.jsp">
         <div class="desktop-menu-item">
             <i class="fas fa-globe-europe desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">map</span>
@@ -65,7 +65,7 @@ let headerMain = `
     <div class="container-primary desktop-menu-div higher">
 
         {{#if settingsTO.facebookProfile}}
-        <a class="general-a" href="{{settingsTO.facebookProfile}}">
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.facebookProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-facebook desktop-menu-icon"></i><span class="desktop-menu-text">facebook</span>
         </div>
@@ -73,7 +73,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.twitterProfile}}
-        <a class="general-a" href="{{settingsTO.twitterProfile}}">
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">twitter</span>
@@ -82,7 +82,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.instagramProfile}}
-        <a class="general-a" href="{{settingsTO.instagramProfile}}">
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.instagramProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-instagram desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">instagram</span>
@@ -91,7 +91,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.pinterestProfile}}
-        <a class="general-a" href="{{settingsTO.pinterestProfile}}">
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.pinterestProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">pinterest</span>
@@ -99,10 +99,12 @@ let headerMain = `
         </a>
         {{/if}}
         
+        <a class="general-a desktop-menu-item-a" href="rss.jsp">
         <div class="desktop-menu-item">
             <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">rss</span>
         </div>
+        </a>
     </div>
     </div>
 </div>

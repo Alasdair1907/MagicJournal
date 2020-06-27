@@ -35,8 +35,8 @@ body.cda {
 /* div that contains icons */
 .desktop-menu-div {
     display: flex;
-    height: min-content;
-    width: min-content;
+    /*height: min-content;*/
+    /*width: min-content;*/
 }
 
 /* contains font-awesome <i> and <span> with text */
@@ -44,6 +44,10 @@ body.cda {
     text-align: center;
     margin-left: 1vmin;
     margin-right: 1vmin;
+}
+
+.desktop-menu-item-a {
+    flex-basis: 10px; /* because Edge still doesn't know what min-content is! */
 }
 
 .container-primary {

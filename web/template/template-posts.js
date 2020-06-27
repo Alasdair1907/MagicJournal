@@ -43,19 +43,74 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
 
 let galleryTemplate = `
 <div class="post-content-and-panel-container">
-    <div class="container-primary container-primary-element post-container">
 
-        <div class="jg">
-            {{#each galleryVO.imageVOList}}
-            <a href="#" style="--r: {{this.aspectRatio}}">
-                <img src="getImage.jsp?filename={{this.preview}}" alt="{{this.title}}">
-            </a>
-            {{/each}}
+    <div class="post-container">
+
+        <div class="container-primary container-primary-element">
+            <span class="item-heading">{{galleryVO.title}}</span>
+
+            <div class="post-render-info-line">
+                Author: <a class="main-a" href="author.jsp?author={{galleryVO.authorVO.login}}">{{galleryVO.authorVO.displayName}}</a>,
+                date posted: {{galleryVO.creationDateStr}}</span>
+            </div>
+
+            <div class="item-tags-subheading-container">
+                {{#each galleryVO.tagEntityList}}
+                <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="gallery-tag">#{{this.tag}}</span></a>&nbsp;
+                {{/each}}
+            </div>
+
+            <div class="text-main post-main">
+                {{{galleryDescription}}}
+            </div>
+        </div>
+
+        <div class="container-primary container-primary-element">
+
+            <div class="jg">
+                {{#each galleryVO.imageVOList}}
+                <span style="--r: {{this.aspectRatio}}">
+                    <img class="gallery-image-breadcrumb" data-image="{{this.image}}" data-title="{{this.title}}" data-role="inline-image" src="getImage.jsp?filename={{this.preview}}" alt="{{this.title}}">
+                </span>
+                {{/each}}
+            </div>
         </div>
     </div>
 
     <div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>
 </div>`;
+
+let photoTemplate = `
+<div class="post-content-and-panel-container">
+
+    <div class="post-container">
+
+        <div class="container-primary container-primary-element">
+            <span class="item-heading">{{photoVO.title}}</span>
+
+            <div class="post-render-info-line">
+                Author: <a class="main-a" href="author.jsp?author={{photoVO.authorVO.login}}">{{photoVO.authorVO.displayName}}</a>,
+                date posted: {{photoVO.creationDateStr}}</span>
+            </div>
+
+            <div class="item-tags-subheading-container">
+                {{#each photoVO.tagEntityList}}
+                <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="photo-tag">#{{this.tag}}</span></a>&nbsp;
+                {{/each}}
+            </div>
+
+            <div class="text-main post-main">
+                {{{photoDescription}}}
+            </div>
+        </div>
+        
+        <div class="container-primary container-primary-element">
+            <img class="photo-image" src="getImage.jsp?filename={{photoVO.imageVO.preview}}" data-image="{{photoVO.imageVO.image}}" data-title="" data-role="inline-image">
+        </div>
+    </div>
+    <div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>
+</div>
+`;
 
 let sidePanelArticleTemplate = `
 <a class="general-a" href="posts.jsp?article={{this.id}}">
@@ -76,7 +131,6 @@ let sidePanelPhotoTemplate = `
 </div>
 </a>
 `;
-
 let sidePanelGalleryTemplate = `
 <a class="general-a" href="posts.jsp?gallery={{this.id}}">
 <div class="side-panel-container side-panel-container-size">

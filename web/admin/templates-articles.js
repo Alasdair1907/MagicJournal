@@ -77,9 +77,9 @@ let articleNewOrEdit = `
 <span class="text">Title:</span>
 <input type="text" class="form-control input" data-role="data-title" value="{{articleVO.title}}"><br/>
 
-<span class="text">Description:</span><br />
-<textarea class="input-textarea-description width-100-pc" maxlength="1000" data-role="data-description">{{articleVO.description}}</textarea><br />
-
+<span class="text">Description:</span><br /><span class="smalltext">max. 300 characters</span><br />
+<textarea class="input-textarea-description-article width-100-pc" maxlength="300" data-role="data-description">{{articleVO.description}}</textarea><br />
+<br />
 <span class="text">Article Text:</span><br />
 
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="image-insert-button"><i class="fa fa-image"></i> Insert image</button>

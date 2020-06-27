@@ -37,6 +37,8 @@ $.widget("magic.posts", {
 
         } else if (params.has("photo")){
             // load photo
+            let photoId = params.get("photo");
+            await self._displayPhoto(self, photoId);
             return;
         }
 
@@ -51,7 +53,15 @@ $.widget("magic.posts", {
         }*/
 
         let locationHeader = getLocationHeaderByFilter(pagingRequestFilter);
-        self.element.html(hArticleListing({postVOList: postVOList.posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
+
+        let posts = [];
+        for (let i = 0; i < postVOList.posts.length; i++){
+            let post = postVOList.posts[i];
+            post.description = prepareCompactDescription(post.description);
+            posts.push(post);
+        }
+
+        self.element.html(hArticleListing({postVOList: posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');
         $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter});
@@ -74,10 +84,24 @@ $.widget("magic.posts", {
         let galleryVO = await ajaxCda({action: "getGalleryVOByGalleryId", data: galleryId});
 
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
-        self.element.html(hGalleryTemplate({galleryVO: galleryVO}));
+        self.element.html(hGalleryTemplate({galleryVO: galleryVO, galleryDescription: basicRender(galleryVO.description)}));
+
+        self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
+    },
+
+    _displayPhoto: async function(self, photoId) {
+        let photoVO = await ajaxCda({action: "getPhotoVOByPhotoId", data: photoId});
+
+        let hPhotoTemplate = Handlebars.compile(photoTemplate);
+        self.element.html(hPhotoTemplate({photoVO: photoVO, photoDescription: basicRender(photoVO.description)}));
+
+        self._handleClickableImages(self);
+
+        let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
+        $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_PHOTO, postId: photoId});
     },
 
     _handleClickableImages: function(self){

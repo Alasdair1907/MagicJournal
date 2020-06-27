@@ -103,13 +103,6 @@ let getParamsStrFromPagingRequestFilter = function(base, filter) {
     return request;
 };
 
-let shrinkDescription = function(description){
-    if (description.length > 170){
-        description = description.substring(0,168) + "...";
-    }
-    return description;
-};
-
 let getLocationHeaderByFilter = function(filter) {
     if (filter.tags){
         return "Tags: "+filter.tags.join(", ");
