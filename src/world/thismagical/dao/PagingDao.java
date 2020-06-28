@@ -30,6 +30,23 @@ import java.util.List;
 
 public class PagingDao {
 
+    public static List<String> preFilterTagEntities(PagingRequestFilter pagingRequestFilter, Session session){
+
+        if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
+            Query query = session.createQuery("select distinct(tag) from TagEntity where attributionClass in :attrs");
+            query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
+
+            return query.getResultList();
+        } else {
+            Query query = session.createQuery("select distinct(tag) from TagEntity where postIndexItemId in (select postIndexItemId from TagEntity where tag in :tagList and attributionClass in :attrs group by postIndexItemId having count(distinct tag) = :count) order by tag asc");
+            query.setParameter("tagList", pagingRequestFilter.tags);
+            query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
+            query.setParameter("count",  Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
+
+            return query.getResultList();
+        }
+    }
+
     public static List<Long> preloadTagEntities(PagingRequestFilter pagingRequestFilter, Session session){
         if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
             return new ArrayList<>();

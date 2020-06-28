@@ -112,6 +112,20 @@ let photoTemplate = `
 </div>
 `;
 
+let aboutTemplate = `
+<div class="post-content-and-panel-container">
+    <div class="container-primary container-primary-element post-container">
+        <span class="item-heading">About</span>
+
+        <div class="text-main post-main">
+            {{{aboutText}}}
+        </div>
+    </div>
+
+    <div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>
+</div>
+`;
+
 let sidePanelArticleTemplate = `
 <a class="general-a" href="posts.jsp?article={{this.id}}">
 <div class="side-panel-container side-panel-container-size">

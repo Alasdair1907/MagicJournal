@@ -70,6 +70,9 @@ let pagingInfoLine = `
 
 let postListingTemplate = `
 ${pagingInfoLine}
+
+<div data-role="advanced-search-anchor" class="posts-advanced-search-anchor"></div>
+
 <div class="width-100pc item-listing-dedicated">
     {{#each postVOList}}
     
@@ -91,8 +94,21 @@ ${pagingInfoLine}
 <div data-role="paging-anchor"></div>
 `;
 
-let showImageTemplate = `
+let dynamicSearchCdaTemplate = `
 
+<div class="container-primary container-primary-element">
+    <span class="selectable-heading">Select post types:</span>
+    <div class="selectables-container">
+        <span class="selectable selectable-default" data-role="post-type" data-id="articles">Articles</span>
+        <span class="selectable selectable-default" data-role="post-type" data-id="photos">Photos</span>
+        <span class="selectable selectable-default" data-role="post-type" data-id="galleries">Galleries</span>
+    </div>
+    <span class="selectable-heading">Select tags:</span>
+    <div class="selectables-container">
+        {{#each tags}}
+            <span class="selectable selectable-default text-main" data-role="post-tag" data-id="{{this}}">{{this}}</span>
+        {{/each}}
+    </div>
+</div>
 `;
-
 

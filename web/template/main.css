@@ -35,6 +35,7 @@ body.cda {
 /* div that contains icons */
 .desktop-menu-div {
     display: flex;
+    flex-basis: 10px;
     /*height: min-content;*/
     /*width: min-content;*/
 }
@@ -174,6 +175,12 @@ body.cda {
     text-decoration: none;
 }
 
+.tag-cloud-advanced-link {
+    text-align: right;
+    display: block;
+    padding-right: 1%;
+}
+
 /* removes decorations from links */
 .general-a {
     text-decoration: none;
@@ -299,6 +306,54 @@ body.cda {
 }
 
 
+/* advanced search panel */
+
+/* anchor which holds ASP in post listings */
+.posts-advanced-search-anchor {
+    width: 95vw;
+    margin: auto;
+}
+
+.selectable-heading {
+    color: white;
+    font-size: 2.0vmin;
+    font-family: Candara, Verdana, sans-serif;
+    display: block;
+}
+
+.selectables-container {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgba(240, 248, 255, 0.09);
+}
+
+.selectable {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+
+    color: white;
+    font-size: 1.8vmin;
+    font-family: Candara, Verdana, sans-serif;
+
+    margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+    padding: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+
+    cursor: pointer;
+}
+
+.selectable-default {
+    background: none;
+}
+
+.selectable-selected {
+    background-color: #152a82;
+}
 
 @media (max-width: 1499px) {
     /* div with either full res menu-logo-menu header, or two divs with logo + menu */

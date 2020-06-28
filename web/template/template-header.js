@@ -39,7 +39,7 @@ let headerMain = `
         </div>
         </a>
 
-        <a class="general-a desktop-menu-item-a" href="about.jsp">
+        <a class="general-a desktop-menu-item-a" href="posts.jsp?about=true">
         <div class="desktop-menu-item">
             <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">about</span>
@@ -141,7 +141,7 @@ let headerMain = `
         </div>
         </a>
 
-        <a class="general-a" href="about.jsp">
+        <a class="general-a" href="posts.jsp?about=true">
         <div class="desktop-menu-item">
             <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">about</span>

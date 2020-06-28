@@ -22,6 +22,7 @@ import world.thismagical.dao.KeyValueDao;
 import world.thismagical.service.KeyValueService;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.SettingsTO;
+import world.thismagical.util.BBCodeExtractor;
 import world.thismagical.util.Tools;
 
 public class SettingsService {
@@ -62,6 +63,17 @@ public class SettingsService {
         settingsTO.otherFilesStoragePath = null;
 
         return JsonAdminResponse.success(settingsTO);
+    }
+
+    public static JsonAdminResponse<String> getAboutPreprocessed(Session session){
+        SettingsTO settingsTO = getSettings(session);
+        String about = settingsTO.about;
+
+        if (about == null || about.isEmpty()){
+            return JsonAdminResponse.success("");
+        }
+
+        return JsonAdminResponse.success(BBCodeExtractor.preprocess(about, session));
     }
 
     public static SettingsTO getSettings(Session session){

@@ -115,8 +115,9 @@ let tagListMenu = `
 <div class="container-primary container-primary-element">
     <span class="item-container-heading">Tag Cloud</span>
     {{#each tagDigestVOList}}
-        <a class="text-main tag-cloud-a" href="search.jsp?tag={{this.title}}">#{{this.title}}</a>&nbsp;
+        <a class="text-main tag-cloud-a" href="posts.jsp?tags={{this.title}}">#{{this.title}}</a>&nbsp;
     {{/each}}
+    <a class="main-a text-main tag-cloud-advanced-link" href="posts.jsp?advanced=true">Advanced search</a>
 </div>
 `;
 

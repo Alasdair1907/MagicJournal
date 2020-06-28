@@ -12,6 +12,8 @@ import world.thismagical.filter.PagingRequestFilter;
 import world.thismagical.service.*;
 import world.thismagical.to.*;
 import world.thismagical.vo.*;
+
+import javax.tools.Tool;
 import java.util.*;
 
 
@@ -544,6 +546,16 @@ public class JsonApi {
         return JsonAdminResponse.fail("error getting settings");
     }
 
+    public static JsonAdminResponse<String> getAboutPreprocessed(SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            return SettingsService.getAboutPreprocessed(session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("error loading about page");
+    }
+
     public static JsonAdminResponse<PostVOList> processPagingRequest(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
         try (Session session = sessionFactory.openSession()){
             return JsonAdminResponse.success(PagingService.get(pagingRequestFilter, session));
@@ -576,7 +588,9 @@ public class JsonApi {
             PostVOListUnified postVOListUnified = PagingService.unify(postVOList);
             sidePanelPostsTO.latest = postVOListUnified.posts;
 
-            RelationService.fillRelevantPosts(sidePanelPostsTO, sidePanelRequestTO, session);
+            if (sidePanelRequestTO.postId != null && sidePanelRequestTO.postAttribution != null) {
+                RelationService.fillRelevantPosts(sidePanelPostsTO, sidePanelRequestTO, session);
+            }
 
             return JsonAdminResponse.success(sidePanelPostsTO);
 
@@ -587,7 +601,15 @@ public class JsonApi {
         return JsonAdminResponse.fail("error assembling sidepanel posts");
     }
 
+    public static JsonAdminResponse<List<String>> preFilterTags(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            return JsonAdminResponse.success(PagingDao.preFilterTagEntities(pagingRequestFilter, session));
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
 
+        return JsonAdminResponse.fail("error preloading tags");
+    }
 
     public static String toString(Object object, ObjectMapper objectMapper){
 

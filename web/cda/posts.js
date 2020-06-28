@@ -40,18 +40,27 @@ $.widget("magic.posts", {
             let photoId = params.get("photo");
             await self._displayPhoto(self, photoId);
             return;
+
+        } else if (params.has("about")){
+            await self._displayAbout(self);
+            return;
+
         }
 
         // search and listing
         let pagingRequestFilter = getPagingRequestFilterFromParams();
+        await self._list(pagingRequestFilter, self);
+
+        if (params.has("advanced")){
+            let $advancedSearchAnchor = self.element.find('[data-role="advanced-search-anchor"]');
+            $advancedSearchAnchor.DynamicSearchCda({pagingRequestFilter: pagingRequestFilter});
+        }
+
+    },
+
+    _list: async function(pagingRequestFilter, self){
         let postVOList = await ajaxCda({action: "processPagingRequestUnified", data: JSON.stringify(pagingRequestFilter) });
-        let hArticleListing = Handlebars.compile(postListingTemplate);
-
-        /*
-        for (let i = 0; i < postVOList.posts.length; i++){
-            postVOList.posts[i].description = shrinkDescription(postVOList.posts[i].description);
-        }*/
-
+        let hPostListingTemplate = Handlebars.compile(postListingTemplate);
         let locationHeader = getLocationHeaderByFilter(pagingRequestFilter);
 
         let posts = [];
@@ -61,7 +70,7 @@ $.widget("magic.posts", {
             posts.push(post);
         }
 
-        self.element.html(hArticleListing({postVOList: posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
+        self.element.html(hPostListingTemplate({postVOList: posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');
         $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter});
@@ -104,6 +113,20 @@ $.widget("magic.posts", {
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_PHOTO, postId: photoId});
     },
 
+    _displayAbout: async function(self){
+        let aboutPreprocessed = await ajaxCda({action: "getAboutPreprocessed"});
+
+        let hAboutTemplate = Handlebars.compile(aboutTemplate);
+        self.element.html(hAboutTemplate({aboutText: render(aboutPreprocessed)}));
+        postRender(self.element);
+
+        self._handleClickableImages(self);
+
+        let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
+        $sidePanelDiv.sidePanel({latestPostsCount: 15, postAttributionClass: null, postId: null});
+
+    },
+
     _handleClickableImages: function(self){
         let clickableImages = self.element.find('[data-role="inline-image"]');
 
@@ -125,6 +148,10 @@ $.widget("magic.posts", {
                 $("body").css("overflow","auto");
             });
         });
+    },
+
+    _advancedSearch: function(self){
+
     }
 
 });

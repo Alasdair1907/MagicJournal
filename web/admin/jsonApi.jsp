@@ -15,6 +15,8 @@
 <%@ page import="world.thismagical.filter.PagingRequestFilter" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="world.thismagical.test.PagingTest" %>
+<%@ page import="com.fasterxml.jackson.core.type.TypeReference" %>
+<%@ page import="java.lang.reflect.Type" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -356,6 +358,11 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("getAboutPreprocessed")){
+            JsonAdminResponse<String> res = JsonApi.getAboutPreprocessed(sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         // non-image files
 
         if (action.equals("listOtherFiles")){
@@ -399,6 +406,12 @@
         if (action.equals("getSidePanelPosts")){
             SidePanelRequestTO sidePanelRequestTO = objectMapper.readValue(data, SidePanelRequestTO.class);
             JsonAdminResponse<SidePanelPostsTO> res = JsonApi.getSidePanelPosts(sidePanelRequestTO, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("preFilterTags")){
+            PagingRequestFilter pagingRequestFilter = objectMapper.readValue(data, PagingRequestFilter.class);
+            JsonAdminResponse<List<String>> res = JsonApi.preFilterTags(pagingRequestFilter, sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));
         }
 
