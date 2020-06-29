@@ -49,16 +49,18 @@ $.widget("magic.posts", {
 
         // search and listing
         let pagingRequestFilter = getPagingRequestFilterFromParams();
-        await self._list(pagingRequestFilter, self);
+        await self._list(pagingRequestFilter, self, params.has("advanced"));
 
         if (params.has("advanced")){
             let $advancedSearchAnchor = self.element.find('[data-role="advanced-search-anchor"]');
-            $advancedSearchAnchor.DynamicSearchCda({pagingRequestFilter: pagingRequestFilter});
+            $advancedSearchAnchor.DynamicSearchCda({pagingRequestFilter: pagingRequestFilter, callback: function(pagingRequestFilter){
+                    window.location = getParamsStrFromPagingRequestFilter("posts.jsp", pagingRequestFilter, true);
+            }});
         }
 
     },
 
-    _list: async function(pagingRequestFilter, self){
+    _list: async function(pagingRequestFilter, self, advanced){
         let postVOList = await ajaxCda({action: "processPagingRequestUnified", data: JSON.stringify(pagingRequestFilter) });
         let hPostListingTemplate = Handlebars.compile(postListingTemplate);
         let locationHeader = getLocationHeaderByFilter(pagingRequestFilter);
@@ -73,7 +75,7 @@ $.widget("magic.posts", {
         self.element.html(hPostListingTemplate({postVOList: posts, totalItems: postVOList.totalItems, locationHeader: locationHeader}));
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');
-        $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter});
+        $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter, advanced: advanced});
     },
 
     _displayArticle: async function(self, articleId){

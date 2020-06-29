@@ -42,6 +42,10 @@
     background-color: rgba(240, 248, 255, 0.09);
 }
 
+.side-panel-container:hover {
+    background-color: rgba(240, 248, 255, 0.31);
+}
+
 .file-container {
     display: block;
     margin-top: 2.0vmin;

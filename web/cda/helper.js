@@ -69,9 +69,13 @@ let getPagingRequestFilterFromParams = function(){
     return filter;
 };
 
-let getParamsStrFromPagingRequestFilter = function(base, filter) {
+let getParamsStrFromPagingRequestFilter = function(base, filter, advanced = false) {
 
     let request = base + "?";
+
+    if (advanced){
+        request += "advanced=true&";
+    }
 
     if (filter.needArticles){
         request += "articles=true&";
@@ -91,7 +95,7 @@ let getParamsStrFromPagingRequestFilter = function(base, filter) {
         request += "pageNum="+filter.page+"&";
     }
 
-    if (filter.tags){
+    if (filter.tags && filter.tags.length){
         let tagsStr = filter.tags.join(",");
         request += "tags="+tagsStr+"&";
     }

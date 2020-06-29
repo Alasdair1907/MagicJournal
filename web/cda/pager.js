@@ -31,7 +31,7 @@ $.widget('magic.pager', {
         var curPlus = ops.filter.page+1+1;
 
         pages.push({
-            paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter),
+            paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter, ops.advanced),
             pageNum: ops.filter.page+1,
             isActive: true
         });
@@ -48,7 +48,7 @@ $.widget('magic.pager', {
                 ops.filter.page = curMinus-1;
 
                 pages.unshift({
-                    paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter),
+                    paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter, ops.advanced),
                     pageNum: curMinus,
                     isActive: false
                 });
@@ -58,7 +58,7 @@ $.widget('magic.pager', {
                 ops.filter.page = curPlus-1;
 
                 pages.push({
-                    paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter),
+                    paramsStr: getParamsStrFromPagingRequestFilter("posts.jsp", ops.filter, ops.advanced),
                     pageNum: curPlus,
                     isActive: false
                 });

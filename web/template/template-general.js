@@ -99,9 +99,9 @@ let dynamicSearchCdaTemplate = `
 <div class="container-primary container-primary-element">
     <span class="selectable-heading">Select post types:</span>
     <div class="selectables-container">
-        <span class="selectable selectable-default" data-role="post-type" data-id="articles">Articles</span>
-        <span class="selectable selectable-default" data-role="post-type" data-id="photos">Photos</span>
-        <span class="selectable selectable-default" data-role="post-type" data-id="galleries">Galleries</span>
+        <span class="selectable selectable-default" data-class="selectable-selected-article" data-role="post-type" data-id="articles">Articles</span>
+        <span class="selectable selectable-default" data-class="selectable-selected-photo" data-role="post-type" data-id="photos">Photos</span>
+        <span class="selectable selectable-default" data-class="selectable-selected-gallery" data-role="post-type" data-id="galleries">Galleries</span>
     </div>
     <span class="selectable-heading">Select tags:</span>
     <div class="selectables-container">
@@ -109,6 +109,9 @@ let dynamicSearchCdaTemplate = `
             <span class="selectable selectable-default text-main" data-role="post-tag" data-id="{{this}}">{{this}}</span>
         {{/each}}
     </div>
+    
+    <button type="button" class="button-cda button-large center-block" data-role="search-posts"><i class="fas fa-search"></i> Search</button>
+    
 </div>
 `;
 

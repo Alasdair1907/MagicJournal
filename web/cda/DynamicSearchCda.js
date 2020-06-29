@@ -17,21 +17,35 @@
 $.widget("magic.DynamicSearchCda", {
 
     _toggleSelect: function($selectable){
-        if ($selectable.hasClass("selectable-default")){
+        if ($selectable.data("selected") !== "selected"){
             this._setSelected($selectable);
-        } else if ($selectable.hasClass("selectable-selected")) {
+        } else {
             this._setNotSelected($selectable);
         }
     },
 
     _setSelected: function($selectable){
         $selectable.removeClass("selectable-default");
-        $selectable.addClass("selectable-selected");
+
+        let customClass = $selectable.data("class");
+        if (customClass){
+            $selectable.addClass(customClass)
+        } else {
+            $selectable.addClass("selectable-selected");
+        }
+
         $selectable.attr("data-selected", "selected");
     },
 
     _setNotSelected: function($selectable){
-        $selectable.removeClass("selectable-selected");
+
+        let customClass = $selectable.data("class");
+        if (customClass){
+            $selectable.removeClass(customClass);
+        } else {
+            $selectable.removeClass("selectable-selected");
+        }
+
         $selectable.addClass("selectable-default");
         $selectable.attr("data-selected", "none");
     },
@@ -41,6 +55,8 @@ $.widget("magic.DynamicSearchCda", {
         let ops = this.options;
 
         self.pagingRequestFilter = ops.pagingRequestFilter;
+        self.callback = ops.callback;
+
         self._display();
     },
     
@@ -93,6 +109,13 @@ $.widget("magic.DynamicSearchCda", {
             self._display();
         });
 
+        let $searchButton = self.element.find('[data-role="search-posts"]');
+        $searchButton.unbind();
+        $searchButton.click(function(){
+            self.resetPagingRequestFilterPage();
+            self.callback(self.getPagingRequestFilter());
+        });
+
     },
     enrichFilter: function(){
         let self = this;
@@ -132,5 +155,12 @@ $.widget("magic.DynamicSearchCda", {
         });
 
         pagingRequestFilter.tags = tags;
+    },
+    resetPagingRequestFilterPage: function(){
+        this.pagingRequestFilter.page = 0;
+    },
+    getPagingRequestFilter: function(){
+        this.enrichFilter();
+        return this.pagingRequestFilter;
     }
 });

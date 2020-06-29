@@ -351,9 +351,55 @@ body.cda {
     background: none;
 }
 
+/* selectable post types have inline styles for selected background-color !! */
 .selectable-selected {
-    background-color: #152a82;
+    background-color: #676668;
 }
+
+.selectable-selected-article {
+    background-color: #00299d;
+}
+
+.selectable-selected-photo {
+    background-color: #029d00;
+}
+
+.selectable-selected-gallery {
+    background-color: #9d0000;
+}
+
+.center-block {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+.button-cda {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+    background-color: rgba(240, 248, 255, 0.09);
+    cursor: pointer;
+    color: white;
+    padding: 0.5vmin 1.5vmin;
+    margin-top: 1vmin;
+    outline: none;
+}
+
+.button-cda:focus {
+    outline: none;
+}
+
+.button-cda:hover {
+    background-color: rgba(240, 248, 255, 0.31);
+}
+
+.button-large {
+    font-size: 2.4vmin;
+}
+
+
 
 @media (max-width: 1499px) {
     /* div with either full res menu-logo-menu header, or two divs with logo + menu */
