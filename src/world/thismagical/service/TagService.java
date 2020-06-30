@@ -139,6 +139,10 @@ public class TagService {
         TagDao.truncateTags(tagTO.objectId, tagTO.attribution, session);
 
         if (tagsArray.length != 0){
+
+            String geo = postEntity.getGpsCoordinates();
+            boolean hasGeo = (geo != null) && ( !geo.isEmpty() );
+
             PostIndexItem postIndexItem = PagingDao.getItem(PostAttribution.getPostAttribution(tagTO.attribution), tagTO.objectId, session);
 
             for (String tag : tagsArray){
@@ -147,6 +151,7 @@ public class TagService {
                 tagEntity.setAttributionClass(PostAttribution.getPostAttribution(tagTO.attribution));
                 tagEntity.setParentObjectId(tagTO.objectId);
                 tagEntity.setPostIndexItemId(postIndexItem.getId());
+                tagEntity.setParentHasGeo(hasGeo);
 
                 TagDao.addOrUpdateTag(tagEntity, session);
             }

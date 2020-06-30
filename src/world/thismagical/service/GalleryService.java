@@ -175,10 +175,15 @@ public class GalleryService {
             postIndexItem.setPostId(galleryEntity.getId());
             postIndexItem.setAuthorLogin(galleryEntity.getAuthor().getLogin());
             postIndexItem.setCreationDate(galleryEntity.getCreationDate());
+            postIndexItem.setHasGeo(Tools.isValidGeo(galleryEntity.getGpsCoordinates()));
 
             session.save(postIndexItem);
             session.flush();
+        } else {
+            PagingDao.setGeo(galleryEntity.getGpsCoordinates(), PostAttribution.GALLERY, galleryEntity.getId(), session);
         }
+
+        TagDao.setGeo(galleryEntity.getGpsCoordinates(), galleryEntity.getId(), PostAttribution.GALLERY, session);
 
         return JsonAdminResponse.success(galleryEntity.getId());
     }

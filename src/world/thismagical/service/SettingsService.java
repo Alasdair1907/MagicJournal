@@ -91,7 +91,7 @@ public class SettingsService {
             Tools.handleException(ex);
         }
 
-        settingsTO.itemsPerPage = 6; // TODO !!!!!!!!!!!!!!!!!!!
+        settingsTO.itemsPerPage = 6; // TODO !!
 
         return settingsTO;
     }

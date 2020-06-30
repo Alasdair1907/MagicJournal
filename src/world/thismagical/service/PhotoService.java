@@ -138,10 +138,15 @@ public class PhotoService {
             postIndexItem.setPostId(photoEntity.getId());
             postIndexItem.setAuthorLogin(photoEntity.getAuthor().getLogin());
             postIndexItem.setCreationDate(photoEntity.getCreationDate());
+            postIndexItem.setHasGeo(Tools.isValidGeo(photoEntity.getGpsCoordinates()));
 
             session.saveOrUpdate(postIndexItem);
             session.flush();
+        } else {
+            PagingDao.setGeo(photoEntity.getGpsCoordinates(), PostAttribution.PHOTO, photoEntity.getId(), session);
         }
+
+        TagDao.setGeo(photoEntity.getGpsCoordinates(), photoEntity.getId(), PostAttribution.PHOTO, session);
 
         return JsonAdminResponse.success(photoEntity.getId());
     }

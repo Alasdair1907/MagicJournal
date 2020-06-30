@@ -32,13 +32,19 @@ public class PagingDao {
 
     public static List<String> preFilterTagEntities(PagingRequestFilter pagingRequestFilter, Session session){
 
+        String geo = "";
+        if (Boolean.TRUE.equals(pagingRequestFilter.requireGeo)){
+            geo = "parentHasGeo = true and";
+        }
+
         if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
-            Query query = session.createQuery("select distinct(tag) from TagEntity where attributionClass in :attrs");
+            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " attributionClass in :attrs");
             query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
 
             return query.getResultList();
         } else {
-            Query query = session.createQuery("select distinct(tag) from TagEntity where postIndexItemId in (select postIndexItemId from TagEntity where tag in :tagList and attributionClass in :attrs group by postIndexItemId having count(distinct tag) = :count) order by tag asc");
+
+            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " postIndexItemId in (select postIndexItemId from TagEntity where tag in :tagList and attributionClass in :attrs group by postIndexItemId having count(distinct tag) = :count) order by tag asc");
             query.setParameter("tagList", pagingRequestFilter.tags);
             query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
             query.setParameter("count",  Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
@@ -52,7 +58,12 @@ public class PagingDao {
             return new ArrayList<>();
         }
 
-        Query query = session.createQuery("select max(postIndexItemId) from TagEntity where tag in :tagList and attributionClass in :attrs group by attributionClass, parentObjectId having count(distinct tag) = :count");
+        String geo = "";
+        if (Boolean.TRUE.equals(pagingRequestFilter.requireGeo)){
+            geo = "parentHasGeo = true and";
+        }
+
+        Query query = session.createQuery("select max(postIndexItemId) from TagEntity where "+geo+" tag in :tagList and attributionClass in :attrs group by attributionClass, parentObjectId having count(distinct tag) = :count");
         query.setParameter("tagList", pagingRequestFilter.tags);
         query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
         query.setParameter("count", Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
@@ -87,6 +98,10 @@ public class PagingDao {
             CriteriaBuilder.In<Long> thisId = cb.in(postIndexItemRoot.get("id"));
             postPreloadList.forEach(thisId::value);
             predicates.add(thisId);
+        }
+
+        if (Boolean.TRUE.equals(pagingRequestFilter.requireGeo)){
+            predicates.add(cb.equal(postIndexItemRoot.get("hasGeo"), Boolean.TRUE));
         }
 
         List<Short> postAttributionList = gatherPostAttributionList(pagingRequestFilter);
@@ -167,6 +182,25 @@ public class PagingDao {
         } else {
             postIndexItem.setPublished(true);
         }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.saveOrUpdate(postIndexItem);
+        session.flush();
+    }
+
+    public static void setGeo(String geo, PostAttribution postAttribution, Long objectId, Session session){
+        PostIndexItem postIndexItem = getItem(postAttribution, objectId, session);
+
+        if (postIndexItem == null){
+            return;
+        }
+
+        boolean hasGeo = (geo != null) && ( !geo.isEmpty() );
+
+        postIndexItem.setHasGeo(hasGeo);
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

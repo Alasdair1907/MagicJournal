@@ -49,6 +49,9 @@ public class PostIndexItem implements Serializable {
     @Column(name="is_published")
     Boolean isPublished;
 
+    @Column(name="has_geo")
+    Boolean hasGeo;
+
     /*
     @OneToMany(fetch = FetchType.EAGER)
     @BatchSize(size = 100)
@@ -104,6 +107,14 @@ public class PostIndexItem implements Serializable {
 
     public void setPublished(Boolean published) {
         isPublished = published;
+    }
+
+    public Boolean getHasGeo() {
+        return hasGeo;
+    }
+
+    public void setHasGeo(Boolean hasGeo) {
+        this.hasGeo = hasGeo;
     }
 
     /*

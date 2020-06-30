@@ -22,6 +22,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import world.thismagical.entity.TagEntity;
 import world.thismagical.util.PostAttribution;
+import world.thismagical.util.Tools;
+
 import java.util.List;
 
 public class TagDao {
@@ -111,6 +113,32 @@ public class TagDao {
         delQuery.setParameter("attribution", attribution);
 
         delQuery.executeUpdate();
+        session.flush();
+    }
+
+    public static void setGeo(String geo, Long parentObjectId, PostAttribution postAttribution, Session session){
+        boolean hasGeo = (geo != null) && ( !geo.isEmpty() );
+        setGeo(hasGeo, parentObjectId, postAttribution, session);
+    }
+
+    public static void setGeo(Boolean hasGeo, Long parentObjectId, PostAttribution postAttribution, Session session){
+        Short attribution = postAttribution.getId();
+
+        if (parentObjectId == null || postAttribution == null){
+            Tools.log("[ERROR] TagDao: setGeo: null argument");
+            return;
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        Query updateQuery = session.createQuery("update TagEntity set parentHasGeo = :hasGeo where parentObjectId= :objId and attributionClass= :attribution");
+        updateQuery.setParameter("hasGeo", hasGeo);
+        updateQuery.setParameter("objId", parentObjectId);
+        updateQuery.setParameter("attribution", attribution);
+
+        updateQuery.executeUpdate();
         session.flush();
     }
 

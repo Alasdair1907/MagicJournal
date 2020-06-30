@@ -56,6 +56,7 @@ $.widget("magic.DynamicSearchCda", {
 
         self.pagingRequestFilter = ops.pagingRequestFilter;
         self.callback = ops.callback;
+        self.geo = ops.geo;
 
         self._display();
     },
@@ -64,6 +65,11 @@ $.widget("magic.DynamicSearchCda", {
         let self = this;
 
         let pagingRequestFilter = self.pagingRequestFilter;
+
+        if (self.geo){
+            pagingRequestFilter.requireGeo = true;
+        }
+
         let preFilteredTags = await ajaxCda({action: "preFilterTags", data: JSON.stringify(pagingRequestFilter)});
 
         let hDynamicSearchCdaTemplate = Handlebars.compile(dynamicSearchCdaTemplate);
@@ -112,7 +118,6 @@ $.widget("magic.DynamicSearchCda", {
         let $searchButton = self.element.find('[data-role="search-posts"]');
         $searchButton.unbind();
         $searchButton.click(function(){
-            self.resetPagingRequestFilterPage();
             self.callback(self.getPagingRequestFilter());
         });
 
@@ -155,11 +160,17 @@ $.widget("magic.DynamicSearchCda", {
         });
 
         pagingRequestFilter.tags = tags;
+
+        if (self.geo){
+            pagingRequestFilter.requireGeo = true;
+        }
+
     },
     resetPagingRequestFilterPage: function(){
         this.pagingRequestFilter.page = 0;
     },
     getPagingRequestFilter: function(){
+        this.resetPagingRequestFilterPage();
         this.enrichFilter();
         return this.pagingRequestFilter;
     }

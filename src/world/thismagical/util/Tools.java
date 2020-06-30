@@ -149,4 +149,19 @@ public class Tools {
                 return path;
             }
     }
+
+    public static Boolean isValidGeo(String geo){
+
+        if (geo == null){
+            return false;
+        }
+
+        if (geo.isEmpty()){
+            return false;
+        }
+
+        // ^\s*\-?[0-9]{1,2}(\.[0-9]{1,})?\,\s+\-?[0-9]{1,3}(\.[0-9]{1,})?\s*$
+        String geoRegExp = "^\\s*\\-?[0-9]{1,2}(\\.[0-9]{1,})?\\,\\s+\\-?[0-9]{1,3}(\\.[0-9]{1,})?\\s*$";
+        return geo.matches(geoRegExp);
+    }
 }

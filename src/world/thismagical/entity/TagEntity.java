@@ -25,6 +25,9 @@ public class TagEntity implements Serializable {
     @Column(name="post_index_item_id")
     private Long postIndexItemId;
 
+    @Column(name="parent_has_geo")
+    private Boolean parentHasGeo;
+
     public Long getId() {
         return id;
     }
@@ -63,5 +66,13 @@ public class TagEntity implements Serializable {
 
     public void setPostIndexItemId(Long postIndexItemId) {
         this.postIndexItemId = postIndexItemId;
+    }
+
+    public Boolean getParentHasGeo() {
+        return parentHasGeo;
+    }
+
+    public void setParentHasGeo(Boolean parentHasGeo) {
+        this.parentHasGeo = parentHasGeo;
     }
 }

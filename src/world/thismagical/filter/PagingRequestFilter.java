@@ -31,6 +31,8 @@ public class PagingRequestFilter {
 
     public Integer itemsPerPage;
 
+    public Boolean requireGeo;
+
     public static PagingRequestFilter latest(Integer count){
         PagingRequestFilter pagingRequestFilter = new PagingRequestFilter();
         pagingRequestFilter.needArticles = true;

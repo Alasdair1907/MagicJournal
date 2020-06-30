@@ -142,14 +142,17 @@ public class ArticleService {
             postIndexItem.setPostId(articleEntity.getId());
             postIndexItem.setAuthorLogin(articleEntityAuthor.getLogin());
             postIndexItem.setCreationDate(articleEntity.getCreationDate());
+            postIndexItem.setHasGeo(Tools.isValidGeo(articleEntity.getGpsCoordinates()));
 
             session.save(postIndexItem);
             session.flush();
         }
 
+        TagDao.setGeo(articleEntity.getGpsCoordinates(), articleEntity.getId(), PostAttribution.ARTICLE, session);
 
         if (!newArticle) {
             RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
+            PagingDao.setGeo(articleEntity.getGpsCoordinates(), PostAttribution.ARTICLE, articleEntity.getId(), session);
         }
 
         return JsonAdminResponse.success(articleEntity.getId());
