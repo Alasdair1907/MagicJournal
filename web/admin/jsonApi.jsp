@@ -105,6 +105,11 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        if (action.equals("getAuthorVOByLogin")){
+            JsonAdminResponse<AuthorVO> res = JsonApi.getAuthorVOByLogin(data, sessionFactory);
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
         if (action.equals("updateAuthorProfile")){
             AuthorVO authorVO = objectMapper.readValue(data, AuthorVO.class);
             JsonAdminResponse<Void> res = JsonApi.updateAuthorProfile(guid, authorVO, sessionFactory);

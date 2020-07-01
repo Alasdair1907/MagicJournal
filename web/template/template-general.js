@@ -122,5 +122,27 @@ let cdaMapTemplate = `
 </div>
 
 <div data-role="map-search-controller" class="cda-map-base"></div>
+`;
+
+let authorPageTemplate = `
+<div class="container-primary container-primary-element author-page-container">
+    
+    <span class="item-container-heading width-100-pc">{{authorVO.displayName}}</span>
+    
+    {{#if authorVO.pictureFileName}}
+        <img src="getImage.jsp?filename={{authorVO.pictureFileName}}" class="author-page-picture">        
+    {{/if}}
+
+    <span class="text-main">{{{authorDescription}}}</span>
+    
+    <span class="afterfloat">&nbsp;</span>
+    <span class="text-main">Personal website: </span><a class="main-a text-main" href="{{authorVO.website}}" target="_blank">{{authorVO.website}}</a><br />
+    <span class="text-main">Email: {{authorVO.email}}</span>
+    
+</div>
+
+<div class="container-primary container-primary-element author-page-container">
+    <a class="center-block text-main main-a" href="posts.jsp?author={{authorVO.login}}">Search for posts by this author</a>
+</div>
 
 `;

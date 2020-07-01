@@ -44,13 +44,13 @@ let articleRepresentationCompact = `
     <div class="item-tags-subheading-container">
         {{#each this.tagEntityList}}
         
-        <a href="search.jsp?tag={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
+        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
        
         {{/each}}
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
     <div class="post-info-line">
-        <a class="main-a text-main" href="search.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
+        <a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
         <span class="text-main">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">

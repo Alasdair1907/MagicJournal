@@ -518,4 +518,19 @@ body.cda {
         height: 10.9vw;
         margin-bottom: 0.2vw;
     }
+
+    .author-page-picture {
+        max-height: 50vh;
+        max-width: 30vw;
+        display: block;
+        margin: 1vw;
+        border-radius: 1.5vmin;
+        float: left;
+    }
+
+    .author-page-container {
+        width: 70%;
+        margin: auto;
+        margin-bottom: 1vh;
+    }
 }

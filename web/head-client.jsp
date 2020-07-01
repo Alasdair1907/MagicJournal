@@ -16,3 +16,4 @@
 <script src="cda/bbcode.js"></script>
 <script src="cda/sidePanel.js"></script>
 <script src="cda/DynamicSearchCda.js"></script>
+<script src="cda/author.js"></script>

@@ -200,6 +200,10 @@ let basicNotRender = function(text){
 };
 
 let newlineToBr = function(input){
+    if (!input){
+        return "";
+    }
+
     return input.replace(/(?:\r\n|\r|\n)/g, '<br>');
 };
 

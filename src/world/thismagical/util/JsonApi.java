@@ -145,6 +145,17 @@ public class JsonApi {
 
     }
 
+    public static JsonAdminResponse<AuthorVO> getAuthorVOByLogin(String login, SessionFactory sessionFactory){
+
+        try (Session session = sessionFactory.openSession()) {
+            return AuthorService.getAuthorVOByLogin(login, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+        }
+
+        return JsonAdminResponse.fail("unable to load author data");
+    }
+
     public static JsonAdminResponse<Void> updateAuthorProfile(String guid, AuthorVO authorVO, SessionFactory sessionFactory){
         try (Session session = sessionFactory.openSession()) {
             return AuthorService.updateAuthorProfile(guid, authorVO, session);

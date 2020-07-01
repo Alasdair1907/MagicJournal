@@ -26,6 +26,7 @@ import world.thismagical.entity.SessionEntity;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.PostsTO;
+import world.thismagical.util.BBCodeExtractor;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.PrivilegeLevel;
 import world.thismagical.util.Tools;
@@ -117,6 +118,25 @@ public class AuthorService {
         }
 
         AuthorVO authorVO = new AuthorVO(authorEntity);
+        loadProfilePicture(authorVO, session);
+
+        return JsonAdminResponse.success(authorVO);
+    }
+
+    public static JsonAdminResponse<AuthorVO> getAuthorVOByLogin(String login, Session session){
+        if (login == null){
+            return JsonAdminResponse.fail("null login");
+        }
+
+        AuthorEntity authorEntity = AuthorDao.getAuthorEntityByLogin(login, session);
+
+        if (authorEntity == null){
+            return JsonAdminResponse.fail("author not found");
+        }
+
+        AuthorVO authorVO = new AuthorVO(authorEntity);
+        authorVO.bio = BBCodeExtractor.escapeHtmlElements(authorVO.bio);
+
         loadProfilePicture(authorVO, session);
 
         return JsonAdminResponse.success(authorVO);
