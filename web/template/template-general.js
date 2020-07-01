@@ -116,8 +116,11 @@ let dynamicSearchCdaTemplate = `
 `;
 
 let cdaMapTemplate = `
-<div class="container-primary container-primary-element">
+
+<div class="container-primary container-primary-element cda-map-base">
     <div data-role="cda-map" class="cda-map"></div>
-    <div data-role="map-search-controller"></div>
 </div>
+
+<div data-role="map-search-controller" class="cda-map-base"></div>
+
 `;

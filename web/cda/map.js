@@ -43,34 +43,63 @@ $.widget("magic.CdaMap", {
         let $mapAnchor = self.element.find('[data-role="cda-map"]');
         let $controllerAnchor = self.element.find('[data-role="map-search-controller"]');
 
-        let location = new Microsoft.Maps.Location(48.57, 7.75);
+        let location = new Microsoft.Maps.Location(50.08962962831929, 14.398006198883046);
         let mapTypeId = Microsoft.Maps.MapTypeId.aerial;
         let map = new Microsoft.Maps.Map($mapAnchor.get(0), {
             center: location,
-            zoom: 4,
+            zoom: 3,
             mapTypeId: mapTypeId
         });
 
+        let infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
+            visible: false
+        });
+        infobox.setMap(map);
+
         let pagingRequestFilter = getPagingRequestFilterFromParams();
-        $controllerAnchor.DynamicSearchCda({pagingRequestFilter: pagingRequestFilter, geo: true, callback: async function(){
-                pagingRequestFilter = $controllerAnchor.DynamicSearchCda("getPagingRequestFilter");
-                pagingRequestFilter.itemsPerPage = 10000;
-                let postVOList = await ajaxCda({action: "processPagingRequestUnified", data: JSON.stringify(pagingRequestFilter) });
+        $controllerAnchor.DynamicSearchCda({pagingRequestFilter: pagingRequestFilter, geo: true, clickOnCreate: true, callback: async function(pagingRequestFilter){
 
-                $.each(postVOList.posts, function(index, postVO){
-                    let location = new Microsoft.Maps.Location.parseLatLong(postVO.gpsCoordinates);
+            pagingRequestFilter.itemsPerPage = 10000;
+            let postVOList = await ajaxCda({action: "processPagingRequestUnified", data: JSON.stringify(pagingRequestFilter) });
 
-                    let color = 'red';
-                    if (postVO.isArticle){
-                        color = 'blue';
-                    } else if (postVO.isPhoto){
-                        color = 'green';
-                    }
+            for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+                var pushpin = map.entities.get(i);
+                if (pushpin instanceof Microsoft.Maps.Pushpin) {
+                    map.entities.removeAt(i);
+                }
+            }
 
-                    let pin = new Microsoft.Maps.Pushpin(location, {text: '+', color: color});
-                    map.entities.push(pin);
-                });
-            }});
+            $.each(postVOList.posts, function(index, postVO){
+                let location = new Microsoft.Maps.Location.parseLatLong(postVO.gpsCoordinates);
 
+                let color = 'red';
+                if (postVO.isArticle){
+                    color = 'blue';
+                } else if (postVO.isPhoto){
+                    color = 'green';
+                }
+
+                let pin = new Microsoft.Maps.Pushpin(location, {text: '+', color: color});
+                pin.metadata = {postVO: postVO};
+                map.entities.push(pin);
+
+                Microsoft.Maps.Events.addHandler(pin, 'click', pushpinClickedHandler);
+            });
+
+        }});
+
+        let pushpinClickedHandler = function(e){
+            let postVO = e.target.metadata.postVO;
+
+            let postClass = postVO.isArticle ? 'Article' : ( postVO.isPhoto ? 'Photo' : 'Gallery' );
+
+            infobox.setOptions({
+                location: e.target.getLocation(),
+                title: postClass,
+                description: postVO.title + '<br /><a href="posts.jsp?' + postClass.toLowerCase() + '=' + postVO.id + '" target="_blank">View post</a>',
+                visible: true
+            });
+
+        };
     }
 });

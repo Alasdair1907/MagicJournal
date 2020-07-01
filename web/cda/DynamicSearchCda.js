@@ -57,6 +57,7 @@ $.widget("magic.DynamicSearchCda", {
         self.pagingRequestFilter = ops.pagingRequestFilter;
         self.callback = ops.callback;
         self.geo = ops.geo;
+        self.clickOnCreate = ops.clickOnCreate;
 
         self._display();
     },
@@ -120,6 +121,11 @@ $.widget("magic.DynamicSearchCda", {
         $searchButton.click(function(){
             self.callback(self.getPagingRequestFilter());
         });
+
+        if (self.clickOnCreate && !self.creationDone){
+            $searchButton.click();
+            self.creationDone = true;
+        }
 
     },
     enrichFilter: function(){

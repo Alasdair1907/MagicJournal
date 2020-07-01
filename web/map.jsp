@@ -30,16 +30,8 @@
 
     <script type="text/javascript">
 
-        var event = null;
-        var func = null;
-
         function GetMap(){
-
-            if (!event) {
-                event = new Event('bingMapApiLoaded');
-            }
-
-            document.dispatchEvent(event);
+            document.dispatchEvent(new Event('bingMapApiLoaded'));
         }
 
     </script>

@@ -399,6 +399,12 @@ body.cda {
     font-size: 2.4vmin;
 }
 
+.cda-map-base {
+    margin: 0 1% 0 1%;
+    padding: 1vmin;
+    width: 98%;
+}
+
 .cda-map {
     width: 100%;
     height: 60vh;
