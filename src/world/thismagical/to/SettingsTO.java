@@ -18,6 +18,7 @@ package world.thismagical.to;
 
 public class SettingsTO {
 
+    public String websiteName;
     public String about;
     public String headerInjection;
     public String bingApiKey;

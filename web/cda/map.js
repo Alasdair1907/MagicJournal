@@ -15,7 +15,9 @@
 */
 
 let loadMap = async function(){
-    let settingsTO = await ajaxCda({action: "getSettingsNoAuth"},"error loading settings");
+
+    let settingsTO = await getSettingsTO();
+
     if (settingsTO === undefined){
         return;
     }
@@ -101,5 +103,7 @@ $.widget("magic.CdaMap", {
             });
 
         };
+
+        document.title = "Map";
     }
 });

@@ -76,6 +76,9 @@ $.widget("magic.posts", {
 
         let $pagingAnchor = self.element.find('[data-role="paging-anchor"]');
         $pagingAnchor.pager({pagesTotal: postVOList.totalPages, filter: pagingRequestFilter, advanced: advanced});
+
+        let settingsTO = await getSettingsTO();
+        document.title = settingsTO.websiteName + (locationHeader ? (" :: " + locationHeader) : "");
     },
 
     _displayArticle: async function(self, articleId){
@@ -89,6 +92,8 @@ $.widget("magic.posts", {
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_ARTICLE, postId: articleId});
+
+        document.title = articleVO.title;
     },
 
     _displayGallery: async function(self, galleryId){
@@ -101,6 +106,8 @@ $.widget("magic.posts", {
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
+
+        document.title = galleryVO.title;
     },
 
     _displayPhoto: async function(self, photoId) {
@@ -113,6 +120,8 @@ $.widget("magic.posts", {
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_PHOTO, postId: photoId});
+
+        document.title = photoVO.title;
     },
 
     _displayAbout: async function(self){
@@ -127,6 +136,8 @@ $.widget("magic.posts", {
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 15, postAttributionClass: null, postId: null});
 
+        let settingsTO = await getSettingsTO();
+        document.title = "About " + settingsTO.websiteName;
     },
 
     _handleClickableImages: function(self){

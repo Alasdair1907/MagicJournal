@@ -64,6 +64,9 @@ $.widget('admin.settingsEditor', {
     </div>
 
     <div class="item-container transparent width-medium item-right">
+    
+        <span class="text">Website name:</span><br />
+        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-website-name"  disabled="disabled"/><br />
 
         <span class="text">Image Storage Path:</span><br/>
         <input type="text" class="form-control input width-100-pc" value="" data-role="settings-image-storage"  disabled="disabled"/><br />
@@ -143,6 +146,7 @@ $.widget('admin.settingsEditor', {
         $mapTypeRadio.parent().addClass("disabled");
         let $demo = self.element.find('[data-role="allow_demo_anon"]');
 
+        let $websiteName = self.element.find('[data-role="settings-website-name"]');
         let $imageStoragePath = self.element.find('[data-role="settings-image-storage"]');
         let $tempPath =  self.element.find('[data-role="settings-image-tmp"]');
         let $otherStoragePath = self.element.find('[data-role="settings-other-storage"]');
@@ -174,6 +178,7 @@ $.widget('admin.settingsEditor', {
         $selectedMapTypeRadio.parent().addClass("active");
         $selectedMapTypeRadio.prop("checked", true);
 
+        $websiteName.val(settingsTO.websiteName);
         $imageStoragePath.val(settingsTO.imageStoragePath);
         $tempPath.val(settingsTO.temporaryFolderPath);
         $otherStoragePath.val(settingsTO.otherFilesStoragePath);
@@ -200,6 +205,7 @@ $.widget('admin.settingsEditor', {
             $mapTypeRadio.parent().removeClass("disabled");
             $demo.removeAttr("disabled");
 
+            $websiteName.prop("disabled", false);
             $imageStoragePath.prop("disabled", false);
             $tempPath.prop("disabled", false);
             $otherStoragePath.prop("disabled", false);
@@ -253,6 +259,7 @@ $.widget('admin.settingsEditor', {
                     bingApiKey: $bingApiKey.val(),
                     mapTypeIdStr: self.element.find('[data-role="map-type-id"]:checked').data("id"),
                     allowDemoAnon: $demo.prop('checked'),
+                    websiteName: $websiteName.val(),
                     imageStoragePath: $imageStoragePath.val(),
                     temporaryFolderPath: $tempPath.val(),
                     otherFilesStoragePath: $otherStoragePath.val(),

@@ -38,7 +38,7 @@ public class PagingDao {
         }
 
         if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
-            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " attributionClass in :attrs");
+            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " attributionClass in :attrs order by tag asc");
             query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
 
             return query.getResultList();

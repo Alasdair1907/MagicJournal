@@ -27,7 +27,7 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
 
         <div class="item-tags-subheading-container">
             {{#each articleVO.tagEntityList}}
-            <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
+            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
             {{/each}}
         </div>
 
@@ -56,7 +56,7 @@ let galleryTemplate = `
 
             <div class="item-tags-subheading-container">
                 {{#each galleryVO.tagEntityList}}
-                <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="gallery-tag">#{{this.tag}}</span></a>&nbsp;
+                <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="gallery-tag">#{{this.tag}}</span></a>&nbsp;
                 {{/each}}
             </div>
 
@@ -95,7 +95,7 @@ let photoTemplate = `
 
             <div class="item-tags-subheading-container">
                 {{#each photoVO.tagEntityList}}
-                <a href="posts.jsp?tag={{this.tag}}" class="general-a"><span class="photo-tag">#{{this.tag}}</span></a>&nbsp;
+                <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="photo-tag">#{{this.tag}}</span></a>&nbsp;
                 {{/each}}
             </div>
 

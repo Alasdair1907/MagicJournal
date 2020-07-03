@@ -26,7 +26,7 @@
     <jsp:include page="head-standard.jsp"/>
     <jsp:include page="head-client.jsp"/>
 
-    <title>ThisMagical.world</title> <!-- TODO load from settings -->
+    <title></title>
 
     <script src="cda/posts.js"></script>
     <script src="cda/header.js"></script>

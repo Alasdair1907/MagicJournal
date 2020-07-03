@@ -29,5 +29,7 @@ $.widget("magic.authorPage", {
 
         let hAuthorPageTemplate = Handlebars.compile(authorPageTemplate);
         self.element.html(hAuthorPageTemplate({authorVO: authorVO, authorDescription: newlineToBr(authorVO.bio)}));
+
+        document.title = "About author: " + authorVO.displayName;
     }
 });
