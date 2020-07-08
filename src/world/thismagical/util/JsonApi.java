@@ -13,7 +13,10 @@ import world.thismagical.service.*;
 import world.thismagical.to.*;
 import world.thismagical.vo.*;
 
+import javax.servlet.ServletContext;
 import javax.tools.Tool;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -638,6 +641,53 @@ public class JsonApi {
         return res;
     }
 
+    public static SessionFactory getSessionFactory(ServletContext application){
 
+        synchronized (application){
+
+            SessionFactory sessionFactory = (SessionFactory) application.getAttribute("sessionFactory");
+            if (sessionFactory != null){
+                return sessionFactory;
+            }
+
+            Tools.log("creating new session factory.");
+            sessionFactory = Tools.getSessionfactory();
+            application.setAttribute("sessionFactory", sessionFactory);
+            return sessionFactory;
+        }
+    }
+
+    public static SettingsTO getNoAuthSettingsCached(ServletContext application){
+        return getSettings(application).nullNotForPublicAttributes();
+    }
+
+    public static SettingsTO getSettings(ServletContext application){
+        synchronized (application){
+            SettingsTO settingsTO = (SettingsTO) application.getAttribute("settingsTO");
+            if (settingsTO != null){
+                return settingsTO;
+            }
+
+            SessionFactory sessionFactory = getSessionFactory(application);
+            try (Session session = sessionFactory.openSession()){
+                settingsTO = SettingsService.getSettings(session);
+            }
+            if (settingsTO == null){
+                settingsTO = new SettingsTO();
+            }
+
+            return settingsTO;
+        }
+    }
+
+    // TODO: reset settings cache when saving
+
+    public static String toBase64(String input){
+        return Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String fromBase64(String input){
+        return new String(Base64.getDecoder().decode(input), StandardCharsets.UTF_8);
+    }
 
 }

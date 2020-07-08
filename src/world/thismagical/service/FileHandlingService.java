@@ -86,7 +86,7 @@ public class FileHandlingService {
         session.flush();
     }
 
-    public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, OtherFileTO otherFileTO, Session session) throws Exception {
+    public static Boolean processUpload(HttpServletRequest request, OtherFileTO otherFileTO, Session session) throws Exception {
 
         if (otherFileTO == null){
             return Boolean.FALSE;
@@ -108,7 +108,7 @@ public class FileHandlingService {
 
         AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(otherFileTO.guid, session);
 
-        OtherFileEntity otherFileEntity = handleUploadOtherFile(servletContext, request, authorEntity, settingsTO);
+        OtherFileEntity otherFileEntity = handleUploadOtherFile(request, authorEntity, settingsTO);
 
         if (otherFileEntity == null){
             return Boolean.FALSE;
@@ -128,7 +128,7 @@ public class FileHandlingService {
         return Boolean.TRUE;
     }
 
-    public static Boolean processUpload(ServletContext servletContext, HttpServletRequest request, ImageUploadTO imageUploadTO, Session session) throws Exception {
+    public static Boolean processUpload(HttpServletRequest request, ImageUploadTO imageUploadTO, Session session) throws Exception {
 
         if (imageUploadTO == null){
             return Boolean.FALSE;
@@ -159,7 +159,7 @@ public class FileHandlingService {
         imageFileEntityStub.setImageAttributionClass(imageAttribution);
         imageFileEntityStub.setParentObjectId(imageUploadTO.parentObjectId);
 
-        List<ImageFileEntity> imageFileEntityList = handleUploadImage(servletContext, request, imageFileEntityStub, settingsTO);
+        List<ImageFileEntity> imageFileEntityList = handleUploadImage(request, imageFileEntityStub, settingsTO);
 
         if (imageFileEntityList.size() == 0){
             return Boolean.FALSE;
@@ -202,7 +202,7 @@ public class FileHandlingService {
     }
 
     // expects only one uploaded file. returns partial OtherFileEntity with original file name and the new file name.
-    public static OtherFileEntity handleUploadOtherFile(ServletContext servletContext, HttpServletRequest request, AuthorEntity uploadAuthor, SettingsTO settingsTO){
+    public static OtherFileEntity handleUploadOtherFile(HttpServletRequest request, AuthorEntity uploadAuthor, SettingsTO settingsTO){
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(sizeThreshold);
         factory.setRepository(new File(settingsTO.otherFilesStoragePath));
@@ -246,7 +246,7 @@ public class FileHandlingService {
         return res;
     }
 
-    public static List<ImageFileEntity> handleUploadImage(ServletContext servletContext, HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
+    public static List<ImageFileEntity> handleUploadImage(HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(sizeThreshold);
         factory.setRepository(new File(settingsTO.temporaryFolderPath));

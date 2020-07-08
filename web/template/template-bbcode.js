@@ -21,21 +21,21 @@ let bbInlineImage = `
 
 let bbInlineFile = `
 
-<div class="attached-file-container attached-file-container-size">
+<div class="attached-file-container-external attached-file-container-external-size">
+    <a href="getFile.jsp?id={{fileId}}" class="general-a" download>
+        <div class="attached-file-container-internal attached-file-container-internal-size">
 
-    <a href="getFile.jsp?id={{fileId}}" class="general-a" download>
-        <i class="fas fa-file-download attached-file-icon"></i>
-    </a>
-    
-    <a href="getFile.jsp?id={{fileId}}" class="general-a" download>
-        <div class="attached-file-info-div">
-            <span class="text-main">{{displayName}}</span>
-            <span class="attached-file-description">{{description}}</span>
+            <i class="fas fa-file-download attached-file-icon"></i>
+
+            <div class="attached-file-info-div">
+                <span class="text-main">{{displayName}}</span>
+                <span class="attached-file-description">{{description}}</span>
+            </div>
+
         </div>
     </a>
-    
-
 </div>
+
 `;
 
 let bbYouTube = `
@@ -47,5 +47,5 @@ let bulletListOpen = `
 `;
 
 let hyperLinkTemplate = `
-<a class="bb-inline-hyperlink" href="{{url}}">{{text}}</a>
+<a class="bb-inline-hyperlink" href="{{url}}" target="_blank">{{text}}</a>
 `;

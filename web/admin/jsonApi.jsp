@@ -20,12 +20,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    SessionFactory sessionFactory = (SessionFactory) application.getAttribute("sessionFactory");
-    if (sessionFactory == null){
-        Tools.log("creating new session factory.");
-        sessionFactory = Tools.getSessionfactory();
-        application.setAttribute("sessionFactory", sessionFactory);
-    }
+    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -347,7 +342,7 @@
             JsonAdminResponse<Void> res = JsonApi.saveSettings(guid, settingsTO, sessionFactory);
 
             if (res.success){
-                application.setAttribute("settingsTO", settingsTO);
+                application.setAttribute("settingsTO", null);
             }
 
             out.print(JsonApi.toString(res, objectMapper));
@@ -424,5 +419,16 @@
         if (action.equals("test")){
             PagingTest.test(sessionFactory);
         }*/
+
+
+        if (action.equals("toBase64Utf8")){
+            JsonAdminResponse<String> res = JsonAdminResponse.success(JsonApi.toBase64(data));
+            out.print(JsonApi.toString(res, objectMapper));
+        }
+
+        if (action.equals("fromBase64Utf8")){
+            JsonAdminResponse<String> res = JsonAdminResponse.success(JsonApi.fromBase64(data));
+            out.print(JsonApi.toString(res, objectMapper));
+        }
     }
 %>

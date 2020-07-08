@@ -93,7 +93,7 @@ $.widget("admin.photosWidget", {
                 sessionGuid: Cookies.get("guid")
             };
 
-            let imageUploadTOJson = btoa(JSON.stringify(imageUploadTO));
+            let imageUploadTOJson = await toBase64(JSON.stringify(imageUploadTO));
             Cookies.set("imageUploadTOJson", imageUploadTOJson);
 
             await $.ajax({

@@ -76,7 +76,7 @@ public class Tools {
 
     public static String getExtension(String fName){
 
-        String[] supportedExtensions = {"jpeg","jpg","png"};
+        String[] supportedExtensions = {"jpeg","jpg","png","bmp"};
 
         String extensionPattern = ".*\\.([a-zA-Z]+)$";
 

@@ -1,5 +1,14 @@
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@ page import="world.thismagical.util.JsonApi" %>
+<%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="org.hibernate.SessionFactory" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+  SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
+  SettingsTO settingsTO = JsonApi.getNoAuthSettingsCached(application);
+  ObjectMapper objectMapper = new ObjectMapper();
+%>
 
 <html>
 <!--
@@ -17,10 +26,13 @@
 
 -->
   <head>
+
+    <meta name="settingsTOCache" content="<% out.print(JsonApi.toBase64(objectMapper.writeValueAsString(settingsTO))); %>">
+
     <jsp:include page="head-standard.jsp"/>
     <jsp:include page="head-client.jsp"/>
 
-    <title></title>
+    <title><% out.print(settingsTO.websiteName); %></title>
 
     <script src="cda/homepage.js"></script>
     <script src="cda/header.js"></script>

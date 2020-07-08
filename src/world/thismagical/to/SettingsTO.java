@@ -16,7 +16,7 @@ package world.thismagical.to;
                                                                                                    
 */
 
-public class SettingsTO {
+public class SettingsTO implements Cloneable {
 
     public String websiteName;
     public String about;
@@ -45,4 +45,20 @@ public class SettingsTO {
     public String instagramProfile;
     public String pinterestProfile;
 
+    public SettingsTO clone(){
+        try {
+            return (SettingsTO) super.clone();
+        } catch (CloneNotSupportedException ex){
+            return new SettingsTO();
+        }
+    }
+
+    public SettingsTO nullNotForPublicAttributes(){
+        SettingsTO settingsTO = this.clone();
+
+        settingsTO.imageStoragePath = null;
+        settingsTO.otherFilesStoragePath = null;
+
+        return settingsTO;
+    }
 }

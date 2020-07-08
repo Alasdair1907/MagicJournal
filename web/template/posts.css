@@ -52,12 +52,19 @@
     margin-bottom: 2.0vmin;
 }
 
-.attached-file-container {
-    display: flex;
+.attached-file-container-external {
     border-width: 1px;
     border-style: solid;
     border-color: grey;
     margin: auto;
+}
+
+.attached-file-container-internal {
+    display: flex;
+}
+
+.attached-file-container-external:hover {
+    background-color: rgba(240, 248, 255, 0.31);
 }
 
 .attached-file-icon {
@@ -166,11 +173,18 @@
 
 .image-show-image {
     max-width: 100vw;
-    max-height: 95vh;
     width: 100%;
     object-fit: contain;
     margin: auto;
     display: block;
+}
+
+.image-show-image-with-descr {
+    max-height: 95vh;
+}
+
+.image-show-image-no-descr {
+    max-height: 100vh;
 }
 
 .image-show-title {
@@ -245,13 +259,17 @@
         border-radius: 1.5vmin;
     }
 
-    .attached-file-container-size {
+    .attached-file-container-external-size {
         width: 50%;
-        padding-top: 0.2vw;
-        padding-bottom: 0.2vw;
         margin-top: 0.2vw;
         margin-bottom: 0.2vw;
         border-radius: 1.5vmin;
+    }
+
+    .attached-file-container-internal-size {
+        width: 100%;
+        padding-top: 0.2vw;
+        padding-bottom: 0.2vw;
     }
 
     .bb-youtube-embed-size {

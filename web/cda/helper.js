@@ -135,6 +135,11 @@ let arrEqual = function(a, b){
 };
 
 let getSettingsTO = async function(){
+
+    let settingsTOJson = await fromBase64Cda($("meta[name='settingsTOCache']").attr("content"));
+    let settingsTO = JSON.parse(settingsTOJson);
+
+    /*
     let settingsTO = JSON.parse(localStorage.getItem("settingsTO") || "null");
 
     if (settingsTO && settingsTO.__localStorageDateTime){
@@ -149,7 +154,18 @@ let getSettingsTO = async function(){
         settingsTO = await ajaxCda({action: "getSettingsNoAuth"});
         settingsTO.__localStorageDateTime = new Date().getTime();
         localStorage.setItem("settingsTO", JSON.stringify(settingsTO));
-    }
+    }*/
+
+
 
     return settingsTO;
+};
+
+
+let toBase64Cda = async function(input){
+    return await ajaxCda({action: "toBase64Utf8", data: input});
+};
+
+let fromBase64Cda = async function(input){
+    return await ajaxCda({action: "fromBase64Utf8", data: input});
 };

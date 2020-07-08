@@ -11,30 +11,16 @@
 <%@ page import="world.thismagical.service.SettingsService" %>
 <%@ page import="world.thismagical.entity.OtherFileEntity" %>
 <%@ page import="java.io.FileNotFoundException" %>
+<%@ page import="world.thismagical.util.JsonApi" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page trimDirectiveWhitespaces="true"%>
 <%
-
-    /*
-    !!! SettingsTO must be refreshed by each function that alters image storage path !!!
-     */
-    SettingsTO settingsTO = (SettingsTO) application.getAttribute("settingsTO");
-
-    SessionFactory sessionFactory = (SessionFactory) application.getAttribute("sessionFactory");
-    if (sessionFactory == null){
-        Tools.log("creating new session factory.");
-        sessionFactory = Tools.getSessionfactory();
-        application.setAttribute("sessionFactory", sessionFactory);
-    }
+    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
+    SettingsTO settingsTO = JsonApi.getSettings(application);
 
     try (Session sessionGetFile = sessionFactory.openSession()) {
-
-        if (settingsTO == null) {
-            settingsTO = SettingsService.getSettings(sessionGetFile);
-            application.setAttribute("settingsTO", settingsTO);
-        }
 
         String fileStorage = settingsTO.otherFilesStoragePath;
         String fileIdStr = request.getParameter("id");
@@ -44,7 +30,6 @@
         }
 
         if (fileIdStr != null) {
-
             Long fileId = Long.parseLong(fileIdStr);
             OtherFileEntity otherFileEntity = sessionGetFile.get(OtherFileEntity.class, fileId);
 

@@ -9,18 +9,12 @@
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.List" %>
+<%@ page import="world.thismagical.util.JsonApi" %>
+<%@ page import="world.thismagical.to.SettingsTO" %>
 <%
 
-    SessionFactory sessionFactory = (SessionFactory) application.getAttribute("sessionFactory");
-    if (sessionFactory == null){
-        Tools.log("creating new session factory.");
-        sessionFactory = Tools.getSessionfactory();
-        application.setAttribute("sessionFactory", sessionFactory);
-    }
-
+    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
     ObjectMapper objectMapper = new ObjectMapper();
-
-    ServletContext context = pageContext.getServletContext();
 
     List<Cookie> cookies = Arrays.asList(request.getCookies());
 
@@ -45,15 +39,15 @@
     try (Session sessionFileUpload = sessionFactory.openSession()) {
 
         if (imageUploadTOJson != null) {
-            String imageUploadTOJsonDecoded = new String(Base64.getDecoder().decode(imageUploadTOJson));
+            String imageUploadTOJsonDecoded = JsonApi.fromBase64(imageUploadTOJson);
             imageUploadTO = objectMapper.readValue(imageUploadTOJsonDecoded, ImageUploadTO.class);
-            res = FileHandlingService.processUpload(context, request, imageUploadTO, sessionFileUpload);
+            res = FileHandlingService.processUpload(request, imageUploadTO, sessionFileUpload);
         }
 
         if (otherFileTOJson != null) {
-            String otherFileTOJsonDecoded = new String(Base64.getDecoder().decode(otherFileTOJson));
+            String otherFileTOJsonDecoded = JsonApi.fromBase64(otherFileTOJson);
             otherFileTO = objectMapper.readValue(otherFileTOJsonDecoded, OtherFileTO.class);
-            res = FileHandlingService.processUpload(context, request, otherFileTO, sessionFileUpload);
+            res = FileHandlingService.processUpload(request, otherFileTO, sessionFileUpload);
         }
     } catch (Exception ex){
         Tools.handleException(ex);

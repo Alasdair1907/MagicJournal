@@ -30,7 +30,5 @@ $.widget("magic.header", {
 
         let hHeaderMain = Handlebars.compile(headerMain);
         self.element.html(hHeaderMain({settingsTO: settingsTO}));
-
-        document.title = settingsTO.websiteName;
     }
 });

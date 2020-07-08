@@ -196,9 +196,9 @@ let sidePanelBase = `
 let fullScreenImageOverlay = `
 <div class="image-show-base-overlay">
     <div class="image-show-container">
-        <div>
-            <img src="getImage.jsp?filename={{imageSrc}}" class="image-show-image">
-            <div class="image-show-title text-main">{{title}}</div>
+        <div class="width-100-pc">
+            <img src="getImage.jsp?filename={{imageSrc}}" class="image-show-image {{#if title}}image-show-image-with-descr{{else}}image-show-image-no-descr{{/if}}">
+            {{#if title}}<div class="image-show-title text-main">{{title}}</div>{{/if}}
             <i class="fas fa-times image-show-close" data-role="image-show-close"></i>
         </div>
     </div>

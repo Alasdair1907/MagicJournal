@@ -153,7 +153,7 @@ let fileSelect = async function($modalAnchor){
                 description: fileDescription
             };
 
-            let otherFileTOJson = btoa(JSON.stringify(otherFileTO));
+            let otherFileTOJson = await toBase64(JSON.stringify(otherFileTO));
             Cookies.set("otherFileTOJson", otherFileTOJson);
 
             let res = "";

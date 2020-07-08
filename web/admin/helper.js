@@ -83,3 +83,11 @@ function isDemo(){
 
     return false;
 }
+
+let toBase64 = async function(input){
+    return await ajax({action: "toBase64Utf8", data: input});
+};
+
+let fromBase64 = async function(input){
+    return await ajax({action: "fromBase64Utf8", data: input});
+};
