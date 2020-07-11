@@ -14,6 +14,7 @@ import world.thismagical.to.*;
 import world.thismagical.vo.*;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.tools.Tool;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -680,7 +681,33 @@ public class JsonApi {
         }
     }
 
-    // TODO: reset settings cache when saving
+    public static MetaTO prepareMeta(HttpServletRequest request, ServletContext application){
+        String article = request.getParameter("article");
+        String photo = request.getParameter("photo");
+        String gallery = request.getParameter("gallery");
+
+        SessionFactory sessionFactory = getSessionFactory(application);
+        SettingsTO settingsTO = getSettings(application);
+
+        if (Tools.strIsNumber(article)){
+            Long articleId = Long.parseLong(article);
+            ArticleVO articleVO = getArticleVOByArticleId(articleId, false, sessionFactory).data;
+            if (articleVO == null){ return new MetaTO(); }
+            return MetaTO.fromPostVO(articleVO, settingsTO.websiteURL);
+        } else if (Tools.strIsNumber(photo)){
+            Long photoId = Long.parseLong(photo);
+            PhotoVO photoVO = getPhotoVOByPhotoId(photoId, sessionFactory).data;
+            if (photoVO == null){ return new MetaTO(); }
+            return MetaTO.fromPostVO(photoVO, settingsTO.websiteURL);
+        } else if (Tools.strIsNumber(gallery)){
+            Long galleryId = Long.parseLong(gallery);
+            GalleryVO galleryVO = getGalleryVOByGalleryId(galleryId, sessionFactory).data;
+            if (galleryVO == null){ return new MetaTO(); }
+            return MetaTO.fromPostVO(galleryVO, settingsTO.websiteURL);
+        }
+
+        return new MetaTO();
+    }
 
     public static String toBase64(String input){
         return Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8));

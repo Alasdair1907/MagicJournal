@@ -79,6 +79,10 @@ let photoNewOrEdit = `
 <span class="text">Title:</span>
 <input type="text" class="form-control input width-100-pc" data-role="data-title" value="{{photoVO.title}}"><br/>
 
+<span class="text">Tiny description:</span><br />
+<span class="smalltext">Brief description for social media posts</span><br />
+<textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{photoVO.tinyDescription}}</textarea><br />
+
 <span class="text">Description:</span><br />
 <span class="smalltext">Basic BB code can be used. Max. 1000 characters, will be trimmed to 300 in listings.</span>
 <textarea class="input-textarea-description width-100-pc" maxlength="1000" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />

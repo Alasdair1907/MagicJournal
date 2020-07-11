@@ -158,6 +158,7 @@ public class GalleryService {
         }
 
         galleryEntity.setTitle(Tools.nullToEmpty(galleryTO.title));
+        galleryEntity.setTinyDescription(Tools.nullToEmpty(galleryTO.tinyDescription));
         galleryEntity.setDescription(Tools.nullToEmpty(galleryTO.description));
         galleryEntity.setGpsCoordinates(Tools.nullToEmpty(galleryTO.gpsCoordinates));
         galleryEntity.setPublished(galleryTO.published);

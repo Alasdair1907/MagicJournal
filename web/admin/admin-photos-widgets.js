@@ -57,6 +57,7 @@ $.widget("admin.photosWidget", {
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
+        let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
 
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
@@ -127,6 +128,7 @@ $.widget("admin.photosWidget", {
             let photoTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
+                tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")

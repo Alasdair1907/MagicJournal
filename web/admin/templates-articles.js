@@ -77,7 +77,12 @@ let articleNewOrEdit = `
 <span class="text">Title:</span>
 <input type="text" class="form-control input" data-role="data-title" value="{{articleVO.title}}"><br/>
 
-<span class="text">Description:</span><br /><span class="smalltext">max. 300 characters</span><br />
+<span class="text">Tiny description:</span><br />
+<span class="smalltext">Brief description for social media posts</span><br />
+<textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{articleVO.tinyDescription}}</textarea><br />
+
+<span class="text">Description:</span><br />
+<span class="smalltext">max. 300 characters</span><br />
 <textarea class="input-textarea-description-article width-100-pc" maxlength="300" data-role="data-description">{{articleVO.description}}</textarea><br />
 <br />
 <span class="text">Article Text:</span><br />

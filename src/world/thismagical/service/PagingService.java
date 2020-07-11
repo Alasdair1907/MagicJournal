@@ -124,11 +124,11 @@ public class PagingService {
 
         postVOs.sort( (postA, postB) -> {
             if (postA.getCreationDate().isAfter(postB.getCreationDate())){
-                return 1;
+                return -1;
             }
 
             if (postA.getCreationDate().isBefore(postB.getCreationDate())){
-                return -1;
+                return 1;
             }
 
             return 0;

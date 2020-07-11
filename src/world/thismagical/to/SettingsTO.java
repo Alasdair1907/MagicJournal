@@ -19,6 +19,7 @@ package world.thismagical.to;
 public class SettingsTO implements Cloneable {
 
     public String websiteName;
+    public String websiteURL;
     public String about;
     public String headerInjection;
     public String bingApiKey;

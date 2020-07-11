@@ -1,6 +1,9 @@
 package world.thismagical.vo;
 
+import world.thismagical.entity.TagEntity;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PostVO {
     String getTitle();
@@ -9,4 +12,7 @@ public interface PostVO {
     LocalDateTime getCreationDate();
     String getPostAttributionStr();
     void setPostAttributionStr(String postAttributionStr);
+    List<TagEntity> getTagEntityList();
+    Short getPostAttribution();
+    String getTinyDescription();
 }

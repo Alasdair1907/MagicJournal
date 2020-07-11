@@ -12,6 +12,7 @@
 <%@ page import="world.thismagical.util.Tools" %>
 <%@ page import="org.hibernate.SessionFactory" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="world.thismagical.to.MetaTO" %>
 
 <%
     SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
@@ -36,6 +37,18 @@
                                                                                                  
 -->
 <head>
+
+    <%
+        MetaTO metaTO = JsonApi.prepareMeta(request, application);
+
+        out.println(String.format("<meta name='description' content='%s'>", metaTO.getDescription()));
+        out.println(String.format("<meta name='keywords' content='%s'>", metaTO.getKeywords()));
+        out.println(String.format("<meta name='author' content='%s'>", metaTO.getAuthor()));
+
+        out.println(String.format("<meta property='og:title' content='%s'>", metaTO.getOgTitle()));
+        out.println(String.format("<meta property='og:image' content='%s'>", metaTO.getOgImage()));
+        out.println(String.format("<meta property='og:description' content='%s'>", metaTO.getOgDescription()));
+    %>
 
     <meta name="settingsTOCache" content="<% out.print(JsonApi.toBase64(objectMapper.writeValueAsString(settingsTO))); %>">
 

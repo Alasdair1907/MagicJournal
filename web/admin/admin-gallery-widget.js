@@ -197,6 +197,7 @@ $.widget("admin.galleriesWidget", {
 
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
+        let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
         let $submitElem = element.find('[data-role="data-gallery-save-or-update"]');
 
@@ -227,6 +228,7 @@ $.widget("admin.galleriesWidget", {
             let galleryTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
+                tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")

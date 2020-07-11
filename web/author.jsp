@@ -1,7 +1,9 @@
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>
-<%@ page import="org.hibernate.SessionFactory" %><%--
+<%@ page import="org.hibernate.SessionFactory" %>
+<%@ page import="world.thismagical.vo.ArticleVO" %>
+<%@ page import="world.thismagical.service.ArticleService" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 7/1/2020
@@ -15,6 +17,14 @@
     SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
     SettingsTO settingsTO = JsonApi.getNoAuthSettingsCached(application);
     ObjectMapper objectMapper = new ObjectMapper();
+
+    String article = request.getParameter("article");
+    String gallery = request.getParameter("gallery");
+    String photo = request.getParameter("photo");
+
+    if (article != null){
+
+    }
 
 %>
 

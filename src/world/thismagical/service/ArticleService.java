@@ -120,6 +120,7 @@ public class ArticleService {
 
         articleEntity.setTitle(Tools.nullToEmpty(articleTO.title));
         articleEntity.setDescription(Tools.nullToEmpty(articleTO.description));
+        articleEntity.setTinyDescription(Tools.nullToEmpty(articleTO.tinyDescription));
         articleEntity.setGpsCoordinates(Tools.nullToEmpty(articleTO.gpsCoordinates));
         articleEntity.setPublished(articleTO.published);
 

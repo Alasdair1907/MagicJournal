@@ -67,6 +67,10 @@ $.widget('admin.settingsEditor', {
     
         <span class="text">Website name:</span><br />
         <input type="text" class="form-control input width-100-pc" value="" data-role="settings-website-name"  disabled="disabled"/><br />
+        
+        <span class="text">Website URL:</span><br />
+        <span class="smalltext">e.g. http://www.example.org</span><br />
+        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-website-url"  disabled="disabled"/><br />
 
         <span class="text">Image Storage Path:</span><br/>
         <input type="text" class="form-control input width-100-pc" value="" data-role="settings-image-storage"  disabled="disabled"/><br />
@@ -147,6 +151,7 @@ $.widget('admin.settingsEditor', {
         let $demo = self.element.find('[data-role="allow_demo_anon"]');
 
         let $websiteName = self.element.find('[data-role="settings-website-name"]');
+        let $websiteUrl = self.element.find('[data-role="settings-website-url"]');
         let $imageStoragePath = self.element.find('[data-role="settings-image-storage"]');
         let $tempPath =  self.element.find('[data-role="settings-image-tmp"]');
         let $otherStoragePath = self.element.find('[data-role="settings-other-storage"]');
@@ -179,6 +184,7 @@ $.widget('admin.settingsEditor', {
         $selectedMapTypeRadio.prop("checked", true);
 
         $websiteName.val(settingsTO.websiteName);
+        $websiteUrl.val(settingsTO.websiteURL);
         $imageStoragePath.val(settingsTO.imageStoragePath);
         $tempPath.val(settingsTO.temporaryFolderPath);
         $otherStoragePath.val(settingsTO.otherFilesStoragePath);
@@ -206,6 +212,7 @@ $.widget('admin.settingsEditor', {
             $demo.removeAttr("disabled");
 
             $websiteName.prop("disabled", false);
+            $websiteUrl.prop("disabled", false);
             $imageStoragePath.prop("disabled", false);
             $tempPath.prop("disabled", false);
             $otherStoragePath.prop("disabled", false);
@@ -237,10 +244,10 @@ $.widget('admin.settingsEditor', {
             // activate image insert into about textarea
             $imageInsertButton.unbind();
             $imageInsertButton.click(await async function(){
-                let currentText = $aboutTextarea.val();
+                let textAreaPosition = $aboutTextarea.prop("selectionStart");
                 let selectedImgId = await imageSelect($modalAnchor, undefined);
-                currentText = currentText + "\n[img id=" + selectedImgId + "]\n";
-                $aboutTextarea.val(currentText);
+                let bbCode = "[img id=" + selectedImgId + "]";
+                insertAtPosition($aboutTextarea, textAreaPosition, bbCode);
             });
 
             // save values on click
@@ -260,6 +267,7 @@ $.widget('admin.settingsEditor', {
                     mapTypeIdStr: self.element.find('[data-role="map-type-id"]:checked').data("id"),
                     allowDemoAnon: $demo.prop('checked'),
                     websiteName: $websiteName.val(),
+                    websiteURL: $websiteUrl.val(),
                     imageStoragePath: $imageStoragePath.val(),
                     temporaryFolderPath: $tempPath.val(),
                     otherFilesStoragePath: $otherStoragePath.val(),

@@ -20,6 +20,7 @@ package world.thismagical.to;
 public class GalleryTO {
     public Long id;
     public String title;
+    public String tinyDescription;
     public String description;
     public String gpsCoordinates;
     public String sessionGuid;

@@ -61,6 +61,7 @@ $.widget("admin.articlesWidget", {
         let $modalAnchor = self.element.find('[data-role="modal-anchor"]');
         let $idElem = element.find('[data-role="data-id"]');
         let $titleElem = element.find('[data-role="data-title"]');
+        let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
         let $textElem = element.find('[data-role="data-article-text"]');
 
@@ -128,6 +129,7 @@ $.widget("admin.articlesWidget", {
             let articleTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
+                tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
                 articleText: $textElem.val(),
                 gpsCoordinates: $gpsElem.val(),
@@ -152,6 +154,7 @@ $.widget("admin.articlesWidget", {
             let articleTO = {
                 id: $idElem.val(),
                 title: $titleElem.val(),
+                tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
                 articleText: $textElem.val(),
                 gpsCoordinates: $gpsElem.val(),
@@ -173,18 +176,18 @@ $.widget("admin.articlesWidget", {
 
         $imageInsertButton.unbind();
         $imageInsertButton.click(await async function(){
-            let currentText = $textElem.val();
+            let textAreaPosition = $textElem.prop("selectionStart");
             let selectedImgId = await imageSelect($modalAnchor, articleVO.id);
-            currentText = currentText + "\n[img id=" + selectedImgId + "]\n";
-            $textElem.val(currentText);
+            let bbCode = "[img id=" + selectedImgId + "]";
+            insertAtPosition($textElem, textAreaPosition, bbCode);
         });
 
         $fileInsertbutton.unbind();
         $fileInsertbutton.click(await async function(){
-            let currentText = $textElem.val();
+            let textAreaPosition = $textElem.prop("selectionStart");
             let selectedFileId = await fileSelect($modalAnchor);
-            currentText = currentText + "\n[file id=" + selectedFileId + "]\n";
-            $textElem.val(currentText);
+            let bbCode = "[file id=" + selectedFileId + "]";
+            insertAtPosition($textElem, textAreaPosition, bbCode);
         });
     },
 

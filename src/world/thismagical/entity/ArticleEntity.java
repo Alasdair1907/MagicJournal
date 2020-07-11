@@ -20,6 +20,9 @@ public class ArticleEntity implements Serializable, PostEntity {
     @Column(name="description")
     String description;
 
+    @Column(name="tiny_description")
+    String tinyDescription;
+
     @Column(name="title_image_id")
     Long titleImageId;
 
@@ -61,6 +64,14 @@ public class ArticleEntity implements Serializable, PostEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTinyDescription() {
+        return tinyDescription;
+    }
+
+    public void setTinyDescription(String tinyDescription) {
+        this.tinyDescription = tinyDescription;
     }
 
     public AuthorEntity getAuthor() {

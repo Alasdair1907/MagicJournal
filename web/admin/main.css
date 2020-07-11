@@ -221,6 +221,11 @@ button.close {
     height: 10vh;
 }
 
+.input-textarea-tiny-description {
+    font-size: 2vh;
+    height: 5vh;
+}
+
 .input-textarea-description {
     font-size: 2vh;
     height: 30vh;
@@ -342,7 +347,7 @@ button.close {
 }
 
 .relation-manager-list-group {
-    height: 10vh !important;
+    height: 15vh !important;
     overflow-y: scroll !important;
 }
 

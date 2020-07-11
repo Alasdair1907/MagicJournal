@@ -31,6 +31,7 @@ public class GalleryVO implements PostVO {
     public Long id;
     public String title;
     public String description;
+    public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
     public String creationDateStr;
@@ -39,6 +40,7 @@ public class GalleryVO implements PostVO {
     public List<TagEntity> tagEntityList;
 
     public String postAttributionStr;
+    public Short postAttribution;
     public Boolean isGallery;
 
     public List<ImageVO> imageVOList;
@@ -48,12 +50,14 @@ public class GalleryVO implements PostVO {
         this.id = galleryEntity.getId();
         this.title = galleryEntity.getTitle();
         this.description = galleryEntity.getDescription();
+        this.tinyDescription = galleryEntity.getTinyDescription();
         this.authorVO = new AuthorVO(galleryEntity.getAuthor());
         this.creationDate = galleryEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(galleryEntity.getCreationDate());
         this.gpsCoordinates = galleryEntity.getGpsCoordinates();
         this.published = galleryEntity.getPublished();
         this.postAttributionStr = PostAttribution.GALLERY.getReadable();
+        this.postAttribution = PostAttribution.GALLERY.getId();
         this.isGallery = true;
     }
 
@@ -89,5 +93,20 @@ public class GalleryVO implements PostVO {
     @Override
     public void setPostAttributionStr(String postAttributionStr) {
         this.postAttributionStr = postAttributionStr;
+    }
+
+    @Override
+    public List<TagEntity> getTagEntityList(){
+        return this.tagEntityList;
+    }
+
+    @Override
+    public Short getPostAttribution() {
+        return postAttribution;
+    }
+
+    @Override
+    public String getTinyDescription() {
+        return tinyDescription;
     }
 }

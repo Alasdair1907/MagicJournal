@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.MessageDigest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +133,10 @@ public class Tools {
             return "";
         }
 
-        return localDateTime.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm"));
+        ZonedDateTime ldtZoned = localDateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime gmt = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
+
+        return gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm")) + " GMT";
     }
 
     public static String nullToEmpty(String input){
@@ -163,5 +168,34 @@ public class Tools {
         // ^\s*\-?[0-9]{1,2}(\.[0-9]{1,})?\,\s+\-?[0-9]{1,3}(\.[0-9]{1,})?\s*$
         String geoRegExp = "^\\s*\\-?[0-9]{1,2}(\\.[0-9]{1,})?\\,\\s+\\-?[0-9]{1,3}(\\.[0-9]{1,})?\\s*$";
         return geo.matches(geoRegExp);
+    }
+
+    public static boolean strIsNumber(String input){
+        if (input == null || input.isEmpty()){
+            return false;
+        }
+
+        return input.matches("^[0-9]+$");
+    }
+
+    public static String normalizeURL(String input){
+        if (input.startsWith("www.")){
+            input = "http://" + input;
+        }
+
+        if (input.endsWith("/")){
+            input = input.substring(0, input.length()-1);
+        }
+
+        return input;
+    }
+
+    public static String htmlSingleQuote(String input){
+
+        if (input == null){
+            return "";
+        }
+
+        return input.replaceAll("'", "&apos;");
     }
 }

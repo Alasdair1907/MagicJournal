@@ -113,6 +113,7 @@ public class PhotoService {
         }
 
         photoEntity.setTitle(Tools.nullToEmpty(photoTO.title));
+        photoEntity.setTinyDescription(Tools.nullToEmpty(photoTO.tinyDescription));
         photoEntity.setDescription(Tools.nullToEmpty(photoTO.description));
         photoEntity.setGpsCoordinates(Tools.nullToEmpty(photoTO.gpsCoordinates));
         photoEntity.setPublished(photoTO.published);

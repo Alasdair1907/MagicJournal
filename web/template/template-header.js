@@ -57,7 +57,7 @@ let headerMain = `
 
     <!-- logo -->
     <div class="header-subdiv">
-    <img src="template/logo-full-white.png" class="header-logo" alt="ThisMagical.world">
+    <a class="general-a" href="index.jsp"><img src="template/logo-full-white.png" class="header-logo" alt="ThisMagical.world"></a>
     </div>
 
     <!-- subscriptions menu -->

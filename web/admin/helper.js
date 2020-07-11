@@ -91,3 +91,11 @@ let toBase64 = async function(input){
 let fromBase64 = async function(input){
     return await ajax({action: "fromBase64Utf8", data: input});
 };
+
+let insertAtPosition = function($textarea, cursorPos, toInsert){
+    let text = $textarea.val();
+    let textBefore = text.substring(0,  cursorPos);
+    let textAfter  = text.substring(cursorPos, text.length);
+
+    $textarea.val(textBefore + toInsert + textAfter);
+};

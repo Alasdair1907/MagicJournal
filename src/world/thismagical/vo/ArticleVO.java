@@ -26,6 +26,7 @@ public class ArticleVO implements PostVO {
     public Long id;
     public String title;
     public String description;
+    public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
     public String creationDateStr;
@@ -33,6 +34,7 @@ public class ArticleVO implements PostVO {
     public Boolean published;
 
     public String postAttributionStr;
+    public Short postAttribution;
     public Boolean isArticle;
 
     public String articleText;
@@ -44,6 +46,7 @@ public class ArticleVO implements PostVO {
         this.id = articleEntity.getId();
         this.title = articleEntity.getTitle();
         this.description = articleEntity.getDescription();
+        this.tinyDescription = articleEntity.getTinyDescription();
         this.authorVO = new AuthorVO(articleEntity.getAuthor());
         this.creationDate = articleEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(articleEntity.getCreationDate());
@@ -51,6 +54,7 @@ public class ArticleVO implements PostVO {
         this.published = articleEntity.getPublished();
         this.articleText = articleEntity.getArticleText();
         this.postAttributionStr = PostAttribution.ARTICLE.getReadable();
+        this.postAttribution = PostAttribution.ARTICLE.getId();
         this.isArticle = true;
     }
 
@@ -86,5 +90,18 @@ public class ArticleVO implements PostVO {
         this.postAttributionStr = postAttributionStr;
     }
 
+    @Override
+    public List<TagEntity> getTagEntityList(){
+        return this.tagEntityList;
+    }
 
+    @Override
+    public Short getPostAttribution() {
+        return postAttribution;
+    }
+
+    @Override
+    public String getTinyDescription() {
+        return tinyDescription;
+    }
 }

@@ -116,6 +116,10 @@ let galleryNewOrEdit = `
 
         <span class="text">Title:</span>
         <input type="text" class="form-control input width-100-pc" data-role="data-title" value="{{galleryVO.title}}"><br/>
+        
+        <span class="text">Tiny description:</span><br />
+        <span class="smalltext">Brief description for social media posts</span><br />
+        <textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{galleryVO.tinyDescription}}</textarea><br />
 
         <span class="text">Description:</span><br />
         <span class="smalltext">Basic BB code can be used. Max. 1000 characters, will be trimmed to 300 in listings.</span>

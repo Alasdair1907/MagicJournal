@@ -30,6 +30,7 @@ public class PhotoVO implements PostVO {
     public Long id;
     public String title;
     public String description;
+    public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
     public String creationDateStr;
@@ -38,6 +39,7 @@ public class PhotoVO implements PostVO {
     public List<TagEntity> tagEntityList;
 
     public String postAttributionStr;
+    public Short postAttribution;
     public Boolean isPhoto;
 
     public ImageVO imageVO;
@@ -46,12 +48,14 @@ public class PhotoVO implements PostVO {
         this.id = photoEntity.getId();
         this.title = photoEntity.getTitle();
         this.description = photoEntity.getDescription();
+        this.tinyDescription = photoEntity.getTinyDescription();
         this.authorVO = new AuthorVO(photoEntity.getAuthor());
         this.creationDate = photoEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(photoEntity.getCreationDate());
         this.gpsCoordinates = photoEntity.getGpsCoordinates();
         this.published = photoEntity.getPublished();
         this.postAttributionStr = PostAttribution.PHOTO.getReadable();
+        this.postAttribution = PostAttribution.PHOTO.getId();
         isPhoto = true;
     }
 
@@ -89,4 +93,18 @@ public class PhotoVO implements PostVO {
         this.postAttributionStr = postAttributionStr;
     }
 
+    @Override
+    public List<TagEntity> getTagEntityList(){
+        return this.tagEntityList;
+    }
+
+    @Override
+    public Short getPostAttribution() {
+        return postAttribution;
+    }
+
+    @Override
+    public String getTinyDescription() {
+        return tinyDescription;
+    }
 }

@@ -37,6 +37,9 @@ public class GalleryEntity implements Serializable, PostEntity {
     @Column(name="description")
     private String description;
 
+    @Column(name="tiny_description")
+    private String tinyDescription;
+
     @JoinColumn(name="author_id")
     @OneToOne
     private AuthorEntity author;
@@ -72,6 +75,14 @@ public class GalleryEntity implements Serializable, PostEntity {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTinyDescription() {
+        return tinyDescription;
+    }
+
+    public void setTinyDescription(String tinyDescription) {
+        this.tinyDescription = tinyDescription;
     }
 
     public AuthorEntity getAuthor() {
