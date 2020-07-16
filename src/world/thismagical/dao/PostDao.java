@@ -93,6 +93,11 @@ public class PostDao {
             predicates.add(inIds);
         }
 
+        if (!basicPostFilter.showUnpublished){
+            Predicate showUnpublished = cb.isTrue(root.get("published"));
+            predicates.add(showUnpublished);
+        }
+
         return cb.and(predicates.toArray(new Predicate[0]));
     }
 
@@ -137,7 +142,7 @@ public class PostDao {
 
         Query query;
         if (basicPostFilter == null){
-            query = session.createQuery("from "+clazz.getSimpleName()+" order by creationDate desc");
+            query = session.createQuery("from "+clazz.getSimpleName()+" where published = true order by creationDate desc");
             list = (List<PostEntity>) query.getResultList();
         } else {
             query = prepareQueryFromFilter(basicPostFilter, clazz, session);

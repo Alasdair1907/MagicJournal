@@ -38,13 +38,13 @@ public class PagingDao {
         }
 
         if (pagingRequestFilter.tags == null || pagingRequestFilter.tags.isEmpty()){
-            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " attributionClass in :attrs order by tag asc");
+            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " attributionClass in :attrs and parentIsPublished = true order by tag asc");
             query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
 
             return query.getResultList();
         } else {
 
-            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " postIndexItemId in (select postIndexItemId from TagEntity where tag in :tagList and attributionClass in :attrs group by postIndexItemId having count(distinct tag) = :count) order by tag asc");
+            Query query = session.createQuery("select distinct(tag) from TagEntity where " + geo + " postIndexItemId in (select postIndexItemId from TagEntity where tag in :tagList and attributionClass in :attrs group by postIndexItemId having count(distinct tag) = :count) and parentIsPublished = true order by tag asc");
             query.setParameter("tagList", pagingRequestFilter.tags);
             query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
             query.setParameter("count",  Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
@@ -63,7 +63,7 @@ public class PagingDao {
             geo = "parentHasGeo = true and";
         }
 
-        Query query = session.createQuery("select max(postIndexItemId) from TagEntity where "+geo+" tag in :tagList and attributionClass in :attrs group by attributionClass, parentObjectId having count(distinct tag) = :count");
+        Query query = session.createQuery("select max(postIndexItemId) from TagEntity where "+geo+" tag in :tagList and parentIsPublished = true and attributionClass in :attrs group by attributionClass, parentObjectId having count(distinct tag) = :count");
         query.setParameter("tagList", pagingRequestFilter.tags);
         query.setParameter("attrs", gatherPostAttributionList(pagingRequestFilter));
         query.setParameter("count", Integer.valueOf(pagingRequestFilter.tags.size()).longValue());
@@ -103,6 +103,8 @@ public class PagingDao {
         if (Boolean.TRUE.equals(pagingRequestFilter.requireGeo)){
             predicates.add(cb.equal(postIndexItemRoot.get("hasGeo"), Boolean.TRUE));
         }
+
+        predicates.add(cb.isTrue(postIndexItemRoot.get("isPublished")));
 
         List<Short> postAttributionList = gatherPostAttributionList(pagingRequestFilter);
         CriteriaBuilder.In<Short> attrIn = cb.in(postIndexItemRoot.get("postAttribution"));

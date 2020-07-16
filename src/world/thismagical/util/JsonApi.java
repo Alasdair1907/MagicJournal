@@ -709,6 +709,19 @@ public class JsonApi {
         return new MetaTO();
     }
 
+    public static PostVOListUnified latest(Integer count, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+
+            PagingRequestFilter pagingRequestFilter = PagingRequestFilter.latest(count);
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
+            return PagingService.unify(postVOList);
+
+        } catch (Exception ex){
+            Tools.handleException(ex);
+            return null;
+        }
+    }
+
     public static String toBase64(String input){
         return Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8));
     }

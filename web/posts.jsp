@@ -60,6 +60,8 @@
     <script src="cda/posts.js"></script>
     <script src="cda/header.js"></script>
 
+    <% out.println(settingsTO.headerInjection); %>
+
 </head>
 
 

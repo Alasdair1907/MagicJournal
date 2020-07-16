@@ -1,8 +1,8 @@
-package world.thismagical.to;
+package world.thismagical.service;
 /*
   User: Alasdair
-  Date: 4/23/2020
-  Time: 6:26 PM                                                                                                    
+  Date: 7/15/2020
+  Time: 11:34 PM                                                                                                    
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -17,18 +17,15 @@ package world.thismagical.to;
                                                                                                    
 */
 
-import java.util.List;
+import org.hibernate.Session;
+import world.thismagical.dao.PostDao;
+import world.thismagical.dao.TagDao;
+import world.thismagical.entity.PostEntity;
+import world.thismagical.util.PostAttribution;
 
-public class BasicPostFilterTO {
-    // for listing unpublished articles
-    public String userGuid;
-
-    public String login;
-    public String from;
-    public String to;
-    public String titleContains;
-    public Integer limit;
-    public Integer fromCount;
-    public Integer galleryRepresentationImages;
-    public List<Long> ids;
+public class PostService {
+    public static void updateTagPublish(Long postId, PostAttribution postAttribution, Session session){
+        PostEntity postEntity = PostDao.getPostEntityById(postId, postAttribution.getAssociatedClass(), session);
+        TagDao.setPublished(postEntity.getPublished(), postId, postAttribution, session);
+    }
 }

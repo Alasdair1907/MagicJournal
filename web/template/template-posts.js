@@ -105,7 +105,7 @@ let photoTemplate = `
         </div>
         
         <div class="container-primary container-primary-element">
-            <img class="photo-image" src="getImage.jsp?filename={{photoVO.imageVO.preview}}" data-image="{{photoVO.imageVO.image}}" data-title="" data-role="inline-image">
+            <img class="photo-image" alt="{{photoVO.title}}" src="getImage.jsp?filename={{photoVO.imageVO.preview}}" data-image="{{photoVO.imageVO.image}}" data-title="" data-role="inline-image">
         </div>
     </div>
     <div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>
@@ -197,7 +197,7 @@ let fullScreenImageOverlay = `
 <div class="image-show-base-overlay">
     <div class="image-show-container">
         <div class="width-100-pc">
-            <img src="getImage.jsp?filename={{imageSrc}}" class="image-show-image {{#if title}}image-show-image-with-descr{{else}}image-show-image-no-descr{{/if}}">
+            <img src="getImage.jsp?filename={{imageSrc}}" alt="{{title}}" class="image-show-image {{#if title}}image-show-image-with-descr{{else}}image-show-image-no-descr{{/if}}">
             {{#if title}}<div class="image-show-title text-main">{{title}}</div>{{/if}}
             <i class="fas fa-times image-show-close" data-role="image-show-close"></i>
         </div>

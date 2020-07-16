@@ -47,7 +47,8 @@ tag_name varchar(128),
 attribution_class smallint,
 parent_object_id bigint,
 post_index_item_id bigint,
-parent_has_geo boolean
+parent_has_geo boolean,
+parent_is_published boolean
 );
 
 CREATE TABLE galleries (

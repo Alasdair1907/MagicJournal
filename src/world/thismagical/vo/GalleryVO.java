@@ -61,6 +61,7 @@ public class GalleryVO implements PostVO {
         this.isGallery = true;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -108,5 +109,13 @@ public class GalleryVO implements PostVO {
     @Override
     public String getTinyDescription() {
         return tinyDescription;
+    }
+
+    @Override
+    public ImageVO getMainImageVO(){
+        if (this.imageVOList != null && this.imageVOList.size() > 0){
+            return imageVOList.get(0);
+        }
+        return null;
     }
 }

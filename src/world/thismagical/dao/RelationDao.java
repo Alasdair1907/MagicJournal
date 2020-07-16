@@ -56,6 +56,19 @@ public class RelationDao {
         session.flush();
     }
 
+    public static void deleteRelationsInvolvingPost(PostAttribution postAttribution, Long postId, Session session){
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        Query deleteQuery = session.createQuery("delete from RelationEntity where (srcAttributionClass = :attrCl and srcObjectId = :objId) or (dstAttributionClass = :attrCl and dstObjectId = :objId)");
+        deleteQuery.setParameter("attrCl", postAttribution.getId());
+        deleteQuery.setParameter("objId", postId);
+        deleteQuery.executeUpdate();
+
+        session.flush();
+    }
+
     public static void deleteRelation(Long relationId, Session session){
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

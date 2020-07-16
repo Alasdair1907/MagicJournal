@@ -123,21 +123,21 @@ public class RelationService {
         List<PostVO> relatedVOList = new ArrayList<>();
         
         associated.forEach((String key, PostTO postTO) -> {
-            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass)){
+            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass) && articleVOMap.containsKey(postTO.postObjectId)){
                 associatedVOList.add(articleVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass)){
+            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass) && photoVOMap.containsKey(postTO.postObjectId)){
                 associatedVOList.add(photoVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass)){
+            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass) && galleryVOMap.containsKey(postTO.postObjectId)){
                 associatedVOList.add(galleryVOMap.get(postTO.postObjectId));
             }
         });
 
         related.forEach((String key, PostTO postTO) -> {
-            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass)){
+            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass) && articleVOMap.containsKey(postTO.postObjectId)){
                 relatedVOList.add(articleVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass)){
+            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass) && photoVOMap.containsKey(postTO.postObjectId)){
                 relatedVOList.add(photoVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass)){
+            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass) && galleryVOMap.containsKey(postTO.postObjectId)){
                 relatedVOList.add(galleryVOMap.get(postTO.postObjectId));
             }
         });

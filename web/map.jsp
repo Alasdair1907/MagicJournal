@@ -53,6 +53,8 @@
     <script src="cda/header.js"></script>
     <script src="cda/map.js"></script>
 
+    <% out.println(settingsTO.headerInjection); %>
+
 </head>
 <body class="cda">
 

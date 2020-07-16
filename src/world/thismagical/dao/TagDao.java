@@ -142,4 +142,25 @@ public class TagDao {
         session.flush();
     }
 
+    public static void setPublished(Boolean isPublished, Long parentObjectId, PostAttribution postAttribution, Session session){
+        Short attribution = postAttribution.getId();
+
+        if (parentObjectId == null || postAttribution == null){
+            Tools.log("[ERROR] TagDao: setPublished: null argument");
+            return;
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        Query updateQuery = session.createQuery("update TagEntity set parentIsPublished = :isPublished where parentObjectId= :objId and attributionClass= :attribution");
+        updateQuery.setParameter("isPublished", isPublished);
+        updateQuery.setParameter("objId", parentObjectId);
+        updateQuery.setParameter("attribution", attribution);
+
+        updateQuery.executeUpdate();
+        session.flush();
+    }
+
 }

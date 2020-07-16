@@ -61,7 +61,8 @@ let postFilter = async function($element, basicPostFilterTO, displayCallback, se
             login: $authorLoginFilterInput.val(),
             from: $creationDateFrom.val(),
             to: $creationDateTo.val(),
-            titleContains: $titleContainsInput.val()
+            titleContains: $titleContainsInput.val(),
+            userGuid: Cookies.get("guid")
         };
 
         await displayCallback(self, basicPostFilterTO);

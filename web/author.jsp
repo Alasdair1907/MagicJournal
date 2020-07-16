@@ -53,6 +53,8 @@
     <title></title>
     <script src="cda/header.js"></script>
 
+    <% out.println(settingsTO.headerInjection); %>
+
 </head>
 <body class="cda">
 

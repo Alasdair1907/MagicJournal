@@ -19,10 +19,7 @@ package world.thismagical.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.dao.FileDao;
-import world.thismagical.dao.PagingDao;
-import world.thismagical.dao.PhotoDao;
-import world.thismagical.dao.TagDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
@@ -37,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PhotoService {
+public class PhotoService extends PostService {
 
     public static PhotoVO getPhotoVObyPhotoId(Long photoId, Session session){
         PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(photoId, PhotoEntity.class, session);
@@ -54,6 +51,7 @@ public class PhotoService {
 
     @SuppressWarnings("unchecked")
     public static List<PhotoVO> listAllPhotoVOs(BasicPostFilter basicPostFilter, Session session){
+        basicPostFilter.verifyGuid(session);
         List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(basicPostFilter, PhotoEntity.class, session);
         List<Long> parentObjectIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, parentObjectIds, session);
@@ -171,6 +169,7 @@ public class PhotoService {
         PhotoDao.deleteEntity(id, PhotoEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.PHOTO.getId(), session);
         PagingDao.deleteIndex(PostAttribution.PHOTO, id, session);
+        RelationDao.deleteRelationsInvolvingPost(PostAttribution.PHOTO, id, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -186,6 +185,7 @@ public class PhotoService {
 
         PhotoDao.togglePostPublish(id, PhotoEntity.class, session);
         PagingDao.togglePostPublish(PostAttribution.PHOTO, id, session);
+        updateTagPublish(id, PostAttribution.PHOTO, session);
 
         return JsonAdminResponse.success(null);
     }

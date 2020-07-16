@@ -210,6 +210,7 @@ public class AuthorService {
 
         BasicPostFilter basicPostFilter = new BasicPostFilter();
         basicPostFilter.authorEntity = authorEntity;
+        basicPostFilter.showUnpublished = true;
 
         List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(basicPostFilter, session);
         List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(basicPostFilter, session);

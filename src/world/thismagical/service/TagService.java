@@ -38,7 +38,7 @@ public class TagService {
 
         List<TagEntity> tagEntityList = null;
         try {
-            tagEntityList = session.createQuery("from TagEntity order by tag asc", TagEntity.class).getResultList();
+            tagEntityList = session.createQuery("from TagEntity where parentIsPublished = true order by tag asc", TagEntity.class).getResultList();
         } catch (Exception e){
             Tools.handleException(e);
             return JsonAdminResponse.success(new ArrayList<>());

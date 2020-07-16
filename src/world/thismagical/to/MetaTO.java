@@ -20,10 +20,7 @@ package world.thismagical.to;
 import world.thismagical.entity.TagEntity;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
-import world.thismagical.vo.ArticleVO;
-import world.thismagical.vo.GalleryVO;
-import world.thismagical.vo.PhotoVO;
-import world.thismagical.vo.PostVO;
+import world.thismagical.vo.*;
 
 import java.util.stream.Collectors;
 
@@ -75,15 +72,9 @@ public class MetaTO {
         metaTO.ogTitle = postVO.getTitle();
         metaTO.ogDescription = postVO.getTinyDescription();
 
-        if (postVO.getPostAttribution().equals(PostAttribution.ARTICLE.getId())){
-            ArticleVO articleVO = (ArticleVO) postVO;
-            metaTO.ogImage = Tools.normalizeURL(websiteURL) + "/" + "getImage.jsp?filename=" + articleVO.titleImageVO.thumbnail;
-        } else if (postVO.getPostAttribution().equals(PostAttribution.PHOTO.getId())){
-            PhotoVO photoVO = (PhotoVO) postVO;
-            metaTO.ogImage = Tools.normalizeURL(websiteURL) + "/" + "getImage.jsp?filename=" + photoVO.imageVO.thumbnail;
-        } else if (postVO.getPostAttribution().equals(PostAttribution.GALLERY.getId())){
-            GalleryVO galleryVO = (GalleryVO) postVO;
-            metaTO.ogImage = Tools.normalizeURL(websiteURL) + "/" + "getImage.jsp?filename=" + galleryVO.galleryRepresentation.get(0).thumbnail;
+        ImageVO imageVO = postVO.getMainImageVO();
+        if (imageVO != null){
+            metaTO.ogImage = imageVO.thumbnail;
         }
 
         return metaTO;

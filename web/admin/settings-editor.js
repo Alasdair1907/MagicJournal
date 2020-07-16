@@ -124,6 +124,9 @@ $.widget('admin.settingsEditor', {
 
         <span class="text">Pinterest profile:</span><br />
         <input type="text" class="form-control input width-100-pc" value="" data-role="settings-pinterest"  disabled="disabled"/><br />
+        
+        <span class="text">Flickr profile:</span><br />
+        <input type="text" class="form-control input width-100-pc" value="" data-role="settings-flickr"  disabled="disabled"/><br />
 
         <button type="button" class="btn btn-light btn-std btn-vertical" data-role="settings-save"  disabled="disabled">Save</button>
     </div>
@@ -166,6 +169,7 @@ $.widget('admin.settingsEditor', {
         let $settingsFacebook = self.element.find('[data-role="settings-facebook"]');
         let $settingsInstagram = self.element.find('[data-role="settings-instagram"]');
         let $settingsPinterest = self.element.find('[data-role="settings-pinterest"]');
+        let $settingsFlickr = self.element.find('[data-role="settings-flickr"]');
         let $saveSettings = self.element.find('[data-role="settings-save"]');
         let $modalAnchor = self.element.find('[data-role="imageselect-anchor"]');
 
@@ -198,6 +202,7 @@ $.widget('admin.settingsEditor', {
         $settingsFacebook.val(settingsTO.facebookProfile);
         $settingsInstagram.val(settingsTO.instagramProfile);
         $settingsPinterest.val(settingsTO.pinterestProfile);
+        $settingsFlickr.val(settingsTO.flickrProfile);
 
         $check.NoFuckingBullshitCheckbox();
         $demo.NoFuckingBullshitCheckbox();
@@ -225,6 +230,7 @@ $.widget('admin.settingsEditor', {
             $settingsFacebook.prop("disabled", false);
             $settingsInstagram.prop("disabled", false);
             $settingsPinterest.prop("disabled", false);
+            $settingsFlickr.prop("disabled", false);
             $saveSettings.prop("disabled", false);
 
             if (settingsTO.showCookieWarning){
@@ -280,7 +286,8 @@ $.widget('admin.settingsEditor', {
                     twitterProfile: $settingsTwitter.val(),
                     facebookProfile: $settingsFacebook.val(),
                     instagramProfile: $settingsInstagram.val(),
-                    pinterestProfile: $settingsPinterest.val()
+                    pinterestProfile: $settingsPinterest.val(),
+                    flickrProfile: $settingsFlickr.val()
                 };
 
                 let settingsTOStr = JSON.stringify(settingsTO);

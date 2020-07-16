@@ -45,6 +45,7 @@ public class SettingsTO implements Cloneable {
     public String facebookProfile;
     public String instagramProfile;
     public String pinterestProfile;
+    public String flickrProfile;
 
     public SettingsTO clone(){
         try {

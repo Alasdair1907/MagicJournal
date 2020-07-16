@@ -28,6 +28,12 @@ $.widget("admin.galleriesWidget", {
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
 
+        if (basicPostFilterTO) {
+            basicPostFilterTO.userGuid = Cookies.get("guid");
+        } else {
+            basicPostFilterTO = {userGuid : Cookies.get("guid")};
+        }
+
         let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 
         let hGalleryEditSelect = Handlebars.compile(galleryEditSelect);

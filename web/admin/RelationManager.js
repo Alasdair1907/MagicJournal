@@ -159,7 +159,7 @@ $.widget("admin.RelationManager", {
             };
 
             $mainElem.html('');
-            postFilter($searchAnchor, null, articleDisplay, null);
+            postFilter($searchAnchor, {userGuid : Cookies.get("guid")}, articleDisplay, null);
 
         });
 
@@ -194,7 +194,7 @@ $.widget("admin.RelationManager", {
             };
 
             $mainElem.html('');
-            postFilter($searchAnchor, null, photoDisplay, null);
+            postFilter($searchAnchor, {userGuid : Cookies.get("guid")}, photoDisplay, null);
 
         });
 
@@ -228,7 +228,7 @@ $.widget("admin.RelationManager", {
             };
 
             $mainElem.html('');
-            postFilter($searchAnchor, null, galleryDisplay, null);
+            postFilter($searchAnchor, {userGuid : Cookies.get("guid")}, galleryDisplay, null);
 
         });
 
@@ -264,7 +264,8 @@ $.widget("admin.RelationManager", {
 
         let postTo = {
             postAttributionClass: ops.attributionClass,
-            postObjectId: ops.objectId
+            postObjectId: ops.objectId,
+            basicPostFilterTO: {userGuid: Cookies.get("guid")}
         };
 
         let relationTo = await ajax({action: "listRelationsForPost", data: JSON.stringify(postTo) }, "error listing relations for post");

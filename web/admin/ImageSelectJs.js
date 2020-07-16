@@ -79,6 +79,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
         let photoDisplay = async function(ignore, basicPostFilterTO){
             $imageSelectMain.html(modalSpinner);
 
+            basicPostFilterTO.userGuid = Cookies.get("guid");
             let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO)});
 
             let hPhotoVOListDisplay = Handlebars.compile(photoVOListDisplay);
@@ -112,6 +113,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
         let galleryDisplay = async function(ignore, basicPostFilterTO){
             $imageSelectMain.html(modalSpinner);
 
+            basicPostFilterTO.userGuid = Cookies.get("guid");
             let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO)});
 
             let hGalleryVOListDisplay = Handlebars.compile(galleryVOListDisplay);

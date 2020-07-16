@@ -166,6 +166,7 @@
             out.print(JsonApi.toString(res, objectMapper));
         }
 
+        // homepage widget - lists only tags for published posts
         if (action.equals("getTagDigestVOList")){
             JsonAdminResponse<List<TagDigestVO>> res = JsonApi.getTagDigestVOList(sessionFactory);
             out.print(JsonApi.toString(res, objectMapper));

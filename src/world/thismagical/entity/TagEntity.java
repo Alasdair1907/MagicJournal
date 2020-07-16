@@ -28,6 +28,9 @@ public class TagEntity implements Serializable {
     @Column(name="parent_has_geo")
     private Boolean parentHasGeo;
 
+    @Column(name="parent_is_published")
+    private Boolean parentIsPublished;
+
     public Long getId() {
         return id;
     }
@@ -74,5 +77,13 @@ public class TagEntity implements Serializable {
 
     public void setParentHasGeo(Boolean parentHasGeo) {
         this.parentHasGeo = parentHasGeo;
+    }
+
+    public Boolean getParentIsPublished() {
+        return parentIsPublished;
+    }
+
+    public void setParentIsPublished(Boolean parentIsPublished) {
+        this.parentIsPublished = parentIsPublished;
     }
 }

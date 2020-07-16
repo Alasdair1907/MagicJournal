@@ -15,4 +15,6 @@ public interface PostVO {
     List<TagEntity> getTagEntityList();
     Short getPostAttribution();
     String getTinyDescription();
+    ImageVO getMainImageVO();
+    Long getId();
 }

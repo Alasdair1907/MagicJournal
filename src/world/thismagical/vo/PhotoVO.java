@@ -59,6 +59,7 @@ public class PhotoVO implements PostVO {
         isPhoto = true;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -106,5 +107,10 @@ public class PhotoVO implements PostVO {
     @Override
     public String getTinyDescription() {
         return tinyDescription;
+    }
+
+    @Override
+    public ImageVO getMainImageVO() {
+        return this.imageVO;
     }
 }

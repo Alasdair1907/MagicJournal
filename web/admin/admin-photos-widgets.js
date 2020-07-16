@@ -196,6 +196,12 @@ $.widget("admin.photosWidget", {
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
 
+        if (basicPostFilterTO) {
+            basicPostFilterTO.userGuid = Cookies.get("guid");
+        } else {
+            basicPostFilterTO = {userGuid : Cookies.get("guid")};
+        }
+
         let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")}, "error listing photos");
 
         let hPhotoEditSelect = Handlebars.compile(photoEditSelect);

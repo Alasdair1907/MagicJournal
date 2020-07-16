@@ -58,6 +58,7 @@ public class ArticleVO implements PostVO {
         this.isArticle = true;
     }
 
+    @Override
     public Long getId() { return id; }
 
     @Override
@@ -103,5 +104,10 @@ public class ArticleVO implements PostVO {
     @Override
     public String getTinyDescription() {
         return tinyDescription;
+    }
+
+    @Override
+    public ImageVO getMainImageVO() {
+        return titleImageVO;
     }
 }

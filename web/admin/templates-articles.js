@@ -98,6 +98,7 @@ let articleNewOrEdit = `
 <div style="display: flex">
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save article</button><br />
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-or-update-close" {{#if demoUser}}disabled="disabled"{{/if}}>Save article & Close</button><br />
+<button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-article-save-and-preview" {{#if demoUser}}disabled="disabled"{{/if}}>Save article & preview</button><br />
 </div>
 
 <hr class="hr-white">

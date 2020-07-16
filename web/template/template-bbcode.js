@@ -15,7 +15,7 @@
 */
 
 let bbInlineImage = `
-<img src="getImage.jsp?filename={{preview}}" class="article-image" data-role="inline-image" data-image="{{imageSrc}}" data-title="{{title}}">
+<img src="getImage.jsp?filename={{preview}}" class="article-image" data-role="inline-image" data-image="{{imageSrc}}" data-title="{{title}}" alt="{{title}}">
 <span class="article-image-title">{{title}}</span>
 `;
 

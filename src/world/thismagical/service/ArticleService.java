@@ -17,10 +17,7 @@ package world.thismagical.service;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import world.thismagical.dao.FileDao;
-import world.thismagical.dao.ArticleDao;
-import world.thismagical.dao.PagingDao;
-import world.thismagical.dao.TagDao;
+import world.thismagical.dao.*;
 import world.thismagical.entity.AuthorEntity;
 import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.PostIndexItem;
@@ -39,7 +36,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ArticleService {
+import static world.thismagical.service.AuthorizationService.getAuthorEntityBySessionGuid;
+
+public class ArticleService extends PostService {
 
 
     public static ArticleVO getArticleVObyArticleId(Long articleId, Session session){
@@ -60,6 +59,8 @@ public class ArticleService {
 
     @SuppressWarnings("unchecked")
     public static List<ArticleVO> listAllArticleVOs(BasicPostFilter basicPostFilter, Session session){
+
+        basicPostFilter.verifyGuid(session);
         List<ArticleEntity> articleEntityList = (List<ArticleEntity>) (List) ArticleDao.listAllPosts(basicPostFilter, ArticleEntity.class, session);
 
         List<ArticleVO> articleVOList = new ArrayList<>();
@@ -93,7 +94,7 @@ public class ArticleService {
         String sessionGuid = articleTO.sessionGuid;
 
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(articleTO.id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(sessionGuid, session);
+        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(sessionGuid, session);
 
         AuthorEntity articleEntityAuthor = null;
         Boolean newArticle = false;
@@ -176,7 +177,7 @@ public class ArticleService {
         }
 
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(guid, session);
 
         if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity)){
             return JsonAdminResponse.fail("unauthorized action");
@@ -188,6 +189,7 @@ public class ArticleService {
         ArticleDao.deleteEntity(id, ArticleEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.ARTICLE.getId(), session);
         PagingDao.deleteIndex(PostAttribution.ARTICLE, id, session);
+        RelationDao.deleteRelationsInvolvingPost(PostAttribution.ARTICLE, id, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -195,7 +197,7 @@ public class ArticleService {
     public static JsonAdminResponse<Void> toggleArticlePublish(Long id, String guid, Session session){
 
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(guid, session);
 
         if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity)){
             return JsonAdminResponse.fail("unauthorized action");
@@ -203,6 +205,7 @@ public class ArticleService {
 
         ArticleDao.togglePostPublish(id, ArticleEntity.class, session);
         PagingDao.togglePostPublish(PostAttribution.ARTICLE, id, session);
+        updateTagPublish(id, PostAttribution.ARTICLE, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -214,7 +217,7 @@ public class ArticleService {
         }
 
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(articleTO.id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(guid, session);
 
         if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity)){
             return JsonAdminResponse.fail("unauthorized action");

@@ -20,6 +20,7 @@ package world.thismagical.filter;
 import org.hibernate.Session;
 import world.thismagical.dao.AuthorDao;
 import world.thismagical.entity.AuthorEntity;
+import world.thismagical.service.AuthorizationService;
 import world.thismagical.to.BasicPostFilterTO;
 
 import java.time.LocalDate;
@@ -29,6 +30,13 @@ import java.util.List;
 
 public class BasicPostFilter {
     public static final Integer DEFAULT_GALLERY_REPRESENTATION_IMAGES = 4;
+
+    // for listing unpublished articles
+    public String userGuid;
+
+    // for internal use only
+    // also, userGuid must be translated into this BEFORE the filter goes to dao
+    public boolean showUnpublished;
 
     public AuthorEntity authorEntity;
     public LocalDateTime fromDateTime;
@@ -80,6 +88,7 @@ public class BasicPostFilter {
         }
 
         basicPostFilter.ids = to.ids;
+        basicPostFilter.userGuid = to.userGuid;
 
         return basicPostFilter;
     }
@@ -88,5 +97,14 @@ public class BasicPostFilter {
         BasicPostFilter basicPostFilter = new BasicPostFilter();
         basicPostFilter.ids = ids;
         return basicPostFilter;
+    }
+
+    public void verifyGuid(Session session){
+        if (this.userGuid != null && !this.userGuid.isEmpty()){
+            AuthorEntity requestingAuthor = AuthorizationService.getAuthorEntityBySessionGuid(this.userGuid, session);
+            if (requestingAuthor != null){
+                this.showUnpublished = true;
+            }
+        }
     }
 }

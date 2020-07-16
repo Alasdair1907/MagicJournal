@@ -73,6 +73,8 @@ $.widget("admin.articlesWidget", {
 
         let $submitElem = element.find('[data-role="data-article-save-or-update"]');
         let $submitElemClose = element.find('[data-role="data-article-save-or-update-close"]');
+        let $submitElemPreview = element.find('[data-role="data-article-save-and-preview"]');
+
         let $articleImageElem = element.find('[data-role="article-title-image"]'); // img with the image
         let $tagEditorDiv = element.find('[data-role="article-tag-editor"]');
         let $relationEditorDiv = element.find('[data-role="article-relation-editor"]');
@@ -169,6 +171,36 @@ $.widget("admin.articlesWidget", {
             }
         });
 
+        $submitElemPreview.unbind();
+        $submitElemPreview.click(async function(){
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
+
+            let buttonText = spinButton($submitElemPreview);
+
+            let articleTO = {
+                id: $idElem.val(),
+                title: $titleElem.val(),
+                tinyDescription: $tinyDescrElem.val(),
+                description: $descrElem.val(),
+                articleText: $textElem.val(),
+                gpsCoordinates: $gpsElem.val(),
+                sessionGuid: Cookies.get("guid")
+            };
+
+            let res = await self._saveOrUpdateArticle(articleTO);
+            unSpinButton($submitElemPreview, buttonText);
+
+            if (res !== undefined || res !== null){
+                self.element.html('');
+                await self._display(self);
+            }
+
+            window.open("../posts.jsp?article="+$idElem.val(), "_blank");
+
+        });
+
         // image select
 
         let $imageInsertButton = self.element.find('[data-role="image-insert-button"]');
@@ -230,6 +262,12 @@ $.widget("admin.articlesWidget", {
     },
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
+
+        if (basicPostFilterTO) {
+            basicPostFilterTO.userGuid = Cookies.get("guid");
+        } else {
+            basicPostFilterTO = {userGuid : Cookies.get("guid")};
+        }
 
         let articleVOList = await ajax({action: "listAllArticleVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 

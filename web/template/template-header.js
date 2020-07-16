@@ -99,6 +99,15 @@ let headerMain = `
         </a>
         {{/if}}
         
+        {{#if settingsTO.flickrProfile}}
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.flickrProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">flickr</span>
+        </div>
+        </a>
+        {{/if}}
+        
         <a class="general-a desktop-menu-item-a" href="rss.jsp">
         <div class="desktop-menu-item">
             <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
@@ -190,6 +199,15 @@ let headerMain = `
         <div class="desktop-menu-item">
             <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">pinterest</span>
+        </div>
+        </a>
+        {{/if}}
+        
+        {{#if settingsTO.flickrProfile}}
+        <a class="general-a desktop-menu-item-a" href="{{settingsTO.flickrProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">flickr</span>
         </div>
         </a>
         {{/if}}

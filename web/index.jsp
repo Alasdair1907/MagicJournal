@@ -37,6 +37,8 @@
     <script src="cda/homepage.js"></script>
     <script src="cda/header.js"></script>
 
+    <% out.println(settingsTO.headerInjection); %>
+
   </head>
   <body class="cda">
 

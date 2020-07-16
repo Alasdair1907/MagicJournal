@@ -139,25 +139,6 @@ let getSettingsTO = async function(){
     let settingsTOJson = await fromBase64Cda($("meta[name='settingsTOCache']").attr("content"));
     let settingsTO = JSON.parse(settingsTOJson);
 
-    /*
-    let settingsTO = JSON.parse(localStorage.getItem("settingsTO") || "null");
-
-    if (settingsTO && settingsTO.__localStorageDateTime){
-        // dont keep this stuff for more then one hour
-        let diff = ( new Date().getTime() - settingsTO.__localStorageDateTime ) / 36e5;
-        if (diff > 1){
-            settingsTO = null;
-        }
-    }
-
-    if (!settingsTO){
-        settingsTO = await ajaxCda({action: "getSettingsNoAuth"});
-        settingsTO.__localStorageDateTime = new Date().getTime();
-        localStorage.setItem("settingsTO", JSON.stringify(settingsTO));
-    }*/
-
-
-
     return settingsTO;
 };
 

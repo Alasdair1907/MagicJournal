@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class GalleryService {
+public class GalleryService extends PostService {
 
     public static List<GalleryVO> entitiesToVos(List<GalleryEntity> galleryEntityList, Integer imagesInRepresentation, Session session){
 
@@ -98,6 +98,7 @@ public class GalleryService {
 
     @SuppressWarnings("unchecked")
     public static List<GalleryVO> listAllGalleryVOs(BasicPostFilter basicPostFilter, Integer imagesInRepresentation, Session session){
+        basicPostFilter.verifyGuid(session);
         List<GalleryEntity> galleryEntityList = (List<GalleryEntity>) (List) GalleryDao.listAllPosts(basicPostFilter, GalleryEntity.class, session);
 
         if (galleryEntityList == null || galleryEntityList.isEmpty()){
@@ -118,6 +119,7 @@ public class GalleryService {
 
         GalleryDao.togglePostPublish(id, GalleryEntity.class, session);
         PagingDao.togglePostPublish(PostAttribution.GALLERY, id, session);
+        updateTagPublish(id, PostAttribution.GALLERY, session);
 
         return JsonAdminResponse.success(null);
     }
@@ -208,6 +210,7 @@ public class GalleryService {
         GalleryDao.deleteEntity(id, GalleryEntity.class, session);
         TagDao.truncateTags(id, PostAttribution.GALLERY.getId(), session);
         PagingDao.deleteIndex(PostAttribution.GALLERY, id, session);
+        RelationDao.deleteRelationsInvolvingPost(PostAttribution.GALLERY, id, session);
 
         return JsonAdminResponse.success(null);
     }
