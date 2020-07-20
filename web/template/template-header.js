@@ -164,12 +164,20 @@ let headerMain = `
         </div>
         </a>
         
+        <a class="general-a menu-normal-screen-hide" href="javascript:void(42);" data-role="lowres-extra-menu">
         <div class="desktop-menu-item">
+            <i class="fas fa-bell desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">subscribe</span>
+        </div>
+        </a>
+        
+        <div class="desktop-menu-item menu-tiny-screen-hide">
             &nbsp;
         </div>
         
+        
 {{#if settingsTO.facebookProfile}}
-        <a class="general-a" href="{{settingsTO.facebookProfile}}">
+        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.facebookProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-facebook desktop-menu-icon"></i><span class="desktop-menu-text">facebook</span>
         </div>
@@ -177,7 +185,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.twitterProfile}}
-        <a class="general-a" href="{{settingsTO.twitterProfile}}">
+        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">twitter</span>
@@ -186,7 +194,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.instagramProfile}}
-        <a class="general-a" href="{{settingsTO.instagramProfile}}">
+        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.instagramProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-instagram desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">instagram</span>
@@ -195,7 +203,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.pinterestProfile}}
-        <a class="general-a" href="{{settingsTO.pinterestProfile}}">
+        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.pinterestProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">pinterest</span>
@@ -204,7 +212,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.flickrProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.flickrProfile}}">
+        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.flickrProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">flickr</span>
@@ -212,11 +220,40 @@ let headerMain = `
         </a>
         {{/if}}
         
+        <a class="general-a menu-tiny-screen-hide" href="rss.jsp">
         <div class="desktop-menu-item">
             <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">rss</span>
         </div>
-    </div>
+        </a>
+        
+        </div>
+        
+    
 </div>
     
     `;
+
+let extraMenuOverlay = `
+<div class="extra-menu-overlay">
+    <div class="extra-menu-container">
+        <div class="width-100-pc">
+
+            <a class="general-a" href="TODO-flickr">
+                <div class="desktop-menu-item">
+                    <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
+                    <span class="desktop-menu-text">flickr</span>
+                </div>
+            </a>
+            
+            <a class="general-a" href="rss.jsp">
+                <div class="desktop-menu-item">
+                    <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
+                    <span class="desktop-menu-text">rss</span>
+                </div>
+            </a>
+            
+        </div>
+    </div>
+</div>
+`;

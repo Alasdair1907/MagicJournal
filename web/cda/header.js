@@ -30,5 +30,19 @@ $.widget("magic.header", {
 
         let hHeaderMain = Handlebars.compile(headerMain);
         self.element.html(hHeaderMain({settingsTO: settingsTO}));
+
+        let $lowresExtraMenu = self.element.find('[data-role="lowres-extra-menu"]');
+
+        $lowresExtraMenu.unbind();
+        $lowresExtraMenu.click(function(){
+
+            let hExtraMenuOverlay = Handlebars.compile(extraMenuOverlay);
+            let overlayHtml = hExtraMenuOverlay({});
+
+            let $newElem = $(overlayHtml);
+            $newElem.appendTo("body");
+            $("body").css("overflow", "hidden");
+
+        });
     }
 });

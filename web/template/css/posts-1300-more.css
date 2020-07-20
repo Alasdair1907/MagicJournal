@@ -229,83 +229,80 @@
     margin: auto;
 }
 
-@media (min-width: 1500px) {
-    .post-container {
-        margin-left: 1%;
-        margin-right: 0.5%;
-        width: 74.5%;
-    }
-
-    .side-container {
-        margin-left: 0.5%;
-        margin-right: 1%;
-        width: 22.5%;
-        /*height: min-content; doesnt work in Edge? */
-    }
-
-    .side-panel-image-div-size {
-        height: 5vw;
-        width: 5vw;
-        border-radius: 1.5vmin;
-        margin-left: 0.3vw;
-        margin-right: 0.3vw;
-    }
-
-    .side-panel-container-size {
-        padding-top: 0.2vw;
-        padding-bottom: 0.2vw;
-        margin-top: 0.2vw;
-        margin-bottom: 0.2vw;
-        border-radius: 1.5vmin;
-    }
-
-    .attached-file-container-external-size {
-        width: 50%;
-        margin-top: 0.2vw;
-        margin-bottom: 0.2vw;
-        border-radius: 1.5vmin;
-    }
-
-    .attached-file-container-internal-size {
-        width: 100%;
-        padding-top: 0.2vw;
-        padding-bottom: 0.2vw;
-    }
-
-    .bb-youtube-embed-size {
-        width: 50vw;
-        height: 28vw;
-        margin-top: 2vmin;
-        margin-bottom: 2vmin;
-    }
-
-    .bb-quote-size {
-        width: 60%;
-        border-width: 1vw;
-        padding-left: 1vw;
-        margin-left: 1vw;
-        margin-top: 2.0vmin;
-        margin-bottom: 2.0vmin;
-    }
-
-    .bb-bullet-1 {
-        margin-left: 1vw;
-    }
-    .bb-bullet-2 {
-        margin-left: 3vw;
-    }
-    .bb-bullet-3 {
-        margin-left: 5vw;
-    }
-    .bb-bullet-4 {
-        margin-left: 7vw;
-    }
-    .bb-bullet-5 {
-        margin-left: 9vw;
-    }
-
-
+.post-container {
+    margin-left: 1%;
+    margin-right: 0.5%;
+    width: 74.5%;
 }
+
+.side-container {
+    margin-left: 0.5%;
+    margin-right: 1%;
+    width: 22.5%;
+    /*height: min-content; doesnt work in Edge? */
+}
+
+.side-panel-image-div-size {
+    height: 5vw;
+    width: 5vw;
+    border-radius: 1.5vmin;
+    margin-left: 0.3vw;
+    margin-right: 0.3vw;
+}
+
+.side-panel-container-size {
+    padding-top: 0.2vw;
+    padding-bottom: 0.2vw;
+    margin-top: 0.2vw;
+    margin-bottom: 0.2vw;
+    border-radius: 1.5vmin;
+}
+
+.attached-file-container-external-size {
+    width: 50%;
+    margin-top: 0.2vw;
+    margin-bottom: 0.2vw;
+    border-radius: 1.5vmin;
+}
+
+.attached-file-container-internal-size {
+    width: 100%;
+    padding-top: 0.2vw;
+    padding-bottom: 0.2vw;
+}
+
+.bb-youtube-embed-size {
+    width: 50vw;
+    height: 28vw;
+    margin-top: 2vmin;
+    margin-bottom: 2vmin;
+}
+
+.bb-quote-size {
+    width: 60%;
+    border-width: 1vw;
+    padding-left: 1vw;
+    margin-left: 1vw;
+    margin-top: 2.0vmin;
+    margin-bottom: 2.0vmin;
+}
+
+.bb-bullet-1 {
+    margin-left: 1vw;
+}
+.bb-bullet-2 {
+    margin-left: 3vw;
+}
+.bb-bullet-3 {
+    margin-left: 5vw;
+}
+.bb-bullet-4 {
+    margin-left: 7vw;
+}
+.bb-bullet-5 {
+    margin-left: 9vw;
+}
+
 
 
 /* https://stackoverflow.com/questions/41504162/is-it-possible-to-implement-a-flickr-like-justified-gallery-in-pure-css  */

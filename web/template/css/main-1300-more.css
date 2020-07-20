@@ -1,6 +1,6 @@
 body.cda {
     background-color: black;
-    background-image: url("background.jpg");
+    background-image: url("../background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -411,126 +411,89 @@ body.cda {
 }
 
 
-@media (max-width: 1499px) {
-    /* div with either full res menu-logo-menu header, or two divs with logo + menu */
-    .header-div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 1vmin 1vmin;
+/* div with either full res menu-logo-menu header, or two divs with logo + menu */
+
+@media (min-aspect-ratio: 1585001/1000000) {
+    .lower {
+        display: none !important;
     }
 
-    .higher {
-        display: none;
-    }
-
-    /* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
-    .main-listing-column {
-        width: 48%;
-        margin-left: 1%;
-        margin-right: 1%;
-    }
-
-    /* article item on homepage - header image size */
-    .item-image-div-size {
-        width: 13.08vw;
-        height: 13.08vw;
-        margin-right: 0.5vw;
-    }
-
-    /* size for photos and gallery images on homepage items */
-    .photo-image-div-size {
-        width: 10.8vw;
-        height: 10.8vw;
-        margin: 0.1vw;
-    }
-
-    /* dedicated/search listings items - size */
-    .compact-item-size {
-        width: 31vw;
-        margin: 0.5vw;
-    }
-
-    /* one image (articles, photos) in d/s listings items - size */
-    .compact-item-image-div-size {
-        width: 30vw;
-        height: 30vw;
-        margin: auto;
-    }
-
-    .compact-gallery-image-div-size {
-        width: 14.75vw;
-        height: 14.75vw;
-        margin-bottom: 0.5vw;
-    }
-
-}
-
-@media (min-width: 1500px) {
-    /* div with either full res menu-logo-menu header, or two divs with logo + menu */
     .header-div {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1vmin 2vmin 1vmin 2vmin;
     }
+}
 
-    .lower {
-        display: none;
+@media (max-aspect-ratio: 1585/1000) {
+    .higher {
+        display: none !important;
     }
 
-    /* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
-    .main-listing-column {
-        width: 48%;
-        margin-left: 1%;
-        margin-right: 1%;
+    .header-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1vmin 1vmin;
     }
+}
 
-    /* article item on homepage - header image size */
-    .item-image-div-size {
-        width: 13.08vw;
-        height: 13.08vw;
-        margin-right: 0.5vw;
-    }
+/* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
+.main-listing-column {
+    width: 48%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
 
-    /* size for photos and gallery images on homepage items */
-    .photo-image-div-size {
-        width: 10.8vw;
-        height: 10.8vw;
-        margin: 0.1vw;
-    }
+/* article item on homepage - header image size */
+.item-image-div-size {
+    width: 13.08vw;
+    height: 13.08vw;
+    margin-right: 0.5vw;
+}
 
-    /* compact listings items - size */
-    .compact-item-size {
-        width: 23vw;
-        margin: 0.5vw;
-    }
+/* size for photos and gallery images on homepage items */
+.photo-image-div-size {
+    width: 10.8vw;
+    height: 10.8vw;
+    margin: 0.1vw;
+}
 
-    /* one image (articles, photos) in d/s listings items - size */
-    .compact-item-image-div-size {
-        width: 22vw;
-        height: 22vw;
-        margin: auto;
-    }
+/* compact listings items - size */
+.compact-item-size {
+    width: 23vw;
+    margin: 0.5vw;
+}
 
-    .compact-gallery-image-div-size {
-        width: 10.9vw;
-        height: 10.9vw;
-        margin-bottom: 0.2vw;
-    }
+/* one image (articles, photos) in d/s listings items - size */
+.compact-item-image-div-size {
+    width: 22vw;
+    height: 22vw;
+    margin: auto;
+}
 
-    .author-page-picture {
-        max-height: 50vh;
-        max-width: 30vw;
-        display: block;
-        margin: 1vw;
-        border-radius: 1.5vmin;
-        float: left;
-    }
+.compact-gallery-image-div-size {
+    width: 10.9vw;
+    height: 10.9vw;
+    margin-bottom: 0.2vw;
+}
 
-    .author-page-container {
-        width: 70%;
-        margin: auto;
-        margin-bottom: 1vh;
-    }
+.author-page-picture {
+    max-height: 50vh;
+    max-width: 30vw;
+    display: block;
+    margin: 1vw;
+    border-radius: 1.5vmin;
+    float: left;
+}
+
+.author-page-container {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 1vh;
+}
+
+.menu-normal-screen-hide {
+    display: none;
 }

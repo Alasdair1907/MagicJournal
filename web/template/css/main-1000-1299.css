@@ -1,0 +1,479 @@
+body.cda {
+    background-color: black;
+    background-image: url("../background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* subdiv for each of the following: menu - logo/title - menu; menu contents get hidden in lower res */
+.header-subdiv {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+}
+
+.header-logo {
+    max-height: 17vmin;
+}
+
+/* font-awesome icon */
+.desktop-menu-icon {
+    color: white;
+    font-size: 4.6vmin; /*4vmin;*/
+    display: block;
+}
+
+/* text under the menu icon */
+.desktop-menu-text {
+    color: white;
+    font-size: 1.955vmin; /* 1.7vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+/* div that contains icons */
+.desktop-menu-div {
+    display: flex;
+    flex-basis: 10px;
+    /*height: min-content;*/
+    /*width: min-content;*/
+}
+
+/* contains font-awesome <i> and <span> with text */
+.desktop-menu-item {
+    text-align: center;
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+}
+
+.desktop-menu-item-a {
+    flex-basis: 10px; /* because Edge still doesn't know what min-content is! */
+}
+
+.container-primary {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5vw;
+    border-radius: 1.5vmin;
+}
+
+.container-primary-element {
+    margin-top: 1vmin;
+    margin-bottom: 1vmin;
+}
+
+.width-100-pc {
+    width: 100%;
+}
+
+
+.item-container-heading {
+    color: white;
+    font-size: 3.1vmin; /*2.7vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    /*margin-bottom: 1vmin;*/
+}
+
+/* span with heading for post item in listings */
+.item-heading {
+    color: white;
+    font-size: 3.1vmin; /*2.7vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+    text-align: center;
+    display: block;
+}
+
+/* div container for tags in items in listings */
+.item-tags-subheading-container {
+    text-align: center;
+    display: block;
+}
+
+/* span inside <a> - tags inside items */
+.article-tag {
+    color: #4a6eff;
+    font-size: 2.2vmin; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.photo-tag {
+    color: #43ff6a;
+    font-size: 2.2vmin; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.gallery-tag {
+    color: #ff3a65;
+    font-size: 2.2vmin; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.text-main {
+    color: white;
+    font-size: 2.2vmin; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+/* large square image in items in listings (photos, articles) */
+.item-image-div {
+    border-radius: 1.5vmin;
+    float: left;
+    background-position: center;
+    background-size: cover;
+}
+
+/* large square image in items in compact listings (post listings, search results) */
+.compact-item-image-div {
+    border-radius: 1.5vmin;
+    background-position: center;
+    background-size: cover;
+}
+
+/* images for compact gallery representation */
+.compact-gallery-image-div {
+    background-position: center;
+    background-size: cover;
+}
+
+/* container div for images for compact gallery representation */
+.gallery-representation-compact-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* text in listing items - description */
+.item-text {
+    text-align: justify;
+    display: block;
+}
+
+.afterfloat {
+    clear: both;
+    display: block;
+    line-height: 0;
+}
+
+/* tag cloud on homepage */
+.tag-cloud-a {
+    text-decoration: none;
+    margin-left: 1vw;
+    white-space: nowrap;
+}
+
+.tag-cloud-a:hover {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.tag-cloud-a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.tag-cloud-advanced-link {
+    text-align: right;
+    display: block;
+    padding-right: 1%;
+}
+
+/* removes decorations from links */
+.general-a {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.general-a:hover {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+.general-a:visited {
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+/* white underlined link */
+.main-a {
+    color: white;
+    text-decoration: underline;
+    outline: none;
+}
+
+.main-a:hover {
+    color:white;
+    text-decoration: underline;
+    outline: none;
+}
+
+.main-a:visited {
+    color: white;
+    text-decoration: underline;
+    outline: none;
+}
+
+/* author, date, read more in items */
+.post-info-line {
+    display: flex;
+    justify-content: space-around;
+}
+
+/* homepage - photos and gallery representations */
+.photo-image-div {
+    margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
+    background-position: center;
+    background-size: cover;
+    display: inline-block;
+}
+
+/* div with photo-image-div - homepage listings for photos and galleries */
+.photo-listing-div {
+    width: 44vw;
+    margin: auto;
+    font-size: 0;
+}
+
+/* read more for photos and galleries on homepage */
+.td-extra-link {
+    text-align: right;
+    padding-right:5%;
+}
+
+/* main container for items in dedicated listings (articles, photos, galleries) and search results */
+.item-listing-dedicated {
+    display: flex;
+    flex-wrap: wrap;
+    width: 96vw;
+    margin: auto;
+}
+
+/* div container for items in dedicated/search listings */
+.compact-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* description text - to keep the date/author/read-more element anchored to the bottom of item */
+.compact-item-text {
+    flex-grow: 1;
+}
+
+/* location (articles,photos,galleries,tags,posts by author) heading in the compact item listing */
+.compact-location-heading {
+    color: white;
+    font-size: 4vmin; /*3.5vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.compact-listing-count {
+    color: white;
+    font-size: 2.7vmin; /*2.3vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+/* pager */
+.pager-link-normal {
+    color: #4a6eff;
+    font-size: 2.7vmin; /*2.3vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.pager-link-current {
+    color: #b2e5ff;
+    font-weight: bold;
+    font-size: 2.7vmin; /*2.3vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.paging-info-line {
+    text-align: right;
+    padding-right: 5%;
+}
+
+.pager-container {
+    width: 80vw;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 5vmin;
+    margin-top: 2.5vmin;
+}
+
+
+/* advanced search panel */
+
+/* anchor which holds ASP in post listings */
+.posts-advanced-search-anchor {
+    width: 95vw;
+    margin: auto;
+}
+
+.selectable-heading {
+    color: white;
+    font-size: 2.3vmin; /*2.0vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+    display: block;
+}
+
+.selectables-container {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgba(240, 248, 255, 0.09);
+}
+
+.selectable {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+
+    color: white;
+    font-size: 2.1vmin; /*1.8vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+
+    margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+    padding: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+
+    cursor: pointer;
+}
+
+.selectable-default {
+    background: none;
+}
+
+/* selectable post types have inline styles for selected background-color !! */
+.selectable-selected {
+    background-color: #676668;
+}
+
+.selectable-selected-article {
+    background-color: #00299d;
+}
+
+.selectable-selected-photo {
+    background-color: #029d00;
+}
+
+.selectable-selected-gallery {
+    background-color: #9d0000;
+}
+
+.center-block {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+.button-cda {
+    border-style: solid;
+    border-color: white;
+    border-radius: 1.5vmin;
+    border-width: thin;
+    background-color: rgba(240, 248, 255, 0.09);
+    cursor: pointer;
+    color: white;
+    padding: 0.5vmin 1.5vmin;
+    margin-top: 1vmin;
+    outline: none;
+}
+
+.button-cda:focus {
+    outline: none;
+}
+
+.button-cda:hover {
+    background-color: rgba(240, 248, 255, 0.31);
+}
+
+.button-large {
+    font-size: 2.76vmin; /*2.4vmin;*/
+}
+
+.cda-map-base {
+    margin: 0 1% 0 1%;
+    padding: 1vmin;
+    width: 98%;
+}
+
+.cda-map {
+    width: 100%;
+    height: 60vh;
+}
+
+/* div with either full res menu-logo-menu header, or two divs with logo + menu */
+.header-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vmin 1vmin;
+}
+
+.higher {
+    display: none;
+}
+
+/* homepage column (in 1920 and 1366 two columns - articles/tags+photos+galleries) */
+.main-listing-column {
+    width: 48%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+/* article item on homepage - header image size */
+.item-image-div-size {
+    width: 13.08vw;
+    height: 13.08vw;
+    margin-right: 0.5vw;
+}
+
+/* size for photos and gallery images on homepage items */
+.photo-image-div-size {
+    width: 10.8vw;
+    height: 10.8vw;
+    margin: 0.1vw;
+}
+
+/* dedicated/search listings items - size */
+.compact-item-size {
+    width: 31vw;
+    margin: 0.5vw;
+}
+
+/* one image (articles, photos) in d/s listings items - size */
+.compact-item-image-div-size {
+    width: 30vw;
+    height: 30vw;
+    margin: auto;
+}
+
+.compact-gallery-image-div-size {
+    width: 14.75vw;
+    height: 14.75vw;
+    margin-bottom: 0.5vw;
+}
+
+
+.author-page-picture {
+    max-height: 50vh;
+    max-width: 30vw;
+    display: block;
+    margin: 1vw;
+    border-radius: 1.5vmin;
+    float: left;
+}
+
+.author-page-container {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 1vh;
+}
