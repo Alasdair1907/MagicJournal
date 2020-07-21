@@ -1,3 +1,4 @@
+<%@page trimDirectiveWhitespaces="true"%>
 <%--
   Created by IntelliJ IDEA.
   User: Alasdair
@@ -41,13 +42,17 @@
     <%
         MetaTO metaTO = JsonApi.prepareMeta(request, application);
 
+        out.println(String.format("<meta property='og:url' content='%s' />", metaTO.getOgUrl()));
+        out.println("<meta property='og:type' content='article' />");
+        out.println(String.format("<meta property='og:title' content='%s' />", metaTO.getOgTitle()));
+        out.println(String.format("<meta property='og:description' content='%s' />", metaTO.getOgDescription()));
+        out.println(String.format("<meta property='og:image' content='%s' />", metaTO.getOgImage()));
+
+        /*
         out.println(String.format("<meta name='description' content='%s'>", metaTO.getDescription()));
         out.println(String.format("<meta name='keywords' content='%s'>", metaTO.getKeywords()));
-        out.println(String.format("<meta name='author' content='%s'>", metaTO.getAuthor()));
+        out.println(String.format("<meta name='author' content='%s'>", metaTO.getAuthor()));*/
 
-        out.println(String.format("<meta property='og:title' content='%s'>", metaTO.getOgTitle()));
-        out.println(String.format("<meta property='og:image' content='%s'>", metaTO.getOgImage()));
-        out.println(String.format("<meta property='og:description' content='%s'>", metaTO.getOgDescription()));
     %>
 
     <meta name="settingsTOCache" content="<% out.print(JsonApi.toBase64(objectMapper.writeValueAsString(settingsTO))); %>">

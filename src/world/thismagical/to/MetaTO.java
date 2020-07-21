@@ -35,6 +35,9 @@ public class MetaTO {
     public String ogImage;
     public String ogTitle;
     public String ogDescription;
+    public String ogUrl;
+
+    public String websiteUrl; // http://www.example.org
 
     public String getDescription() {
         return Tools.htmlSingleQuote(description);
@@ -60,6 +63,10 @@ public class MetaTO {
         return Tools.htmlSingleQuote(ogDescription);
     }
 
+    public String getOgUrl() {
+        return ogUrl;
+    }
+
     public static MetaTO fromPostVO(PostVO postVO, String websiteURL){
         MetaTO metaTO = new MetaTO();
 
@@ -69,13 +76,18 @@ public class MetaTO {
             metaTO.keywords = postVO.getTagEntityList().stream().map(TagEntity::getTag).collect(Collectors.joining(" "));
         }
 
-        metaTO.ogTitle = postVO.getTitle();
+        metaTO.ogTitle = postVO.getPostAttributionStr() + ": " + postVO.getTitle();
         metaTO.ogDescription = postVO.getTinyDescription();
+
+        metaTO.websiteUrl = Tools.normalizeURL(websiteURL);
 
         ImageVO imageVO = postVO.getMainImageVO();
         if (imageVO != null){
-            metaTO.ogImage = imageVO.thumbnail;
+            metaTO.ogImage = metaTO.websiteUrl + "/getImage.jsp?filename=" + imageVO.thumbnail;
         }
+
+        metaTO.ogUrl = metaTO.websiteUrl + "/posts.jsp?" + postVO.getPostAttributionStr().toLowerCase() + "=" + postVO.getId();
+
 
         return metaTO;
     }

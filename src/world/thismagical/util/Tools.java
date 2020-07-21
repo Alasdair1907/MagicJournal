@@ -129,6 +129,9 @@ public class Tools {
     }
 
     public static String formatDate(LocalDateTime localDateTime){
+
+        List<String> monthsEn = Arrays.asList("January", "February", "March", "April", "May","June","July","August","September","October","November","December");
+
         if (localDateTime == null){
             return "";
         }
@@ -136,7 +139,13 @@ public class Tools {
         ZonedDateTime ldtZoned = localDateTime.atZone(ZoneId.systemDefault());
         ZonedDateTime gmt = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
 
-        return gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm")) + " GMT";
+        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm")) + " GMT";
+
+        // 21 luglio 2020 20:44 GMT - that might happen if server is somewhere in the world...
+        String[] gmtTokens = gmtFormat.split(" ");
+        gmtTokens[1] = monthsEn.get(gmt.getMonthValue()-1);
+
+        return String.join(" ", gmtTokens);
     }
 
     public static String nullToEmpty(String input){
