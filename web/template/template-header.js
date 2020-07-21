@@ -65,7 +65,7 @@ let headerMain = `
     <div class="container-primary desktop-menu-div higher">
 
         {{#if settingsTO.facebookProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.facebookProfile}}">
+        <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.facebookProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-facebook desktop-menu-icon"></i><span class="desktop-menu-text">facebook</span>
         </div>
@@ -73,7 +73,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.twitterProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.twitterProfile}}">
+        <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">twitter</span>
@@ -82,7 +82,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.instagramProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.instagramProfile}}">
+        <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.instagramProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-instagram desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">instagram</span>
@@ -91,7 +91,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.pinterestProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.pinterestProfile}}">
+        <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.pinterestProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">pinterest</span>
@@ -100,7 +100,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.flickrProfile}}
-        <a class="general-a desktop-menu-item-a" href="{{settingsTO.flickrProfile}}">
+        <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.flickrProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">flickr</span>
@@ -176,8 +176,8 @@ let headerMain = `
         </div>
         
         
-{{#if settingsTO.facebookProfile}}
-        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.facebookProfile}}">
+        {{#if settingsTO.facebookProfile}}
+        <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.facebookProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-facebook desktop-menu-icon"></i><span class="desktop-menu-text">facebook</span>
         </div>
@@ -185,7 +185,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.twitterProfile}}
-        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.twitterProfile}}">
+        <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">twitter</span>
@@ -194,7 +194,7 @@ let headerMain = `
         {{/if}}
 
         {{#if settingsTO.instagramProfile}}
-        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.instagramProfile}}">
+        <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.instagramProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-instagram desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">instagram</span>
@@ -203,7 +203,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.pinterestProfile}}
-        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.pinterestProfile}}">
+        <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.pinterestProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">pinterest</span>
@@ -212,7 +212,7 @@ let headerMain = `
         {{/if}}
         
         {{#if settingsTO.flickrProfile}}
-        <a class="general-a menu-tiny-screen-hide" href="{{settingsTO.flickrProfile}}">
+        <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.flickrProfile}}">
         <div class="desktop-menu-item">
             <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">flickr</span>
@@ -227,31 +227,66 @@ let headerMain = `
         </div>
         </a>
         
-        </div>
-        
-    
+    </div>
 </div>
     
     `;
 
 let extraMenuOverlay = `
 <div class="extra-menu-overlay">
-    <div class="extra-menu-container">
-        <div class="width-100-pc">
+    <div class="extra-menu-container" data-role="extra-menu-container">
+        <div class="width-100-pc extra-menu-icons-container">
 
-            <a class="general-a" href="TODO-flickr">
-                <div class="desktop-menu-item">
-                    <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
-                    <span class="desktop-menu-text">flickr</span>
-                </div>
-            </a>
-            
-            <a class="general-a" href="rss.jsp">
-                <div class="desktop-menu-item">
-                    <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
-                    <span class="desktop-menu-text">rss</span>
-                </div>
-            </a>
+        {{#if settingsTO.facebookProfile}}
+        <a class="general-a " target="_blank" href="{{settingsTO.facebookProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-facebook desktop-menu-icon"></i><span class="desktop-menu-text">facebook</span>
+        </div>
+        </a>
+        {{/if}}
+
+        {{#if settingsTO.twitterProfile}}
+        <a class="general-a" target="_blank" href="{{settingsTO.twitterProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">twitter</span>
+        </div>
+        </a>
+        {{/if}}
+
+        {{#if settingsTO.instagramProfile}}
+        <a class="general-a " target="_blank" href="{{settingsTO.instagramProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-instagram desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">instagram</span>
+        </div>
+        </a>
+        {{/if}}
+        
+        {{#if settingsTO.pinterestProfile}}
+        <a class="general-a " target="_blank" href="{{settingsTO.pinterestProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-pinterest desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">pinterest</span>
+        </div>
+        </a>
+        {{/if}}
+        
+        {{#if settingsTO.flickrProfile}}
+        <a class="general-a " target="_blank" href="{{settingsTO.flickrProfile}}">
+        <div class="desktop-menu-item">
+            <i class="fab fa-flickr desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">flickr</span>
+        </div>
+        </a>
+        {{/if}}
+        
+        <a class="general-a " target="_blank" href="rss.jsp">
+        <div class="desktop-menu-item">
+            <i class="fas fa-rss desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">rss</span>
+        </div>
+        </a>
             
         </div>
     </div>

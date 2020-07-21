@@ -21,14 +21,14 @@ body.cda {
 /* font-awesome icon */
 .desktop-menu-icon {
     color: white;
-    font-size: 4.6vmin; /*4vmin;*/
+    font-size: 7vmin; /*4vmin;*/
     display: block;
 }
 
 /* text under the menu icon */
 .desktop-menu-text {
     color: white;
-    font-size: 1.955vmin; /* 1.7vmin;*/
+    font-size: 3vmin; /* 1.7vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -69,7 +69,7 @@ body.cda {
 
 .item-container-heading {
     color: white;
-    font-size: 3.1vmin; /*2.7vmin;*/
+    font-size: 3.41vmin; /*3.1vmin; /*2.7vmin;*/
     font-family: Candara, Verdana, sans-serif;
     display: inline-block;
     width: 100%;
@@ -80,7 +80,7 @@ body.cda {
 /* span with heading for post item in listings */
 .item-heading {
     color: white;
-    font-size: 3.1vmin; /*2.7vmin;*/
+    font-size: 3.41vmin; /*3.1vmin; /*2.7vmin;*/
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
     display: block;
@@ -95,25 +95,25 @@ body.cda {
 /* span inside <a> - tags inside items */
 .article-tag {
     color: #4a6eff;
-    font-size: 2.2vmin; /*1.9vmin;*/
+    font-size: 2.42vmin; /*2.2vmin; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .photo-tag {
     color: #43ff6a;
-    font-size: 2.2vmin; /*1.9vmin;*/
+    font-size: 2.42vmin; /*2.2vmin; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .gallery-tag {
     color: #ff3a65;
-    font-size: 2.2vmin; /*1.9vmin;*/
+    font-size: 2.42vmin; /*2.2vmin; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .text-main {
     color: white;
-    font-size: 2.2vmin; /*1.9vmin;*/
+    font-size: 2.42vmin; /*2.2vmin; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -268,27 +268,27 @@ body.cda {
 /* location (articles,photos,galleries,tags,posts by author) heading in the compact item listing */
 .compact-location-heading {
     color: white;
-    font-size: 4vmin; /*3.5vmin;*/
+    font-size: 4.4vmin; /*4vmin; /*3.5vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .compact-listing-count {
     color: white;
-    font-size: 2.7vmin; /*2.3vmin;*/
+    font-size: 2.97vmin; /*2.7vmin; /*2.3vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 /* pager */
 .pager-link-normal {
     color: #4a6eff;
-    font-size: 2.7vmin; /*2.3vmin;*/
+    font-size: 2.97vmin; /*2.7vmin; /*2.3vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .pager-link-current {
     color: #b2e5ff;
     font-weight: bold;
-    font-size: 2.7vmin; /*2.3vmin;*/
+    font-size: 2.97vmin; /*2.7vmin; /*2.3vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -316,7 +316,7 @@ body.cda {
 
 .selectable-heading {
     color: white;
-    font-size: 2.3vmin; /*2.0vmin;*/
+    font-size: 2.53vmin; /*2.3vmin; /*2.0vmin;*/
     font-family: Candara, Verdana, sans-serif;
     display: block;
 }
@@ -338,7 +338,7 @@ body.cda {
     border-width: thin;
 
     color: white;
-    font-size: 2.1vmin; /*1.8vmin;*/
+    font-size: 2.31vmin; /*2.1vmin; /*1.8vmin;*/
     font-family: Candara, Verdana, sans-serif;
 
     margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
@@ -396,7 +396,7 @@ body.cda {
 }
 
 .button-large {
-    font-size: 2.76vmin; /*2.4vmin;*/
+    font-size: 3vmin; /*2.76vmin; /*2.4vmin;*/
 }
 
 .cda-map-base {
@@ -473,7 +473,7 @@ body.cda {
 }
 
 .author-page-container {
-    width: 70%;
+    width: 90%;
     margin: auto;
     margin-bottom: 1vh;
 }
@@ -483,7 +483,7 @@ body.cda {
 }
 
 .extra-menu-overlay {
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(0, 0, 0, 0.92);
     overflow: hidden;
     position: fixed;
     width: 100vw;
@@ -499,4 +499,10 @@ body.cda {
     align-items: center;
     width: 100vw;
     height: 100vh;
+}
+
+.extra-menu-icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }

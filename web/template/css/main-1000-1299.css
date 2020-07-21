@@ -477,3 +477,7 @@ body.cda {
     margin: auto;
     margin-bottom: 1vh;
 }
+
+.menu-normal-screen-hide {
+    display: none;
+}

@@ -55,6 +55,8 @@
 
     <% out.println(settingsTO.headerInjection); %>
 
+    <link rel="alternate" type="application/rss+xml" title="<% out.print(settingsTO.websiteName); %>" href="rss.jsp" />
+
 </head>
 <body class="cda">
 

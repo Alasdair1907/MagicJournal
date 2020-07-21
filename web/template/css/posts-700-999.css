@@ -21,7 +21,7 @@
 .article-image-title {
     display: block;
     color: white;
-    font-size: 1.8vmin;
+    font-size: 2.3vmin; /*2.07vmin; /*1.8vmin;*/
     font-style: italic;
     font-family: Candara, Verdana, sans-serif;
 }
@@ -69,7 +69,7 @@
 
 .attached-file-icon {
     color: white;
-    font-size: 4vmin;
+    font-size: 5.1vmin; /*4.6vmin; /*4vmin;*/
     margin: 1.5vmin;
 }
 
@@ -80,7 +80,7 @@
 
 .attached-file-description {
     color: white;
-    font-size: 1.8vmin;
+    font-size: 2.3vmin; /*2.07vmin; /*1.8vmin;*/
     font-style: italic;
     font-family: Candara, Verdana, sans-serif;
 }
@@ -94,7 +94,7 @@
 }
 
 .bb-heading {
-    font-size: 2.3vmin;
+    font-size: 2.9vmin; /*2.65vmin; /*2.3vmin;*/
     color: white;
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
@@ -112,7 +112,7 @@
     border-left-color: lightgray;
     border-left-style: solid;
     font-style: italic;
-    font-size: 1.9vmin;
+    font-size: 2.4vmin; /*2.2vmin; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -125,7 +125,7 @@
 
 .bb-bullet {
     margin-right: 0.5vmin;
-    font-size: 2.0vmin;
+    font-size: 2.5vmin; /*2.3vmin; /*2.0vmin;*/
     color: white;
 }
 
@@ -210,7 +210,7 @@
 .post-render-info-line {
     display: block;
     text-align: center;
-    font-size: 1.9vmin;
+    font-size: 2.4vmin; /*2.185vmin; /*1.9vmin;*/
     font-style: italic;
     color: white;
     font-family: Candara, Verdana, sans-serif;
@@ -288,19 +288,19 @@
 }
 
 .bb-bullet-1 {
-    margin-left: 1vw;
+    margin-left: 1.15vw; /*1vw;*/
 }
 .bb-bullet-2 {
-    margin-left: 3vw;
+    margin-left: 3.45vw; /*3vw;*/
 }
 .bb-bullet-3 {
-    margin-left: 5vw;
+    margin-left: 5.75vw; /*5vw;*/
 }
 .bb-bullet-4 {
-    margin-left: 7vw;
+    margin-left: 8.05vw; /*7vw;*/
 }
 .bb-bullet-5 {
-    margin-left: 9vw;
+    margin-left: 10.35vw; /*9vw;*/
 }
 
 

@@ -37,12 +37,16 @@ $.widget("magic.header", {
         $lowresExtraMenu.click(function(){
 
             let hExtraMenuOverlay = Handlebars.compile(extraMenuOverlay);
-            let overlayHtml = hExtraMenuOverlay({});
+            let overlayHtml = hExtraMenuOverlay({settingsTO: settingsTO});
 
             let $newElem = $(overlayHtml);
             $newElem.appendTo("body");
             $("body").css("overflow", "hidden");
 
+            let $extraMenuContainer = $newElem.find('[data-role="extra-menu-container"]');
+            $extraMenuContainer.click(function(){
+                $newElem.remove();
+            });
         });
     }
 });
