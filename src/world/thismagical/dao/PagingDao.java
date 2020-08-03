@@ -18,6 +18,7 @@ package world.thismagical.dao;
 */
 
 import org.hibernate.Session;
+import world.thismagical.entity.PostEntity;
 import world.thismagical.entity.PostIndexItem;
 import world.thismagical.entity.TagEntity;
 import world.thismagical.filter.PagingRequestFilter;
@@ -171,7 +172,7 @@ public class PagingDao {
         return postIndexItem;
     }
 
-    public static void togglePostPublish(PostAttribution postAttribution, Long objectId, Session session){
+    public static void updatePostPublish(PostAttribution postAttribution, Long objectId, Session session){
 
         PostIndexItem postIndexItem = getItem(postAttribution, objectId, session);
 
@@ -179,11 +180,14 @@ public class PagingDao {
             return;
         }
 
-        if (Boolean.TRUE.equals(postIndexItem.getPublished())){
-            postIndexItem.setPublished(false);
-        } else {
+        PostEntity postEntity = PostDao.getPostEntityById(objectId, postAttribution.getAssociatedClass(), session);
+
+        if (Boolean.TRUE.equals(postEntity.getPublished())){
             postIndexItem.setPublished(true);
+        } else {
+            postIndexItem.setPublished(false);
         }
+
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

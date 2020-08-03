@@ -179,7 +179,7 @@ let basicNotRender = function(text){
     text = text.replace(italicCloseTag, "");
 
     text = text.replace(subHeadingOpenTag, "");
-    text = text.replace(subHeadingCloseTag, "");
+    text = text.replace(subHeadingCloseTag, " ");
 
     // links
     let urlTags = [];

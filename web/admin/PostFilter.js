@@ -80,9 +80,9 @@ let postFilterTemplate = `<div class="width-100-pc transparent item-container">
             <td width="50%;"><span class="text">Title contains: </span></td>
         </tr>
         <tr>
-            <td class="td-search">
-                <input type="text" class="form-control input" style="display:inline; width:75% !important;" data-role="author-login-filter">
-                <button type="button" class="btn btn-light btn-std" style="display:inline; width:20% !important;" data-role="me">Me</button>
+            <td class="td-search" style="display: flex">
+                <input type="text" class="form-control input" style="width:75% !important;" data-role="author-login-filter">
+                <button type="button" class="btn btn-light btn-std" style="width:20% !important; margin-right: 0 !important; margin-left: 3% !important;" data-role="me">Me</button>
             </td>
             <td class="td-search"><input type="text" class="form-control input" data-role="title-contains-filter"></td>
         </tr>
@@ -95,7 +95,7 @@ let postFilterTemplate = `<div class="width-100-pc transparent item-container">
             <td class="td-search"><input type="text" class="form-control input" data-role="date-from-to"></td>
         </tr>
         <tr>
-            <td class="td-search" style="text-align: right;"><button type="button" class="btn btn-light btn-std" data-role="filter-search" style="width:35%; margin-top:1vh !important;">Search</button></td>
+            <td class="td-search" style="text-align: right;"><button type="button" class="btn btn-light btn-std" data-role="filter-search" style="width:35%; margin-top:1vh !important; margin-right: 0 !important;">Search</button></td>
             <td class="td-search" style="text-align: left;"><button type="button" class="btn btn-light btn-std" data-role="filter-clear" style="width:35%; margin-top:1vh !important;">Clear parameters</button></td>
         </tr>
     </table>

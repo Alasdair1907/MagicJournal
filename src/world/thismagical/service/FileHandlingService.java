@@ -293,6 +293,7 @@ public class FileHandlingService {
                             fileEntity.setThumbnailFileName(newFileNameThumbnail);
                             fileEntity.setOriginalFileName(fName);
                             fileEntity.setAspectRatio(aspectRatio);
+                            fileEntity.setOrderNumber(1000L);
 
                             fileEntities.add(fileEntity);
                         }

@@ -46,6 +46,7 @@ $.widget("magic.header", {
             let $extraMenuContainer = $newElem.find('[data-role="extra-menu-container"]');
             $extraMenuContainer.click(function(){
                 $newElem.remove();
+                $("body").css("overflow", "scroll");
             });
         });
     }

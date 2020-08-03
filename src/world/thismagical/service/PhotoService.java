@@ -114,7 +114,9 @@ public class PhotoService extends PostService {
         photoEntity.setTinyDescription(Tools.nullToEmpty(photoTO.tinyDescription));
         photoEntity.setDescription(Tools.nullToEmpty(photoTO.description));
         photoEntity.setGpsCoordinates(Tools.nullToEmpty(photoTO.gpsCoordinates));
-        photoEntity.setPublished(photoTO.published);
+        if (newPhoto) {
+            photoEntity.setPublished(photoTO.published);
+        }
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
@@ -184,7 +186,7 @@ public class PhotoService extends PostService {
         }
 
         PhotoDao.togglePostPublish(id, PhotoEntity.class, session);
-        PagingDao.togglePostPublish(PostAttribution.PHOTO, id, session);
+        PagingDao.updatePostPublish(PostAttribution.PHOTO, id, session);
         updateTagPublish(id, PostAttribution.PHOTO, session);
 
         return JsonAdminResponse.success(null);

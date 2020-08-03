@@ -34,6 +34,9 @@ import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
 
 public class RelationService {
 
+    /*
+    loads list of relations for post specified with postTO.postAttributionClass, postTO.postObjectId
+     */
     public static JsonAdminResponse<RelationTO> getRelationTO(PostTO postTO, Session session){
 
         if (postTO == null || postTO.postAttributionClass == null || postTO.postObjectId == null){
@@ -65,6 +68,10 @@ public class RelationService {
 
     }
 
+    /*
+    obtains list of relations for post defined by sidePanelRequestTO.postAttribution and sidePanelRequestTO.postId,
+    splits them into associated (auto relations) and related, fetches PostVOs for them, and puts these VOs into sidePanelPostsTO
+     */
     public static void fillRelevantPosts(SidePanelPostsTO sidePanelPostsTO, SidePanelRequestTO sidePanelRequestTO, Session session){
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(PostAttribution.getPostAttribution(sidePanelRequestTO.postAttribution), sidePanelRequestTO.postId, session);
 
@@ -318,6 +325,10 @@ public class RelationService {
         return JsonAdminResponse.success(null);
     }
 
+    /*
+    filters out ids from postIdsToFilter of posts of type targetPostAttribution that are already linked to post defined
+    by postTO.potObjectId and postTO.postAttributionClass
+     */
     public static Set<Long> getSetOfConcernedPosts(PostTO postTO, PostAttribution targetPostAttribution, Set<Long> postIdsToFilter, Session session){
 
         Long postId = postTO.postObjectId;
@@ -351,7 +362,12 @@ public class RelationService {
 
         return res;
     }
-    
+
+    /*
+    Returns list of ArticleVOs that can be added as relations to current post.
+    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
+    Filter for articles is defined in postTO.basicPostFilterTO.
+     */
     public static List<ArticleVO> listConcernedArticlesVOs(PostTO postTO, Session session){
 
         if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
@@ -373,6 +389,11 @@ public class RelationService {
         return articleVOList.stream().filter(it -> articleIdSetFinal.contains(it.id)).collect(Collectors.toList());
     }
 
+    /*
+    Returns list of PhotoVOs that can be added as relations to current post.
+    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
+    Filter for photos is defined in postTO.basicPostFilterTO.
+    */
     public static List<PhotoVO> listConcernedPhotosVOs(PostTO postTO, Session session){
 
         if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
@@ -394,6 +415,11 @@ public class RelationService {
         return photoVOList.stream().filter(it -> photoIdSetFinal.contains(it.id)).collect(Collectors.toList());
     }
 
+    /*
+    Returns list of GalleryVOs that can be added as relations to current post.
+    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
+    Filter for galleries is defined in postTO.basicPostFilterTO.
+    */
     public static List<GalleryVO> listConcernedGalleryVOs(PostTO postTO, Session session){
 
         if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
@@ -415,6 +441,9 @@ public class RelationService {
         return galleryVOList.stream().filter(it -> galleryIdSetFinal.contains(it.id)).collect(Collectors.toList());
     }
 
+    /*
+    Parses article looking for GALLERY images referenced from bbcode and re-creates auto relations
+     */
     @SuppressWarnings("unchecked")
     public static void updateArticleGalleryRelations(Long articleId, String articleText, Session session){
         BBCodeExtractor.BBCodeData bbCodeData = BBCodeExtractor.parse(articleText);
@@ -480,7 +509,9 @@ public class RelationService {
         session.flush();
     }
 
-
+    /*
+    Source object attribution/id, destination object attribution/id, relation class - related
+     */
     public static RelationEntity relationVoPartialToRelationEntity(RelationVO relationVO){
         RelationEntity relationEntity = new RelationEntity();
 

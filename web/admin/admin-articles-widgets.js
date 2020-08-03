@@ -204,7 +204,8 @@ $.widget("admin.articlesWidget", {
         // image select
 
         let $imageInsertButton = self.element.find('[data-role="image-insert-button"]');
-        let $fileInsertbutton = self.element.find('[data-role="file-insert-button"]')
+        let $fileInsertbutton = self.element.find('[data-role="file-insert-button"]');
+        let $bbCodeHintButton = self.element.find('[data-role="bb-code-hint-button"]');
 
         $imageInsertButton.unbind();
         $imageInsertButton.click(await async function(){
@@ -220,6 +221,11 @@ $.widget("admin.articlesWidget", {
             let selectedFileId = await fileSelect($modalAnchor);
             let bbCode = "[file id=" + selectedFileId + "]";
             insertAtPosition($textElem, textAreaPosition, bbCode);
+        });
+
+        $bbCodeHintButton.unbind();
+        $bbCodeHintButton.click(function(){
+            showBBCodeHintModal($modalAnchor);
         });
     },
 

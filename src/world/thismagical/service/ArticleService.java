@@ -123,7 +123,10 @@ public class ArticleService extends PostService {
         articleEntity.setDescription(Tools.nullToEmpty(articleTO.description));
         articleEntity.setTinyDescription(Tools.nullToEmpty(articleTO.tinyDescription));
         articleEntity.setGpsCoordinates(Tools.nullToEmpty(articleTO.gpsCoordinates));
-        articleEntity.setPublished(articleTO.published);
+
+        if (newArticle) {
+            articleEntity.setPublished(articleTO.published);
+        }
 
         if (articleTO.titleImageId != null) {
             articleEntity.setTitleImageId(articleTO.titleImageId);
@@ -204,7 +207,7 @@ public class ArticleService extends PostService {
         }
 
         ArticleDao.togglePostPublish(id, ArticleEntity.class, session);
-        PagingDao.togglePostPublish(PostAttribution.ARTICLE, id, session);
+        PagingDao.updatePostPublish(PostAttribution.ARTICLE, id, session);
         updateTagPublish(id, PostAttribution.ARTICLE, session);
 
         return JsonAdminResponse.success(null);

@@ -38,7 +38,7 @@
                                                                                                  
 -->
 <head>
-
+    <meta name="viewport" content="width=device-width" />
     <%
         MetaTO metaTO = JsonApi.prepareMeta(request, application);
 

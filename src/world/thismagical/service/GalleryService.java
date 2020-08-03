@@ -118,7 +118,7 @@ public class GalleryService extends PostService {
         }
 
         GalleryDao.togglePostPublish(id, GalleryEntity.class, session);
-        PagingDao.togglePostPublish(PostAttribution.GALLERY, id, session);
+        PagingDao.updatePostPublish(PostAttribution.GALLERY, id, session);
         updateTagPublish(id, PostAttribution.GALLERY, session);
 
         return JsonAdminResponse.success(null);
@@ -163,7 +163,10 @@ public class GalleryService extends PostService {
         galleryEntity.setTinyDescription(Tools.nullToEmpty(galleryTO.tinyDescription));
         galleryEntity.setDescription(Tools.nullToEmpty(galleryTO.description));
         galleryEntity.setGpsCoordinates(Tools.nullToEmpty(galleryTO.gpsCoordinates));
-        galleryEntity.setPublished(galleryTO.published);
+
+        if (newGallery) {
+            galleryEntity.setPublished(galleryTO.published);
+        }
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

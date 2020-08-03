@@ -48,6 +48,7 @@
             out.println("<title>"+postVO.getTitle()+"</title>");
             out.println("<link>" + postLink + "</link>");
             out.println("<description>" + postVO.getTinyDescription() + "</description>");
+            out.println("<pubDate>" + Tools.formatPubDate(postVO.getCreationDate()) + "</pubDate>");
 
             out.println("</item>");
         }

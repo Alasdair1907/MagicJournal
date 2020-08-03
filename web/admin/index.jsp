@@ -56,6 +56,7 @@
     <script src="PostFilter.js"></script>
     <script src="FileFilter.js"></script>
     <script src="MapPick.js"></script>
+    <script src="bbCodeHint.js"></script>
 
     <link rel="stylesheet" href="main.css">
 

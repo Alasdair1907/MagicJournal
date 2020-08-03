@@ -199,6 +199,16 @@ body.admin {
     font-size: 2vh !important;
 }
 
+.modal-text {
+    font-size: 1.5vh !important;
+}
+
+.modal-link {
+    font-size: 1.5vh !important;
+    color: darkblue;
+    text-decoration: underline;
+}
+
 .modal-h1 {
     font-size: 2.5vh !important;
 }

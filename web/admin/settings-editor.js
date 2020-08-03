@@ -24,6 +24,9 @@ $.widget('admin.settingsEditor', {
         <span class="text">About:</span><br />
 
         <button type="button" class="btn btn-light btn-std btn-vertical" data-role="image-insert-button"><i class="fa fa-image"></i> Insert image</button>
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="file-insert-button"><i class="fa fa-file"></i> Insert file</button>
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="bb-code-hint-button"><i class="fas fa-pencil-alt"></i> BBCode hint</button>
+        
         <textarea class="width-100-pc input-textarea-text-smaller" data-role="settings-about" disabled="disabled"></textarea><br />
 
         <span class="text">Header injection: (e.g. for google analytics)</span>
@@ -146,6 +149,9 @@ $.widget('admin.settingsEditor', {
         self.element.html(self._template);
 
         let $imageInsertButton = self.element.find('[data-role="image-insert-button"]');
+        let $fileInsertButton = self.element.find('[data-role="file-insert-button"]');
+        let $bbCodeHintButton = self.element.find('[data-role="bb-code-hint-button"]');
+
         let $aboutTextarea = self.element.find('[data-role="settings-about"]');
         let $headerInjection = self.element.find('[data-role="settings-header-injection"]');
         let $bingApiKey = self.element.find('[data-role="settings-bing-api-key"]');
@@ -255,6 +261,19 @@ $.widget('admin.settingsEditor', {
                 let bbCode = "[img id=" + selectedImgId + "]";
                 insertAtPosition($aboutTextarea, textAreaPosition, bbCode);
             });
+
+            // file insert into about textarea
+            $fileInsertButton.unbind();
+            $fileInsertButton.click(await async function(){
+                let textAreaPosition = $aboutTextarea.prop("selectionStart");
+                let selectedFileId = await fileSelect($modalAnchor);
+                let bbCode = "[file id=" + selectedFileId + "]";
+                insertAtPosition($aboutTextarea, textAreaPosition, bbCode);
+            });
+
+            // BBCode Hint button
+            $bbCodeHintButton.unbind();
+            $bbCodeHintButton.click(function(){ showBBCodeHintModal($modalAnchor); });
 
             // save values on click
             $saveSettings.click(await async function(){

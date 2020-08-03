@@ -14,6 +14,10 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class RelationDao {
+
+    /*
+    lists relations, where either destination or source is object referred to by postAttribution and postId
+     */
     public static List<RelationEntity> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
         if (postAttribution == null || postId == null){
             throw new IllegalArgumentException("listRelations: null argument");

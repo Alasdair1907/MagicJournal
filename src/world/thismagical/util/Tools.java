@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 
 public class Tools {
 
+    public static final List<String> monthsEn = Arrays.asList("January", "February", "March", "April", "May","June","July","August","September","October","November","December");
+    public static final List<String> daysEn = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+
     public static void handleException(Exception ex){
         log(ex.getMessage() + "\r\n" + getStackTraceStr(ex));
     }
@@ -128,17 +131,21 @@ public class Tools {
         return Boolean.TRUE;
     }
 
-    public static String formatDate(LocalDateTime localDateTime){
+    public static ZonedDateTime getGmt(LocalDateTime localDateTime){
 
-        List<String> monthsEn = Arrays.asList("January", "February", "March", "April", "May","June","July","August","September","October","November","December");
+        ZonedDateTime ldtZoned = localDateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime gmt = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
+
+        return gmt;
+    }
+
+    public static String formatDate(LocalDateTime localDateTime){
 
         if (localDateTime == null){
             return "";
         }
 
-        ZonedDateTime ldtZoned = localDateTime.atZone(ZoneId.systemDefault());
-        ZonedDateTime gmt = ldtZoned.withZoneSameInstant(ZoneId.of("UTC"));
-
+        ZonedDateTime gmt = getGmt(localDateTime);
         String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm")) + " GMT";
 
         // 21 luglio 2020 20:44 GMT - that might happen if server is somewhere in the world...
@@ -146,6 +153,23 @@ public class Tools {
         gmtTokens[1] = monthsEn.get(gmt.getMonthValue()-1);
 
         return String.join(" ", gmtTokens);
+    }
+
+    public static String formatPubDate(LocalDateTime localDateTime){
+
+        if (localDateTime == null){
+            return "";
+        }
+
+        ZonedDateTime gmt = getGmt(localDateTime);
+        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm:ss")) + " GMT";
+
+        // 21 luglio 2020 20:44 GMT - that might happen if server is somewhere in the world...
+        String[] gmtTokens = gmtFormat.split(" ");
+        gmtTokens[1] = monthsEn.get(gmt.getMonthValue()-1);
+
+        String preRes = String.join(" ", gmtTokens);
+        return daysEn.get(gmt.getDayOfWeek().getValue()-1) + ", " + preRes;
     }
 
     public static String nullToEmpty(String input){

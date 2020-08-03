@@ -38,6 +38,55 @@ let imageSelect = async function($modalJQueryElement, articleId){
     let $selectedImgInfo = $modalJQueryElement.find('[data-role="selected-img-info"]');
 
     let $imageSelectPreviewImg = $modalJQueryElement.find('[data-role="image-select-preview-img"]');
+    let $recentGalleriesAnchor = $modalJQueryElement.find('[data-role="recent-galleries-anchor"]');
+
+    let refreshRecentGalleries = async function(){
+        let recentGalleries = getRecentGalleries();
+
+        if (!recentGalleries || recentGalleries.length < 1){
+            return;
+        }
+
+        let hRecentGalleriesTemplate = Handlebars.compile(recentGalleriesTemplate);
+        $recentGalleriesAnchor.html(hRecentGalleriesTemplate({recentGalleries: recentGalleries}));
+
+        let $recentGalleryLinks = $recentGalleriesAnchor.find('[data-role="recent-gallery-select"]');
+        $recentGalleryLinks.click(async function(){
+            let recentGalleryId = $(this).data("id");
+            await showGallery(recentGalleryId);
+        });
+    };
+
+    let showGallery = async function(chosenGalleryId){
+
+        refreshRecentGalleries();
+
+        $imageSelectMain.html(modalSpinner);
+        let imageVOList = await getImageVOList(chosenGalleryId, 0);
+        $imageSelectMain.html("");
+
+        let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
+        $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
+
+        let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
+
+        $imageSelectList.unbind();
+        $imageSelectList.click(function(){
+            $imageInsertSubmit.prop("disabled", false);
+            $imageSelectList.removeClass("div-image-selected");
+
+            let imageId = $(this).data("id");
+            let previewFile = $(this).data("preview");
+            $(this).addClass("div-image-selected");
+
+            $selectedImgInfo.data("id", imageId);
+
+            $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
+            $imageSelectPreviewImg.show();
+        });
+    };
+
+    refreshRecentGalleries();
 
     if (articleId !== undefined) {
         $articleSrc.unbind();
@@ -124,29 +173,10 @@ let imageSelect = async function($modalJQueryElement, articleId){
             $gallerySelectButtons.unbind();
             $gallerySelectButtons.click(await async function(){
                 let chosenGalleryId = $(this).data("id");
-                $imageSelectMain.html(modalSpinner);
-                let imageVOList = await getImageVOList(chosenGalleryId, 0);
-                $imageSelectMain.html("");
+                let chosenGalleryTitle = $(this).data("title");
 
-                let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
-                $imageSelectMain.html(hImageVOListDisplay({imageVOList: imageVOList}));
-
-                let $imageSelectList = $modalJQueryElement.find('[data-role="image-select-list"]');
-
-                $imageSelectList.unbind();
-                $imageSelectList.click(function(){
-                    $imageInsertSubmit.prop("disabled", false);
-                    $imageSelectList.removeClass("div-image-selected");
-
-                    let imageId = $(this).data("id");
-                    let previewFile = $(this).data("preview");
-                    $(this).addClass("div-image-selected");
-
-                    $selectedImgInfo.data("id", imageId);
-
-                    $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
-                    $imageSelectPreviewImg.show();
-                });
+                pushRecentGallery(chosenGalleryId, chosenGalleryTitle);
+                showGallery(chosenGalleryId);
             });
         };
 
@@ -193,6 +223,43 @@ let getImageVOList = async function(objectId, imageAttributionClass){
     }
 };
 
+let pushRecentGallery = function(galleryId, galleryTitle){
+    let recentJson = Cookies.get("recent");
+
+    let newRecentGallery = {galleryId: galleryId, galleryTitle: galleryTitle};
+
+    if (!recentJson){
+        Cookies.set("recent", JSON.stringify([newRecentGallery]));
+        return;
+    }
+
+    let recentGalleries = JSON.parse(recentJson);
+
+    for (let i = recentGalleries.length-1; i >= 0; i--){
+        if (recentGalleries[i].galleryId === galleryId){
+            recentGalleries.splice(i, 1);
+        }
+    }
+
+    let recentGalleriesMax = 2; // this number DOES NOT include gallery that's gonna be added!
+    if (recentGalleries.length > recentGalleriesMax){
+        recentGalleries.splice(recentGalleriesMax - 1, recentGalleries.length - recentGalleriesMax);
+    }
+
+    recentGalleries.unshift(newRecentGallery);
+    Cookies.set("recent", JSON.stringify(recentGalleries));
+};
+
+let getRecentGalleries = function(){
+    let recentJson = Cookies.get("recent");
+
+    if (!recentJson){
+        return [];
+    }
+
+    return JSON.parse(recentJson);
+};
+
 let imageSelectionModal = `
 
 <div class="modal" data-role="image-select-modal">
@@ -214,6 +281,8 @@ let imageSelectionModal = `
                 <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button>
                 
                 <hr class="hr-black">
+                
+                <div data-role="recent-galleries-anchor"></div>
                 
                 <div data-role="modal-post-filter"></div><br />
 
@@ -243,6 +312,16 @@ let modalSpinner = `
 <span class="width-100-pc center-text center-vertical"><i class="fas fa-cog fa-spin"></i></span>
 `;
 
+let recentGalleriesTemplate = `
+<span class="modal-title">Recent galleries: </span>
+
+{{#each recentGalleries}}
+    <span class="modal-link" data-role="recent-gallery-select" data-id="{{this.galleryId}}">{{this.galleryTitle}}</span>
+{{/each}}
+
+<hr class="hr-black">
+`;
+
 let imageVOListDisplay = `
 {{#each imageVOList}}
 <div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
@@ -270,7 +349,7 @@ let galleryVOListDisplay = `
         <td class="table-lgray">{{this.authorVO.displayName}} ({{this.authorVO.login}})</td>
         <td class="table-lgray">{{this.creationDateStr}}</td>
         <td class="table-lgray center-text">
-            <button type="button" class="btn btn-success btn-std" data-role="image-select-gallery-select" data-id="{{this.id}}">Select</button>            
+            <button type="button" class="btn btn-success btn-std" data-role="image-select-gallery-select" data-id="{{this.id}}" data-title="{{this.title}}">Select</button>            
         </td>
     </tr>
     {{/each}}

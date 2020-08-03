@@ -27,6 +27,7 @@
 -->
   <head>
 
+    <meta name="viewport" content="width=device-width" />
     <meta name="settingsTOCache" content="<% out.print(JsonApi.toBase64(objectMapper.writeValueAsString(settingsTO))); %>">
 
     <jsp:include page="head-standard.jsp"/>

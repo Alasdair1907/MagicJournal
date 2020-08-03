@@ -154,6 +154,11 @@ public class PostDao {
     }
 
     public static <T extends PostEntity> PostEntity getPostEntityById(Long id, Class<T> clazz, Session session){
+
+        if (id == null){
+            return null;
+        }
+
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<T> cq = criteriaBuilder.createQuery(clazz);
         Root<T> entityRoot = cq.from(clazz);
