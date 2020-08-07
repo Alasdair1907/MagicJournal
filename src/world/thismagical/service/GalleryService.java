@@ -158,6 +158,7 @@ public class GalleryService extends PostService {
         if (galleryEntity.getCreationDate() == null){
             galleryEntity.setCreationDate(LocalDateTime.now());
         }
+        galleryEntity.setLastModifiedDate(LocalDateTime.now());
 
         galleryEntity.setTitle(Tools.nullToEmpty(galleryTO.title));
         galleryEntity.setTinyDescription(Tools.nullToEmpty(galleryTO.tinyDescription));

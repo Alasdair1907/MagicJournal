@@ -109,6 +109,7 @@ public class PhotoService extends PostService {
         if (photoEntity.getCreationDate() == null){
             photoEntity.setCreationDate(LocalDateTime.now());
         }
+        photoEntity.setLastModifiedDate(LocalDateTime.now());
 
         photoEntity.setTitle(Tools.nullToEmpty(photoTO.title));
         photoEntity.setTinyDescription(Tools.nullToEmpty(photoTO.tinyDescription));

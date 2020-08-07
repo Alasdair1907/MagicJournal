@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 public class Tools {
 
+    // this is easier than making sure that the server is set to the correct locale
     public static final List<String> monthsEn = Arrays.asList("January", "February", "March", "April", "May","June","July","August","September","October","November","December");
     public static final List<String> daysEn = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
 
@@ -212,7 +213,7 @@ public class Tools {
     }
 
     public static String normalizeURL(String input){
-        if (input.startsWith("www.")){
+        if (!input.startsWith("http://") && !input.startsWith("https://")){
             input = "http://" + input;
         }
 

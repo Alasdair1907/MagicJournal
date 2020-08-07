@@ -33,6 +33,7 @@ public class PhotoVO implements PostVO {
     public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
+    public LocalDateTime lastModified;
     public String creationDateStr;
     public String gpsCoordinates;
     public Boolean published;
@@ -52,6 +53,7 @@ public class PhotoVO implements PostVO {
         this.authorVO = new AuthorVO(photoEntity.getAuthor());
         this.creationDate = photoEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(photoEntity.getCreationDate());
+        this.lastModified = photoEntity.getLastModifiedDate();
         this.gpsCoordinates = photoEntity.getGpsCoordinates();
         this.published = photoEntity.getPublished();
         this.postAttributionStr = PostAttribution.PHOTO.getReadable();
@@ -113,4 +115,10 @@ public class PhotoVO implements PostVO {
     public ImageVO getMainImageVO() {
         return this.imageVO;
     }
+
+    @Override
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
 }

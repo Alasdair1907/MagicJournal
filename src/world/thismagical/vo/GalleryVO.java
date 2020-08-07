@@ -35,6 +35,7 @@ public class GalleryVO implements PostVO {
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
     public String creationDateStr;
+    public LocalDateTime lastModified;
     public String gpsCoordinates;
     public Boolean published;
     public List<TagEntity> tagEntityList;
@@ -54,6 +55,7 @@ public class GalleryVO implements PostVO {
         this.authorVO = new AuthorVO(galleryEntity.getAuthor());
         this.creationDate = galleryEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(galleryEntity.getCreationDate());
+        this.lastModified = galleryEntity.getLastModifiedDate();
         this.gpsCoordinates = galleryEntity.getGpsCoordinates();
         this.published = galleryEntity.getPublished();
         this.postAttributionStr = PostAttribution.GALLERY.getReadable();
@@ -118,4 +120,10 @@ public class GalleryVO implements PostVO {
         }
         return null;
     }
+
+    @Override
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
 }

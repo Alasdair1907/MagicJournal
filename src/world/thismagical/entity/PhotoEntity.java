@@ -54,6 +54,9 @@ public class PhotoEntity implements Serializable, PostEntity {
     @Column(name="published")
     private Boolean published;
 
+    @Column(name="lastmod")
+    LocalDateTime lastModifiedDate;
+
     public Long getId() {
         return id;
     }
@@ -117,5 +120,14 @@ public class PhotoEntity implements Serializable, PostEntity {
     public void setPublished(Boolean published) {
         this.published = published;
     }
+
+    public LocalDateTime getLastModifiedDate() {
+        if (lastModifiedDate == null){
+            return creationDate;
+        }
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
 }

@@ -42,6 +42,9 @@ public class ArticleEntity implements Serializable, PostEntity {
     @Column(name="published")
     Boolean published;
 
+    @Column(name="lastmod")
+    LocalDateTime lastModifiedDate;
+
     public Long getId() {
         return id;
     }
@@ -122,4 +125,14 @@ public class ArticleEntity implements Serializable, PostEntity {
     public void setTitleImageId(Long titleImageId) {
         this.titleImageId = titleImageId;
     }
+
+    public LocalDateTime getLastModifiedDate() {
+        if (lastModifiedDate == null){
+            return creationDate;
+        }
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
+
 }

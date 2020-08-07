@@ -30,6 +30,7 @@ public class ArticleVO implements PostVO {
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
     public String creationDateStr;
+    public LocalDateTime lastModified;
     public String gpsCoordinates;
     public Boolean published;
 
@@ -50,6 +51,7 @@ public class ArticleVO implements PostVO {
         this.authorVO = new AuthorVO(articleEntity.getAuthor());
         this.creationDate = articleEntity.getCreationDate();
         this.creationDateStr = Tools.formatDate(articleEntity.getCreationDate());
+        this.lastModified = articleEntity.getLastModifiedDate();
         this.gpsCoordinates = articleEntity.getGpsCoordinates();
         this.published = articleEntity.getPublished();
         this.articleText = articleEntity.getArticleText();
@@ -109,5 +111,10 @@ public class ArticleVO implements PostVO {
     @Override
     public ImageVO getMainImageVO() {
         return titleImageVO;
+    }
+
+    @Override
+    public LocalDateTime getLastModified() {
+        return lastModified;
     }
 }

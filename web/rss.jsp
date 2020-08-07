@@ -1,3 +1,4 @@
+<%@page trimDirectiveWhitespaces="true"%>
 <%@ page import="world.thismagical.to.SettingsTO" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="world.thismagical.vo.PostVOListUnified" %>
@@ -5,7 +6,7 @@
 <%@ page import="world.thismagical.util.Tools" %>
 <%@ page import="world.thismagical.util.BBCodeExtractor" %>
 <%@ page import="world.thismagical.vo.ImageVO" %>
-<%@page trimDirectiveWhitespaces="true"%>
+<%@ page import="world.thismagical.util.ServletUtils" %>
 <%--
   Created by IntelliJ IDEA.
   User: Alasdair
@@ -27,7 +28,7 @@
 --%>
 <%@ page contentType="text/xml;charset=UTF-8" language="java" %>
 <%
-    SettingsTO settingsTO = JsonApi.getNoAuthSettingsCached(application);
+    SettingsTO settingsTO = ServletUtils.getNoAuthSettingsCached(application);
 %>
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
@@ -36,7 +37,7 @@
         <title><% out.print(settingsTO.websiteName); %></title>
         <link><% out.print(settingsTO.websiteURL); %></link>
 <%
-    PostVOListUnified postVOListUnified = JsonApi.latest(50, JsonApi.getSessionFactory(application));
+    PostVOListUnified postVOListUnified = JsonApi.latest(50, ServletUtils.getSessionFactory(application));
 
     if (postVOListUnified.posts != null){
         for (PostVO postVO : postVOListUnified.posts){

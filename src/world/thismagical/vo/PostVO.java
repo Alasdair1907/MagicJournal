@@ -17,4 +17,5 @@ public interface PostVO {
     String getTinyDescription();
     ImageVO getMainImageVO();
     Long getId();
+    LocalDateTime getLastModified();
 }

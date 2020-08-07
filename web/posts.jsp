@@ -14,10 +14,11 @@
 <%@ page import="org.hibernate.SessionFactory" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>
 <%@ page import="world.thismagical.to.MetaTO" %>
+<%@ page import="world.thismagical.util.ServletUtils" %>
 
 <%
-    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
-    SettingsTO settingsTO = JsonApi.getNoAuthSettingsCached(application);
+    SessionFactory sessionFactory = ServletUtils.getSessionFactory(application);
+    SettingsTO settingsTO = ServletUtils.getNoAuthSettingsCached(application);
     ObjectMapper objectMapper = new ObjectMapper();
 
 %>
@@ -40,7 +41,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <%
-        MetaTO metaTO = JsonApi.prepareMeta(request, application);
+        MetaTO metaTO = ServletUtils.prepareMeta(request, application);
 
         out.println(String.format("<meta property='og:url' content='%s' />", metaTO.getOgUrl()));
         out.println("<meta property='og:type' content='article' />");

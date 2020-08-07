@@ -44,4 +44,7 @@ public interface PostEntity {
     Boolean getPublished();
     void setPublished(Boolean published);
 
+    LocalDateTime getLastModifiedDate();
+    void setLastModifiedDate(LocalDateTime lastModifiedDate);
+
 }

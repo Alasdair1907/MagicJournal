@@ -12,13 +12,14 @@
 <%@ page import="world.thismagical.entity.OtherFileEntity" %>
 <%@ page import="java.io.FileNotFoundException" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
+<%@ page import="world.thismagical.util.ServletUtils" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page trimDirectiveWhitespaces="true"%>
 <%
-    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
-    SettingsTO settingsTO = JsonApi.getSettings(application);
+    SessionFactory sessionFactory = ServletUtils.getSessionFactory(application);
+    SettingsTO settingsTO = ServletUtils.getSettings(application);
 
     try (Session sessionGetFile = sessionFactory.openSession()) {
 

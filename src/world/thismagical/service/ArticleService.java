@@ -119,6 +119,7 @@ public class ArticleService extends PostService {
             articleEntity.setCreationDate(LocalDateTime.now());
         }
 
+        articleEntity.setLastModifiedDate(LocalDateTime.now());
         articleEntity.setTitle(Tools.nullToEmpty(articleTO.title));
         articleEntity.setDescription(Tools.nullToEmpty(articleTO.description));
         articleEntity.setTinyDescription(Tools.nullToEmpty(articleTO.tinyDescription));
@@ -131,8 +132,8 @@ public class ArticleService extends PostService {
         if (articleTO.titleImageId != null) {
             articleEntity.setTitleImageId(articleTO.titleImageId);
         }
-        articleEntity.setArticleText(articleTO.articleText);
 
+        articleEntity.setArticleText(articleTO.articleText);
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

@@ -17,10 +17,11 @@
 <%@ page import="world.thismagical.test.PagingTest" %>
 <%@ page import="com.fasterxml.jackson.core.type.TypeReference" %>
 <%@ page import="java.lang.reflect.Type" %>
+<%@ page import="world.thismagical.util.ServletUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
+    SessionFactory sessionFactory = ServletUtils.getSessionFactory(application);
 
     ObjectMapper objectMapper = new ObjectMapper();
 

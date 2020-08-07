@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://www.thismagical.world/sitemap.jsp

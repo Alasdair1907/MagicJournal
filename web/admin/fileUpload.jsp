@@ -11,9 +11,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="world.thismagical.util.ServletUtils" %>
 <%
 
-    SessionFactory sessionFactory = JsonApi.getSessionFactory(application);
+    SessionFactory sessionFactory = ServletUtils.getSessionFactory(application);
     ObjectMapper objectMapper = new ObjectMapper();
 
     List<Cookie> cookies = Arrays.asList(request.getCookies());

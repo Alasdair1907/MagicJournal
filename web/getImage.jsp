@@ -10,7 +10,8 @@
 <%@ page import="org.hibernate.Session" %>
 <%@ page import="world.thismagical.service.SettingsService" %>
 <%@ page import="java.io.FileNotFoundException" %>
-<%@ page import="world.thismagical.util.JsonApi" %><%--
+<%@ page import="world.thismagical.util.JsonApi" %>
+<%@ page import="world.thismagical.util.ServletUtils" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 1/2/2020
@@ -32,7 +33,7 @@
         response.getOutputStream().flush();
         response.getOutputStream().close();
     } else {
-        SettingsTO settingsTO = JsonApi.getSettings(application);
+        SettingsTO settingsTO = ServletUtils.getSettings(application);
         String imageStorage = settingsTO.imageStoragePath;
 
         if (imageStorage == null || imageStorage.isEmpty()) {
