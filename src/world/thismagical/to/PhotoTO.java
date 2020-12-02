@@ -17,6 +17,10 @@ package world.thismagical.to;
                                                                                                    
 */
 
+/**
+ * Deserialized class that is received from the front-end when the user saves a Photo
+ */
+
 public class PhotoTO {
     public Long id;
     public String title;

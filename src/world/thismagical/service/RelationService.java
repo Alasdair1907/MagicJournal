@@ -32,6 +32,18 @@ import java.util.stream.Collectors;
 
 import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
 
+/*
+This service is responsible for "Associated posts" and "Related posts" listings in the panel.
+
+Associated relations between posts are created whenever an image from a gallery or a photo is used in an article. The relation is
+created for both sides - when a user views the article, he will see a list of associated photos and galleries, and when he views either a
+gallery or a photo he will see associated articles.
+
+Related relations are created by an author manually and any types of posts can be connected. Relation works in both ways.
+
+Associated and Related posts do not duplicate each other, and Associated posts have higher priority.
+ */
+
 public class RelationService {
 
     /*

@@ -23,7 +23,6 @@ import java.util.*;
 
 public class JsonApi {
 
-
     public static JsonAdminResponse<Void> verifySessionGuid(String guid, SessionFactory sessionFactory){
 
         try (Session session = sessionFactory.openSession()) {

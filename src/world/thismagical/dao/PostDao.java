@@ -134,6 +134,8 @@ public class PostDao {
     @SuppressWarnings("unchecked")
     public static <T extends PostEntity> List<PostEntity> listAllPosts(BasicPostFilter basicPostFilter, Class<T> clazz, Session session){
 
+        // todo: unauthorized users shouldn't have the ability to list unlimited amounts of posts at once
+
         if (basicPostFilter != null && Boolean.TRUE.equals(basicPostFilter.returnEmpty)){
             return new ArrayList<>();
         }
