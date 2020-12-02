@@ -1,0 +1,2 @@
+After downloading tomcat, go to the lib folder inside tomcat archive, and copy everything to this folder.
+Then you can build this project with gradlew.
