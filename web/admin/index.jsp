@@ -90,7 +90,7 @@
         let verifyGuid = $.ajax({
             url: "/admin/jsonApi.jsp",
             method: "POST",
-            data: {data: guid, action: "verifySessionGuid"}
+            data: {guid: guid, action: "verifySessionGuid"}
         });
 
         verifyGuid.done(function (adminResponseJson) {

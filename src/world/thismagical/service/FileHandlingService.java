@@ -349,9 +349,8 @@ public class FileHandlingService {
         return JsonAdminResponse.success(null);
     }
     
-    public static JsonAdminResponse<Void> deleteFile(Long id, String guid, SessionFactory sessionFactory){
+    public static JsonAdminResponse<Void> deleteFile(Long id, String guid, Session session){
 
-        Session session = sessionFactory.openSession();
         SettingsTO settingsTO = SettingsService.getSettings(session);
         JsonAdminResponse<Void> jsonAdminResponse;
 
@@ -391,8 +390,7 @@ public class FileHandlingService {
         return jsonAdminResponse;
     }
 
-    public static JsonAdminResponse<Void> updateFileInfo(ImageFileDescrTO imageFileDescrTO, String guid, SessionFactory sessionFactory){
-        Session session = sessionFactory.openSession();
+    public static JsonAdminResponse<Void> updateFileInfo(ImageFileDescrTO imageFileDescrTO, String guid, Session session){
         JsonAdminResponse<Void> jsonAdminResponse;
 
         try {
@@ -421,142 +419,121 @@ public class FileHandlingService {
         return jsonAdminResponse;
     }
 
-    public static JsonAdminResponse<ImageFileDescrTO> getImageFileDescrTO(Long id, SessionFactory sessionFactory){
+    public static JsonAdminResponse<ImageFileDescrTO> getImageFileDescrTO(Long id, Session session){
 
         if (id == null){
             return JsonAdminResponse.fail("getImageFileDescrTO: null argument");
         }
 
-        try (Session session = sessionFactory.openSession()) {
-            List<ImageFileEntity> imageFileEntityList = FileDao.getImageEntitiesByIds(Collections.singletonList(id), session);
-            if (imageFileEntityList == null || imageFileEntityList.isEmpty()){
-                return JsonAdminResponse.fail("ImageFileEntity not found");
-            }
-
-            ImageFileEntity imageFileEntity = imageFileEntityList.get(0);
-            return JsonAdminResponse.success(new ImageFileDescrTO(imageFileEntity));
-        } catch (Exception ex){
-            Tools.handleException(ex);
+        List<ImageFileEntity> imageFileEntityList = FileDao.getImageEntitiesByIds(Collections.singletonList(id), session);
+        if (imageFileEntityList == null || imageFileEntityList.isEmpty()){
+            return JsonAdminResponse.fail("ImageFileEntity not found");
         }
 
-        return JsonAdminResponse.fail("error getting image file description");
-
+        ImageFileEntity imageFileEntity = imageFileEntityList.get(0);
+        return JsonAdminResponse.success(new ImageFileDescrTO(imageFileEntity));
     }
 
-    public static JsonAdminResponse<List<OtherFileVO>> listOtherFiles(BasicFileFilter basicFileFilter, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
+    public static JsonAdminResponse<List<OtherFileVO>> listOtherFiles(BasicFileFilter basicFileFilter, Session session){
 
-            CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<OtherFileEntity> cq = cb.createQuery(OtherFileEntity.class);
-            Root<OtherFileEntity> root = cq.from(OtherFileEntity.class);
-            cq.orderBy(cb.desc(root.get("id")));
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<OtherFileEntity> cq = cb.createQuery(OtherFileEntity.class);
+        Root<OtherFileEntity> root = cq.from(OtherFileEntity.class);
+        cq.orderBy(cb.desc(root.get("id")));
 
-            if (basicFileFilter != null){
+        if (basicFileFilter != null){
 
-                List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<>();
 
-                if (basicFileFilter.authorLogin != null && !basicFileFilter.authorLogin.isEmpty()){
-                    AuthorEntity authorEntity = AuthorDao.getAuthorEntityByLogin(basicFileFilter.authorLogin, session);
-                    if (authorEntity == null){
-                        return JsonAdminResponse.success(new ArrayList<>());
-                    }
-
-                    predicates.add(cb.equal(root.get("authorEntity"), authorEntity));
+            if (basicFileFilter.authorLogin != null && !basicFileFilter.authorLogin.isEmpty()){
+                AuthorEntity authorEntity = AuthorDao.getAuthorEntityByLogin(basicFileFilter.authorLogin, session);
+                if (authorEntity == null){
+                    return JsonAdminResponse.success(new ArrayList<>());
                 }
 
-                if (basicFileFilter.fileDisplayName != null && !basicFileFilter.fileDisplayName.isEmpty()){
-                    predicates.add(cb.like(root.get("displayName"), '%' + basicFileFilter.fileDisplayName + '%'));
-                }
-
-                if (basicFileFilter.fileOriginalName != null && !basicFileFilter.fileOriginalName.isEmpty()){
-                    predicates.add(cb.like(root.get("originalFileName"), '%' + basicFileFilter.fileOriginalName + '%'));
-                }
-
-                Predicate and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-                cq.select(root).where(and);
-            } else {
-                cq.select(root);
+                predicates.add(cb.equal(root.get("authorEntity"), authorEntity));
             }
 
-            List<OtherFileEntity> otherFileEntityList = session.createQuery(cq).getResultList();
-
-            if (otherFileEntityList == null || otherFileEntityList.isEmpty()){
-                return JsonAdminResponse.success(new ArrayList<>());
+            if (basicFileFilter.fileDisplayName != null && !basicFileFilter.fileDisplayName.isEmpty()){
+                predicates.add(cb.like(root.get("displayName"), '%' + basicFileFilter.fileDisplayName + '%'));
             }
 
-            List<OtherFileVO> otherFileVOList = new ArrayList<>();
-
-            for (OtherFileEntity otherFileEntity : otherFileEntityList){
-                otherFileVOList.add(new OtherFileVO(otherFileEntity));
+            if (basicFileFilter.fileOriginalName != null && !basicFileFilter.fileOriginalName.isEmpty()){
+                predicates.add(cb.like(root.get("originalFileName"), '%' + basicFileFilter.fileOriginalName + '%'));
             }
 
-            return JsonAdminResponse.success(otherFileVOList);
-
-        } catch (Exception ex){
-            Tools.handleException(ex);
-            return JsonAdminResponse.fail("error obtaining list of files");
+            Predicate and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            cq.select(root).where(and);
+        } else {
+            cq.select(root);
         }
+
+        List<OtherFileEntity> otherFileEntityList = session.createQuery(cq).getResultList();
+
+        if (otherFileEntityList == null || otherFileEntityList.isEmpty()){
+            return JsonAdminResponse.success(new ArrayList<>());
+        }
+
+        List<OtherFileVO> otherFileVOList = new ArrayList<>();
+
+        for (OtherFileEntity otherFileEntity : otherFileEntityList){
+            otherFileVOList.add(new OtherFileVO(otherFileEntity));
+        }
+
+        return JsonAdminResponse.success(otherFileVOList);
     }
 
-    public static JsonAdminResponse<Void> deleteOtherFile(String guid, Long id, SessionFactory sessionFactory){
+    public static JsonAdminResponse<Void> deleteOtherFile(String guid, Long id, Session session) throws Exception {
 
         if (id == null){
             return JsonAdminResponse.fail("null argument");
         }
 
-        try (Session session = sessionFactory.openSession()){
-            AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
+        AuthorEntity authorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
 
-            if (authorEntity == null){
-                return JsonAdminResponse.fail("not authorized for this action!");
-            }
-
-            OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, id);
-
-            if (otherFileEntity == null){
-                return JsonAdminResponse.fail("file with this id not found!");
-            }
-
-            if (!AuthorizationService.checkPrivileges(otherFileEntity.getAuthorEntity(), authorEntity)){
-                return JsonAdminResponse.fail("not authorized for this action!");
-            }
-
-            SettingsTO settingsTO = SettingsService.getSettings(session);
-            Files.delete(Paths.get(settingsTO.otherFilesStoragePath, otherFileEntity.getFileName()));
-
-            if (!session.getTransaction().isActive()){
-                session.beginTransaction();
-            }
-
-            session.delete(otherFileEntity);
-            session.flush();
-
-            return JsonAdminResponse.success(null);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-            return JsonAdminResponse.fail("unknown error");
+        if (authorEntity == null){
+            return JsonAdminResponse.fail("not authorized for this action!");
         }
+
+        OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, id);
+
+        if (otherFileEntity == null){
+            return JsonAdminResponse.fail("file with this id not found!");
+        }
+
+        if (!AuthorizationService.checkPrivileges(otherFileEntity.getAuthorEntity(), authorEntity)){
+            return JsonAdminResponse.fail("not authorized for this action!");
+        }
+
+        SettingsTO settingsTO = SettingsService.getSettings(session);
+        Files.delete(Paths.get(settingsTO.otherFilesStoragePath, otherFileEntity.getFileName()));
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.delete(otherFileEntity);
+        session.flush();
+
+        return JsonAdminResponse.success(null);
+
     }
 
-    public static JsonAdminResponse<OtherFileVO> getOtherFileById(Long id, SessionFactory sessionFactory){
+    public static JsonAdminResponse<OtherFileVO> getOtherFileById(Long id, Session session){
 
         if (id == null){
             return JsonAdminResponse.fail("null argument");
         }
 
-        try (Session session = sessionFactory.openSession()){
-            List<OtherFileEntity> otherFileEntityList = FileDao.getOtherFilesByIds(Collections.singletonList(id), session);
-            if (otherFileEntityList != null && !otherFileEntityList.isEmpty()){
-                return JsonAdminResponse.success(new OtherFileVO(otherFileEntityList.get(0)));
-            }
-        } catch (Exception ex){
-            Tools.handleException(ex);
+        List<OtherFileEntity> otherFileEntityList = FileDao.getOtherFilesByIds(Collections.singletonList(id), session);
+        if (otherFileEntityList != null && !otherFileEntityList.isEmpty()){
+            return JsonAdminResponse.success(new OtherFileVO(otherFileEntityList.get(0)));
         }
 
-        return JsonAdminResponse.fail("error getting file by id");
+        return JsonAdminResponse.fail("file not found");
     }
 
-    public static JsonAdminResponse<Void> updateOtherFileInfo(OtherFileTO otherFileTO, SessionFactory sessionFactory){
+    public static JsonAdminResponse<Void> updateOtherFileInfo(OtherFileTO otherFileTO, Session session){
 
         if (otherFileTO.guid == null || otherFileTO.fileId == null){
             return JsonAdminResponse.fail("null arguments");
@@ -566,35 +543,28 @@ public class FileHandlingService {
             return JsonAdminResponse.fail("file display name must be filled!");
         }
 
-        try (Session session = sessionFactory.openSession()){
-            OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, otherFileTO.fileId);
+        OtherFileEntity otherFileEntity = session.get(OtherFileEntity.class, otherFileTO.fileId);
 
-            if (otherFileEntity == null){
-                return JsonAdminResponse.fail("file not found");
-            }
-
-            AuthorEntity originalAuthor = otherFileEntity.getAuthorEntity();
-            AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(otherFileTO.guid, session);
-            if (!AuthorizationService.checkPrivileges(originalAuthor, currentAuthor)){
-                return JsonAdminResponse.fail("not authorized");
-            }
-
-            if (!session.getTransaction().isActive()){
-                session.beginTransaction();
-            }
-
-            otherFileEntity.setDisplayName(otherFileTO.name);
-            otherFileEntity.setDescription(otherFileTO.description);
-
-            session.update(otherFileEntity);
-            session.flush();
-
-            return JsonAdminResponse.success(null);
-
-        } catch (Exception ex){
-            Tools.handleException(ex);
+        if (otherFileEntity == null){
+            return JsonAdminResponse.fail("file not found");
         }
 
-        return JsonAdminResponse.fail("error updating file info");
+        AuthorEntity originalAuthor = otherFileEntity.getAuthorEntity();
+        AuthorEntity currentAuthor = AuthorizationService.getAuthorEntityBySessionGuid(otherFileTO.guid, session);
+        if (!AuthorizationService.checkPrivileges(originalAuthor, currentAuthor)){
+            return JsonAdminResponse.fail("not authorized");
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        otherFileEntity.setDisplayName(otherFileTO.name);
+        otherFileEntity.setDescription(otherFileTO.description);
+
+        session.update(otherFileEntity);
+        session.flush();
+
+        return JsonAdminResponse.success(null);
     }
 }

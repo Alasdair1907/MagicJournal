@@ -1,8 +1,12 @@
-package world.thismagical.to;
+package world.thismagical.util;
+
+
+import world.thismagical.to.JsonAdminResponse;
+import world.thismagical.to.JsonApiRequestContext;
+
 /*
-  User: Alasdair
-  Date: 1/2/2020
-  Time: 7:00 PM                                                                                                    
+User: Alasd
+Date: 12/3/2020
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -14,15 +18,8 @@ package world.thismagical.to;
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                   
+
 */
-
-/*
-apparently, this is used also for getting images from file dao
- */
-
-public class ImageUploadTO {
-    public Short imageAttributionClass;
-    public Long parentObjectId;
-    public String sessionGuid;
+public interface JsonFunction {
+    JsonAdminResponse apply(JsonApiRequestContext request) throws Exception;
 }

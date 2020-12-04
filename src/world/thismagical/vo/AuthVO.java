@@ -17,6 +17,10 @@ package world.thismagical.vo;
                                                                                                    
 */
 
+/**
+ * Used for passing authentication data from client to server
+ */
+
 public class AuthVO {
     public String login;
     public String passwordHash;

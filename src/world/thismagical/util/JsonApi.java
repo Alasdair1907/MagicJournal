@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
-import world.thismagical.entity.ArticleEntity;
 import world.thismagical.entity.AuthorEntity;
-import world.thismagical.entity.SessionEntity;
+import world.thismagical.filter.BasicFileFilter;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.filter.PagingRequestFilter;
 import world.thismagical.service.*;
@@ -15,631 +14,509 @@ import world.thismagical.vo.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.tools.Tool;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
 public class JsonApi {
 
-    public static JsonAdminResponse<Void> verifySessionGuid(String guid, SessionFactory sessionFactory){
+    /*
+    todo:
+    - all post listings should be limited to 50 or so posts for unauthenticated users
+     */
 
-        try (Session session = sessionFactory.openSession()) {
-            if (AuthorizationService.isSessionValid(guid, session)){
+    public static Map<String, String> actionToErrorMessage;
+    public static Map<String, JsonFunction> actionToFunction;
+    static {
+        actionToErrorMessage = new HashMap<>();
+        actionToFunction = new HashMap<>();
+
+        /*
+        Authorization
+         */
+
+        actionToErrorMessage.put("verifySessionGuid", "Unable to verify session guid");
+        actionToFunction.put("verifySessionGuid", (JsonApiRequestContext request) -> {
+            if (AuthorizationService.isSessionValid(request.userGuid, request.session)){
                 return JsonAdminResponse.success(null);
             }
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+            return JsonAdminResponse.fail("User session can not be verified.");
+        });
 
-        return JsonAdminResponse.fail("can't verify session guid");
-    }
+        actionToErrorMessage.put("authorize", "Unable to authorize user");
+        actionToFunction.put("authorize", (JsonApiRequestContext request) -> {
+            AuthVO authVO = request.objectMapper.readValue(request.data, AuthVO.class);
+            return AuthorizationService.authorize(authVO.login, authVO.passwordHash, request.session);
+        });
 
-    public static JsonAdminResponse<AuthorizedVO> authorize(String login, String passwordHash, SessionFactory sessionFactory){
-        try {
-            Thread.sleep(1000);
-        } catch (Exception ex){
-        }
+        actionToErrorMessage.put("authorizeDemo", "Unable to create a demo user");
+        actionToFunction.put("authorizeDemo", (JsonApiRequestContext request) -> {
+            return AuthorizationService.authorizeDemo(request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()){
-            return AuthorizationService.authorize(login, passwordHash, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        /*
+        Authors edit
+         */
 
-        return JsonAdminResponse.fail("can not authorize user");
-    }
+        actionToErrorMessage.put("listAllAuthorsVO", "Unable to obtain list of authors");
+        actionToFunction.put("listAllAuthorsVO", (JsonApiRequestContext request) -> {
+            return JsonAdminResponse.success(AuthorService.getAllAuthorsVOList(request.session));
+        });
 
-    public static JsonAdminResponse<AuthorizedVO> authorizeDemo(SessionFactory sessionFactory){
+        actionToErrorMessage.put("listPrivileges", "Error obtaining list of privileges");
+        actionToFunction.put("listPrivileges", (JsonApiRequestContext request) -> {
+            return JsonAdminResponse.success(PrivilegeLevel.getPrivilegesList());
+        });
 
-        try {
-            Thread.sleep(1000);
-        } catch (Exception ex){
-        }
+        actionToErrorMessage.put("createNewAuthor", "Error creating new author");
+        actionToFunction.put("createNewAuthor", (JsonApiRequestContext request) -> {
+            AuthorEntity newAuthor = request.objectMapper.readValue(request.data, AuthorEntity.class);
+            return AuthorService.createNewAuthor(request.userGuid, newAuthor, request.fsLocation, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()){
-            return AuthorizationService.authorizeDemo(session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("changePassword", "Error changing password");
+        actionToFunction.put("changePassword", (JsonApiRequestContext request) -> {
+            ChangeAuthorDataRequest cadr = request.objectMapper.readValue(request.data, ChangeAuthorDataRequest.class);
+            return AuthorService.changeBasicAuthorParams(request.userGuid, cadr.targetAuthorId, null, cadr.newPassword, null, request.session);
+        });
 
-        return JsonAdminResponse.fail("can not create demo user");
-    }
+        actionToErrorMessage.put("changeDisplayName", "Error changing display name");
+        actionToFunction.put("changeDisplayName", (JsonApiRequestContext request) -> {
+            ChangeAuthorDataRequest cadr = request.objectMapper.readValue(request.data, ChangeAuthorDataRequest.class);
+            return AuthorService.changeBasicAuthorParams(request.userGuid, cadr.targetAuthorId, cadr.newDisplayName, null, null, request.session);
+        });
 
-    public static JsonAdminResponse<List<AuthorVO>> listAllAuthorsVO(SessionFactory sessionFactory){
+        actionToErrorMessage.put("changeAccessLevel", "Error changing access level");
+        actionToFunction.put("changeAccessLevel", (JsonApiRequestContext request) -> {
+            ChangeAuthorDataRequest cadr = request.objectMapper.readValue(request.data, ChangeAuthorDataRequest.class);
+            return AuthorService.changeBasicAuthorParams(request.userGuid, cadr.targetAuthorId, null, null, cadr.newAccessLevelId, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()){
-            return JsonAdminResponse.success(AuthorService.getAllAuthorsVOList(session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("deleteUser", "Error deleting user");
+        actionToFunction.put("deleteUser", (JsonApiRequestContext request) -> {
+            Long userId = Long.parseLong(request.data);
+            return AuthorService.deleteAuthor(request.userGuid, userId, request.session);
+        });
 
-        return JsonAdminResponse.fail("can not obtain list of authors");
-    }
+        /*
+        Author profile
+         */
 
+        actionToErrorMessage.put("getAuthorVOByGuid", "Unable to load author data");
+        actionToFunction.put("getAuthorVOByGuid", (JsonApiRequestContext request) -> {
+            return AuthorService.getAuthorVOByGuid(request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<List<PrivilegeVO>> listPrivileges(){
-        return JsonAdminResponse.success(PrivilegeLevel.getPrivilegesList());
-    }
+        actionToErrorMessage.put("getAuthorVOByLogin", "Unable to load author data");
+        actionToFunction.put("getAuthorVOByLogin", (JsonApiRequestContext request) -> {
+            return AuthorService.getAuthorVOByLogin(request.data, request.session);
+        });
 
-    public static JsonAdminResponse<Void> createNewAuthor(String guid, AuthorEntity newAuthor, String location, SessionFactory sessionFactory){
+        actionToErrorMessage.put("updateAuthorProfile", "Error updating author profile");
+        actionToFunction.put("updateAuthorProfile", (JsonApiRequestContext request) -> {
+            AuthorVO authorVO = request.objectMapper.readValue(request.data, AuthorVO.class);
+            return AuthorService.updateAuthorProfile(request.userGuid, authorVO, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return AuthorService.createNewAuthor(guid, newAuthor, location, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        /*
+        Photos edit
+         */
 
-        return JsonAdminResponse.fail("error creating new author");
-    }
+        actionToErrorMessage.put("saveOrUpdatePhoto", "Error saving photo");
+        actionToFunction.put("saveOrUpdatePhoto", (JsonApiRequestContext request) -> {
+            PhotoTO photoTO = request.objectMapper.readValue(request.data, PhotoTO.class);
+            return PhotoService.createOrUpdatePhoto(photoTO, request.session);
+        });
 
-    public static JsonAdminResponse<Void> deleteAuthor(String guid, Long targetAuthorId, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()){
-            return AuthorService.deleteAuthor(guid, targetAuthorId, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error deleting author");
-    }
-
-    public static JsonAdminResponse<Void> changeDisplayName(String guid, Long targetAuthorId, String newDisplayName, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()){
-            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, newDisplayName, null, null, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error changing display name");
-    }
-
-    public static JsonAdminResponse<Void> changePassword(String guid, Long targetAuthorId, String newUnhashedPassword, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, null, newUnhashedPassword, null, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error changing password");
-    }
-
-    public static JsonAdminResponse<Void> changeAccessLevel(String guid, Long targetAuthorId, Short newAccessLevelId, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return AuthorService.changeBasicAuthorParams(guid, targetAuthorId, null, null, newAccessLevelId, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error changing access level");
-    }
-
-    public static JsonAdminResponse<AuthorVO> getAuthorVOByGuid(String guid, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return AuthorService.getAuthorVOByGuid(guid, session);
-        } catch (Exception ex) {
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("unable to load author data");
-
-    }
-
-    public static JsonAdminResponse<AuthorVO> getAuthorVOByLogin(String login, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return AuthorService.getAuthorVOByLogin(login, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("unable to load author data");
-    }
-
-    public static JsonAdminResponse<Void> updateAuthorProfile(String guid, AuthorVO authorVO, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()) {
-            return AuthorService.updateAuthorProfile(guid, authorVO, session);
-        } catch (Exception ex) {
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("unable to update author profile");
-    }
-
-
-    public static JsonAdminResponse<PhotoVO> getPhotoVOByPhotoId(Long id, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(PhotoService.getPhotoVObyPhotoId(id, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error getting photo by id");
-    }
-
-    public static JsonAdminResponse<List<PhotoVO>> listAllPhotoVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
-            return JsonAdminResponse.success(PhotoService.listAllPhotoVOs(basicPostFilter, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing photos");
-    }
-
-    public static JsonAdminResponse<ImageVO> getPhotoImageVO(Long parentObjectId, SessionFactory sessionFactory){
-        ImageVO imageVO = null;
-
-        try (Session session = sessionFactory.openSession()) {
-            List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(parentObjectId), session);
-            if (imageVOList != null){
-                imageVO = imageVOList.get(0);
+        actionToErrorMessage.put("listAllPhotoVOs", "Error listing photos");
+        actionToFunction.put("listAllPhotoVOs", (JsonApiRequestContext request) -> {
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (request.data != null && !request.data.isEmpty()){
+                basicPostFilterTO = request.objectMapper.readValue(request.data, BasicPostFilterTO.class);
             }
-            return JsonAdminResponse.success(imageVO);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, request.session);
+            return JsonAdminResponse.success(PhotoService.listAllPhotoVOs(basicPostFilter, request.session));
+        });
 
-        return JsonAdminResponse.fail("error getting image for photo");
-    }
+        actionToErrorMessage.put("getPhotoVOByPhotoId", "Error getting photo by id");
+        actionToFunction.put("getPhotoVOByPhotoId", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return JsonAdminResponse.success(PhotoService.getPhotoVObyPhotoId(id, request.session));
+        });
 
-    public static JsonAdminResponse<Long> saveOrUpdatePhoto(PhotoTO photoTO, SessionFactory sessionFactory){
+        actionToErrorMessage.put("getPhotoImageVO", "Error getting image for photo");
+        actionToFunction.put("getPhotoImageVO", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotoService.getPhotoImageVO(id, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return PhotoService.createOrUpdatePhoto(photoTO, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("togglePhotoPublish", "Error toggling photo publish status");
+        actionToFunction.put("togglePhotoPublish", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotoService.togglePhotoPublish(id, request.userGuid, request.session);
+        });
 
-        return JsonAdminResponse.fail("error saving or updating photo");
-    }
+        actionToErrorMessage.put("deletePhoto", "Error deleting photo");
+        actionToFunction.put("deletePhoto", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotoService.deletePhoto(id, request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<Void> togglePhotoPublish(Long id, String guid, SessionFactory sessionFactory){
+        /*
+        Tag Editor
+         */
 
-        try (Session session = sessionFactory.openSession()) {
-            return PhotoService.togglePhotoPublish(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("listTags", "Error listing tags for object");
+        actionToFunction.put("listTags", (JsonApiRequestContext request) -> {
+            TagTO tagTO = request.objectMapper.readValue(request.data, TagTO.class);
+            return TagService.listTagsForObjectStr(tagTO, request.session);
+        });
 
-        return JsonAdminResponse.fail("error toggling photo publish status");
-    }
+        actionToErrorMessage.put("saveOrUpdateTags", "Error saving or updating tags");
+        actionToFunction.put("saveOrUpdateTags", (JsonApiRequestContext request) -> {
+            TagTO tagTO = request.objectMapper.readValue(request.data, TagTO.class);
+            return TagService.saveOrUpdateTags(tagTO, request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<Void> deletePhoto(Long id, String guid, SessionFactory sessionFactory){
+        // homepage widget - lists only tags for published posts
+        actionToErrorMessage.put("getTagDigestVOList", "Error obtaining list of tags");
+        actionToFunction.put("getTagDigestVOList", (JsonApiRequestContext request) -> {
+            return TagService.getTagDigestVOList(request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return PhotoService.deletePhoto(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        /*
+        Gallery edit
+         */
 
-        return JsonAdminResponse.fail("error deleting photo");
-    }
+        actionToErrorMessage.put("listAllGalleryVOs", "Error listing galleries");
+        actionToFunction.put("listAllGalleryVOs", (JsonApiRequestContext request) -> {
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (request.data != null && !request.data.isEmpty()){
+                basicPostFilterTO = request.objectMapper.readValue(request.data, BasicPostFilterTO.class);
+            }
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, request.session);
 
-    /*
-     * Tags
-     */
-
-    public static JsonAdminResponse<TagTO> listTagsForObject(TagTO request, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return TagService.listTagsForObjectStr(request, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing tags for object");
-    }
-
-    public static JsonAdminResponse<Void> saveOrUpdateTags(TagTO tagTO, String guid, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return TagService.saveOrUpdateTags(tagTO, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error saving or updating tags");
-    }
-
-    public static JsonAdminResponse<List<TagDigestVO>> getTagDigestVOList(SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return TagService.getTagDigestVOList(session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error obtaining list of tags");
-    }
-
-    /*
-     * Image Manager - list gallery/article images
-     */
-    public static JsonAdminResponse<List<ImageVO>> listImageVOs(Short postAttribution, Long objId, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return FileDao.getImages(postAttribution, objId, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing images");
-    }
-
-
-    public static JsonAdminResponse<List<GalleryVO>> listAllGalleryVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
             Integer galleryRepresentationImages;
-            if (basicPostFilter == null){
+            if (basicPostFilter.galleryRepresentationImages == null){
                 galleryRepresentationImages = BasicPostFilter.DEFAULT_GALLERY_REPRESENTATION_IMAGES;
             } else {
                 galleryRepresentationImages = basicPostFilter.galleryRepresentationImages;
             }
 
-            return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(basicPostFilter, galleryRepresentationImages, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+            return JsonAdminResponse.success(GalleryService.listAllGalleryVOs(basicPostFilter, galleryRepresentationImages, request.session));
+        });
 
-        return JsonAdminResponse.fail("error listing gallerys");
-    }
+        actionToErrorMessage.put("saveOrUpdateGallery", "Error saving or updating gallery");
+        actionToFunction.put("saveOrUpdateGallery", (JsonApiRequestContext request) -> {
+            GalleryTO galleryTO = request.objectMapper.readValue(request.data, GalleryTO.class);
+            return GalleryService.createOrUpdateGallery(galleryTO, request.session);
+        });
 
-    public static JsonAdminResponse<Long> saveOrUpdateGallery(GalleryTO galleryTO, SessionFactory sessionFactory){
+        actionToErrorMessage.put("getGalleryVOByGalleryId", "Error loading gallery object");
+        actionToFunction.put("getGalleryVOByGalleryId", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return JsonAdminResponse.success(GalleryService.getGalleryVOByGalleryId(id, request.session));
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return GalleryService.createOrUpdateGallery(galleryTO, session);
-        } catch (Exception ex) {
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("toggleGalleryPublish", "Error toggling gallery publish status");
+        actionToFunction.put("toggleGalleryPublish", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return GalleryService.togglePostPublish(id, request.userGuid, request.session);
+        });
 
-        return JsonAdminResponse.fail("error saving or updating gallery");
-    }
+        actionToErrorMessage.put("deleteGallery", "Error deleting gallery");
+        actionToFunction.put("deleteGallery", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return GalleryService.deleteGallery(id, request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<GalleryVO> getGalleryVOByGalleryId(Long id, SessionFactory sessionFactory){
+        /*
+         Image Manager
+         */
+        actionToErrorMessage.put("listImageVOs", "Error listing images");
+        actionToFunction.put("listImageVOs", (JsonApiRequestContext request) -> {
+            ImageUploadTO imageTO = request.objectMapper.readValue(request.data, ImageUploadTO.class);
+            return FileDao.getImages(imageTO.imageAttributionClass, imageTO.parentObjectId, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(GalleryService.getGalleryVOByGalleryId(id, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("deleteFileEntity", "Error deleting file");
+        actionToFunction.put("deleteFileEntity", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return FileHandlingService.deleteFile(id, request.userGuid, request.session);
+        });
 
-        return JsonAdminResponse.fail("error loading gallery object");
-    }
+        actionToErrorMessage.put("updateFileDescription", "Error updating file description");
+        actionToFunction.put("updateFileDescription", (JsonApiRequestContext request) -> {
+            ImageFileDescrTO imageFileDescrTO = request.objectMapper.readValue(request.data, ImageFileDescrTO.class);
+            return FileHandlingService.updateFileInfo(imageFileDescrTO, request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<Void> toggleGalleryPublish(Long id, String guid, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()) {
-            return GalleryService.togglePostPublish(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("getImageFileDescrTO", "Error loading image description");
+        actionToFunction.put("getImageFileDescrTO", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return FileHandlingService.getImageFileDescrTO(id, request.session);
+        });
 
-        return JsonAdminResponse.fail("error toggling gallery publish status");
-    }
+        /*
+        Articles edit
+         */
 
-    public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, SessionFactory sessionFactory){
+        actionToErrorMessage.put("saveOrUpdateArticle", "Error saving or updating article");
+        actionToFunction.put("saveOrUpdateArticle", (JsonApiRequestContext request) -> {
+            ArticleTO articleTO = request.objectMapper.readValue(request.data, ArticleTO.class);
+            return ArticleService.createOrUpdateArticle(articleTO, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return GalleryService.deleteGallery(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("listAllArticleVOs", "");
+        actionToFunction.put("listAllArticleVOs", (JsonApiRequestContext request) -> {
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (request.data != null && !request.data.isEmpty()){
+                basicPostFilterTO = request.objectMapper.readValue(request.data, BasicPostFilterTO.class);
+            }
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, request.session);
+            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(basicPostFilter, request.session));
+        });
 
-        return JsonAdminResponse.fail("error deleting gallery");
-    }
+        actionToErrorMessage.put("getArticleVOByArticleId", "Error loading article data");
+        actionToFunction.put("getArticleVOByArticleId", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, request.session));
+        });
 
-    // articles
+        actionToErrorMessage.put("getArticleVOByArticleIdPreprocessed", "Error loading article data");
+        actionToFunction.put("getArticleVOByArticleIdPreprocessed", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleIdPreprocessed(id, request.session));
+        });
 
-    public static JsonAdminResponse<ImageVO> getArticleTitleImageVO(Long parentObjectId, SessionFactory sessionFactory){
+        actionToErrorMessage.put("getArticleTitleImageVO", "Error loading article title image");
+        actionToFunction.put("getArticleTitleImageVO", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return ArticleService.getArticleTitleImageVO(id, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return ArticleService.getArticleTitleImageVO(parentObjectId, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("toggleArticlePublish", "Error toggling article publish status");
+        actionToFunction.put("toggleArticlePublish", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return ArticleService.toggleArticlePublish(id, request.userGuid, request.session);
+        });
 
-        return JsonAdminResponse.fail("error loading article title image");
-    }
+        actionToErrorMessage.put("deleteArticle", "Error deleting article");
+        actionToFunction.put("deleteArticle", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return ArticleService.deleteArticle(id, request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<ArticleVO> getArticleVOByArticleId(Long id, Boolean preprocessed, SessionFactory sessionFactory){
+        actionToErrorMessage.put("setArticleTitleImageId", "Error setting article title image ID");
+        actionToFunction.put("setArticleTitleImageId", (JsonApiRequestContext request) -> {
+            ArticleTO articleTO = request.objectMapper.readValue(request.data, ArticleTO.class);
+            return ArticleService.setArticleTitleImageId(articleTO, request.userGuid, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            if (preprocessed){
-                return JsonAdminResponse.success(ArticleService.getArticleVObyArticleIdPreprocessed(id, session));
-            } else {
-                return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, session));
+        /*
+        Relations
+         */
+
+        actionToErrorMessage.put("listRelationsForPost", "Error listing relations for post");
+        actionToFunction.put("listRelationsForPost", (JsonApiRequestContext request) -> {
+            PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
+            return RelationService.getRelationTO(postTO, request.session);
+        });
+
+        actionToErrorMessage.put("createNewRelation", "Error creating new relation");
+        actionToFunction.put("createNewRelation", (JsonApiRequestContext request) -> {
+            RelationVO relationVoPartial = request.objectMapper.readValue(request.data, RelationVO.class);
+            return RelationService.createNewRelation(request.userGuid, relationVoPartial, request.session);
+        });
+
+        actionToErrorMessage.put("deleteRelation", "Error deleting relation");
+        actionToFunction.put("deleteRelation", (JsonApiRequestContext request) -> {
+            Long relationId = Long.parseLong(request.data);
+            return RelationService.deleteRelation(request.userGuid, relationId, request.session);
+        });
+
+        actionToErrorMessage.put("listConcernedArticlesVOs", "Error listing concerned articles for relation");
+        actionToFunction.put("listConcernedArticlesVOs", (JsonApiRequestContext request) -> {
+            PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
+            return JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, request.session));
+        });
+
+        actionToErrorMessage.put("listConcernedPhotosVOs", "Error listing concerned photos for relation");
+        actionToFunction.put("listConcernedPhotosVOs", (JsonApiRequestContext request) -> {
+            PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
+            return JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, request.session));
+        });
+
+        actionToErrorMessage.put("listConcernedGalleryVOs", "Error listing concerned galleries for relation");
+        actionToFunction.put("listConcernedGalleryVOs", (JsonApiRequestContext request) -> {
+            PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
+            return JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, request.session));
+        });
+
+        /*
+         Key value service - settings etc.
+         */
+
+        actionToErrorMessage.put("saveKeyValue", "Error saving key-value");
+        actionToFunction.put("saveKeyValue", (JsonApiRequestContext request) -> {
+            KeyValueTO keyValueTO = request.objectMapper.readValue(request.data, KeyValueTO.class);
+            return KeyValueService.setValue(keyValueTO.key, keyValueTO.value, request.userGuid, request.session);
+        });
+
+        actionToErrorMessage.put("loadKeyValue", "Error getting key-value");
+        actionToFunction.put("loadKeyValue", (JsonApiRequestContext request) -> {
+            return KeyValueService.getValue(request.data, request.userGuid, request.session);
+        });
+
+        actionToErrorMessage.put("saveSettings", "Error saving settings");
+        actionToFunction.put("saveSettings", (JsonApiRequestContext request) -> {
+            SettingsTO settingsTO = request.objectMapper.readValue(request.data, SettingsTO.class);
+            JsonAdminResponse<Void> res = SettingsService.saveSettings(request.userGuid, settingsTO, request.session);
+
+            if (res.success){
+                request.application.setAttribute("settingsTO", null);
             }
 
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+            return res;
+        });
 
-        return JsonAdminResponse.fail("error loading article data");
-    }
+        actionToErrorMessage.put("getSettingsAuthed", "Error getting settings");
+        actionToFunction.put("getSettingsAuthed", (JsonApiRequestContext request) -> {
+            return SettingsService.getSettingsAuthed(request.userGuid, request.session);
+        });
 
-    public static JsonAdminResponse<List<ArticleVO>> listAllArticleVOsFilter(BasicPostFilterTO basicPostFilterTO, SessionFactory sessionFactory){
-        
-        try (Session session = sessionFactory.openSession()) {
-            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, session);
-            return JsonAdminResponse.success(ArticleService.listAllArticleVOs(basicPostFilter, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("getSettingsNoAuth", "Error getting settings");
+        actionToFunction.put("getSettingsNoAuth", (JsonApiRequestContext request) -> {
+            return SettingsService.getSettingsNoAuth(request.session);
+        });
 
-        return JsonAdminResponse.fail("error listing articles");
-    }
+        actionToErrorMessage.put("getAboutPreprocessed", "Error loading preprocessed about page");
+        actionToFunction.put("getAboutPreprocessed", (JsonApiRequestContext request) -> {
+            return SettingsService.getAboutPreprocessed(request.session);
+        });
 
-    public static JsonAdminResponse<Long> saveOrUpdateArticle(ArticleTO articleTO, SessionFactory sessionFactory){
+        /*
+        Non-image files
+         */
 
-        try (Session session = sessionFactory.openSession()) {
-            return ArticleService.createOrUpdateArticle(articleTO, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("listOtherFiles", "Error listing files");
+        actionToFunction.put("listOtherFiles", (JsonApiRequestContext request) -> {
+            BasicFileFilter basicFileFilter = request.objectMapper.readValue(request.data, BasicFileFilter.class);
+            return FileHandlingService.listOtherFiles(basicFileFilter, request.session);
+        });
 
-        return JsonAdminResponse.fail("error saving or updating article");
-    }
+        actionToErrorMessage.put("deleteOtherFile", "Error deleting file");
+        actionToFunction.put("deleteOtherFile", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return FileHandlingService.deleteOtherFile(request.userGuid, id, request.session);
+        });
 
-    public static JsonAdminResponse<Void> toggleArticlePublish(Long id, String guid, SessionFactory sessionFactory){
+        actionToErrorMessage.put("getOtherFileById", "Error loading file");
+        actionToFunction.put("getOtherFileById", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return FileHandlingService.getOtherFileById(id, request.session);
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return ArticleService.toggleArticlePublish(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        actionToErrorMessage.put("updateOtherFileInfo", "Error updating file info");
+        actionToFunction.put("updateOtherFileInfo", (JsonApiRequestContext request) -> {
+            OtherFileTO otherFileTO = request.objectMapper.readValue(request.data, OtherFileTO.class);
+            return FileHandlingService.updateOtherFileInfo(otherFileTO, request.session);
+        });
 
-        return JsonAdminResponse.fail("error toggling article publish status");
-    }
+        /*
+        CDA
+         */
 
-    public static JsonAdminResponse<Void> deleteArticle(Long id, String guid, SessionFactory sessionFactory){
+        actionToErrorMessage.put("processPagingRequest", "Error processing paging request");
+        actionToFunction.put("processPagingRequest", (JsonApiRequestContext request) -> {
+            PagingRequestFilter pagingRequestFilter = request.objectMapper.readValue(request.data, PagingRequestFilter.class);
+            return JsonAdminResponse.success(PagingService.get(pagingRequestFilter, request.session));
+        });
 
-        try (Session session = sessionFactory.openSession()) {
-            return ArticleService.deleteArticle(id, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error deleting article");
-    }
-
-    public static JsonAdminResponse<Void> setArticleTitleImageId(ArticleTO articleTO, String guid, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return ArticleService.setArticleTitleImageId(articleTO, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error setting article title image id");
-    }
-
-
-    public static JsonAdminResponse<RelationTO> listRelationsForPost(PostTO postTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return RelationService.getRelationTO(postTO, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing relations for post");
-    }
-
-    public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVOPartial, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return RelationService.createNewRelation(guid, relationVOPartial, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error creating new relation");
-    }
-
-    public static JsonAdminResponse<Void> deleteRelation(String guid, Long relationId, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return RelationService.deleteRelation(guid, relationId, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error deleting relation");
-    }
-    
-    public static JsonAdminResponse<List<ArticleVO>> listConcernedArticlesVOs(PostTO postTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing concerned articles for relation");
-    }
-
-    public static JsonAdminResponse<List<PhotoVO>> listConcernedPhotosVOs(PostTO postTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing concerned articles for photo");
-    }
-
-    public static JsonAdminResponse<List<GalleryVO>> listConcernedGalleryVOs(PostTO postTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()) {
-            return JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error listing concerned galleries for relation");
-    }
-
-    public static JsonAdminResponse<Void> saveKeyValue(KeyValueTO keyValueTO, String guid, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()){
-            return KeyValueService.setValue(keyValueTO.key, keyValueTO.value, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error saving key-value");
-    }
-
-    public static JsonAdminResponse<KeyValueTO> getKeyValue(String key, String guid, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()){
-            return KeyValueService.getValue(key, guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error getting key-value");
-    }
-
-    public static JsonAdminResponse<Void> saveSettings(String guid, SettingsTO settingsTO, SessionFactory sessionFactory){
-
-        try (Session session = sessionFactory.openSession()){
-            return SettingsService.saveSettings(guid, settingsTO, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error saving settings");
-    }
-
-    public static JsonAdminResponse<SettingsTO> getSettingsAuthed(String guid, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()) {
-            return SettingsService.getSettingsAuthed(guid, session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error getting settings");
-    }
-
-    public static JsonAdminResponse<SettingsTO> getSettingsNoAuth(SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()) {
-            return SettingsService.getSettingsNoAuth(session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error getting settings");
-    }
-
-    public static JsonAdminResponse<String> getAboutPreprocessed(SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return SettingsService.getAboutPreprocessed(session);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error loading about page");
-    }
-
-    public static JsonAdminResponse<PostVOList> processPagingRequest(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return JsonAdminResponse.success(PagingService.get(pagingRequestFilter, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
-
-        return JsonAdminResponse.fail("error processing paging request");
-    }
-
-    public static JsonAdminResponse<PostVOListUnified> processPagingRequestUnified(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
+        actionToErrorMessage.put("processPagingRequestUnified", "Error processing paging request");
+        actionToFunction.put("processPagingRequestUnified", (JsonApiRequestContext request) -> {
+            PagingRequestFilter pagingRequestFilter = request.objectMapper.readValue(request.data, PagingRequestFilter.class);
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, request.session);
             PostVOListUnified postVOListUnified = PagingService.unify(postVOList);
             return JsonAdminResponse.success(postVOListUnified);
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        });
 
-        return JsonAdminResponse.fail("error processing paging request");
-    }
-
-    public static JsonAdminResponse<SidePanelPostsTO> getSidePanelPosts(SidePanelRequestTO sidePanelRequestTO, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
+        actionToErrorMessage.put("getSidePanelPosts", "Error assembling sidepanel posts");
+        actionToFunction.put("getSidePanelPosts", (JsonApiRequestContext request) -> {
+            SidePanelRequestTO sidePanelRequestTO = request.objectMapper.readValue(request.data, SidePanelRequestTO.class);
 
             SidePanelPostsTO sidePanelPostsTO = new SidePanelPostsTO();
 
             PagingRequestFilter pagingRequestFilter = PagingRequestFilter.latest(sidePanelRequestTO.limitLatest);
-            PostVOList postVOList = PagingService.get(pagingRequestFilter, session);
+            PostVOList postVOList = PagingService.get(pagingRequestFilter, request.session);
             PostVOListUnified postVOListUnified = PagingService.unify(postVOList);
             sidePanelPostsTO.latest = postVOListUnified.posts;
 
             if (sidePanelRequestTO.postId != null && sidePanelRequestTO.postAttribution != null) {
-                RelationService.fillRelevantPosts(sidePanelPostsTO, sidePanelRequestTO, session);
+                RelationService.fillRelevantPosts(sidePanelPostsTO, sidePanelRequestTO, request.session);
             }
 
             return JsonAdminResponse.success(sidePanelPostsTO);
 
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+        });
 
-        return JsonAdminResponse.fail("error assembling sidepanel posts");
+        actionToErrorMessage.put("preFilterTags", "Error preloading tags");
+        actionToFunction.put("preFilterTags", (JsonApiRequestContext request) -> {
+            PagingRequestFilter pagingRequestFilter = request.objectMapper.readValue(request.data, PagingRequestFilter.class);
+            return JsonAdminResponse.success(PagingDao.preFilterTagEntities(pagingRequestFilter, request.session));
+        });
+
+        actionToErrorMessage.put("toBase64Utf8", "Error encoding to base64");
+        actionToFunction.put("toBase64Utf8", (JsonApiRequestContext request) -> {
+            return JsonAdminResponse.success(toBase64(request.data));
+        });
+
+        actionToErrorMessage.put("fromBase64Utf8", "Error decoding from base64");
+        actionToFunction.put("fromBase64Utf8", (JsonApiRequestContext request) -> {
+            return JsonAdminResponse.success(fromBase64(request.data));
+        });
+
+
     }
 
-    public static JsonAdminResponse<List<String>> preFilterTags(PagingRequestFilter pagingRequestFilter, SessionFactory sessionFactory){
-        try (Session session = sessionFactory.openSession()){
-            return JsonAdminResponse.success(PagingDao.preFilterTagEntities(pagingRequestFilter, session));
-        } catch (Exception ex){
-            Tools.handleException(ex);
-        }
+    public static String processRequestWithSerialization(HttpServletRequest request, ServletContext application, SessionFactory sessionFactory, ObjectMapper objectMapper){
+        String responseSerialized = "";
 
-        return JsonAdminResponse.fail("error preloading tags");
-    }
-
-    public static String toString(Object object, ObjectMapper objectMapper){
-
-        if (object == null){
-            return "null";
-        }
-
-        String res = "";
         try {
-            res = objectMapper.writeValueAsString(object);
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());
+            responseSerialized = objectMapper.writeValueAsString(processRequest(request, application, sessionFactory, objectMapper));
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
-        return res;
+        return responseSerialized;
     }
+
+    public static JsonAdminResponse processRequest(HttpServletRequest request, ServletContext application, SessionFactory sessionFactory, ObjectMapper objectMapper){
+
+        JsonApiRequestContext jar = new JsonApiRequestContext();
+        jar.action = request.getParameter("action");
+        jar.data = request.getParameter("data");
+        jar.userGuid = request.getParameter("guid");
+        jar.fsLocation = request.getSession().getServletContext().getRealPath("/");
+        jar.objectMapper = objectMapper;
+        jar.application = application;
+
+        if (jar.action == null || jar.action.isBlank()){
+            return JsonAdminResponse.fail("Error: no action");
+        }
+        JsonAdminResponse response;
+
+        try (Session session = sessionFactory.openSession()){
+            jar.session = session;
+            response = (JsonAdminResponse) actionToFunction.get(jar.action).apply(jar);
+        } catch (Exception ex) {
+            Tools.handleException(ex);
+            response = JsonAdminResponse.fail(actionToErrorMessage.get(jar.action));
+        }
+
+        return response;
+    }
+
 
     public static PostVOListUnified latest(Integer count, SessionFactory sessionFactory){
         try (Session session = sessionFactory.openSession()){

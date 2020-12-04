@@ -17,6 +17,10 @@ package world.thismagical.vo;
                                                                                                    
 */
 
+/**
+ * authorization data passed from server to client
+ */
+
 public class AuthorizedVO {
     public String guid;
     public String privilegeLevelName;

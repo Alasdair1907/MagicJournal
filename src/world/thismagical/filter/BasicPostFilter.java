@@ -55,7 +55,7 @@ public class BasicPostFilter {
     public static BasicPostFilter fromTO(BasicPostFilterTO to, Session session){
 
         if (to == null){
-            return null;
+            return new BasicPostFilter(); // TODO not entirely sure this is the right behaviour
         }
 
         String regEx = "\\d\\d\\d\\d-\\d\\d-\\d\\d";

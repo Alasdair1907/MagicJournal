@@ -193,4 +193,16 @@ public class PhotoService extends PostService {
         return JsonAdminResponse.success(null);
     }
 
+    public static JsonAdminResponse<ImageVO> getPhotoImageVO(Long parentObjectId, Session session){
+
+        ImageVO imageVO = null;
+        List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(parentObjectId), session);
+
+        if (imageVOList != null){
+            imageVO = imageVOList.get(0);
+        }
+
+        return JsonAdminResponse.success(imageVO);
+    }
+
 }

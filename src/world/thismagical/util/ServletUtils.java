@@ -19,6 +19,9 @@ package world.thismagical.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import world.thismagical.service.ArticleService;
+import world.thismagical.service.GalleryService;
+import world.thismagical.service.PhotoService;
 import world.thismagical.service.SettingsService;
 import world.thismagical.to.MetaTO;
 import world.thismagical.to.SettingsTO;
@@ -88,21 +91,22 @@ public class ServletUtils {
         SessionFactory sessionFactory = getSessionFactory(application);
         SettingsTO settingsTO = getSettings(application);
 
-        if (Tools.strIsNumber(article)){
-            Long articleId = Long.parseLong(article);
-            ArticleVO articleVO = JsonApi.getArticleVOByArticleId(articleId, false, sessionFactory).data;
-            if (articleVO == null){ return new MetaTO(); }
-            return MetaTO.fromPostVO(articleVO, settingsTO.websiteURL);
-        } else if (Tools.strIsNumber(photo)){
-            Long photoId = Long.parseLong(photo);
-            PhotoVO photoVO = JsonApi.getPhotoVOByPhotoId(photoId, sessionFactory).data;
-            if (photoVO == null){ return new MetaTO(); }
-            return MetaTO.fromPostVO(photoVO, settingsTO.websiteURL);
-        } else if (Tools.strIsNumber(gallery)){
-            Long galleryId = Long.parseLong(gallery);
-            GalleryVO galleryVO = JsonApi.getGalleryVOByGalleryId(galleryId, sessionFactory).data;
-            if (galleryVO == null){ return new MetaTO(); }
-            return MetaTO.fromPostVO(galleryVO, settingsTO.websiteURL);
+        try (Session session = sessionFactory.openSession()) {
+            if (Tools.strIsNumber(article)) {
+                Long articleId = Long.parseLong(article);
+                ArticleVO articleVO = ArticleService.getArticleVObyArticleId(articleId, session);
+                return MetaTO.fromPostVO(articleVO, settingsTO.websiteURL);
+            } else if (Tools.strIsNumber(photo)) {
+                Long photoId = Long.parseLong(photo);
+                PhotoVO photoVO = PhotoService.getPhotoVObyPhotoId(photoId, session);
+                return MetaTO.fromPostVO(photoVO, settingsTO.websiteURL);
+            } else if (Tools.strIsNumber(gallery)) {
+                Long galleryId = Long.parseLong(gallery);
+                GalleryVO galleryVO = GalleryService.getGalleryVOByGalleryId(galleryId, session);
+                return MetaTO.fromPostVO(galleryVO, settingsTO.websiteURL);
+            }
+        } catch (Exception ex){
+            Tools.handleException(ex);
         }
 
         return new MetaTO();

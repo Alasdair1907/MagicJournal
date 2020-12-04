@@ -1,8 +1,13 @@
 package world.thismagical.to;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.Session;
+
+import javax.servlet.ServletContext;
+
 /*
-  User: Alasdair
-  Date: 1/2/2020
-  Time: 7:00 PM                                                                                                    
+User: Alasd
+Date: 12/3/2020
                                         `.------:::--...``.`                                        
                                     `-:+hmmoo+++dNNmo-.``/dh+...                                    
                                    .+/+mNmyo++/+hmmdo-.``.odmo -/`                                  
@@ -14,15 +19,15 @@ package world.thismagical.to;
                       ```..--:/+oyhddddmmmmmmmmmmmmmmmmmmmmmmmddddys+/::-..````                     
                                  ``.:oshddmmmmmNNNNNNNNNNNmmmhs+:.`                                 
                                        `.-/+oossssyysssoo+/-.`                                      
-                                                                                                   
+
 */
+public class JsonApiRequestContext {
+    public String action;
+    public String data;
+    public String userGuid;
+    public String fsLocation;
 
-/*
-apparently, this is used also for getting images from file dao
- */
-
-public class ImageUploadTO {
-    public Short imageAttributionClass;
-    public Long parentObjectId;
-    public String sessionGuid;
+    public Session session;
+    public ObjectMapper objectMapper;
+    public ServletContext application;
 }
