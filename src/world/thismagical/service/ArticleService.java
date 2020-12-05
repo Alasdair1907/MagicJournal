@@ -125,40 +125,18 @@ public class ArticleService extends PostService {
         articleEntity.setTinyDescription(Tools.nullToEmpty(articleTO.tinyDescription));
         articleEntity.setGpsCoordinates(Tools.nullToEmpty(articleTO.gpsCoordinates));
 
-        if (newArticle) {
-            articleEntity.setPublished(articleTO.published);
-        }
-
         if (articleTO.titleImageId != null) {
             articleEntity.setTitleImageId(articleTO.titleImageId);
         }
 
         articleEntity.setArticleText(articleTO.articleText);
 
-        if (!session.getTransaction().isActive()){
-            session.beginTransaction();
-        }
-
-        session.saveOrUpdate(articleEntity);
-        session.flush();
-
-        if (newArticle){
-            PostIndexItem postIndexItem = new PostIndexItem();
-            postIndexItem.setPostAttribution(PostAttribution.ARTICLE);
-            postIndexItem.setPostId(articleEntity.getId());
-            postIndexItem.setAuthorLogin(articleEntityAuthor.getLogin());
-            postIndexItem.setCreationDate(articleEntity.getCreationDate());
-            postIndexItem.setHasGeo(Tools.isValidGeo(articleEntity.getGpsCoordinates()));
-
-            session.save(postIndexItem);
-            session.flush();
-        }
-
-        TagDao.setGeo(articleEntity.getGpsCoordinates(), articleEntity.getId(), PostAttribution.ARTICLE, session);
+        savePostGeneralProcedures(newArticle, articleEntityAuthor, articleEntity, PostAttribution.ARTICLE, session);
 
         if (!newArticle) {
+            // we're not updating it when the article is completely new, because the frontend first creates a completely
+            // empty article, and when the user puts text into it and clicks 'save', the empty article gets updated
             RelationService.updateArticleGalleryRelations(articleEntity.getId(), articleTO.articleText, session);
-            PagingDao.setGeo(articleEntity.getGpsCoordinates(), PostAttribution.ARTICLE, articleEntity.getId(), session);
         }
 
         return JsonAdminResponse.success(articleEntity.getId());
@@ -174,45 +152,6 @@ public class ArticleService extends PostService {
         return JsonAdminResponse.success(FileDao.getImageById(articleEntity.getTitleImageId(), session));
     }
 
-    public static JsonAdminResponse<Void> deleteArticle(Long id, String guid, Session session){
-
-        if (id == null){
-            return JsonAdminResponse.fail("deleteArticle: no id provided");
-        }
-
-        ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        List<ImageVO> articleImages = FileDao.getImages(PostAttribution.ARTICLE, Collections.singletonList(id), session);
-        FileHandlingService.deleteImages(articleImages, session);
-
-        ArticleDao.deleteEntity(id, ArticleEntity.class, session);
-        TagDao.truncateTags(id, PostAttribution.ARTICLE.getId(), session);
-        PagingDao.deleteIndex(PostAttribution.ARTICLE, id, session);
-        RelationDao.deleteRelationsInvolvingPost(PostAttribution.ARTICLE, id, session);
-
-        return JsonAdminResponse.success(null);
-    }
-
-    public static JsonAdminResponse<Void> toggleArticlePublish(Long id, String guid, Session session){
-
-        ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(id, ArticleEntity.class, session);
-        AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(articleEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        ArticleDao.togglePostPublish(id, ArticleEntity.class, session);
-        PagingDao.updatePostPublish(PostAttribution.ARTICLE, id, session);
-        updateTagPublish(id, PostAttribution.ARTICLE, session);
-
-        return JsonAdminResponse.success(null);
-    }
 
     public static JsonAdminResponse<Void> setArticleTitleImageId(ArticleTO articleTO, String guid, Session session){
 

@@ -2,6 +2,7 @@ package world.thismagical.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import world.thismagical.entity.PostEntity;
 import world.thismagical.entity.RelationEntity;
 import world.thismagical.util.PostAttribution;
 import world.thismagical.util.Tools;
@@ -11,6 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RelationDao {
@@ -19,32 +21,37 @@ public class RelationDao {
     lists relations, where either destination or source is object referred to by postAttribution and postId
      */
     public static List<RelationEntity> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
-        if (postAttribution == null || postId == null){
-            throw new IllegalArgumentException("listRelations: null argument");
+
+        PostEntity postEntity = PostDao.getPostEntityById(postId, postAttribution.getAssociatedClass(), session);
+
+        if (postEntity == null || postEntity.getIndexId() == null){
+            Tools.log("ERROR: relations requested for the post that hasn't been found");
+            return null;
         }
 
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<RelationEntity> cq = cb.createQuery(RelationEntity.class);
-        Root<RelationEntity> root = cq.from(RelationEntity.class);
+        return listRelationsForPost(postEntity.getIndexId(), session);
+    }
 
-        Predicate postAttributionSrcEqual = cb.equal(root.get("srcAttributionClass"), postAttribution.getId());
-        Predicate postIdSrcEqual = cb.equal(root.get("srcObjectId"), postId);
-        Predicate src = cb.and(postAttributionSrcEqual, postIdSrcEqual);
+    /**
+     * Lists relations that involve the post identified by its index on either side of the relation
+     * @param postIndexId ID of corresponding PostIndexItem
+     * @param session hibernate session
+     * @return list of RelationEntity objects, or null upon error
+     */
+    public static List<RelationEntity> listRelationsForPost(Long postIndexId, Session session){
+        List<RelationEntity> relationEntityList = null;
 
-        Predicate postAttributionDstEqual = cb.equal(root.get("dstAttributionClass"), postAttribution.getId());
-        Predicate postIdDstEqual = cb.equal(root.get("dstObjectId"), postId);
-        Predicate dst = cb.and(postAttributionDstEqual, postIdDstEqual);
+        if (postIndexId == null){
+            return null;
+        }
 
-        Predicate srcOrDst = cb.or(src, dst);
+        Query query = session.createQuery("from RelationEntity where dstIndexId = :indexId or srcIndexId = :indexId");
+        query.setParameter("indexId", postIndexId);
 
-        cq.select(root).where(srcOrDst);
-
-        List<RelationEntity> relationEntityList;
         try {
-            relationEntityList =session.createQuery(cq).getResultList();
+            relationEntityList = query.getResultList();
         } catch (Exception ex){
-            Tools.log("listRelationsForPost:" + ex.getMessage());
-            relationEntityList = null;
+            Tools.handleException(ex);
         }
 
         return relationEntityList;

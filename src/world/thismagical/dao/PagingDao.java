@@ -172,7 +172,7 @@ public class PagingDao {
         return postIndexItem;
     }
 
-    public static void updatePostPublish(PostAttribution postAttribution, Long objectId, Session session){
+    public static void updatePostPublish(Boolean publishStatus, PostAttribution postAttribution, Long objectId, Session session){
 
         PostIndexItem postIndexItem = getItem(postAttribution, objectId, session);
 
@@ -180,21 +180,8 @@ public class PagingDao {
             return;
         }
 
-        PostEntity postEntity = PostDao.getPostEntityById(objectId, postAttribution.getAssociatedClass(), session);
-
-        if (Boolean.TRUE.equals(postEntity.getPublished())){
-            postIndexItem.setPublished(true);
-        } else {
-            postIndexItem.setPublished(false);
-        }
-
-
-        if (!session.getTransaction().isActive()){
-            session.beginTransaction();
-        }
-
-        session.saveOrUpdate(postIndexItem);
-        session.flush();
+        postIndexItem.setPublished(publishStatus);
+        savePostIndexItem(postIndexItem, session);
     }
 
     public static void setGeo(String geo, PostAttribution postAttribution, Long objectId, Session session){
@@ -208,6 +195,10 @@ public class PagingDao {
 
         postIndexItem.setHasGeo(hasGeo);
 
+        savePostIndexItem(postIndexItem, session);
+    }
+
+    public static void savePostIndexItem(PostIndexItem postIndexItem, Session session){
         if (!session.getTransaction().isActive()){
             session.beginTransaction();
         }

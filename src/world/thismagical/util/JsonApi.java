@@ -153,13 +153,13 @@ public class JsonApi {
         actionToErrorMessage.put("togglePhotoPublish", "Error toggling photo publish status");
         actionToFunction.put("togglePhotoPublish", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return PhotoService.togglePhotoPublish(id, request.userGuid, request.session);
+            return PhotoService.togglePostPublishStatus(id, PostAttribution.PHOTO, request.userGuid, request.session);
         });
 
         actionToErrorMessage.put("deletePhoto", "Error deleting photo");
         actionToFunction.put("deletePhoto", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return PhotoService.deletePhoto(id, request.userGuid, request.session);
+            return PhotoService.deletePost(id, PostAttribution.PHOTO, request.userGuid, request.session);
         });
 
         /*
@@ -221,13 +221,13 @@ public class JsonApi {
         actionToErrorMessage.put("toggleGalleryPublish", "Error toggling gallery publish status");
         actionToFunction.put("toggleGalleryPublish", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return GalleryService.togglePostPublish(id, request.userGuid, request.session);
+            return GalleryService.togglePostPublishStatus(id, PostAttribution.GALLERY, request.userGuid, request.session);
         });
 
         actionToErrorMessage.put("deleteGallery", "Error deleting gallery");
         actionToFunction.put("deleteGallery", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return GalleryService.deleteGallery(id, request.userGuid, request.session);
+            return GalleryService.deletePost(id, PostAttribution.GALLERY, request.userGuid, request.session);
         });
 
         /*
@@ -298,13 +298,13 @@ public class JsonApi {
         actionToErrorMessage.put("toggleArticlePublish", "Error toggling article publish status");
         actionToFunction.put("toggleArticlePublish", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return ArticleService.toggleArticlePublish(id, request.userGuid, request.session);
+            return ArticleService.togglePostPublishStatus(id, PostAttribution.ARTICLE, request.userGuid, request.session);
         });
 
         actionToErrorMessage.put("deleteArticle", "Error deleting article");
         actionToFunction.put("deleteArticle", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return ArticleService.deleteArticle(id, request.userGuid, request.session);
+            return ArticleService.deletePost(id, PostAttribution.ARTICLE, request.userGuid, request.session);
         });
 
         actionToErrorMessage.put("setArticleTitleImageId", "Error setting article title image ID");
@@ -338,19 +338,19 @@ public class JsonApi {
         actionToErrorMessage.put("listConcernedArticlesVOs", "Error listing concerned articles for relation");
         actionToFunction.put("listConcernedArticlesVOs", (JsonApiRequestContext request) -> {
             PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
-            return JsonAdminResponse.success(RelationService.listConcernedArticlesVOs(postTO, request.session));
+            return JsonAdminResponse.success(RelationService.listConcernedPostVOs(postTO, PostAttribution.ARTICLE, request.session));
         });
 
         actionToErrorMessage.put("listConcernedPhotosVOs", "Error listing concerned photos for relation");
         actionToFunction.put("listConcernedPhotosVOs", (JsonApiRequestContext request) -> {
             PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
-            return JsonAdminResponse.success(RelationService.listConcernedPhotosVOs(postTO, request.session));
+            return JsonAdminResponse.success(RelationService.listConcernedPostVOs(postTO, PostAttribution.PHOTO, request.session));
         });
 
         actionToErrorMessage.put("listConcernedGalleryVOs", "Error listing concerned galleries for relation");
         actionToFunction.put("listConcernedGalleryVOs", (JsonApiRequestContext request) -> {
             PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
-            return JsonAdminResponse.success(RelationService.listConcernedGalleryVOs(postTO, request.session));
+            return JsonAdminResponse.success(RelationService.listConcernedPostVOs(postTO, PostAttribution.GALLERY, request.session));
         });
 
         /*

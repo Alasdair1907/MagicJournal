@@ -18,6 +18,8 @@ package world.thismagical.entity;
 */
 
 import world.thismagical.util.PostAttribution;
+import world.thismagical.vo.GalleryVO;
+import world.thismagical.vo.PostVO;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,6 +32,9 @@ public class GalleryEntity implements Serializable, PostEntity {
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name="index_id")
+    Long indexId;
 
     @Column(name="title")
     private String title;
@@ -62,6 +67,14 @@ public class GalleryEntity implements Serializable, PostEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(Long indexId) {
+        this.indexId = indexId;
     }
 
     public String getTitle() {
@@ -129,4 +142,7 @@ public class GalleryEntity implements Serializable, PostEntity {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
+    public PostVO toBaseVO(){
+        return new GalleryVO(this);
+    }
 }

@@ -1,5 +1,7 @@
 package world.thismagical.entity;
 import world.thismagical.util.PostAttribution;
+import world.thismagical.vo.ArticleVO;
+import world.thismagical.vo.PostVO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +15,9 @@ public class ArticleEntity implements Serializable, PostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     Long id;
+
+    @Column(name="index_id")
+    Long indexId;
 
     @Column(name="title")
     String title;
@@ -51,6 +56,14 @@ public class ArticleEntity implements Serializable, PostEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(Long indexId) {
+        this.indexId = indexId;
     }
 
     public String getTitle() {
@@ -134,5 +147,9 @@ public class ArticleEntity implements Serializable, PostEntity {
     }
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
+
+    public PostVO toBaseVO(){
+        return new ArticleVO(this);
+    }
 
 }

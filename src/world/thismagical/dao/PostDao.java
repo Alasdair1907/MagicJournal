@@ -179,7 +179,15 @@ public class PostDao {
         return postEntity;
     }
 
-    public static <T extends PostEntity> void togglePostPublish(Long id, Class<T> clazz, Session session){
+    /**
+     *
+     * @param id Post ID
+     * @param clazz Class of post entity
+     * @param session Hibernate session
+     * @param <T> A class that extends PostEntity
+     * @return Post publish status that has just been set
+     */
+    public static <T extends PostEntity> Boolean togglePostPublish(Long id, Class<T> clazz, Session session){
         PostEntity postEntity = getPostEntityById(id, clazz, session);
 
         if (Boolean.TRUE.equals(postEntity.getPublished())){
@@ -194,6 +202,8 @@ public class PostDao {
 
         session.saveOrUpdate(postEntity);
         session.flush();
+
+        return postEntity.getPublished();
     }
 
     public static <T extends PostEntity> void deleteEntity(Long postId, Class<T> clazz, Session session){
@@ -211,6 +221,38 @@ public class PostDao {
         delQuery.executeUpdate();
 
         session.flush();
+    }
+
+    public static <T extends PostEntity> void saveEntity(T post, Session session){
+        if (post == null){
+            return;
+        }
+
+        if (!session.getTransaction().isActive()){
+            session.beginTransaction();
+        }
+
+        session.saveOrUpdate(post);
+        session.flush();
+    }
+
+    public static List<PostEntity> getPostEntitiesByIndexIds(List<Long> indexIds, Session session){
+        Query articleQuery = session.createQuery("from ArticleEntity where indexId in :indexIds");
+        articleQuery.setParameter("indexIds", indexIds);
+
+        Query photoQuery = session.createQuery("from PhotoEntity  where indexId in :indexIds");
+        photoQuery.setParameter("indexIds", indexIds);
+
+        Query galleryQuery = session.createQuery("from GalleryEntity where indexId in :indexIds");
+        galleryQuery.setParameter("indexIds", indexIds);
+
+        List<PostEntity> resultList = new ArrayList<>();
+
+        resultList.addAll(articleQuery.getResultList());
+        resultList.addAll(photoQuery.getResultList());
+        resultList.addAll(galleryQuery.getResultList());
+
+        return resultList;
     }
 
 }

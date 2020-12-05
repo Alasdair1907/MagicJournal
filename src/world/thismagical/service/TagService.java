@@ -152,6 +152,7 @@ public class TagService {
                 tagEntity.setParentObjectId(tagTO.objectId);
                 tagEntity.setPostIndexItemId(postIndexItem.getId());
                 tagEntity.setParentHasGeo(hasGeo);
+                tagEntity.setParentIsPublished(postIndexItem.getPublished());
 
                 TagDao.addOrUpdateTag(tagEntity, session);
             }

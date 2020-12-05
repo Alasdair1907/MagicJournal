@@ -131,66 +131,9 @@ public class PhotoService extends PostService {
             FileDao.saveOrUpdate(imageFileEntity, session);
         }
 
-        session.saveOrUpdate(photoEntity);
-        session.flush();
-
-        if (newPhoto) {
-            PostIndexItem postIndexItem = new PostIndexItem();
-            postIndexItem.setPostAttribution(PostAttribution.PHOTO);
-            postIndexItem.setPostId(photoEntity.getId());
-            postIndexItem.setAuthorLogin(photoEntity.getAuthor().getLogin());
-            postIndexItem.setCreationDate(photoEntity.getCreationDate());
-            postIndexItem.setHasGeo(Tools.isValidGeo(photoEntity.getGpsCoordinates()));
-
-            session.saveOrUpdate(postIndexItem);
-            session.flush();
-        } else {
-            PagingDao.setGeo(photoEntity.getGpsCoordinates(), PostAttribution.PHOTO, photoEntity.getId(), session);
-        }
-
-        TagDao.setGeo(photoEntity.getGpsCoordinates(), photoEntity.getId(), PostAttribution.PHOTO, session);
+        savePostGeneralProcedures(newPhoto, currentAuthorEntity, photoEntity, PostAttribution.PHOTO, session);
 
         return JsonAdminResponse.success(photoEntity.getId());
-    }
-
-    public static JsonAdminResponse<Void> deletePhoto(Long id, String guid, Session session){
-
-        if (id == null){
-            return JsonAdminResponse.fail("deletePhoto error: no id provided");
-        }
-
-        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(id, PhotoEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        List<ImageVO> photoImages = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(id), session);
-        FileHandlingService.deleteImages(photoImages, session);
-
-        PhotoDao.deleteEntity(id, PhotoEntity.class, session);
-        TagDao.truncateTags(id, PostAttribution.PHOTO.getId(), session);
-        PagingDao.deleteIndex(PostAttribution.PHOTO, id, session);
-        RelationDao.deleteRelationsInvolvingPost(PostAttribution.PHOTO, id, session);
-
-        return JsonAdminResponse.success(null);
-    }
-
-    public static JsonAdminResponse<Void> togglePhotoPublish(Long id, String guid, Session session){
-
-        PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(id, PhotoEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(photoEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        PhotoDao.togglePostPublish(id, PhotoEntity.class, session);
-        PagingDao.updatePostPublish(PostAttribution.PHOTO, id, session);
-        updateTagPublish(id, PostAttribution.PHOTO, session);
-
-        return JsonAdminResponse.success(null);
     }
 
     public static JsonAdminResponse<ImageVO> getPhotoImageVO(Long parentObjectId, Session session){

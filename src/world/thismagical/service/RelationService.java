@@ -55,9 +55,11 @@ public class RelationService {
             return JsonAdminResponse.fail("getRelationTO: null argument");
         }
 
-        List<RelationVO> relationVOList = listRelationsForPost(PostAttribution.getPostAttribution(postTO.postAttributionClass), postTO.postObjectId, session);
+        PostEntity postEntity = PostDao.getPostEntityById(postTO.postObjectId, postTO.getPostAttribution().getAssociatedClass(), session);
 
-        if (relationVOList == null || relationVOList.isEmpty()){
+        List<RelationVO> relationVOList = listRelationsForPost(postEntity.getIndexId(), session);
+
+        if (relationVOList.isEmpty()){
             return JsonAdminResponse.success(RelationTO.getEmpty(postTO));
         }
 
@@ -83,6 +85,7 @@ public class RelationService {
     /*
     obtains list of relations for post defined by sidePanelRequestTO.postAttribution and sidePanelRequestTO.postId,
     splits them into associated (auto relations) and related, fetches PostVOs for them, and puts these VOs into sidePanelPostsTO
+    TODO: refactor this abomination
      */
     public static void fillRelevantPosts(SidePanelPostsTO sidePanelPostsTO, SidePanelRequestTO sidePanelRequestTO, Session session){
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(PostAttribution.getPostAttribution(sidePanelRequestTO.postAttribution), sidePanelRequestTO.postId, session);
@@ -165,137 +168,35 @@ public class RelationService {
         sidePanelPostsTO.related = relatedVOList;
     }
 
+    public static List<RelationVO> listRelationsForPost(Long postIndexId, Session session){
 
-    public static List<RelationVO> listRelationsForPost(PostAttribution postAttribution, Long postId, Session session){
-        List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postAttribution, postId, session);
+        // 1. obtain list of relation entities
+        List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postIndexId, session);
 
-        if (relationEntities == null || relationEntities.isEmpty()){
-            return null;
-        }
+        // 2. load corresponding post entities
+        List<Long> postEntityIds = relationEntities.stream().map(RelationEntity::getDstIndexId).collect(Collectors.toList());
+        postEntityIds.addAll(relationEntities.stream().map(RelationEntity::getSrcIndexId).collect(Collectors.toList()));
+        List<PostEntity> postEntities = PostDao.getPostEntitiesByIndexIds(postEntityIds, session);
 
-        Entities entities = gatherRelationsEntities(relationEntities, session);
-        return relationEntityListToVo(relationEntities, entities, session);
-    }
+        // 3. turn relation entities into relation VOs by adding src and dst post titles
+        List<RelationVO> result = new ArrayList<>();
+        for (RelationEntity relationEntity : relationEntities){
+            RelationVO relationVO = new RelationVO(relationEntity);
 
-    public static List<RelationVO> relationEntityListToVo(List<RelationEntity> relationEntityList, Entities entities, Session session){
-        if (relationEntityList == null){
-            throw new IllegalArgumentException("relationEntityListToVo: null argument");
-        }
+            PostEntity srcEntity = postEntities.stream().filter(postEntity -> postEntity.getIndexId().equals(relationVO.srcIndexId)).findAny().orElse(null);
+            PostEntity dstEntity = postEntities.stream().filter(postEntity -> postEntity.getIndexId().equals(relationVO.dstIndexId)).findAny().orElse(null);
 
-        if (entities == null){
-            return null;
-        }
-
-        List<RelationVO> relationVOList = new ArrayList<>();
-
-        for (RelationEntity relationEntity : relationEntityList){
-            RelationVO relationVO = new RelationVO();
-
-            relationVO.relationId = relationEntity.getId();
-
-            relationVO.srcAttributionClass = relationEntity.getSrcAttributionClass();
-            relationVO.srcAttributionClassStr = relationEntity.getSrcAttributionClass().getReadable();
-            relationVO.srcAttributionClassShort = relationEntity.getSrcAttributionClass().getId();
-            relationVO.srcObjectId = relationEntity.getSrcObjectId();
-
-            relationVO.dstAttributionClass = relationEntity.getDstAttributionClass();
-            relationVO.dstAttributionClassStr = relationEntity.getDstAttributionClass().getReadable();
-            relationVO.dstAttributionClassShort = relationEntity.getDstAttributionClass().getId();
-            relationVO.dstObjectId = relationEntity.getDstObjectId();
-
-            relationVO.relationClass = relationEntity.getRelationClass();
-            relationVO.relationClassShort = relationEntity.getRelationClass().getId();
-
-            relationVO.isAuto = relationVO.relationClass.getIsAuto();
-
-            switch (relationVO.srcAttributionClass){
-                case ARTICLE:
-                    relationVO.srcObjectTitle = entities.articleEntities.stream()
-                            .filter(articleEntity -> articleEntity.getId().equals(relationVO.srcObjectId))
-                            .map(ArticleEntity::getTitle).findFirst().orElse("");
-                    break;
-                case PHOTO:
-                    relationVO.srcObjectTitle = entities.photoEntities.stream()
-                            .filter(photoEntity -> photoEntity.getId().equals(relationVO.srcObjectId))
-                            .map(PhotoEntity::getTitle).findFirst().orElse("");
-                    break;
-                case GALLERY:
-                    relationVO.srcObjectTitle = entities.galleryEntities.stream()
-                            .filter(galleryEntity -> galleryEntity.getId().equals(relationVO.srcObjectId))
-                            .map(GalleryEntity::getTitle).findFirst().orElse("");
-                    break;
+            if (srcEntity != null){
+                relationVO.srcObjectTitle = srcEntity.getTitle();
+            }
+            if (dstEntity != null){
+                relationVO.dstObjectTitle = dstEntity.getTitle();
             }
 
-            switch (relationVO.dstAttributionClass){
-                case ARTICLE:
-                    relationVO.dstObjectTitle = entities.articleEntities.stream()
-                            .filter(articleEntity -> articleEntity.getId().equals(relationVO.dstObjectId))
-                            .map(ArticleEntity::getTitle).findFirst().orElse("");
-                    break;
-                case PHOTO:
-                    relationVO.dstObjectTitle = entities.photoEntities.stream()
-                            .filter(photoEntity -> photoEntity.getId().equals(relationVO.dstObjectId))
-                            .map(PhotoEntity::getTitle).findFirst().orElse("");
-                    break;
-                case GALLERY:
-                    relationVO.dstObjectTitle = entities.galleryEntities.stream()
-                            .filter(galleryEntity -> galleryEntity.getId().equals(relationVO.dstObjectId))
-                            .map(GalleryEntity::getTitle).findFirst().orElse("");
-                    break;
-            }
-
-            relationVOList.add(relationVO);
+            result.add(relationVO);
         }
 
-        return relationVOList;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static Entities gatherRelationsEntities(List<RelationEntity> relationEntityList, Session session){
-        if (relationEntityList == null){
-            throw new IllegalArgumentException("gatherRelationsEntities: null argument");
-        }
-
-        Set<Long> articleEntityIds = new HashSet<>();
-        Set<Long> photoEntityIds = new HashSet<>();
-        Set<Long> galleryEntityIds = new HashSet<>();
-
-        for (RelationEntity relationEntity : relationEntityList){
-
-            Long dstObjectId = relationEntity.getDstObjectId();
-            Long srcObjectId = relationEntity.getSrcObjectId();
-
-            switch (relationEntity.getDstAttributionClass()){
-                case ARTICLE:
-                    articleEntityIds.add(dstObjectId);
-                    break;
-                case PHOTO:
-                    photoEntityIds.add(dstObjectId);
-                    break;
-                case GALLERY:
-                    galleryEntityIds.add(dstObjectId);
-                    break;
-            }
-
-            switch (relationEntity.getSrcAttributionClass()){
-                case ARTICLE:
-                    articleEntityIds.add(srcObjectId);
-                    break;
-                case PHOTO:
-                    photoEntityIds.add(srcObjectId);
-                    break;
-                case GALLERY:
-                    galleryEntityIds.add(srcObjectId);
-                    break;
-            }
-        }
-
-        Entities entities = new Entities();
-        entities.articleEntities = (List<ArticleEntity>) (List) ArticleDao.getEntitiesByIds(new ArrayList<>(articleEntityIds), ArticleEntity.class, session);
-        entities.photoEntities = (List<PhotoEntity>) (List) PhotoDao.getEntitiesByIds(new ArrayList<>(photoEntityIds), PhotoEntity.class, session);
-        entities.galleryEntities = (List<GalleryEntity>) (List) GalleryDao.getEntitiesByIds(new ArrayList<>(galleryEntityIds), GalleryEntity.class, session);
-
-        return entities;
+        return result;
     }
 
     public static JsonAdminResponse<Void> createNewRelation(String guid, RelationVO relationVoPartial, Session session){
@@ -310,7 +211,7 @@ public class RelationService {
             return JsonAdminResponse.fail("insufficient privileges");
         }
 
-        RelationEntity relationEntity = relationVoPartialToRelationEntity(relationVoPartial);
+        RelationEntity relationEntity = relationVoPartialToRelationEntity(relationVoPartial, session);
         RelationDao.saveRelation(relationEntity, session);
 
         return JsonAdminResponse.success(null);
@@ -338,123 +239,73 @@ public class RelationService {
     }
 
     /*
-    filters out ids from postIdsToFilter of posts of type targetPostAttribution that are already linked to post defined
-    by postTO.potObjectId and postTO.postAttributionClass
+    filters out entities from postEntities of posts that are already linked to the post defined by postIndexId
      */
-    public static Set<Long> getSetOfConcernedPosts(PostTO postTO, PostAttribution targetPostAttribution, Set<Long> postIdsToFilter, Session session){
+    public static List<PostEntity> getSetOfConcernedPosts(Long postIndexId, List<PostEntity> postEntities, Session session){
 
-        Long postId = postTO.postObjectId;
-        PostAttribution thisPostAttribution = PostAttribution.getPostAttribution(postTO.postAttributionClass);
-
-        List<RelationVO> relationVOList = listRelationsForPost(thisPostAttribution, postId, session);
-
-        if (relationVOList == null || relationVOList.isEmpty()){
-            return new HashSet<>(postIdsToFilter);
+        if (postIndexId == null || postEntities == null || postEntities.isEmpty()){
+            return new ArrayList<>();
         }
 
-        if (postIdsToFilter == null || postIdsToFilter.isEmpty()){
-            return new HashSet<>();
-        }
-        
-        Set<Long> res = new HashSet<>(postIdsToFilter);
+        List<RelationVO> relationVOList = listRelationsForPost(postIndexId, session);
 
-        for (RelationVO relationVO : relationVOList){
-            if (relationVO.dstAttributionClass == thisPostAttribution && relationVO.dstObjectId.equals(postId)){
-                if (relationVO.srcAttributionClass == targetPostAttribution){
-                    res.remove(relationVO.srcObjectId);
-                }
-            }
+        Set<Long> relationVoUsedIndexes = new HashSet<>();
+        relationVoUsedIndexes.addAll(relationVOList.stream().map(relationVO -> relationVO.dstIndexId).collect(Collectors.toSet()));
+        relationVoUsedIndexes.addAll(relationVOList.stream().map(relationVO -> relationVO.srcIndexId).collect(Collectors.toSet()));
 
-            if (relationVO.srcAttributionClass == thisPostAttribution && relationVO.srcObjectId.equals(postId)){
-                if (relationVO.dstAttributionClass == targetPostAttribution){
-                    res.remove(relationVO.dstObjectId);
-                }
+        Set<Long> resultingPostEntityIds = new HashSet<>();
+        List<PostEntity> result = new ArrayList<>();
+
+        for (PostEntity postEntity : postEntities){
+            Long postEntityIndex = postEntity.getIndexId();
+            if (!relationVoUsedIndexes.contains(postEntityIndex) && !resultingPostEntityIds.contains(postEntityIndex)){
+                resultingPostEntityIds.add(postEntityIndex);
+                result.add(postEntity);
             }
         }
 
-        return res;
+        return result;
     }
 
-    /*
-    Returns list of ArticleVOs that can be added as relations to current post.
-    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
-    Filter for articles is defined in postTO.basicPostFilterTO.
+    /**
+     * Loads the list of PostVOs of chosen class that can be used for creating a new relation - that is,
+     * they are not already related to the post in question
+     * @param postTO Identifies the post by postTO.postObjectId and postTO.postAttributionClass
+     * @param postClass Posts of which class should be loaded
+     * @param session hibernate session
+     * @return list of PostVOs
      */
-    public static List<ArticleVO> listConcernedArticlesVOs(PostTO postTO, Session session){
+    public static List<PostVO> listConcernedPostVOs(PostTO postTO, PostAttribution postClass, Session session){
 
         if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
             throw new IllegalArgumentException();
         }
 
-        List<ArticleVO> articleVOList = ArticleService.listAllArticleVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
-        if (articleVOList.isEmpty()){
-            return new ArrayList<>();
+        PostAttribution postAttribution = PostAttribution.getPostAttribution(postTO.postAttributionClass);
+
+        PostEntity centerPostEntity = PostDao.getPostEntityById(postTO.postObjectId, postAttribution.getAssociatedClass(), session);
+        Long postIndexId = centerPostEntity.getIndexId();
+
+        BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(postTO.basicPostFilterTO, session);
+        basicPostFilter.verifyGuid(session);
+
+        List<PostEntity> postEntityList = PostDao.listAllPosts(basicPostFilter, postClass.getAssociatedClass(), session);
+        List<PostEntity> availablePostEntities = getSetOfConcernedPosts(postIndexId, postEntityList, session);
+
+        List<PostVO> postVOs = new ArrayList<>();
+        for (PostEntity postEntity : availablePostEntities){
+            postVOs.add(postEntity.toBaseVO());
         }
 
-        Set<Long> articleIdSet = articleVOList.stream().map(it -> it.id).collect(Collectors.toSet());
-
-        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.ARTICLE){
-            articleIdSet.remove(postTO.postObjectId);
-        }
-
-        Set<Long> articleIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.ARTICLE, articleIdSet, session);
-        return articleVOList.stream().filter(it -> articleIdSetFinal.contains(it.id)).collect(Collectors.toList());
+        return postVOs;
     }
 
-    /*
-    Returns list of PhotoVOs that can be added as relations to current post.
-    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
-    Filter for photos is defined in postTO.basicPostFilterTO.
-    */
-    public static List<PhotoVO> listConcernedPhotosVOs(PostTO postTO, Session session){
-
-        if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
-            throw new IllegalArgumentException();
-        }
-
-        List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), session);
-        if (photoVOList.isEmpty()){
-            return new ArrayList<>();
-        }
-
-        Set<Long> photoIdSet = photoVOList.stream().map(it -> it.id).collect(Collectors.toSet());
-
-        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.PHOTO){
-            photoIdSet.remove(postTO.postObjectId);
-        }
-
-        Set<Long> photoIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.PHOTO, photoIdSet, session);
-        return photoVOList.stream().filter(it -> photoIdSetFinal.contains(it.id)).collect(Collectors.toList());
-    }
 
     /*
-    Returns list of GalleryVOs that can be added as relations to current post.
-    Current post is defined by postTO.postObjectId and postTO.postAttributionClass.
-    Filter for galleries is defined in postTO.basicPostFilterTO.
-    */
-    public static List<GalleryVO> listConcernedGalleryVOs(PostTO postTO, Session session){
-
-        if (postTO == null || postTO.postObjectId == null || postTO.postAttributionClass == null){
-            throw new IllegalArgumentException();
-        }
-
-        List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(BasicPostFilter.fromTO(postTO.basicPostFilterTO, session), 0, session);
-        if (galleryVOList.isEmpty()){
-            return new ArrayList<>();
-        }
-
-        Set<Long> galleryIdSet = galleryVOList.stream().map(it -> it.id).collect(Collectors.toSet());
-
-        if (PostAttribution.getPostAttribution(postTO.postAttributionClass) == PostAttribution.GALLERY){
-            galleryIdSet.remove(postTO.postObjectId);
-        }
-
-        Set<Long> galleryIdSetFinal = getSetOfConcernedPosts(postTO, PostAttribution.GALLERY, galleryIdSet, session);
-        return galleryVOList.stream().filter(it -> galleryIdSetFinal.contains(it.id)).collect(Collectors.toList());
-    }
-
-    /*
-    Parses article looking for GALLERY images referenced from bbcode and re-creates auto relations
+    Parses article looking for GALLERY images referenced from bbcode and re-creates auto relations.
+    The philosophy is, that linking photos to the article makes little sense, since photo contains
+    only one image that is already in the article, while galleries may contain a lot more stuff that
+    isn't in the article.
      */
     @SuppressWarnings("unchecked")
     public static void updateArticleGalleryRelations(Long articleId, String articleText, Session session){
@@ -515,6 +366,10 @@ public class RelationService {
             relationEntity.setDstObjectId(galleryId);
             relationEntity.setRelationClass(RelationClass.RELATION_DEPENDENT);
 
+            List<Long> srcDstIndex = getSrcAndDstIndex(articleId, PostAttribution.ARTICLE, galleryId, PostAttribution.GALLERY, session);
+            relationEntity.setSrcIndexId(srcDstIndex.get(0));
+            relationEntity.setDstIndexId(srcDstIndex.get(1));
+
             session.save(relationEntity);
         }
 
@@ -524,25 +379,32 @@ public class RelationService {
     /*
     Source object attribution/id, destination object attribution/id, relation class - related
      */
-    public static RelationEntity relationVoPartialToRelationEntity(RelationVO relationVO){
+    public static RelationEntity relationVoPartialToRelationEntity(RelationVO relationVO, Session session){
         RelationEntity relationEntity = new RelationEntity();
 
-        relationEntity.setSrcAttributionClass(PostAttribution.getPostAttribution(relationVO.srcAttributionClassShort));
+        PostAttribution srcPostAttribution = PostAttribution.getPostAttribution(relationVO.srcAttributionClassShort);
+        PostAttribution dstPostAttribution = PostAttribution.getPostAttribution(relationVO.dstAttributionClassShort);
+
+        relationEntity.setSrcAttributionClass(srcPostAttribution);
         relationEntity.setSrcObjectId(relationVO.srcObjectId);
 
-        relationEntity.setDstAttributionClass(PostAttribution.getPostAttribution(relationVO.dstAttributionClassShort));
+        relationEntity.setDstAttributionClass(dstPostAttribution);
         relationEntity.setDstObjectId(relationVO.dstObjectId);
 
         relationEntity.setRelationClass(RelationClass.RELATION_RELATED);
 
+        List<Long> srcDstIndex = getSrcAndDstIndex(relationVO.srcObjectId, srcPostAttribution, relationVO.dstObjectId, dstPostAttribution, session);
+        relationEntity.setSrcIndexId(srcDstIndex.get(0));
+        relationEntity.setDstIndexId(srcDstIndex.get(1));
+
         return relationEntity;
     }
 
+    public static List<Long> getSrcAndDstIndex(Long srcObjectId, PostAttribution srcPostAttribution, Long dstObjectId, PostAttribution dstPostAttribution, Session session){
+        PostEntity srcPostEntity = PostDao.getPostEntityById(srcObjectId, srcPostAttribution.getAssociatedClass(), session);
+        PostEntity dstPostEntity = PostDao.getPostEntityById(dstObjectId, dstPostAttribution.getAssociatedClass(), session);
 
-    public static class Entities {
-        List<ArticleEntity> articleEntities;
-        List<PhotoEntity> photoEntities;
-        List<GalleryEntity> galleryEntities;
+        return Arrays.asList(srcPostEntity.getIndexId(), dstPostEntity.getIndexId());
     }
 
 }

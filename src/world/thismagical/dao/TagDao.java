@@ -117,7 +117,7 @@ public class TagDao {
     }
 
     public static void setGeo(String geo, Long parentObjectId, PostAttribution postAttribution, Session session){
-        boolean hasGeo = (geo != null) && ( !geo.isEmpty() );
+        boolean hasGeo = (geo != null) && ( !geo.isBlank() );
         setGeo(hasGeo, parentObjectId, postAttribution, session);
     }
 

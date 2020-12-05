@@ -32,6 +32,7 @@ aspect_ratio float8
 
 CREATE TABLE photos (
 id bigserial PRIMARY KEY,
+index_id bigint,
 title varchar(128),
 description varchar(1024),
 tiny_description varchar(256),
@@ -53,6 +54,7 @@ parent_is_published boolean
 
 CREATE TABLE galleries (
 id bigserial PRIMARY KEY,
+index_id bigint,
 title varchar(128),
 description varchar(1024),
 tiny_description varchar(256),
@@ -64,6 +66,7 @@ published boolean
 
 CREATE TABLE articles (
 id bigserial PRIMARY KEY,
+index_id bigint,
 title varchar(128),
 description varchar(1024),
 tiny_description varchar(256),
@@ -79,8 +82,10 @@ CREATE TABLE relations (
 relation_id bigserial PRIMARY KEY,
 src_attribution_class smallint,
 src_object_id bigint,
+src_index_id bigint,
 dst_attribution_class smallint,
 dst_object_id bigint,
+dst_index_id bigint,
 relation_class smallint
 );
 

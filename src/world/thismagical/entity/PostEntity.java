@@ -17,6 +17,9 @@ package world.thismagical.entity;
                                                                                                    
 */
 
+import world.thismagical.util.PostAttribution;
+import world.thismagical.vo.PostVO;
+
 import java.time.LocalDateTime;
 
 public interface PostEntity {
@@ -47,4 +50,8 @@ public interface PostEntity {
     LocalDateTime getLastModifiedDate();
     void setLastModifiedDate(LocalDateTime lastModifiedDate);
 
+    Long getIndexId();
+    void setIndexId(Long id);
+
+    PostVO toBaseVO();
 }

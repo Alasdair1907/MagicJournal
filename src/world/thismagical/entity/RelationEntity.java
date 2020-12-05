@@ -39,11 +39,17 @@ public class RelationEntity implements Serializable {
     @Column(name="src_object_id")
     private Long srcObjectId;
 
+    @Column(name="src_index_id")
+    private Long srcIndexId;
+
     @Column(name="dst_attribution_class")
     private Short dstAttributionClass;
 
     @Column(name="dst_object_id")
     private Long dstObjectId;
+
+    @Column(name="dst_index_id")
+    private Long dstIndexId;
 
     @Column(name="relation_class")
     private Short relationClass;
@@ -94,6 +100,22 @@ public class RelationEntity implements Serializable {
 
     public void setRelationClass(RelationClass relationClass) {
         this.relationClass = relationClass.getId();
+    }
+
+    public Long getSrcIndexId() {
+        return srcIndexId;
+    }
+
+    public void setSrcIndexId(Long srcIndexId) {
+        this.srcIndexId = srcIndexId;
+    }
+
+    public Long getDstIndexId() {
+        return dstIndexId;
+    }
+
+    public void setDstIndexId(Long dstIndexId) {
+        this.dstIndexId = dstIndexId;
     }
 
     @Transient

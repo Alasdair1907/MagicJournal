@@ -108,22 +108,6 @@ public class GalleryService extends PostService {
         return entitiesToVos(galleryEntityList, imagesInRepresentation, session);
     }
 
-    public static JsonAdminResponse<Void> togglePostPublish(Long id,  String guid, Session session){
-
-        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(id, GalleryEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        GalleryDao.togglePostPublish(id, GalleryEntity.class, session);
-        PagingDao.updatePostPublish(PostAttribution.GALLERY, id, session);
-        updateTagPublish(id, PostAttribution.GALLERY, session);
-
-        return JsonAdminResponse.success(null);
-    }
-
     public static JsonAdminResponse<Long> createOrUpdateGallery(GalleryTO galleryTO, Session session){
 
         if (galleryTO == null){
@@ -166,58 +150,14 @@ public class GalleryService extends PostService {
         galleryEntity.setGpsCoordinates(Tools.nullToEmpty(galleryTO.gpsCoordinates));
 
         if (newGallery) {
-            galleryEntity.setPublished(galleryTO.published);
+            galleryEntity.setPublished(Boolean.FALSE);
         }
 
-        if (!session.getTransaction().isActive()){
-            session.beginTransaction();
-        }
-
-        session.saveOrUpdate(galleryEntity);
-        session.flush();
-
-        if (newGallery){
-            PostIndexItem postIndexItem = new PostIndexItem();
-            postIndexItem.setPostAttribution(PostAttribution.GALLERY);
-            postIndexItem.setPostId(galleryEntity.getId());
-            postIndexItem.setAuthorLogin(galleryEntity.getAuthor().getLogin());
-            postIndexItem.setCreationDate(galleryEntity.getCreationDate());
-            postIndexItem.setHasGeo(Tools.isValidGeo(galleryEntity.getGpsCoordinates()));
-
-            session.save(postIndexItem);
-            session.flush();
-        } else {
-            PagingDao.setGeo(galleryEntity.getGpsCoordinates(), PostAttribution.GALLERY, galleryEntity.getId(), session);
-        }
-
-        TagDao.setGeo(galleryEntity.getGpsCoordinates(), galleryEntity.getId(), PostAttribution.GALLERY, session);
+        savePostGeneralProcedures(newGallery, currentAuthorEntity, galleryEntity, PostAttribution.GALLERY, session);
 
         return JsonAdminResponse.success(galleryEntity.getId());
     }
 
-    public static JsonAdminResponse<Void> deleteGallery(Long id, String guid, Session session){
-
-        if (id == null){
-            return JsonAdminResponse.fail("deleteGallery: no gallery id provided");
-        }
-
-        GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(id, GalleryEntity.class, session);
-        AuthorEntity currentAuthorEntity = AuthorizationService.getAuthorEntityBySessionGuid(guid, session);
-
-        if (!AuthorizationService.checkPrivileges(galleryEntity.getAuthor(), currentAuthorEntity)){
-            return JsonAdminResponse.fail("unauthorized action");
-        }
-
-        List<ImageVO> galleryImages = FileDao.getImages(PostAttribution.GALLERY, Collections.singletonList(id), session);
-        FileHandlingService.deleteImages(galleryImages, session);
-
-        GalleryDao.deleteEntity(id, GalleryEntity.class, session);
-        TagDao.truncateTags(id, PostAttribution.GALLERY.getId(), session);
-        PagingDao.deleteIndex(PostAttribution.GALLERY, id, session);
-        RelationDao.deleteRelationsInvolvingPost(PostAttribution.GALLERY, id, session);
-
-        return JsonAdminResponse.success(null);
-    }
 
 
 }
