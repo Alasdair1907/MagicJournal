@@ -19,6 +19,7 @@ Date: 12/5/2020
 public enum ImageFullness {
     FULNESS_CLIENT(8), // so far, only used on the main page
     FULNESS_ADMIN(4), // used in listings
+    FULLNESS_PANEL(1), // posts on the side panel
     FULNESS_NO_IMAGES(0);
 
     private Integer galleriesImages;

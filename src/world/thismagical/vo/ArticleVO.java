@@ -24,6 +24,7 @@ import java.util.List;
 
 public class ArticleVO implements PostVO {
     public Long id;
+    public Long indexId;
     public String title;
     public String description;
     public String tinyDescription;
@@ -45,6 +46,7 @@ public class ArticleVO implements PostVO {
 
     public ArticleVO(ArticleEntity articleEntity){
         this.id = articleEntity.getId();
+        this.indexId = articleEntity.getIndexId();
         this.title = articleEntity.getTitle();
         this.description = articleEntity.getDescription();
         this.tinyDescription = articleEntity.getTinyDescription();
@@ -62,6 +64,9 @@ public class ArticleVO implements PostVO {
 
     @Override
     public Long getId() { return id; }
+
+    @Override
+    public Long getIndexId() { return indexId; }
 
     @Override
     public String getTitle() {

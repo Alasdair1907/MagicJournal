@@ -29,6 +29,7 @@ import java.util.List;
 
 public class GalleryVO implements PostVO {
     public Long id;
+    public Long indexId;
     public String title;
     public String description;
     public String tinyDescription;
@@ -49,6 +50,7 @@ public class GalleryVO implements PostVO {
 
     public GalleryVO(GalleryEntity galleryEntity){
         this.id = galleryEntity.getId();
+        this.indexId = galleryEntity.getIndexId();
         this.title = galleryEntity.getTitle();
         this.description = galleryEntity.getDescription();
         this.tinyDescription = galleryEntity.getTinyDescription();
@@ -67,6 +69,9 @@ public class GalleryVO implements PostVO {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public Long getIndexId() { return indexId; }
 
     @Override
     public String getTitle() {

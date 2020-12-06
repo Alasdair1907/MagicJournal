@@ -53,5 +53,7 @@ public interface PostEntity {
     Long getIndexId();
     void setIndexId(Long id);
 
+    PostAttribution getPostAttribution();
+
     PostVO toBaseVO();
 }

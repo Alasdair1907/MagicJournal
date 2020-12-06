@@ -143,6 +143,8 @@ public class PhotoEntity implements Serializable, PostEntity {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
+    public PostAttribution getPostAttribution() { return PostAttribution.PHOTO; }
+
     public PostVO toBaseVO(){
         return new PhotoVO(this);
     }

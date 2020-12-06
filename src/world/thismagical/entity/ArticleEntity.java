@@ -148,6 +148,8 @@ public class ArticleEntity implements Serializable, PostEntity {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
+    public PostAttribution getPostAttribution() { return PostAttribution.ARTICLE; }
+
     public PostVO toBaseVO(){
         return new ArticleVO(this);
     }

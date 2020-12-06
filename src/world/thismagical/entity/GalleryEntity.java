@@ -142,6 +142,8 @@ public class GalleryEntity implements Serializable, PostEntity {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
+    public PostAttribution getPostAttribution() { return PostAttribution.GALLERY; }
+
     public PostVO toBaseVO(){
         return new GalleryVO(this);
     }

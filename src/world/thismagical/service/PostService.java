@@ -31,8 +31,10 @@ import world.thismagical.util.Tools;
 import world.thismagical.vo.ImageVO;
 import world.thismagical.vo.PostVO;
 
-import java.util.Collections;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static world.thismagical.service.AuthorizationService.getAuthorEntityBySessionGuid;
 
@@ -132,11 +134,11 @@ public class PostService {
     }
 
     public static JsonAdminResponse<Void> validateAndAuthorize(String userGuid, Long id, PostAttribution postAttribution, Session session){
-        if (id == null){
-            return JsonAdminResponse.fail("Error: no id provided");
+        if (id == null || postAttribution == null){
+            return JsonAdminResponse.fail("Error: no post identification provided");
         }
 
-        PostEntity postEntity = ArticleDao.getPostEntityById(id, postAttribution.getAssociatedClass(), session);
+        PostEntity postEntity = PostDao.getPostEntityById(id, postAttribution.getAssociatedClass(), session);
         AuthorEntity currentAuthorEntity = getAuthorEntityBySessionGuid(userGuid, session);
 
         if (!AuthorizationService.checkPrivileges(postEntity.getAuthor(), currentAuthorEntity)){
@@ -144,6 +146,23 @@ public class PostService {
         }
 
         return JsonAdminResponse.success(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<PostVO> entitiesToPostVOsFull(List<PostEntity> postEntities, ImageFullness imageFullness, Session session){
+
+        Map<PostAttribution, List<PostEntity>> entitiesByPostAttribution = postEntities.stream()
+                .collect(Collectors.groupingBy(PostEntity::getPostAttribution));
+
+        List<PostVO> postVOList = new ArrayList<>();
+        entitiesByPostAttribution.entrySet().forEach(e -> {
+            switch (e.getKey()){
+                case ARTICLE -> postVOList.addAll(ArticleService.articleEntitiesToArticleVOs((List)e.getValue(), session));
+                case GALLERY -> postVOList.addAll(GalleryService.entitiesToVos((List)e.getValue(), imageFullness.getGalleryImagesCount(), session));
+                case PHOTO -> postVOList.addAll(PhotoService.photoEntitiesToVOs((List)e.getValue(), session));
+            }
+        });
+        return postVOList;
     }
 
 }

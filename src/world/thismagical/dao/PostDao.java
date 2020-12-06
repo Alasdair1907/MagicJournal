@@ -236,15 +236,25 @@ public class PostDao {
         session.flush();
     }
 
-    public static List<PostEntity> getPostEntitiesByIndexIds(List<Long> indexIds, Session session){
-        Query articleQuery = session.createQuery("from ArticleEntity where indexId in :indexIds");
+    public static List<PostEntity> getPostEntitiesByIndexIds(List<Long> indexIds, Boolean publishStatus, Session session){
+
+        String base = "from %s where indexId in :indexIds%s";
+        String publishClause = publishStatus == null ? "" : " and published = :published";
+
+        Query articleQuery = session.createQuery(String.format(base, "ArticleEntity", publishClause));
         articleQuery.setParameter("indexIds", indexIds);
 
-        Query photoQuery = session.createQuery("from PhotoEntity  where indexId in :indexIds");
+        Query photoQuery = session.createQuery(String.format(base, "PhotoEntity", publishClause));
         photoQuery.setParameter("indexIds", indexIds);
 
-        Query galleryQuery = session.createQuery("from GalleryEntity where indexId in :indexIds");
+        Query galleryQuery = session.createQuery(String.format(base, "GalleryEntity", publishClause));
         galleryQuery.setParameter("indexIds", indexIds);
+
+        if (publishStatus != null){
+            articleQuery.setParameter("published", publishStatus);
+            photoQuery.setParameter("published", publishStatus);
+            galleryQuery.setParameter("published", publishStatus);
+        }
 
         List<PostEntity> resultList = new ArrayList<>();
 

@@ -49,10 +49,7 @@ public class PhotoService extends PostService {
         return photoVO;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<PhotoVO> listAllPhotoVOs(BasicPostFilter basicPostFilter, Session session){
-        basicPostFilter.verifyGuid(session);
-        List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(basicPostFilter, PhotoEntity.class, session);
+    public static List<PhotoVO> photoEntitiesToVOs(List<PhotoEntity> photoEntityList, Session session){
         List<Long> parentObjectIds = photoEntityList.stream().map(PhotoEntity::getId).collect(Collectors.toList());
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, parentObjectIds, session);
 
@@ -72,6 +69,13 @@ public class PhotoService extends PostService {
         }
 
         return photoVOList;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<PhotoVO> listAllPhotoVOs(BasicPostFilter basicPostFilter, Session session){
+        basicPostFilter.verifyGuid(session);
+        List<PhotoEntity> photoEntityList = (List<PhotoEntity>) (List) PhotoDao.listAllPosts(basicPostFilter, PhotoEntity.class, session);
+        return photoEntitiesToVOs(photoEntityList, session);
     }
 
     public static JsonAdminResponse<Long> createOrUpdatePhoto(PhotoTO photoTO, Session session){

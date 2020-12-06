@@ -57,12 +57,7 @@ public class ArticleService extends PostService {
         return articleVO;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<ArticleVO> listAllArticleVOs(BasicPostFilter basicPostFilter, Session session){
-
-        basicPostFilter.verifyGuid(session);
-        List<ArticleEntity> articleEntityList = (List<ArticleEntity>) (List) ArticleDao.listAllPosts(basicPostFilter, ArticleEntity.class, session);
-
+    public static List<ArticleVO> articleEntitiesToArticleVOs(List<ArticleEntity> articleEntityList, Session session){
         List<ArticleVO> articleVOList = new ArrayList<>();
         List<Long> imageIds = articleEntityList.stream().map(ArticleEntity::getTitleImageId).collect(Collectors.toList());
         List<Long> articleIds = articleEntityList.stream().map(ArticleEntity::getId).collect(Collectors.toList());
@@ -83,6 +78,13 @@ public class ArticleService extends PostService {
         }
 
         return articleVOList;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<ArticleVO> listAllArticleVOs(BasicPostFilter basicPostFilter, Session session){
+        basicPostFilter.verifyGuid(session);
+        List<ArticleEntity> articleEntityList = (List<ArticleEntity>) (List) ArticleDao.listAllPosts(basicPostFilter, ArticleEntity.class, session);
+        return articleEntitiesToArticleVOs(articleEntityList, session);
     }
 
     public static JsonAdminResponse<Long> createOrUpdateArticle(ArticleTO articleTO, Session session){

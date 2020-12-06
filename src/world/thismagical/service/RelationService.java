@@ -21,14 +21,13 @@ import world.thismagical.dao.*;
 import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.*;
-import world.thismagical.util.BBCodeExtractor;
-import world.thismagical.util.PostAttribution;
-import world.thismagical.util.RelationClass;
+import world.thismagical.util.*;
 import world.thismagical.vo.*;
 
 import javax.management.relation.Relation;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static world.thismagical.dao.FileDao.getImageEntitiesByIds;
 
@@ -48,6 +47,7 @@ public class RelationService {
 
     /*
     loads list of relations for post specified with postTO.postAttributionClass, postTO.postObjectId
+    CMS
      */
     public static JsonAdminResponse<RelationTO> getRelationTO(PostTO postTO, Session session){
 
@@ -85,90 +85,44 @@ public class RelationService {
     /*
     obtains list of relations for post defined by sidePanelRequestTO.postAttribution and sidePanelRequestTO.postId,
     splits them into associated (auto relations) and related, fetches PostVOs for them, and puts these VOs into sidePanelPostsTO
-    TODO: refactor this abomination
+    CDA
      */
     public static void fillRelevantPosts(SidePanelPostsTO sidePanelPostsTO, SidePanelRequestTO sidePanelRequestTO, Session session){
-        List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(PostAttribution.getPostAttribution(sidePanelRequestTO.postAttribution), sidePanelRequestTO.postId, session);
 
+        PostAttribution thisPostAttribution = PostAttribution.getPostAttribution(sidePanelRequestTO.postAttribution);
+
+        List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(thisPostAttribution, sidePanelRequestTO.postId, session);
         if (relationEntities == null || relationEntities.isEmpty()){
             return;
         }
 
-        Set<Long> articleIds = new HashSet<>();
-        Set<Long> galleryIds = new HashSet<>();
-        Set<Long> photoIds = new HashSet<>();
-
-        Map<String, PostTO> associated = new HashMap<>();
-        Map<String, PostTO> related = new HashMap<>();
-
-        for (RelationEntity relationEntity : relationEntities){
-
-            PostTO postTO = relationEntity.getForeignPostTO(sidePanelRequestTO.postAttribution, sidePanelRequestTO.postId);
-            PostAttribution foreignAttribution = PostAttribution.getPostAttribution(postTO.postAttributionClass);
-
-            if (foreignAttribution == PostAttribution.ARTICLE){ articleIds.add(postTO.postObjectId); }
-            if (foreignAttribution == PostAttribution.GALLERY){ galleryIds.add(postTO.postObjectId); }
-            if (foreignAttribution == PostAttribution.PHOTO){ photoIds.add(postTO.postObjectId); }
-
-            String foreignHash = foreignAttribution.getReadable() + "#" + postTO.postObjectId.toString();
-
-            if (Boolean.TRUE.equals(relationEntity.getRelationClass().getIsAuto())){
-                associated.put(foreignHash, postTO);
-            } else {
-                related.put(foreignHash, postTO);
-            }
+        PostEntity thisPostEntity = PostDao.getPostEntityById(sidePanelRequestTO.postId, thisPostAttribution.getAssociatedClass(), session);
+        if (thisPostEntity == null){
+            Tools.log("ERROR: relations requested for post which cannot be fetched");
+            return;
         }
 
-        associated.keySet().forEach(related::remove);
+        Long thisIndexId = thisPostEntity.getIndexId();
+        List<Long> associated = relationEntities.stream().filter(relationEntity -> Boolean.TRUE.equals(relationEntity.getRelationClass().getIsAuto()))
+                .map(relationEntity -> thisIndexId.equals(relationEntity.getDstIndexId()) ? relationEntity.getSrcIndexId() : relationEntity.getDstIndexId())
+                .collect(Collectors.toList());
+        List<Long> related = relationEntities.stream().filter(relationEntity -> !Boolean.TRUE.equals(relationEntity.getRelationClass().getIsAuto()))
+                .map(relationEntity -> thisIndexId.equals(relationEntity.getDstIndexId()) ? relationEntity.getSrcIndexId() : relationEntity.getDstIndexId())
+                .collect(Collectors.toList());
 
+        List<Long> allIds = Stream.concat(associated.stream(), related.stream()).collect(Collectors.toList());
+        List<PostEntity> postEntityList = PostDao.getPostEntitiesByIndexIds(allIds, true, session);
+        List<PostVO> postVOList = PostService.entitiesToPostVOsFull(postEntityList, ImageFullness.FULLNESS_PANEL, session);
 
-        Map<Long, ArticleVO> articleVOMap = new HashMap<>();
-        Map<Long, PhotoVO> photoVOMap = new HashMap<>();
-        Map<Long, GalleryVO> galleryVOMap = new HashMap<>();
-
-        if (articleIds != null && !articleIds.isEmpty()) {
-            articleVOMap.putAll(ArticleService.listAllArticleVOs(BasicPostFilter.fromIdList(new ArrayList<>(articleIds)), session)
-                    .stream().collect(Collectors.toMap(ArticleVO::getId, articleVO -> articleVO)));
-        }
-
-        if (photoIds != null && !photoIds.isEmpty()) {
-            photoVOMap.putAll(PhotoService.listAllPhotoVOs(BasicPostFilter.fromIdList(new ArrayList<>(photoIds)), session)
-                    .stream().collect(Collectors.toMap(PhotoVO::getId, photoVO -> photoVO)));
-        }
-
-        if (galleryIds != null && !galleryIds.isEmpty()) {
-            galleryVOMap.putAll(GalleryService.listAllGalleryVOs(BasicPostFilter.fromIdList(new ArrayList<>(galleryIds)), 1, session)
-                    .stream().collect(Collectors.toMap(GalleryVO::getId, galleryVO -> galleryVO)));
-        }
-
-        List<PostVO> associatedVOList = new ArrayList<>();
-        List<PostVO> relatedVOList = new ArrayList<>();
-        
-        associated.forEach((String key, PostTO postTO) -> {
-            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass) && articleVOMap.containsKey(postTO.postObjectId)){
-                associatedVOList.add(articleVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass) && photoVOMap.containsKey(postTO.postObjectId)){
-                associatedVOList.add(photoVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass) && galleryVOMap.containsKey(postTO.postObjectId)){
-                associatedVOList.add(galleryVOMap.get(postTO.postObjectId));
-            }
-        });
-
-        related.forEach((String key, PostTO postTO) -> {
-            if (PostAttribution.ARTICLE.getId().equals(postTO.postAttributionClass) && articleVOMap.containsKey(postTO.postObjectId)){
-                relatedVOList.add(articleVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.PHOTO.getId().equals(postTO.postAttributionClass) && photoVOMap.containsKey(postTO.postObjectId)){
-                relatedVOList.add(photoVOMap.get(postTO.postObjectId));
-            } else if (PostAttribution.GALLERY.getId().equals(postTO.postAttributionClass) && galleryVOMap.containsKey(postTO.postObjectId)){
-                relatedVOList.add(galleryVOMap.get(postTO.postObjectId));
-            }
-        });
+        List<PostVO> associatedVOList = postVOList.stream().filter(postVO -> associated.contains(postVO.getIndexId())).collect(Collectors.toList());
+        List<PostVO> relatedVOList = postVOList.stream().filter(postVO -> related.contains(postVO.getIndexId())).collect(Collectors.toList());
 
         sidePanelPostsTO.associated = associatedVOList;
         sidePanelPostsTO.related = relatedVOList;
     }
 
     public static List<RelationVO> listRelationsForPost(Long postIndexId, Session session){
+        if (postIndexId == null) { return new ArrayList<>(); }
 
         // 1. obtain list of relation entities
         List<RelationEntity> relationEntities = RelationDao.listRelationsForPost(postIndexId, session);
@@ -176,7 +130,7 @@ public class RelationService {
         // 2. load corresponding post entities
         List<Long> postEntityIds = relationEntities.stream().map(RelationEntity::getDstIndexId).collect(Collectors.toList());
         postEntityIds.addAll(relationEntities.stream().map(RelationEntity::getSrcIndexId).collect(Collectors.toList()));
-        List<PostEntity> postEntities = PostDao.getPostEntitiesByIndexIds(postEntityIds, session);
+        List<PostEntity> postEntities = PostDao.getPostEntitiesByIndexIds(postEntityIds, null, session);
 
         // 3. turn relation entities into relation VOs by adding src and dst post titles
         List<RelationVO> result = new ArrayList<>();
@@ -258,7 +212,8 @@ public class RelationService {
 
         for (PostEntity postEntity : postEntities){
             Long postEntityIndex = postEntity.getIndexId();
-            if (!relationVoUsedIndexes.contains(postEntityIndex) && !resultingPostEntityIds.contains(postEntityIndex)){
+            if (!relationVoUsedIndexes.contains(postEntityIndex)
+                    && !resultingPostEntityIds.contains(postEntityIndex) && !postIndexId.equals(postEntityIndex)){
                 resultingPostEntityIds.add(postEntityIndex);
                 result.add(postEntity);
             }

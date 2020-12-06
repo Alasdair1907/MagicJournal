@@ -28,6 +28,7 @@ import java.util.List;
 
 public class PhotoVO implements PostVO {
     public Long id;
+    public Long indexId;
     public String title;
     public String description;
     public String tinyDescription;
@@ -47,6 +48,7 @@ public class PhotoVO implements PostVO {
 
     public PhotoVO(PhotoEntity photoEntity){
         this.id = photoEntity.getId();
+        this.indexId = photoEntity.getIndexId();
         this.title = photoEntity.getTitle();
         this.description = photoEntity.getDescription();
         this.tinyDescription = photoEntity.getTinyDescription();
@@ -65,6 +67,9 @@ public class PhotoVO implements PostVO {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public Long getIndexId() { return indexId; }
 
     @Override
     public String getTitle() {
