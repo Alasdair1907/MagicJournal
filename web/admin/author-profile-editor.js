@@ -107,7 +107,7 @@ $.widget("admin.authorProfile", {
             Cookies.set("imageUploadTOJson", imageUploadTOJson);
 
             await $.ajax({
-                url: '/admin/fileUpload.jsp',
+                url: 'fileUpload.jsp',
                 type: 'post',
                 data: fileData,
                 contentType: false,

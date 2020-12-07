@@ -160,7 +160,7 @@ let fileSelect = async function($modalAnchor){
 
             try {
                 res = await $.ajax({
-                    url: '/admin/fileUpload.jsp',
+                    url: 'fileUpload.jsp',
                     type: 'post',
                     data: fileData,
                     contentType: false,

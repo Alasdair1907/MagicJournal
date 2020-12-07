@@ -15,7 +15,7 @@
 
     if (request.getParameter("action") != null){
         String action = request.getParameter("action");
-        Tools.log("admin/jsonApi: action: "+action);
+        Tools.log("jsonApi: action: "+action);
         out.print(JsonApi.processRequestWithSerialization(request, application, sessionFactory, objectMapper));
     }
 %>

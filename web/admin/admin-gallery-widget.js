@@ -93,7 +93,7 @@ $.widget("admin.galleriesWidget", {
             let galleryId = $(this).data('id');
 
             let toggleResultJson = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {action: "toggleGalleryPublish", guid: Cookies.get("guid"), data: galleryId}
             });
@@ -117,7 +117,7 @@ $.widget("admin.galleriesWidget", {
             $proceedButton.unbind();
             $proceedButton.click(await async function(){
                 let deleteResultJson = await $.ajax({
-                    url: '/admin/jsonApi.jsp',
+                    url: 'jsonApi.jsp',
                     method: 'POST',
                     data: {action: "deleteGallery", guid: Cookies.get("guid"), data: galleryId}
                 });
@@ -163,7 +163,7 @@ $.widget("admin.galleriesWidget", {
 
     _loadGallery: async function(galleryId){
         let jsonAdminReponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:galleryId , action:"getGalleryVOByGalleryId"}
         });
@@ -180,7 +180,7 @@ $.widget("admin.galleriesWidget", {
     _saveOrUpdateGallery: async function(galleryTO){
         let galleryTOJson = JSON.stringify(galleryTO);
         let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:galleryTOJson, action:"saveOrUpdateGallery"}
         });

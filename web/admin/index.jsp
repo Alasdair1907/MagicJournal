@@ -88,7 +88,7 @@
     } else {
 
         let verifyGuid = $.ajax({
-            url: "/admin/jsonApi.jsp",
+            url: "jsonApi.jsp",
             method: "POST",
             data: {guid: guid, action: "verifySessionGuid"}
         });

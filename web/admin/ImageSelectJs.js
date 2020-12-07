@@ -209,7 +209,7 @@ let getImageVOList = async function(objectId, imageAttributionClass){
     let imageTOJson = JSON.stringify(imageTO);
 
     let jsonAdminResponse = await $.ajax({
-        url: '/admin/jsonApi.jsp',
+        url: 'jsonApi.jsp',
         method: 'POST',
         data: {data: imageTOJson, action: "listImageVOs"}
     });

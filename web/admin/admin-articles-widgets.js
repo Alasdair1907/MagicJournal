@@ -100,7 +100,7 @@ $.widget("admin.articlesWidget", {
             articleTo.titleImageId = newImageId;
 
             let jsonAdminResponse = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {data: JSON.stringify(articleTo), guid: Cookies.get("guid"), action:"setArticleTitleImageId"}
             });
@@ -231,7 +231,7 @@ $.widget("admin.articlesWidget", {
 
     _getArticleTitleImageVO: async function(articleId){
         let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:articleId, action:"getArticleTitleImageVO"}
         });
@@ -253,7 +253,7 @@ $.widget("admin.articlesWidget", {
 
     _loadArticle: async function(articleId){
         let jsonAdminReponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:articleId , action:"getArticleVOByArticleId"}
         });
@@ -331,7 +331,7 @@ $.widget("admin.articlesWidget", {
             let articleId = $(this).data('id');
 
             let toggleResultJson = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {action: "toggleArticlePublish", guid: Cookies.get("guid"), data: articleId}
             });
@@ -355,7 +355,7 @@ $.widget("admin.articlesWidget", {
             $proceedButton.unbind();
             $proceedButton.click(await async function(){
                 let deleteResultJson = await $.ajax({
-                    url: '/admin/jsonApi.jsp',
+                    url: 'jsonApi.jsp',
                     method: 'POST',
                     data: {action: "deleteArticle", guid: Cookies.get("guid"), data: articleId}
                 });

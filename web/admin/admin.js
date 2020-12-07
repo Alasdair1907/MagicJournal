@@ -71,7 +71,7 @@ $.widget("admin.loginPanel", {
             };
 
             let authorize = $.ajax({
-                url: "/admin/jsonApi.jsp",
+                url: "jsonApi.jsp",
                 method: "POST",
                 data: { data: JSON.stringify(loginInfo), action: "authorize"}
             });

@@ -87,7 +87,7 @@ $.widget("admin.authorsEdit", {
 
         $.when(
             $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {guid: Cookies.get("guid"), action: "listAllAuthorsVO"},
                 success: function(adminResponseJson){
@@ -95,7 +95,7 @@ $.widget("admin.authorsEdit", {
                 }
             }),
             $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {action: "listPrivileges"},
                 success: function(adminResponseJson){
@@ -179,7 +179,7 @@ $.widget("admin.authorsEdit", {
                         };
 
                         let changePassword = $.ajax({
-                            url: '/admin/jsonApi.jsp',
+                            url: 'jsonApi.jsp',
                             method: 'POST',
                             data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changePassword"}
                         });
@@ -221,7 +221,7 @@ $.widget("admin.authorsEdit", {
                         };
 
                         let changeDisplayName = $.ajax({
-                            url: '/admin/jsonApi.jsp',
+                            url: 'jsonApi.jsp',
                             method: 'POST',
                             data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changeDisplayName"}
                         });
@@ -261,7 +261,7 @@ $.widget("admin.authorsEdit", {
                         };
 
                         let changeAccessLevel = $.ajax({
-                            url: '/admin/jsonApi.jsp',
+                            url: 'jsonApi.jsp',
                             method: 'POST',
                             data: {guid: Cookies.get("guid"), data: JSON.stringify(changeAuthorDataRequest), action: "changeAccessLevel"}
                         });
@@ -296,7 +296,7 @@ $.widget("admin.authorsEdit", {
                     $('[data-role="delete-confirm"]').unbind();
                     $('[data-role="delete-confirm"]').click(function(){
                         let deleteUser = $.ajax({
-                            url: '/admin/jsonApi.jsp',
+                            url: 'jsonApi.jsp',
                             method: 'POST',
                             data: {guid: Cookies.get("guid"), data: targetUserId, action: "deleteUser"}
                         });

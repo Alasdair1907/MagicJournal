@@ -98,7 +98,7 @@ $.widget("admin.photosWidget", {
             Cookies.set("imageUploadTOJson", imageUploadTOJson);
 
             await $.ajax({
-                url: '/admin/fileUpload.jsp',
+                url: 'fileUpload.jsp',
                 type: 'post',
                 data: fileData,
                 contentType: false,
@@ -146,7 +146,7 @@ $.widget("admin.photosWidget", {
 
     _getPhotoImageVO: async function(photoId){
         let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:photoId,action:"getPhotoImageVO"}
         });
@@ -164,7 +164,7 @@ $.widget("admin.photosWidget", {
     _saveOrUpdatePhoto: async function(photoTO){
         let photoTOJson = JSON.stringify(photoTO);
         let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:photoTOJson, action:"saveOrUpdatePhoto"}
         });
@@ -180,7 +180,7 @@ $.widget("admin.photosWidget", {
 
     _loadPhoto: async function(photoId){
         let jsonAdminReponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data:photoId , action:"getPhotoVOByPhotoId"}
         });
@@ -254,7 +254,7 @@ $.widget("admin.photosWidget", {
             let photoId = $(this).data('id');
 
             let toggleResultJson = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {action: "togglePhotoPublish", guid: Cookies.get("guid"), data: photoId}
             });
@@ -278,7 +278,7 @@ $.widget("admin.photosWidget", {
             $proceedButton.unbind();
             $proceedButton.click(await async function(){
                 let deleteResultJson = await $.ajax({
-                    url: '/admin/jsonApi.jsp',
+                    url: 'jsonApi.jsp',
                     method: 'POST',
                     data: {action: "deletePhoto", guid: Cookies.get("guid"), data: photoId}
                 });

@@ -103,7 +103,7 @@ $.widget("admin.ImageManager", {
         let imageTOJson = JSON.stringify(imageTO);
 
         let jsonAdminResponse = await $.ajax({
-            url: '/admin/jsonApi.jsp',
+            url: 'jsonApi.jsp',
             method: 'POST',
             data: {data: imageTOJson, action: "listImageVOs"}
         });
@@ -193,7 +193,7 @@ $.widget("admin.ImageManager", {
         $selectedImgDelete.click(await async function(){
             let id = $selectedImgElem.data("id");
             let jsonAdminResponse = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {data: id, guid: Cookies.get("guid"), action: "deleteFileEntity"}
             });
@@ -226,7 +226,7 @@ $.widget("admin.ImageManager", {
             };
 
             let jsonAdminResponse = await $.ajax({
-                url: '/admin/jsonApi.jsp',
+                url: 'jsonApi.jsp',
                 method: 'POST',
                 data: {data: JSON.stringify(imageFileDescrTO), guid: Cookies.get("guid"), action: "updateFileDescription"}
             });
@@ -282,7 +282,7 @@ $.widget("admin.ImageManager", {
             Cookies.set("imageUploadTOJson", imageUploadTOJson);
 
             await $.ajax({
-                url: '/admin/fileUpload.jsp',
+                url: 'fileUpload.jsp',
                 type: 'post',
                 data: fileData,
                 contentType: false,
