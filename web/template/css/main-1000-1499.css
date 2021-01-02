@@ -57,7 +57,7 @@ body.cda {
 }
 
 .container-primary {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.85);
     padding: 0.5vw;
     border-radius: 1.5vmin;
 }
@@ -228,6 +228,11 @@ body.cda {
 .post-info-line {
     display: flex;
     justify-content: space-around;
+}
+
+/* applied to post info tokens - author, date */
+.post-info-compact-token {
+    text-align: center;
 }
 
 /* homepage - photos and gallery representations */
@@ -436,8 +441,8 @@ body.cda {
 
 /* article item on homepage - header image size */
 .item-image-div-size {
-    width: 13.08vw;
-    height: 13.08vw;
+    width: 10vw; /* 13.08vw; at this point, I have no idea why it was set to so precise a number */
+    height: 10vw;
     margin-right: 0.5vw;
 }
 
@@ -485,4 +490,16 @@ body.cda {
 
 .menu-normal-screen-hide {
     display: none;
+}
+
+.container-heading-tight {
+    display: none;
+}
+.container-heading-normal {
+}
+
+.container-footing-tight {
+    display: none;
+}
+.container-footing-normal {
 }

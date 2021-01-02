@@ -22,7 +22,7 @@ public class JsonApi {
 
     /*
     todo:
-    - all post listings should be limited to 50 or so posts for unauthenticated users
+    - all post listings should be limited to some number of posts for unauthenticated users
      */
 
     public static Map<String, String> actionToErrorMessage;

@@ -37,6 +37,7 @@
 .side-panel-container {
     width: 100%;
     display: flex;
+    flex-flow: column;
     align-items: center;
     border-width: 0;
     background-color: rgba(240, 248, 255, 0.09);
@@ -139,7 +140,7 @@
 
 /* the post type tag (article/photo/gallery) */
 .side-panel-tag {
-    writing-mode: vertical-rl;
+    /*writing-mode: vertical-rl;*/
     text-align: center;
 }
 
@@ -150,6 +151,7 @@
 
 .side-panel-title {
     flex-shrink: 1000;
+    text-align: center;
 }
 
 .image-show-base-overlay {
@@ -259,7 +261,7 @@
 }
 
 .attached-file-container-external-size {
-    width: 50%;
+    width: 70%;
     margin-top: 0.2vw;
     margin-bottom: 0.2vw;
     border-radius: 1.5vmin;
@@ -279,7 +281,7 @@
 }
 
 .bb-quote-size {
-    width: 60%;
+    width: 70%;
     border-width: 1vw;
     padding-left: 1vw;
     margin-left: 1vw;

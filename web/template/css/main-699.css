@@ -1,3 +1,7 @@
+html {
+    font-size: 12px;
+}
+
 body.cda {
     background-color: black;
     background-image: url("../background.jpg");
@@ -15,20 +19,22 @@ body.cda {
 }
 
 .header-logo {
-    max-height: 17vmin;
+    min-height: 6rem;
+    max-height: 10rem;
+    max-width: 90vw;
 }
 
 /* font-awesome icon */
 .desktop-menu-icon {
     color: white;
-    font-size: 7vmin; /*4vmin;*/
+    font-size: 2.0rem; /*4vmin;*/
     display: block;
 }
 
 /* text under the menu icon */
 .desktop-menu-text {
     color: white;
-    font-size: 3vmin; /* 1.7vmin;*/
+    font-size: 1.0rem; /*1.14rem; /*1.7vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -52,7 +58,7 @@ body.cda {
 }
 
 .container-primary {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.85);
     padding: 0.5vw;
     border-radius: 1.5vmin;
 }
@@ -69,7 +75,7 @@ body.cda {
 
 .item-container-heading {
     color: white;
-    font-size: 3.41vmin; /*3.1vmin; /*2.7vmin;*/
+    font-size: 1.5rem;
     font-family: Candara, Verdana, sans-serif;
     display: inline-block;
     width: 100%;
@@ -80,7 +86,7 @@ body.cda {
 /* span with heading for post item in listings */
 .item-heading {
     color: white;
-    font-size: 3.41vmin; /*3.1vmin; /*2.7vmin;*/
+    font-size: 1.2rem;
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
     display: block;
@@ -95,25 +101,25 @@ body.cda {
 /* span inside <a> - tags inside items */
 .article-tag {
     color: #4a6eff;
-    font-size: 2.7vmin; /*2.42vmin; /*2.2vmin; /*1.9vmin;*/
+    font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .photo-tag {
     color: #43ff6a;
-    font-size: 2.7vmin; /*2.42vmin; /*2.2vmin; /*1.9vmin;*/
+    font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .gallery-tag {
     color: #ff3a65;
-    font-size: 2.7vmin; /*2.42vmin; /*2.2vmin; /*1.9vmin;*/
+    font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .text-main {
     color: white;
-    font-size: 2.7vmin; /*2.42vmin; /*2.2vmin; /*1.9vmin;*/
+    font-size: 1.0rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -225,6 +231,14 @@ body.cda {
     justify-content: space-around;
 }
 
+/* applied to post info tokens - author, date */
+.post-info-compact-token {
+    text-align: center;
+}
+.post-info-token {
+    text-align: center;
+}
+
 /* homepage - photos and gallery representations */
 .photo-image-div {
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
@@ -268,27 +282,27 @@ body.cda {
 /* location (articles,photos,galleries,tags,posts by author) heading in the compact item listing */
 .compact-location-heading {
     color: white;
-    font-size: 4.4vmin; /*4vmin; /*3.5vmin;*/
+    font-size: 1.5rem; /*3.5vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .compact-listing-count {
     color: white;
-    font-size: 2.97vmin; /*2.7vmin; /*2.3vmin;*/
+    font-size: 1.2rem; /*2.3vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 /* pager */
 .pager-link-normal {
     color: #4a6eff;
-    font-size: 3.5vmin; /*2.97vmin; /*2.7vmin; /*2.3vmin;*/
+    font-size: 1.2rem; /*2.5vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .pager-link-current {
     color: #b2e5ff;
     font-weight: bold;
-    font-size: 3.5vmin; /*2.97vmin; /*2.7vmin; /*2.3vmin;*/
+    font-size: 1.2rem; /*2.5vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -316,7 +330,7 @@ body.cda {
 
 .selectable-heading {
     color: white;
-    font-size: 2.8vmin; /*2.53vmin; /*2.3vmin; /*2.0vmin;*/
+    font-size: 1.35rem; /*2.0vmin;*/
     font-family: Candara, Verdana, sans-serif;
     display: block;
 }
@@ -338,7 +352,7 @@ body.cda {
     border-width: thin;
 
     color: white;
-    font-size: 2.5vmin; /*2.31vmin; /*2.1vmin; /*1.8vmin;*/
+    font-size: 1.2rem; /*1.8vmin;*/
     font-family: Candara, Verdana, sans-serif;
 
     margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
@@ -396,7 +410,7 @@ body.cda {
 }
 
 .button-large {
-    font-size: 3vmin; /*2.76vmin; /*2.4vmin;*/
+    font-size: 1.3rem; /*2.4vmin;*/
 }
 
 .cda-map-base {
@@ -505,4 +519,21 @@ body.cda {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.container-heading-tight {
+    text-align: center;
+}
+.container-heading-normal {
+    display: none;
+}
+
+.container-footing-tight {
+}
+.container-footing-normal {
+    display: none;
+}
+
+.mobile-hide {
+    display: none;
 }
