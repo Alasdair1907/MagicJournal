@@ -8,20 +8,33 @@ Galleries also have a brief description (1000 characters) and a collection of im
 ###### Geo Data
 
 All posts can be tied to a specific location. Users can see the posts on the map.
-
+<p align="center">
+<img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/map.png">
+</p>
 ###### Post Relation System
 
 Links get displayed in a side panel in the post view. There are two categories of links.<br />
 An article can use an image from other gallery. In that case, an Associated connection will be automatically created between the article and the gallery.<br />
 A manual connection, called Related, can be created between any two posts. 
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/relations-desktop.jpg">
+</p>
+
 ###### Mobile and Desktop compatible template
 
 Website template is optimized for both handheld devices and desktop.
+<p align="center">
+<img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/mobile.jpg">
+</p>
 
 ###### Admin
 
 Content is managed through the administration panel. More users with various privileges can be created.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/admin.jpg">
+</p>
 
 ###### To get this code running:
 
