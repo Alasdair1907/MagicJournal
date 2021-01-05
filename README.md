@@ -19,7 +19,7 @@ All posts can be tied to a specific location. Users can see the posts on the map
 
 ### Post Relation System
 
-Links get displayed in a side panel in the post view. There are two categories of links.<br />
+Relations get displayed in a side panel in the post view. There are two categories of relations.<br />
 An article can use an image from other gallery. In that case, an Associated connection will be automatically created between the article and the gallery.<br />
 A manual connection, called Related, can be created between any two posts. 
 
