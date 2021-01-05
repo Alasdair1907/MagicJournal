@@ -5,13 +5,19 @@ Articles can be formatted with custom BBCode.<br />
 Photos are posts that have a brief description (1000 characters) and a single image.<br />
 Galleries also have a brief description (1000 characters) and a collection of images.<br />
 
-###### Geo Data
+<p align="center">
+<img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/overall-desktop.jpg">
+</p>
+
+##### Geo Data
 
 All posts can be tied to a specific location. Users can see the posts on the map.
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/map.png">
 </p>
-###### Post Relation System
+
+##### Post Relation System
 
 Links get displayed in a side panel in the post view. There are two categories of links.<br />
 An article can use an image from other gallery. In that case, an Associated connection will be automatically created between the article and the gallery.<br />
@@ -21,14 +27,15 @@ A manual connection, called Related, can be created between any two posts.
 <img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/relations-desktop.jpg">
 </p>
 
-###### Mobile and Desktop compatible template
+##### Mobile and Desktop compatible template
 
 Website template is optimized for both handheld devices and desktop.
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/mobile.jpg">
 </p>
 
-###### Admin
+##### Admin
 
 Content is managed through the administration panel. More users with various privileges can be created.
 
@@ -36,7 +43,7 @@ Content is managed through the administration panel. More users with various pri
 <img src="https://raw.githubusercontent.com/Alasdair1907/MagicJournal/master/misc/github-readme/admin.jpg">
 </p>
 
-###### To get this code running:
+##### To get this code running:
 
 1. Make sure that you have the following installed:
     - Java 14+
