@@ -1,5 +1,6 @@
 package world.thismagical.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,6 +31,42 @@ public class JsonApi {
     static {
         actionToErrorMessage = new HashMap<>();
         actionToFunction = new HashMap<>();
+
+        /*
+        Homepage main method for listing all three posts at once
+         */
+
+        actionToErrorMessage.put("listHomepage", "Error listing posts");
+        actionToFunction.put("listHomepage", (JsonApiRequestContext request) -> {
+
+            List<BasicPostFilterTO> postFilters = null;
+            if (request.data != null && !request.data.isEmpty()){
+                 postFilters =  request.objectMapper.readValue(request.data, new TypeReference<List<BasicPostFilterTO>>(){});
+            }
+
+            if (postFilters == null || postFilters.isEmpty()){
+                return JsonAdminResponse.fail("Error listing posts");
+            }
+
+            List<Object> result = new ArrayList<>();
+
+            // articles
+            BasicPostFilter basicPostFilterArticles = BasicPostFilter.fromTO(postFilters.get(0), request.session);
+            result.add(ArticleService.listAllArticleVOs(basicPostFilterArticles, request.session));
+
+            // photos
+            BasicPostFilter basicPostFilterPhotos = BasicPostFilter.fromTO(postFilters.get(1), request.session);
+            result.add(PhotoService.listAllPhotoVOs(basicPostFilterPhotos, request.session));
+
+            // galleries
+            BasicPostFilter basicPostFilterGalleries = BasicPostFilter.fromTO(postFilters.get(2), request.session);
+            result.add(GalleryService.listAllGalleryVOs(basicPostFilterGalleries, basicPostFilterGalleries.galleryRepresentationImages, request.session));
+
+            // tags
+            result.add(TagService.getTagDigestVOList(request.session).data);
+
+            return JsonAdminResponse.success(result);
+        });
 
         /*
         Authorization
@@ -267,7 +304,7 @@ public class JsonApi {
             return ArticleService.createOrUpdateArticle(articleTO, request.session);
         });
 
-        actionToErrorMessage.put("listAllArticleVOs", "");
+        actionToErrorMessage.put("listAllArticleVOs", "Error listing articles");
         actionToFunction.put("listAllArticleVOs", (JsonApiRequestContext request) -> {
             BasicPostFilterTO basicPostFilterTO = null;
             if (request.data != null && !request.data.isEmpty()){
@@ -511,7 +548,12 @@ public class JsonApi {
             response = (JsonAdminResponse) actionToFunction.get(jar.action).apply(jar);
         } catch (Exception ex) {
             Tools.handleException(ex);
-            response = JsonAdminResponse.fail(actionToErrorMessage.get(jar.action));
+
+            if (actionToErrorMessage.containsKey(jar.action)) {
+                response = JsonAdminResponse.fail(actionToErrorMessage.get(jar.action));
+            } else {
+                response = JsonAdminResponse.fail("Error processing request");
+            }
         }
 
         return response;

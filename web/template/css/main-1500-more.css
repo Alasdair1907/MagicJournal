@@ -181,9 +181,15 @@ body.cda {
 }
 
 .tag-cloud-advanced-link {
-    text-align: right;
     display: block;
-    padding-right: 1%;
+    background: white;
+    color: black !important;
+    width: 200px;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 1.5vmin;
+    text-decoration: none !important;
 }
 
 /* removes decorations from links */
@@ -518,4 +524,8 @@ body.cda {
     display: none;
 }
 .container-footing-normal {
+}
+
+.container-tag-list {
+    text-align: justify;
 }

@@ -19,44 +19,25 @@ $.widget("magic.homepage", {
         await this._display(this);
     },
     _display: async function(self){
+
         let basicPostFilterTOArticles = {
-            limit: 7
+            limit: 9
         };
-
-        // TODO load simultaneously
-        // TODO add spinner
-
-        // TODO add limits
-
-        let articleVOList = await ajaxCda({data: JSON.stringify(basicPostFilterTOArticles), action: "listAllArticleVOs"});
-        if (articleVOList === undefined){
-            // TODO something's wrong - need a handler for this
-        }
-
-        let tagListMenu = await ajaxCda({action: "getTagDigestVOList"});
-        if (tagListMenu === undefined){
-
-        }
-
         let basicPostFilterTOPhotos = {
             limit: 8
         };
-
-
-        let photoVOList = await ajaxCda({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTOPhotos)});
-        if (photoVOList === undefined){
-
-        }
-
         let basicPostFilterTOGalleries = {
-            limit: 3,
+            limit: 4,
             galleryRepresentationImages: 8
         };
 
-        let galleryVOList = await ajaxCda({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTOGalleries)});
-        if (galleryVOList === undefined){
+        let basicPostFilterTOs = [basicPostFilterTOArticles, basicPostFilterTOPhotos, basicPostFilterTOGalleries]
+        let postVOListWithTagListMenu = await ajaxCda({data: JSON.stringify(basicPostFilterTOs), action: "listHomepage"});
 
-        }
+        let articleVOList = postVOListWithTagListMenu[0];
+        let photoVOList = postVOListWithTagListMenu[1];
+        let galleryVOList = postVOListWithTagListMenu[2];
+        let tagListMenu = postVOListWithTagListMenu[3];
 
         let hHomepageListing = Handlebars.compile(homepageListing);
         self.element.html(hHomepageListing({articleVOList: articleVOList, tagDigestVOList: tagListMenu, photoVOList: photoVOList, galleryVOList: galleryVOList}));

@@ -36,7 +36,7 @@ let articleRepresentation = `
     </div>
     
     <div class="container-footing-tight">
-        <table>
+        <table style="width: 100%">
             <tr>
                 <td style="width: 50%">
                     <div class="post-info-token"><span class="text-main">Author:</span><br /><a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>                    
@@ -131,7 +131,7 @@ let galleryRepresentationCompact = `
 // requires tagDigestVOList
 let tagListMenu = `
 
-<div class="container-primary container-primary-element">
+<div class="container-primary container-primary-element container-tag-list">
     <span class="item-container-heading">Tag Cloud</span>
     {{#each tagDigestVOList}}
         <a class="text-main tag-cloud-a" href="posts.jsp?tags={{this.title}}">#{{this.title}}</a>&nbsp;
