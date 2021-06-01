@@ -54,7 +54,7 @@ $.widget("admin.RelationManager", {
     <!-- Modal Header -->
     <div class="modal-header">
       <span class="modal-h1">Select the post to link</span>
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     
     <!-- Modal body -->
@@ -73,7 +73,7 @@ $.widget("admin.RelationManager", {
     
     <!-- Modal footer -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">Cancel</button>
     </div>
     
   </div>
@@ -318,7 +318,7 @@ $.widget("admin.RelationManager", {
             $modalDock.html(self._postSelectionModal);
 
             let $relationSelectModal = self.element.find('[data-role=relation-select-modal]');
-            $relationSelectModal.modal();
+            $relationSelectModal.modal('show');
 
             self._relationAdd(self, ops, $relationSelectModal);
         });

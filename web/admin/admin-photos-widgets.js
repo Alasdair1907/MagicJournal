@@ -272,7 +272,7 @@ $.widget("admin.photosWidget", {
         $photoDeleteButtons.click(await async function(){
             let photoId = $(this).data('id');
 
-            $photoDeleteConfirmModal.modal();
+            $photoDeleteConfirmModal.modal('show');
 
             let $proceedButton = self.element.find('[data-role="delete-confirm"]');
             $proceedButton.unbind();

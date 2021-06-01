@@ -18,7 +18,7 @@ let showBBCodeHintModal = function($modalAnchor){
     $modalAnchor.html(bbCodeHintModal);
 
     let $modalElem = $modalAnchor.find('[data-role="bb-code-hint-modal"]');
-    $modalElem.modal();
+    $modalElem.modal('show');
 };
 
 let bbCodeHintModal = `
@@ -29,7 +29,7 @@ let bbCodeHintModal = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">BBCode Info</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -66,7 +66,7 @@ let bbCodeHintModal = `
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">Close</button>
             </div>
             
         </div>

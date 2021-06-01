@@ -20,7 +20,7 @@ let fileSelect = async function($modalAnchor){
     let selectedId = null;
 
     let $modal = $modalAnchor.find('[data-role="file-select-modal"]');
-    $modal.modal();
+    $modal.modal('show');
 
     let $fileManagerMain = $modalAnchor.find('[data-role="file-manager-main"]');
     let $fileSearchAnchor = $modalAnchor.find('[data-role="file-search"]');
@@ -88,7 +88,7 @@ let fileSelect = async function($modalAnchor){
             $confirmDeleteAnchor.html(confirmDeleteFile);
 
             let $confirmDeleteModal = $confirmDeleteAnchor.find('[data-role="delete-file-confirm"]');
-            $confirmDeleteModal.modal();
+            $confirmDeleteModal.modal('show');
 
             let $deleteConfirmButton = $confirmDeleteAnchor.find('[data-role="file-delete-confirm"]');
             $deleteConfirmButton.unbind();
@@ -202,7 +202,7 @@ let fileSelectModal = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <span class="modal-h1">File Manager</span>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -221,7 +221,7 @@ let fileSelectModal = `
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">Cancel</button>
             </div>
 
         </div>
@@ -288,7 +288,7 @@ let confirmDeleteFile = `
     <!-- Modal Header -->
     <div class="modal-header">
       <h4 class="modal-title">Confirm Deletion</h4>
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     
     <!-- Modal body -->

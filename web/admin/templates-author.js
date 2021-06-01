@@ -105,7 +105,7 @@ let addNewAuthorPanel = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Enter New Password</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -116,7 +116,7 @@ let addNewAuthorPanel = `
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-light btn-std" data-role="update-user-password">Update</button>
-                <button type="button" class="btn btn-danger btn-std" data-dismiss="modal" onclick="$('[data-role=new-user-password]').val('');">Close</button>
+                <button type="button" class="btn btn-danger btn-std" data-bs-dismiss="modal" onclick="$('[data-role=new-user-password]').val('');">Close</button>
             </div>
 
         </div>
@@ -133,7 +133,7 @@ let addNewAuthorPanel = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Enter New Display Name</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -144,7 +144,7 @@ let addNewAuthorPanel = `
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-light btn-std" data-role="update-user-displayname">Update</button>
-                <button type="button" class="btn btn-danger btn-std" data-dismiss="modal" onclick="$('[data-role=new-user-displayname]').val('');">Close</button>
+                <button type="button" class="btn btn-danger btn-std" data-bs-dismiss="modal" onclick="$('[data-role=new-user-displayname]').val('');">Close</button>
             </div>
 
         </div>
@@ -160,7 +160,7 @@ let addNewAuthorPanel = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Select New Access Level</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -180,7 +180,7 @@ let addNewAuthorPanel = `
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-light btn-std" data-role="update-user-access-level">Update</button>
-                <button type="button" class="btn btn-danger btn-std" data-dismiss="modal" onclick="$('[data-role=new-user-password]').val('');">Close</button>
+                <button type="button" class="btn btn-danger btn-std" data-bs-dismiss="modal" onclick="$('[data-role=new-user-password]').val('');">Close</button>
             </div>
 
         </div>
@@ -197,7 +197,7 @@ let addNewAuthorPanel = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Confirm Deletion</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -208,7 +208,7 @@ let addNewAuthorPanel = `
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-std" data-role="delete-confirm">Yes, delete!</button>
-                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">No</button>
             </div>
 
         </div>

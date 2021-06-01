@@ -163,7 +163,7 @@ $.widget("admin.authorsEdit", {
                 $('button[data-role=change-password]').unbind();
                 $('button[data-role=change-password]').click(function(){
                     let targetUserId = $(this).data("id");
-                    $('[data-role=change-password-modal]').modal();
+                    $('[data-role=change-password-modal]').modal('show');
 
                     $('button[data-role=update-user-password]').unbind();
                     $('button[data-role=update-user-password]').click(function(){
@@ -205,7 +205,7 @@ $.widget("admin.authorsEdit", {
                 $('button[data-role=change-display-name]').unbind();
                 $('button[data-role=change-display-name]').click(function(){
                     let targetUserId = $(this).data("id");
-                    $('[data-role=change-displayname-modal]').modal();
+                    $('[data-role=change-displayname-modal]').modal('show');
 
                     $('button[data-role=update-user-displayname]').unbind();
                     $('button[data-role=update-user-displayname]').click(function(){
@@ -246,7 +246,7 @@ $.widget("admin.authorsEdit", {
                 $('button[data-role=change-privilege]').unbind();
                 $('button[data-role=change-privilege]').click(function(){
                     let targetUserId = $(this).data("id");
-                    $('[data-role=change-access-level-modal]').modal();
+                    $('[data-role=change-access-level-modal]').modal('show');
 
                     $('button[data-role=update-user-access-level]').unbind();
                     $('button[data-role=update-user-access-level]').click(function(){
@@ -291,7 +291,7 @@ $.widget("admin.authorsEdit", {
 
                 $deleteButton.click(function(){
                     let targetUserId = $(this).data("id");
-                    $('[data-role="delete-user-confirm"]').modal();
+                    $('[data-role="delete-user-confirm"]').modal('show');
 
                     $('[data-role="delete-confirm"]').unbind();
                     $('[data-role="delete-confirm"]').click(function(){

@@ -28,7 +28,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
     let $imageSelectFilterAnchor = $modalJQueryElement.find('[data-role="modal-post-filter"]');
 
-    $imageSelectModal.modal();
+    $imageSelectModal.modal('show');
 
     let $articleSrc = $modalJQueryElement.find('[data-role="image-select-article"]');
     let $photoSrc = $modalJQueryElement.find('[data-role="image-select-photo"]');
@@ -269,7 +269,7 @@ let imageSelectionModal = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <span class="modal-h1">Select an image to insert</span>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -300,7 +300,7 @@ let imageSelectionModal = `
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-success btn-std" data-role="image-insert" disabled="disabled">Insert selected image</button>
-                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">Cancel</button>
             </div>
 
         </div>

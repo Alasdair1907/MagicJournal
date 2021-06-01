@@ -22,7 +22,7 @@ let mapPickTemplate = `
             <!-- Modal Header -->
             <div class="modal-header">
                 <span class="modal-h1">Choose location</span>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -38,7 +38,7 @@ let mapPickTemplate = `
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-success btn-std" data-role="location-insert" disabled="disabled">Use selected location</button>
-                <button type="button" class="btn btn-primary btn-std" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-std" data-bs-dismiss="modal">Cancel</button>
             </div>
 
         </div>
@@ -58,7 +58,7 @@ let mapPick = async function($modalAnchor, $inputElem, currentCoordinates){
         let $searchInput = $modalAnchor.find('[data-role="mapPickSearch"]');
         let $searchSubmit = $modalAnchor.find('[data-role="search-submit"]');
 
-        $modal.modal();
+        $modal.modal('show');
         let coordinates = null;
 
         $locationInsertButton.click(function () {

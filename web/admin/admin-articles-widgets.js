@@ -349,7 +349,7 @@ $.widget("admin.articlesWidget", {
         $articleDeleteButtons.click(await async function(){
             let articleId = $(this).data('id');
 
-            $articleDeleteConfirmModal.modal();
+            $articleDeleteConfirmModal.modal('show');
 
             let $proceedButton = self.element.find('[data-role="delete-confirm"]');
             $proceedButton.unbind();

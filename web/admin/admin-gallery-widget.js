@@ -111,7 +111,7 @@ $.widget("admin.galleriesWidget", {
         $galleryDeleteButtons.click(await async function(){
             let galleryId = $(this).data('id');
 
-            $galleryDeleteConfirmModal.modal();
+            $galleryDeleteConfirmModal.modal('show');
 
             let $proceedButton = self.element.find('[data-role="delete-confirm"]');
             $proceedButton.unbind();
