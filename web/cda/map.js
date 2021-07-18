@@ -94,11 +94,15 @@ $.widget("magic.CdaMap", {
             let postVO = e.target.metadata.postVO;
 
             let postClass = postVO.isArticle ? 'Article' : ( postVO.isPhoto ? 'Photo' : 'Gallery' );
+            let mainImageVO = postVO.mainImageVO
 
             infobox.setOptions({
                 location: e.target.getLocation(),
                 title: postClass,
-                description: postVO.title + '<br /><a href="posts.jsp?' + postClass.toLowerCase() + '=' + postVO.id + '" target="_blank">View post</a>',
+                maxHeight: 300,
+                maxWidth: 300,
+                showPointer: false,
+                description: postVO.title + '<br /><img src="getImage.jsp?filename=' + mainImageVO.thumbnail + '" style="max-width: 150px; max-height: 150px;"/><br /><a href="posts.jsp?' + postClass.toLowerCase() + '=' + postVO.id + '" target="_blank">View post</a>',
                 visible: true
             });
 
