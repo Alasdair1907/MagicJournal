@@ -37,7 +37,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
 
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
 }
 
 war {
