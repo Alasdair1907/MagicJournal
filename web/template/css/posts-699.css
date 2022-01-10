@@ -207,6 +207,27 @@
     right: 1vw;
     top: 0.5vh;
     cursor: pointer;
+    text-shadow:2px 5px rgb(0, 0, 0, .65);
+}
+
+.image-show-previous {
+    font-size: 4.5vh;
+    color: white;
+    position: absolute;
+    right: 1vw;
+    top: 5vh;
+    cursor: pointer;
+    text-shadow:2px 5px rgb(0, 0, 0, .65);
+}
+
+.image-show-next {
+    font-size: 4.5vh;
+    color: white;
+    position: absolute;
+    right: 1vw;
+    top: 9.5vh;
+    cursor: pointer;
+    text-shadow:2px 5px rgb(0, 0, 0, .65);
 }
 
 .post-render-info-line {

@@ -50,7 +50,9 @@
   <div data-role="content-main" class="width-100-pc"></div>
 
   <script type="text/javascript">
+    console.log("Calling header initializer...");
     $('[data-role="header-main"]').header();
+    console.log("Calling homepage initializer...");
     $('[data-role="content-main"]').homepage();
   </script>
 

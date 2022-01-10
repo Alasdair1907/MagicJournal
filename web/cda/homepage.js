@@ -16,12 +16,14 @@
 
 $.widget("magic.homepage", {
     _init: async function(){
+        console.log("Initializing homepage...");
         await this._display(this);
     },
     _display: async function(self){
 
+        console.log("homepage display()");
         let basicPostFilterTOArticles = {
-            limit: 9
+            limit: 11
         };
         let basicPostFilterTOPhotos = {
             limit: 8

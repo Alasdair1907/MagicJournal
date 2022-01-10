@@ -102,7 +102,7 @@ $.widget("magic.posts", {
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
         self.element.html(hGalleryTemplate({galleryVO: galleryVO, galleryDescription: basicRender(galleryVO.description)}));
 
-        self._handleClickableImages(self);
+        self._handleClickableImages(self, true);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
@@ -140,28 +140,77 @@ $.widget("magic.posts", {
         document.title = "About " + settingsTO.websiteName;
     },
 
-    _handleClickableImages: function(self){
+    _handleClickableImages: function(self, isGallery=false){
         let clickableImages = self.element.find('[data-role="inline-image"]');
 
         clickableImages.unbind();
         clickableImages.click(function(){
             let imageSrc = $(this).data("image");
             let title = $(this).data("title");
+            let index = $(this).data("index");
+            let dataBoundary = $(this).data("boundary");
 
             let hFullScreenImageOverlay = Handlebars.compile(fullScreenImageOverlay);
-            let overlayHtml = hFullScreenImageOverlay({imageSrc: imageSrc, title: title});
+            let hImageOverlayImg = Handlebars.compile(imageOverlayImg);
+
+            let imgHtml = hImageOverlayImg({imageSrc: imageSrc, title: title});
+            let overlayHtml = hFullScreenImageOverlay({isGallery: isGallery});
 
             let $newElem = $(overlayHtml);
+            let $imgElem = $newElem.find('[data-role="image-overlay-img"]');
+            $imgElem.html(imgHtml);
+
             $newElem.appendTo("body");
             $("body").css("overflow", "hidden");
 
             let $imageShowClose = $newElem.find('[data-role="image-show-close"]');
+            let $imageShowPrevious = $newElem.find('[data-role="gallery-previous"]');
+            let $imageShowNext = $newElem.find('[data-role="gallery-next"]');
+
             $imageShowClose.click(function(){
                 $newElem.remove();
                 $("body").css("overflow","auto");
             });
+
+            $imageShowPrevious.click(function(){
+                let $previousImage = null;
+                if (dataBoundary == "first"){
+                    $previousImage = self.element.find('[data-role="inline-image"][data-boundary="last"]');
+                } else {
+                    let prevIndex = index-1;
+                    $previousImage = self.element.find('[data-role="inline-image"][data-index="'+prevIndex+'"]');
+                }
+
+                imageSrc = $previousImage.data("image");
+                title = $previousImage.data("title");
+                index = $previousImage.data("index");
+                dataBoundary = $previousImage.data("boundary");
+
+                imgHtml = hImageOverlayImg({imageSrc: imageSrc, title: title});
+                $imgElem.html(imgHtml);
+            });
+
+            $imageShowNext.click(function(){
+                let $nextImage = null;
+                if (dataBoundary == "last"){
+                    $nextImage = self.element.find('[data-role="inline-image"][data-boundary="first"]');
+                } else {
+                    let nextIndex = index+1;
+                    $nextImage = self.element.find('[data-role="inline-image"][data-index="'+nextIndex+'"]');
+                }
+
+                imageSrc = $nextImage.data("image");
+                title = $nextImage.data("title");
+                index = $nextImage.data("index");
+                dataBoundary = $nextImage.data("boundary");
+
+                imgHtml = hImageOverlayImg({imageSrc: imageSrc, title: title});
+                $imgElem.html(imgHtml);
+            });
+
         });
     },
+
 
     _advancedSearch: function(self){
 

@@ -19,27 +19,31 @@ sourceSets {
 
 dependencies {
 
-    compile fileTree(include: ['*.jar'], dir: 'lib')
+    implementation fileTree(include: ['*.jar'], dir: 'lib')
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.32.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.32.Final'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
 
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
 }
 
 war {
     from 'web'
+}
+
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
 }

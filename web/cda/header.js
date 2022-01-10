@@ -17,11 +17,13 @@
 
 $.widget("magic.header", {
     _init: async function(){
+        console.log("Initializing header...");
         await this._display(this);
     },
 
     _display: async function(self){
 
+        console.log("Header display()");
         let settingsTO = await getSettingsTO();
 
         if (settingsTO === undefined){

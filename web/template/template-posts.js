@@ -70,7 +70,7 @@ let galleryTemplate = `
             <div class="jg">
                 {{#each galleryVO.imageVOList}}
                 <span style="--r: {{this.aspectRatio}}">
-                    <img class="gallery-image-breadcrumb" data-image="{{this.image}}" data-title="{{this.title}}" data-role="inline-image" src="getImage.jsp?filename={{this.preview}}" alt="{{this.title}}">
+                    <img class="gallery-image-breadcrumb" data-image="{{this.image}}" data-index="{{@index}}" data-boundary="{{#if @first}}first{{/if}}{{#if @last}}last{{/if}}" data-title="{{this.title}}" data-role="inline-image" src="getImage.jsp?filename={{this.preview}}" alt="{{this.title}}">
                 </span>
                 {{/each}}
             </div>
@@ -197,10 +197,18 @@ let fullScreenImageOverlay = `
 <div class="image-show-base-overlay">
     <div class="image-show-container">
         <div class="width-100-pc">
-            <img src="getImage.jsp?filename={{imageSrc}}" alt="{{title}}" class="image-show-image {{#if title}}image-show-image-with-descr{{else}}image-show-image-no-descr{{/if}}">
-            {{#if title}}<div class="image-show-title text-main">{{title}}</div>{{/if}}
+            <div data-role="image-overlay-img"></div>
             <i class="fas fa-times image-show-close" data-role="image-show-close"></i>
+            {{#if isGallery}}
+                <i class="fas fa-arrow-left image-show-previous" data-role="gallery-previous"></i>
+                <i class="fas fa-arrow-right image-show-next" data-role="gallery-next"></i>
+            {{/if}}
         </div>
     </div>
 </div>
+`;
+
+let imageOverlayImg = `
+<img src="getImage.jsp?filename={{imageSrc}}" alt="{{title}}" class="image-show-image {{#if title}}image-show-image-with-descr{{else}}image-show-image-no-descr{{/if}}">
+{{#if title}}<div class="image-show-title text-main">{{title}}</div>{{/if}}
 `;
