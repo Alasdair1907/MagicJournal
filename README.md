@@ -46,8 +46,8 @@ Content is managed through the administration panel. More users with various pri
 ### To get this code running:
 
 1. Make sure that you have the following installed:
-    - Java 14+
-    - PostgreSQL (12)
+    - Java 14+ (**because of latest gradlew updates, probably Java 17**)
+    - PostgreSQL (12+)
     - GIT
 
     Download the latest version of tomcat archive from http://tomcat.apache.org/
