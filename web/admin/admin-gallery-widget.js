@@ -27,118 +27,121 @@ $.widget("admin.galleriesWidget", {
     },
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
+        // this is necessary to pass the function as parameter to postFilter()
+        let __display = async function(self, basicPostFilterTO, refreshSearch){
+            if (basicPostFilterTO) {
+                basicPostFilterTO.userGuid = Cookies.get("guid");
+            } else {
+                basicPostFilterTO = {userGuid : Cookies.get("guid")};
+            }
 
-        if (basicPostFilterTO) {
-            basicPostFilterTO.userGuid = Cookies.get("guid");
-        } else {
-            basicPostFilterTO = {userGuid : Cookies.get("guid")};
-        }
+            let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 
-        let galleryVOList = await ajax({action: "listAllGalleryVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
+            let hGalleryEditSelect = Handlebars.compile(galleryEditSelect);
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hGalleryEditSelect({galleryVOs: galleryVOList, demoUser: demoUser}));
 
-        let hGalleryEditSelect = Handlebars.compile(galleryEditSelect);
-        let demoUser = Cookies.get("privilegeLevelName") === "demo";
-        self.element.html(hGalleryEditSelect({galleryVOs: galleryVOList, demoUser: demoUser}));
+            let $searchAnchor = self.element.find('[data-role="search-anchor"]');
+            postFilter($searchAnchor, basicPostFilterTO, __display, self, refreshSearch);
 
-        let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
+            let $galleryEditButtons = self.element.find('[data-role="gallery-edit"]');
+            let $galleryDeleteButtons = self.element.find('[data-role="gallery-delete"]');
+            let $createNewGalleryButton = self.element.find('[data-role="gallery-new"]');
 
-        let $galleryEditButtons = self.element.find('[data-role="gallery-edit"]');
-        let $galleryDeleteButtons = self.element.find('[data-role="gallery-delete"]');
-        let $createNewGalleryButton = self.element.find('[data-role="gallery-new"]');
+            let $galleryPublishToggle = self.element.find('[data-role="gallery-publish-toggle"]');
 
-        let $galleryPublishToggle = self.element.find('[data-role="gallery-publish-toggle"]');
+            let $galleryDeleteConfirmModal = self.element.find('[data-role="delete-gallery-confirm"]');
 
-        let $galleryDeleteConfirmModal = self.element.find('[data-role="delete-gallery-confirm"]');
+            if (Cookies.get("privilegeLevelName") === "user") {
+                $galleryPublishToggle.prop("disabled", true);
+                $galleryDeleteButtons.prop("disabled", true);
+                $galleryEditButtons.prop("disabled", true);
 
-        if (Cookies.get("privilegeLevelName") === "user") {
-            $galleryPublishToggle.prop("disabled", true);
-            $galleryDeleteButtons.prop("disabled", true);
-            $galleryEditButtons.prop("disabled", true);
+                let myLogin = Cookies.get("login");
+                let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+                $ownButtons.prop("disabled", false);
+            }
 
-            let myLogin = Cookies.get("login");
-            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
-            $ownButtons.prop("disabled", false);
-        }
+            $createNewGalleryButton.unbind();
+            $createNewGalleryButton.click(await async function(){
 
-        $createNewGalleryButton.unbind();
-        $createNewGalleryButton.click(await async function(){
+                let buttonText = spinButton($createNewGalleryButton);
+                // create a gallery entity
+                let galleryTO = await self._getEmptyGalleryTO();
+                let newId = await self._saveOrUpdateGallery(galleryTO);
 
-            let buttonText = spinButton($createNewGalleryButton);
-            // create a gallery entity
-            let galleryTO = await self._getEmptyGalleryTO();
-            let newId = await self._saveOrUpdateGallery(galleryTO);
+                // edit gallery entity
+                let galleryVO = await self._getEmptyGalleryVO(newId);
+                await self._edit(self.element, galleryVO, self);
 
-            // edit gallery entity
-            let galleryVO = await self._getEmptyGalleryVO(newId);
-            await self._edit(self.element, galleryVO, self);
-
-            unSpinButton($createNewGalleryButton, buttonText);
-        });
-
-        $galleryEditButtons.unbind();
-        $galleryEditButtons.click(await async function(){
-
-            let buttonText = spinButton($galleryEditButtons);
-
-            let galleryId = $(this).data('id');
-            let galleryVO = await self._loadGallery(galleryId);
-            await self._edit(self.element, galleryVO, self);
-
-            unSpinButton($galleryEditButtons, buttonText);
-        });
-
-        $galleryPublishToggle.unbind();
-        $galleryPublishToggle.click(await async function(){
-            let galleryId = $(this).data('id');
-
-            let toggleResultJson = await $.ajax({
-                url: 'jsonApi.jsp',
-                method: 'POST',
-                data: {action: "toggleGalleryPublish", guid: Cookies.get("guid"), data: galleryId}
+                unSpinButton($createNewGalleryButton, buttonText);
             });
 
-            var toggleResult;
-            if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
-            if (!toggleResult || !toggleResult.success) {
-                alert("error toggling publish status: " + toggleResult.errorDescription);
-            } else {
-                await self._display(self, basicPostFilterTO, true);
-            }
-        });
+            $galleryEditButtons.unbind();
+            $galleryEditButtons.click(await async function(){
 
-        $galleryDeleteButtons.unbind();
-        $galleryDeleteButtons.click(await async function(){
-            let galleryId = $(this).data('id');
+                let buttonText = spinButton($galleryEditButtons);
 
-            $galleryDeleteConfirmModal.modal('show');
+                let galleryId = $(this).data('id');
+                let galleryVO = await self._loadGallery(galleryId);
+                await self._edit(self.element, galleryVO, self);
 
-            let $proceedButton = self.element.find('[data-role="delete-confirm"]');
-            $proceedButton.unbind();
-            $proceedButton.click(await async function(){
-                let deleteResultJson = await $.ajax({
+                unSpinButton($galleryEditButtons, buttonText);
+            });
+
+            $galleryPublishToggle.unbind();
+            $galleryPublishToggle.click(await async function(){
+                let galleryId = $(this).data('id');
+
+                let toggleResultJson = await $.ajax({
                     url: 'jsonApi.jsp',
                     method: 'POST',
-                    data: {action: "deleteGallery", guid: Cookies.get("guid"), data: galleryId}
+                    data: {action: "toggleGalleryPublish", guid: Cookies.get("guid"), data: galleryId}
                 });
 
-                if (deleteResultJson) {
-                    let deleteResult = JSON.parse(deleteResultJson);
-                    if (deleteResult.success === true) {
-                        $galleryDeleteConfirmModal.modal('hide');
-                        self._display(self);
-                    } else {
-                        alert("error deleting: "+deleteResult.errorDescription);
-                    }
+                var toggleResult;
+                if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
+                if (!toggleResult || !toggleResult.success) {
+                    alert("error toggling publish status: " + toggleResult.errorDescription);
+                } else {
+                    await self._display(self, basicPostFilterTO, true);
                 }
             });
 
-        });
+            $galleryDeleteButtons.unbind();
+            $galleryDeleteButtons.click(await async function(){
+                let galleryId = $(this).data('id');
 
-        if (isDemo()){
-            $galleryPublishToggle.prop("disabled", true);
-            $createNewGalleryButton.prop("disabled", true);
-        }
+                $galleryDeleteConfirmModal.modal('show');
+
+                let $proceedButton = self.element.find('[data-role="delete-confirm"]');
+                $proceedButton.unbind();
+                $proceedButton.click(await async function(){
+                    let deleteResultJson = await $.ajax({
+                        url: 'jsonApi.jsp',
+                        method: 'POST',
+                        data: {action: "deleteGallery", guid: Cookies.get("guid"), data: galleryId}
+                    });
+
+                    if (deleteResultJson) {
+                        let deleteResult = JSON.parse(deleteResultJson);
+                        if (deleteResult.success === true) {
+                            $galleryDeleteConfirmModal.modal('hide');
+                            self._display(self);
+                        } else {
+                            alert("error deleting: "+deleteResult.errorDescription);
+                        }
+                    }
+                });
+
+            });
+
+            if (isDemo()){
+                $galleryPublishToggle.prop("disabled", true);
+                $createNewGalleryButton.prop("disabled", true);
+            }
+        };
+        await __display(self, basicPostFilterTO, refreshSearch);
 
     },
 

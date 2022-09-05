@@ -83,7 +83,7 @@ public class PostDao {
         }
 
         if (basicPostFilter.titleContains != null && !basicPostFilter.titleContains.isEmpty()){
-            Predicate titleContains = cb.like(root.get("title"), '%' + basicPostFilter.titleContains + '%');
+            Predicate titleContains = cb.like(cb.lower(root.<String>get("title")), '%' + basicPostFilter.titleContains.toLowerCase() + '%');
             predicates.add(titleContains);
         }
 

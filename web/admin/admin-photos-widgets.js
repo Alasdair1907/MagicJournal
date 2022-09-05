@@ -196,110 +196,116 @@ $.widget("admin.photosWidget", {
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
 
-        if (basicPostFilterTO) {
-            basicPostFilterTO.userGuid = Cookies.get("guid");
-        } else {
-            basicPostFilterTO = {userGuid : Cookies.get("guid")};
-        }
+        // this is necessary to pass the function as parameter to postFilter()
+        let __display = async function(self, basicPostFilterTO, refreshSearch){
+            if (basicPostFilterTO) {
+                basicPostFilterTO.userGuid = Cookies.get("guid");
+            } else {
+                basicPostFilterTO = {userGuid : Cookies.get("guid")};
+            }
 
-        let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")}, "error listing photos");
+            let photoVOList = await ajax({action: "listAllPhotoVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")}, "error listing photos");
 
-        let hPhotoEditSelect = Handlebars.compile(photoEditSelect);
-        let demoUser = Cookies.get("privilegeLevelName") === "demo";
-        self.element.html(hPhotoEditSelect({photoPosts: photoVOList, demoUser: demoUser}));
+            let hPhotoEditSelect = Handlebars.compile(photoEditSelect);
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hPhotoEditSelect({photoPosts: photoVOList, demoUser: demoUser}));
 
-        let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
+            let $searchAnchor = self.element.find('[data-role="search-anchor"]');
+            postFilter($searchAnchor, basicPostFilterTO, __display, self, refreshSearch);
 
-        let $photoPostEditButtons = self.element.find('[data-role="photo-post-edit"]');
-        let $photoDeleteButtons = self.element.find('[data-role="photo-post-delete"]');
-        let $createNewPhotoButton = self.element.find('[data-role="photo-post-new"]');
+            let $photoPostEditButtons = self.element.find('[data-role="photo-post-edit"]');
+            let $photoDeleteButtons = self.element.find('[data-role="photo-post-delete"]');
+            let $createNewPhotoButton = self.element.find('[data-role="photo-post-new"]');
 
 
-        let $photoPostPublishToggle = self.element.find('[data-role="photo-publish-toggle"]');
+            let $photoPostPublishToggle = self.element.find('[data-role="photo-publish-toggle"]');
 
-        let $photoDeleteConfirmModal = self.element.find('[data-role="delete-photo-confirm"]');
+            let $photoDeleteConfirmModal = self.element.find('[data-role="delete-photo-confirm"]');
 
-        if (Cookies.get("privilegeLevelName") === "user") {
-            $photoPostPublishToggle.prop("disabled", true);
-            $photoDeleteButtons.prop("disabled", true);
-            $photoPostEditButtons.prop("disabled", true);
+            if (Cookies.get("privilegeLevelName") === "user") {
+                $photoPostPublishToggle.prop("disabled", true);
+                $photoDeleteButtons.prop("disabled", true);
+                $photoPostEditButtons.prop("disabled", true);
 
-            let myLogin = Cookies.get("login");
-            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
-            $ownButtons.prop("disabled", false);
-        }
+                let myLogin = Cookies.get("login");
+                let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+                $ownButtons.prop("disabled", false);
+            }
 
-        $createNewPhotoButton.unbind();
-        $createNewPhotoButton.click(await async function(){
+            $createNewPhotoButton.unbind();
+            $createNewPhotoButton.click(await async function(){
 
-            // create a photo entity
-            let photoTO = await self._getEmptyPhotoTO();
-            let newId = await self._saveOrUpdatePhoto(photoTO);
+                // create a photo entity
+                let photoTO = await self._getEmptyPhotoTO();
+                let newId = await self._saveOrUpdatePhoto(photoTO);
 
-            // edit photo entity
-            let photoVO = await self._getEmptyPhotoVO(newId);
-            await self._edit(self.element, photoVO, self);
-        });
-
-        $photoPostEditButtons.unbind();
-        $photoPostEditButtons.click(await async function(){
-            let photoId = $(this).data('id');
-            let photoVO = await self._loadPhoto(photoId);
-            await self._edit(self.element, photoVO, self);
-        });
-
-        $photoPostPublishToggle.unbind();
-        $photoPostPublishToggle.click(await async function(){
-            let photoId = $(this).data('id');
-
-            let toggleResultJson = await $.ajax({
-                url: 'jsonApi.jsp',
-                method: 'POST',
-                data: {action: "togglePhotoPublish", guid: Cookies.get("guid"), data: photoId}
+                // edit photo entity
+                let photoVO = await self._getEmptyPhotoVO(newId);
+                await self._edit(self.element, photoVO, self);
             });
 
-            var toggleResult;
-            if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
-            if (!toggleResult || !toggleResult.success) {
-                alert("error toggling publish status: " + toggleResult.errorDescription);
-            } else {
-                await self._display(self, basicPostFilterTO, true);
-            }
-        });
+            $photoPostEditButtons.unbind();
+            $photoPostEditButtons.click(await async function(){
+                let photoId = $(this).data('id');
+                let photoVO = await self._loadPhoto(photoId);
+                await self._edit(self.element, photoVO, self);
+            });
 
-        $photoDeleteButtons.unbind();
-        $photoDeleteButtons.click(await async function(){
-            let photoId = $(this).data('id');
+            $photoPostPublishToggle.unbind();
+            $photoPostPublishToggle.click(await async function(){
+                let photoId = $(this).data('id');
 
-            $photoDeleteConfirmModal.modal('show');
-
-            let $proceedButton = self.element.find('[data-role="delete-confirm"]');
-            $proceedButton.unbind();
-            $proceedButton.click(await async function(){
-                let deleteResultJson = await $.ajax({
+                let toggleResultJson = await $.ajax({
                     url: 'jsonApi.jsp',
                     method: 'POST',
-                    data: {action: "deletePhoto", guid: Cookies.get("guid"), data: photoId}
+                    data: {action: "togglePhotoPublish", guid: Cookies.get("guid"), data: photoId}
                 });
 
-                if (deleteResultJson) {
-                    let deleteResult = JSON.parse(deleteResultJson);
-                    if (deleteResult.success === true) {
-                        $photoDeleteConfirmModal.modal('hide');
-                        self._display(self);
-                    } else {
-                        alert("error deleting: "+deleteResult.errorDescription);
-                    }
+                var toggleResult;
+                if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
+                if (!toggleResult || !toggleResult.success) {
+                    alert("error toggling publish status: " + toggleResult.errorDescription);
+                } else {
+                    await self._display(self, basicPostFilterTO, true);
                 }
             });
 
-        });
+            $photoDeleteButtons.unbind();
+            $photoDeleteButtons.click(await async function(){
+                let photoId = $(this).data('id');
 
-        if (isDemo()){
-            $photoPostPublishToggle.prop("disabled", true);
-            $createNewPhotoButton.prop("disabled", true);
-        }
+                $photoDeleteConfirmModal.modal('show');
+
+                let $proceedButton = self.element.find('[data-role="delete-confirm"]');
+                $proceedButton.unbind();
+                $proceedButton.click(await async function(){
+                    let deleteResultJson = await $.ajax({
+                        url: 'jsonApi.jsp',
+                        method: 'POST',
+                        data: {action: "deletePhoto", guid: Cookies.get("guid"), data: photoId}
+                    });
+
+                    if (deleteResultJson) {
+                        let deleteResult = JSON.parse(deleteResultJson);
+                        if (deleteResult.success === true) {
+                            $photoDeleteConfirmModal.modal('hide');
+                            self._display(self);
+                        } else {
+                            alert("error deleting: "+deleteResult.errorDescription);
+                        }
+                    }
+                });
+
+            });
+
+            if (isDemo()){
+                $photoPostPublishToggle.prop("disabled", true);
+                $createNewPhotoButton.prop("disabled", true);
+            }
+        };
+        await __display(self, basicPostFilterTO, refreshSearch);
+
+
     }
 
 });

@@ -268,113 +268,118 @@ $.widget("admin.articlesWidget", {
     },
 
     _display: async function(self, basicPostFilterTO, refreshSearch){
+        // this is necessary to pass the function as parameter to postFilter()
+        let __display = async function(self, basicPostFilterTO, refreshSearch){
+            if (basicPostFilterTO) {
+                basicPostFilterTO.userGuid = Cookies.get("guid");
+            } else {
+                basicPostFilterTO = {userGuid : Cookies.get("guid")};
+            }
 
-        if (basicPostFilterTO) {
-            basicPostFilterTO.userGuid = Cookies.get("guid");
-        } else {
-            basicPostFilterTO = {userGuid : Cookies.get("guid")};
-        }
+            let articleVOList = await ajax({action: "listAllArticleVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
 
-        let articleVOList = await ajax({action: "listAllArticleVOs", data: JSON.stringify(basicPostFilterTO), guid: Cookies.get("guid")});
-
-        let hArticleEditSelect = Handlebars.compile(articleEditSelect);
-        let demoUser = Cookies.get("privilegeLevelName") === "demo";
-        self.element.html(hArticleEditSelect({articlePosts: articleVOList, demoUser: demoUser}));
+            let hArticleEditSelect = Handlebars.compile(articleEditSelect);
+            let demoUser = Cookies.get("privilegeLevelName") === "demo";
+            self.element.html(hArticleEditSelect({articlePosts: articleVOList, demoUser: demoUser}));
 
 
-        let $searchAnchor = self.element.find('[data-role="search-anchor"]');
-        postFilter($searchAnchor, basicPostFilterTO, self._display, self, refreshSearch);
+            let $searchAnchor = self.element.find('[data-role="search-anchor"]');
+            postFilter($searchAnchor, basicPostFilterTO, __display, self, refreshSearch);
 
-        let $articlePostEditButtons = self.element.find('[data-role="article-post-edit"]');
-        let $articleDeleteButtons = self.element.find('[data-role="article-post-delete"]');
-        let $createNewArticleButton = self.element.find('[data-role="article-post-new"]');
+            let $articlePostEditButtons = self.element.find('[data-role="article-post-edit"]');
+            let $articleDeleteButtons = self.element.find('[data-role="article-post-delete"]');
+            let $createNewArticleButton = self.element.find('[data-role="article-post-new"]');
 
-        let $articlePostPublishToggle = self.element.find('[data-role="article-publish-toggle"]');
+            let $articlePostPublishToggle = self.element.find('[data-role="article-publish-toggle"]');
 
-        let $articleDeleteConfirmModal = self.element.find('[data-role="delete-article-confirm"]');
+            let $articleDeleteConfirmModal = self.element.find('[data-role="delete-article-confirm"]');
 
-        if (Cookies.get("privilegeLevelName") === "user"){
-            $articlePostPublishToggle.prop("disabled", true);
-            $articleDeleteButtons.prop("disabled", true);
-            $articlePostEditButtons.prop("disabled", true);
+            if (Cookies.get("privilegeLevelName") === "user"){
+                $articlePostPublishToggle.prop("disabled", true);
+                $articleDeleteButtons.prop("disabled", true);
+                $articlePostEditButtons.prop("disabled", true);
 
-            let myLogin = Cookies.get("login");
-            let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
-            $ownButtons.prop("disabled", false);
-        }
+                let myLogin = Cookies.get("login");
+                let $ownButtons = self.element.find('[data-owner="'+myLogin+'"]');
+                $ownButtons.prop("disabled", false);
+            }
 
-        $createNewArticleButton.unbind();
-        $createNewArticleButton.click(await async function(){
+            $createNewArticleButton.unbind();
+            $createNewArticleButton.click(await async function(){
 
-            let buttonText = spinButton($createNewArticleButton);
+                let buttonText = spinButton($createNewArticleButton);
 
-            // create article entity
-            let articleTO = await self._getEmptyArticleTO();
-            let newId = await self._saveOrUpdateArticle(articleTO);
+                // create article entity
+                let articleTO = await self._getEmptyArticleTO();
+                let newId = await self._saveOrUpdateArticle(articleTO);
 
-            // edit article entity
-            let articleVO = await self._getEmptyArticleVO(newId);
-            await self._edit(self.element, articleVO, self);
+                // edit article entity
+                let articleVO = await self._getEmptyArticleVO(newId);
+                await self._edit(self.element, articleVO, self);
 
-            unSpinButton($createNewArticleButton, buttonText);
-        });
-
-        $articlePostEditButtons.unbind();
-        $articlePostEditButtons.click(await async function(){
-            let articleId = $(this).data('id');
-            let articleVO = await self._loadArticle(articleId);
-            await self._edit(self.element, articleVO, self);
-        });
-
-        $articlePostPublishToggle.unbind();
-        $articlePostPublishToggle.click(await async function(){
-            let articleId = $(this).data('id');
-
-            let toggleResultJson = await $.ajax({
-                url: 'jsonApi.jsp',
-                method: 'POST',
-                data: {action: "toggleArticlePublish", guid: Cookies.get("guid"), data: articleId}
+                unSpinButton($createNewArticleButton, buttonText);
             });
 
-            var toggleResult;
-            if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
-            if (!toggleResult || !toggleResult.success) {
-                alert("error toggling publish status: " + toggleResult.errorDescription);
-            } else {
-                await self._display(self, basicPostFilterTO, true);
-            }
-        });
+            $articlePostEditButtons.unbind();
+            $articlePostEditButtons.click(await async function(){
+                let articleId = $(this).data('id');
+                let articleVO = await self._loadArticle(articleId);
+                await self._edit(self.element, articleVO, self);
+            });
 
-        $articleDeleteButtons.unbind();
-        $articleDeleteButtons.click(await async function(){
-            let articleId = $(this).data('id');
+            $articlePostPublishToggle.unbind();
+            $articlePostPublishToggle.click(await async function(){
+                let articleId = $(this).data('id');
 
-            $articleDeleteConfirmModal.modal('show');
-
-            let $proceedButton = self.element.find('[data-role="delete-confirm"]');
-            $proceedButton.unbind();
-            $proceedButton.click(await async function(){
-                let deleteResultJson = await $.ajax({
+                let toggleResultJson = await $.ajax({
                     url: 'jsonApi.jsp',
                     method: 'POST',
-                    data: {action: "deleteArticle", guid: Cookies.get("guid"), data: articleId}
+                    data: {action: "toggleArticlePublish", guid: Cookies.get("guid"), data: articleId}
                 });
 
-                if (deleteResultJson) {
-                    let deleteResult = JSON.parse(deleteResultJson);
-                    if (deleteResult.success === true) {
-                        $articleDeleteConfirmModal.modal('hide');
-                        self._display(self);
-                    } else {
-                        alert("error deleting: "+deleteResult.errorDescription);
-                    }
+                var toggleResult;
+                if (toggleResultJson){ toggleResult = JSON.parse(toggleResultJson); }
+                if (!toggleResult || !toggleResult.success) {
+                    alert("error toggling publish status: " + toggleResult.errorDescription);
+                } else {
+                    await self._display(self, basicPostFilterTO, true);
                 }
             });
-        });
 
-        if (isDemo()){
-            $articlePostPublishToggle.prop("disabled", true);
-            $createNewArticleButton.prop("disabled", true);
-        }
+            $articleDeleteButtons.unbind();
+            $articleDeleteButtons.click(await async function(){
+                let articleId = $(this).data('id');
+
+                $articleDeleteConfirmModal.modal('show');
+
+                let $proceedButton = self.element.find('[data-role="delete-confirm"]');
+                $proceedButton.unbind();
+                $proceedButton.click(await async function(){
+                    let deleteResultJson = await $.ajax({
+                        url: 'jsonApi.jsp',
+                        method: 'POST',
+                        data: {action: "deleteArticle", guid: Cookies.get("guid"), data: articleId}
+                    });
+
+                    if (deleteResultJson) {
+                        let deleteResult = JSON.parse(deleteResultJson);
+                        if (deleteResult.success === true) {
+                            $articleDeleteConfirmModal.modal('hide');
+                            self._display(self);
+                        } else {
+                            alert("error deleting: "+deleteResult.errorDescription);
+                        }
+                    }
+                });
+            });
+
+            if (isDemo()){
+                $articlePostPublishToggle.prop("disabled", true);
+                $createNewArticleButton.prop("disabled", true);
+            }
+        };
+        await __display(self, basicPostFilterTO, refreshSearch);
+
+
     }
 });
