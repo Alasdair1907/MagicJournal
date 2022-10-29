@@ -24,7 +24,7 @@ body.cda {
     min-height: 6rem;
     max-height: 10rem;
     max-width: 90vw;
-    background: none !important;
+    /*background: none !important;*/
 }
 
 /* font-awesome icon */
