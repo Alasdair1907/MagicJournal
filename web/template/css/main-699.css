@@ -4,7 +4,7 @@ html {
 
 body.cda {
     background-color: black;
-    background-image: url("../background.jpg?v=102922_2");
+    background-image: url("../background.jpg?v=102922_4");
     /*background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;*/
@@ -24,6 +24,7 @@ body.cda {
     min-height: 6rem;
     max-height: 10rem;
     max-width: 90vw;
+    background: none !important;
 }
 
 /* font-awesome icon */
