@@ -45,6 +45,8 @@ body.cda {
 .desktop-menu-div {
     display: flex;
     flex-basis: 10px;
+    width: 98%;
+
     /*height: min-content;*/
     /*width: min-content;*/
 }
@@ -52,8 +54,8 @@ body.cda {
 /* contains font-awesome <i> and <span> with text */
 .desktop-menu-item {
     text-align: center;
-    margin-left: 1vmin;
-    margin-right: 1vmin;
+    margin-left: 0.5vmin;
+    margin-right: 0.5vmin;
 }
 
 .desktop-menu-item-a {
