@@ -201,31 +201,31 @@
 }
 
 .image-show-close {
-    font-size: 4.5vh;
+    font-size: 2.5rem;
     color: white;
     position: absolute;
     right: 1vw;
-    top: 0.5vh;
+    top: 0.5rem;
     cursor: pointer;
     text-shadow:2px 5px rgb(0, 0, 0, .65);
 }
 
 .image-show-previous {
-    font-size: 4.5vh;
+    font-size: 2.5rem;
     color: white;
     position: absolute;
     right: 1vw;
-    top: 5vh;
+    top: 3rem;
     cursor: pointer;
     text-shadow:2px 5px rgb(0, 0, 0, .65);
 }
 
 .image-show-next {
-    font-size: 4.5vh;
+    font-size: 2.5rem;
     color: white;
     position: absolute;
     right: 1vw;
-    top: 9.5vh;
+    top: 5.5rem;
     cursor: pointer;
     text-shadow:2px 5px rgb(0, 0, 0, .65);
 }

@@ -1,3 +1,8 @@
+<%
+response.setHeader("Pragma", "No-cache");
+response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+response.setDateHeader("Expires", -1);
+%>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="world.thismagical.to.SettingsTO" %>

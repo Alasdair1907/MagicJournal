@@ -1,4 +1,9 @@
 <%@page trimDirectiveWhitespaces="true"%>
+<%
+    response.setHeader("Pragma", "No-cache");
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setDateHeader("Expires", -1);
+%>
 <%--
   Created by IntelliJ IDEA.
   User: Alasdair
