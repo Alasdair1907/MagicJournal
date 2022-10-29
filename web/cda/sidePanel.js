@@ -17,22 +17,15 @@
 $.widget("magic.sidePanel", {
 
     options: {
-        latestPostsCount: 15,
-        postAttributionClass: POST_ATTRIBUTION_ARTICLE,
-        postId: 0
+        sidePanelPostsTO: null
     },
 
+    // use helper.js/getSidepanelData() to get data
     _init: async function(){
         let ops = this.options;
         let self = this;
 
-        let sidePanelRequestTO = {
-            postAttribution: ops.postAttributionClass,
-            postId: ops.postId,
-            limitLatest: ops.latestPostsCount
-        };
-
-        let sidePanelPostsTO = await ajaxCda({data: JSON.stringify(sidePanelRequestTO), action: "getSidePanelPosts"}, "error fetching side panel posts");
+        let sidePanelPostsTO = ops.sidePanelPostsTO;
 
         let hSidePanelBase = Handlebars.compile(sidePanelBase);
         self.element.html(hSidePanelBase({associated: sidePanelPostsTO.associated, related: sidePanelPostsTO.related, latest: sidePanelPostsTO.latest}));

@@ -15,41 +15,42 @@
 */
 
 let homepageListing = `
-<div class="width-100-pc" style="display: flex">
+<div class="width-100-pc" style="display: flex; flex-direction: column;">
+   
+   ${tagListMenu}
+
     
-    <div class="main-listing-column">
-    
-        <div class="container-primary container-primary-element">
-            <span class="item-container-heading">Latest articles</span>
-        </div>
-    
+    <div class="container-primary container-primary-element homepage-section-heading">
+        <span class="item-container-heading">Latest articles</span>
+    </div>
+
+    <div style="width: 100%; display: flex; flex-wrap: wrap; margin-left: auto; margin-right: auto; justify-content: center;">
         {{#each articleVOList}}
             ${articleRepresentation}
         {{/each}}
-        
-        <div class="container-primary container-primary-element">
-            <a class="main-a item-container-heading" href="posts.jsp?articles=true">View all articles</a>
-        </div>
-        
     </div>
     
-    <div class="main-listing-column">
-        ${tagListMenu}
-        ${photoListingHomepage}
+    <div class="container-primary container-primary-element homepage-section-heading">
+        <a class="main-a item-container-heading" href="posts.jsp?articles=true">View all articles</a>
+    </div>
         
-        <div class="container-primary container-primary-element">
-            <span class="item-container-heading">Latest galleries</span>
-        </div>
-        
+
+    ${photoListingHomepage}
+    
+    <div class="container-primary container-primary-element homepage-section-heading">
+        <span class="item-container-heading">Latest galleries</span>
+    </div>
+    
+    <div style="width: 100%; display: flex; flex-wrap: wrap; margin-left: auto; margin-right: auto; justify-content: center;">
         {{#each galleryVOList}}
             ${galleryRepresentation}
         {{/each}}
-        
-        <div class="container-primary container-primary-element">
-            <a class="main-a item-container-heading" href="posts.jsp?galleries=true">View all galleries</a>
-        </div> 
-        
     </div>
+    
+    <div class="container-primary container-primary-element homepage-section-heading">
+        <a class="main-a item-container-heading" href="posts.jsp?galleries=true">View all galleries</a>
+    </div> 
+        
     
     
 </div>

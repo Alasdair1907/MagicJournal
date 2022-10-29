@@ -18,40 +18,41 @@
 // to be used at ArticleVO list context
 let articleRepresentation = `
 
-<div class="container-primary container-primary-element">
-    <a href="posts.jsp?article={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
-    <a href="posts.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
-    <div class="item-tags-subheading-container">
-        {{#each this.tagEntityList}}
-        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
-        {{/each}}
-    </div>
-    <span class="text-main item-text">{{this.description}}</span>
-    <span class="afterfloat">&nbsp;</span>
-    
-    <div class="post-info-line container-footing-normal">
-        <div><span class="text-main">Author: </span><a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>
-        <span class="text-main">Date posted: {{this.creationDateStr}}</span>
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">Read more</a>
+<div class="container-primary container-primary-element article-representation-homepage" style="display: flex; flex-direction: column;">
+
+    <div style="flex: 1;">
+        <a href="posts.jsp?article={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
+        <a href="posts.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
+        <div class="item-tags-subheading-container">
+            {{#each this.tagEntityList}}
+            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
+            {{/each}}
+        </div>
+        <span class="text-main item-text">{{this.description}}</span>
+        <span class="afterfloat">&nbsp;</span>
+        
+        <div class="post-info-line container-footing-normal">
+            <!--<div><span class="text-main">Author: </span><a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>-->
+            <span class="text-main">{{this.creationDateStr}}</span>
+            <a class="main-a text-main" href="posts.jsp?article={{this.id}}">Read more</a>
+        </div>
     </div>
     
     <div class="container-footing-tight">
         <table style="width: 100%">
             <tr>
-                <td style="width: 50%">
+                <!--<td style="width: 50%">
                     <div class="post-info-token"><span class="text-main">Author:</span><br /><a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>                    
+                </td>-->
+                <td style="width: 70%">
+                    <span class="text-main post-info-token center-block">{{this.creationDateStr}}</span>
                 </td>
-                <td style="width: 50%">
-                    <span class="text-main post-info-token center-block">Date posted:<br />{{this.creationDateStr}}</span>
+                <td style="width: 30%">
+                    <a class="main-a text-main center-block" href="posts.jsp?article={{this.id}}">Read more</a>
                 </td>
-            </tr>
-            <tr>
-                <td colspan="2"><a class="main-a text-main center-block" href="posts.jsp?article={{this.id}}">Read more</a></td>
             </tr>
         </table>
     </div>
-    
-    
 </div>
 `;
 
@@ -69,11 +70,11 @@ let articleRepresentationCompact = `
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
     <div class="post-info-line">
-        <a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
+        <!--<a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>-->
         <span class="text-main post-info-compact-token">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">READ ARTICLE</a>
+        <a class="main-a text-main article-tag" href="posts.jsp?article={{this.id}}">READ ARTICLE</a>
     </div>
 </div>
 `;
@@ -91,11 +92,11 @@ let photoRepresentationCompact = `
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
     <div class="post-info-line">
-        <a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
+        <!--<a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>-->
         <span class="text-main post-info-compact-token">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">VIEW PHOTO</a>
+        <a class="main-a text-main photo-tag" href="posts.jsp?photo={{this.id}}">VIEW PHOTO</a>
     </div>
 </div>
 `;
@@ -119,11 +120,11 @@ let galleryRepresentationCompact = `
     </div>
     <span class="text-main item-text compact-item-text">{{this.description}}</span>
     <div class="post-info-line">
-        <a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>
+        <!--<a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>-->
         <span class="text-main post-info-compact-token">{{this.creationDateStr}}</span>
     </div>
     <div class="post-info-line">
-        <a class="main-a text-main" href="posts.jsp?article={{this.id}}">VIEW GALLERY</a>
+        <a class="main-a text-main gallery-tag" href="posts.jsp?gallery={{this.id}}">VIEW GALLERY</a>
     </div>
 </div>
 `;
@@ -142,7 +143,7 @@ let tagListMenu = `
 
 // requires photoVOList
 let photoListingHomepage = `
-<div class="container-primary container-primary-element">
+<div class="container-primary container-primary-element photo-listing-homepage-container">
 
     <table style="width: 100%;">
     <tr>
@@ -165,11 +166,11 @@ let photoListingHomepage = `
 
 // to be used at GalleryVO context
 let galleryRepresentation = `
-<div class="container-primary container-primary-element">
+<div class="container-primary container-primary-element gallery-representation-homepage">
     <table class="container-heading-normal" width="100%;"><tr>
-    <td style="width:33%">&nbsp;</td>
-    <td style="width:33%;text-align: center"><span class="item-container-heading">{{this.title}}</span></td>
-    <td style="width:33%" class="td-extra-link"><a class="main-a text-main" href="posts.jsp?gallery={{this.id}}">View gallery</a></td>
+    <td style="width:20%">&nbsp;</td>
+    <td style="width:60%;text-align: center"><span class="item-container-heading">{{this.title}}</span></td>
+    <td style="width:20%" class="td-extra-link"><a class="main-a text-main" href="posts.jsp?gallery={{this.id}}">View gallery</a></td>
     </tr></table>
     
     <div class="container-heading-tight">

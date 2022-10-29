@@ -2,6 +2,8 @@
 .post-main {
     text-align: justify;
     margin-top: 2vmin;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .article-image-container {

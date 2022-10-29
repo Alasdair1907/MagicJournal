@@ -91,7 +91,8 @@ $.widget("magic.posts", {
         self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
-        $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_ARTICLE, postId: articleId});
+        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_ARTICLE, articleId);
+        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
 
         document.title = articleVO.title;
     },
@@ -105,7 +106,8 @@ $.widget("magic.posts", {
         self._handleClickableImages(self, true);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
-        $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_GALLERY, postId: galleryId});
+        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_GALLERY, galleryId);
+        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
 
         document.title = galleryVO.title;
     },
@@ -119,7 +121,9 @@ $.widget("magic.posts", {
         self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
-        $sidePanelDiv.sidePanel({latestPostsCount: 10, postAttributionClass: POST_ATTRIBUTION_PHOTO, postId: photoId});
+        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_PHOTO, photoId);
+        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
+
 
         document.title = photoVO.title;
     },
@@ -134,7 +138,8 @@ $.widget("magic.posts", {
         self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
-        $sidePanelDiv.sidePanel({latestPostsCount: 15, postAttributionClass: null, postId: null});
+        let sidePanelData = await getSidepanelData(15, null, null);
+        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
 
         let settingsTO = await getSettingsTO();
         document.title = "About " + settingsTO.websiteName;

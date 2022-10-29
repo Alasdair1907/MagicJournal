@@ -12,11 +12,11 @@ body.cda {
 }
 
 /* subdiv for each of the following: menu - logo/title - menu; menu contents get hidden in lower res */
-.header-subdiv {
+/*.header-subdiv {
     width: 33%;
     display: flex;
     justify-content: center;
-}
+}*/
 
 .header-logo {
     min-height: 6rem;
@@ -57,20 +57,25 @@ body.cda {
 }
 
 .container-primary {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.87);
     padding: 0.5vw;
     border-radius: 1.5vmin;
 }
 
 .container-primary-element {
-    margin-top: 1vmin;
-    margin-bottom: 1vmin;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .width-100-pc {
     width: 100%;
 }
 
+.homepage-section-heading {
+    width: 40% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 
 .item-container-heading {
     color: white;
@@ -85,7 +90,7 @@ body.cda {
 /* span with heading for post item in listings */
 .item-heading {
     color: white;
-    font-size: 1.8rem; /*2.7vmin;*/
+    font-size: 1.7rem; /*2.7vmin;*/
     font-family: Candara, Verdana, sans-serif;
     text-align: center;
     display: block;
@@ -97,21 +102,34 @@ body.cda {
     display: block;
 }
 
+.article-representation-homepage {
+    width: 48%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.gallery-representation-homepage {
+    width: 48%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 /* span inside <a> - tags inside items */
 .article-tag {
-    color: #4a6eff;
+    color: #4a6eff !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
+
 .photo-tag {
-    color: #43ff6a;
+    color: #43ff6a !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .gallery-tag {
-    color: #ff3a65;
+    color: #ff3a65 !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
@@ -239,6 +257,7 @@ body.cda {
 /* applied to post info tokens - author, date */
 .post-info-compact-token {
     text-align: center;
+    font-weight: bold;
 }
 .post-info-token {
     text-align: center;
@@ -249,19 +268,28 @@ body.cda {
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
     background-position: center;
     background-size: cover;
-    display: inline-block;
+}
+
+.photo-listing-homepage-container {
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* div with photo-image-div - homepage listings for photos and galleries */
 .photo-listing-div {
-    width: 44vw;
     margin: auto;
     font-size: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
+
 
 /* read more for photos and galleries on homepage */
 .td-extra-link {
-    text-align: right;
+    text-align: center;
     padding-right:5%;
 }
 
@@ -287,7 +315,7 @@ body.cda {
 /* location (articles,photos,galleries,tags,posts by author) heading in the compact item listing */
 .compact-location-heading {
     color: white;
-    font-size: 2.36rem; /*3.5vmin;*/
+    font-size: 2.2rem; /*3.5vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -464,22 +492,23 @@ body.cda {
 
 /* dedicated/search listings items - size */
 .compact-item-size {
-    width: 47vw;
+    width: 31vw;
     margin: 0.5vw;
 }
 
 /* one image (articles, photos) in d/s listings items - size */
 .compact-item-image-div-size {
-    width: 46vw;
-    height: 46vw;
+    width: 30vw;
+    height: 30vw;
     margin: auto;
 }
 
 .compact-gallery-image-div-size {
-    width: 22.75vw;
-    height: 22.75vw;
+    width: 14.75vw;
+    height: 14.75vw;
     margin-bottom: 0.5vw;
 }
+
 
 
 .author-page-picture {
@@ -541,4 +570,6 @@ body.cda {
 
 .container-tag-list {
     text-align: justify;
+    margin-left: 10px;
+    margin-right: 10px;
 }

@@ -23,13 +23,13 @@ $.widget("magic.homepage", {
 
         console.log("homepage display()");
         let basicPostFilterTOArticles = {
-            limit: 11
+            limit: 10
         };
         let basicPostFilterTOPhotos = {
-            limit: 8
+            limit: 16
         };
         let basicPostFilterTOGalleries = {
-            limit: 4,
+            limit: 6,
             galleryRepresentationImages: 8
         };
 

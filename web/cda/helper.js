@@ -23,6 +23,17 @@ let isNumber = function(input){
     return !isNaN(input) || !isNaN(parseInt(input));
 };
 
+let getSidepanelData = async function(latestPostsCount, postAttributionClass, postId){
+    let sidePanelRequestTO = {
+        postAttribution: postAttributionClass,
+        postId: postId,
+        limitLatest: latestPostsCount
+    };
+
+    let sidePanelPostsTO = await ajaxCda({data: JSON.stringify(sidePanelRequestTO), action: "getSidePanelPosts"}, "error fetching side panel posts");
+    return sidePanelPostsTO;
+}
+
 let getPagingRequestFilterFromParams = function(){
 
     let params = new URLSearchParams(window.location.search);

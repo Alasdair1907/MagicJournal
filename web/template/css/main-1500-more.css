@@ -9,6 +9,8 @@ body.cda {
     background-repeat: no-repeat;
     background-attachment: fixed;
     min-height: 100vh;
+    max-width: 1800px;
+    margin: auto;
 }
 
 /* subdiv for each of the following: menu - logo/title - menu; menu contents get hidden in lower res */
@@ -21,6 +23,8 @@ body.cda {
 .header-logo {
     min-height: 6rem;
     max-height: 15vh;
+    max-width: 480px;
+    max-height: 150px;
 }
 
 /* font-awesome icon */
@@ -57,20 +61,25 @@ body.cda {
 }
 
 .container-primary {
-    background: rgba(0, 0, 0, 0.85);
-    padding: 0.5vw;
-    border-radius: 1.5vmin;
+    background: rgba(0, 0, 0, 0.87);
+    padding: 0.5%;
+    border-radius: 10px; /*1.5vmin;*/
 }
 
 .container-primary-element {
-    margin-top: 1vmin;
-    margin-bottom: 1vmin;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .width-100-pc {
     width: 100%;
 }
 
+.homepage-section-heading {
+    width: 30% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 
 .item-container-heading {
     color: white;
@@ -79,7 +88,6 @@ body.cda {
     display: inline-block;
     width: 100%;
     text-align: center;
-    /*margin-bottom: 1vmin;*/
 }
 
 /* span with heading for post item in listings */
@@ -97,21 +105,34 @@ body.cda {
     display: block;
 }
 
+.article-representation-homepage {
+    width: 48%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.gallery-representation-homepage {
+    width: 48%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 /* span inside <a> - tags inside items */
 .article-tag {
-    color: #4a6eff;
+    color: #4a6eff !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
+
 .photo-tag {
-    color: #43ff6a;
+    color: #43ff6a !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .gallery-tag {
-    color: #ff3a65;
+    color: #ff3a65 !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
@@ -124,7 +145,7 @@ body.cda {
 
 /* large square image in items in listings (photos, articles) */
 .item-image-div {
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     float: left;
     background-position: center;
     background-size: cover;
@@ -132,7 +153,7 @@ body.cda {
 
 /* large square image in items in compact listings (post listings, search results) */
 .compact-item-image-div {
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     background-position: center;
     background-size: cover;
 }
@@ -188,7 +209,7 @@ body.cda {
     text-align: center;
     margin: auto;
     margin-top: 10px;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     text-decoration: none !important;
 }
 
@@ -239,6 +260,7 @@ body.cda {
 /* applied to post info tokens - author, date */
 .post-info-compact-token {
     text-align: center;
+    font-weight: bold;
 }
 
 /* homepage - photos and gallery representations */
@@ -246,14 +268,21 @@ body.cda {
     margin: 0.5vmin 2vmin 0.5vmin 0.5vmin;
     background-position: center;
     background-size: cover;
-    display: inline-block;
+}
+
+.photo-listing-homepage-container {
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* div with photo-image-div - homepage listings for photos and galleries */
 .photo-listing-div {
-    width: 44vw;
     margin: auto;
     font-size: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* read more for photos and galleries on homepage */
@@ -267,7 +296,9 @@ body.cda {
     display: flex;
     flex-wrap: wrap;
     width: 96vw;
+    max-width: 1728px;
     margin: auto;
+    /*justify-content: center;*/
 }
 
 /* div container for items in dedicated/search listings */
@@ -315,6 +346,7 @@ body.cda {
 
 .pager-container {
     width: 80vw;
+    max-width: 1440px;
     margin: auto;
     text-align: center;
     margin-bottom: 5vmin;
@@ -327,6 +359,7 @@ body.cda {
 /* anchor which holds ASP in post listings */
 .posts-advanced-search-anchor {
     width: 95vw;
+    max-width: 1710px;
     margin: auto;
 }
 
@@ -340,7 +373,7 @@ body.cda {
 .selectables-container {
     border-style: solid;
     border-color: white;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     border-width: thin;
     display: flex;
     flex-wrap: wrap;
@@ -350,15 +383,17 @@ body.cda {
 .selectable {
     border-style: solid;
     border-color: white;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     border-width: thin;
 
     color: white;
     font-size: 1.2rem; /*1.8vmin;*/
     font-family: Candara, Verdana, sans-serif;
 
-    margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
-    padding: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+    /*margin: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;
+    padding: 0.5vmin 1.0vmin 0.5vmin 1.0vmin;*/
+    margin: 5px 10px;
+    padding: 5px 10px;
 
     cursor: pointer;
 }
@@ -393,7 +428,7 @@ body.cda {
 .button-cda {
     border-style: solid;
     border-color: white;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     border-width: thin;
     background-color: rgba(240, 248, 255, 0.09);
     cursor: pointer;
@@ -464,34 +499,43 @@ body.cda {
 
 /* article item on homepage - header image size */
 .item-image-div-size {
-    width: 10vw; /* 13.08vw; at this point, I have no idea why it was set to so precise a number */
+    width: 10vw;
+    max-width: 180px;
     height: 10vw;
+    max-height: 180px;
     margin-right: 0.5vw;
 }
 
 /* size for photos and gallery images on homepage items */
 .photo-image-div-size {
     width: 10.8vw;
+    max-width: 194px;
     height: 10.8vw;
+    max-height: 194px;
     margin: 0.1vw;
 }
 
 /* compact listings items - size */
 .compact-item-size {
-    width: 23vw;
-    margin: 0.5vw;
+    width: 18vw;
+    max-width: 324px;
+    margin: 0.5%;
 }
 
 /* one image (articles, photos) in d/s listings items - size */
 .compact-item-image-div-size {
-    width: 22vw;
-    height: 22vw;
+    width: 17vw;
+    height: 17vw;
+    max-width: 302px;
+    max-height: 302px;
     margin: auto;
 }
 
 .compact-gallery-image-div-size {
-    width: 10.9vw;
-    height: 10.9vw;
+    width: 8.4vw;
+    height: 8.4vw;
+    max-width: 151px;
+    max-height: 151px;
     margin-bottom: 0.2vw;
 }
 
@@ -500,7 +544,7 @@ body.cda {
     max-width: 30vw;
     display: block;
     margin: 1vw;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     float: left;
 }
 
@@ -522,10 +566,15 @@ body.cda {
 
 .container-footing-tight {
     display: none;
+    margin-top:3px;
 }
 .container-footing-normal {
+    margin-top:3px;
 }
 
 .container-tag-list {
     text-align: justify;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
 }

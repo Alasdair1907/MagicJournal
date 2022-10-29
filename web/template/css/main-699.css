@@ -1,5 +1,5 @@
 html {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 body.cda {
@@ -12,11 +12,11 @@ body.cda {
 }
 
 /* subdiv for each of the following: menu - logo/title - menu; menu contents get hidden in lower res */
-.header-subdiv {
+/*.header-subdiv {
     width: 33%;
     display: flex;
     justify-content: center;
-}
+}*/
 
 .header-logo {
     min-height: 6rem;
@@ -58,20 +58,25 @@ body.cda {
 }
 
 .container-primary {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.87);
     padding: 0.5vw;
     border-radius: 1.5vmin;
 }
 
 .container-primary-element {
-    margin-top: 1vmin;
-    margin-bottom: 1vmin;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .width-100-pc {
     width: 100%;
 }
 
+.homepage-section-heading {
+    width: 60% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 
 .item-container-heading {
     color: white;
@@ -98,21 +103,33 @@ body.cda {
     display: block;
 }
 
+.article-representation-homepage {
+    width: 98%;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.gallery-representation-homepage {
+    width: 48%;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
 /* span inside <a> - tags inside items */
 .article-tag {
-    color: #4a6eff;
+    color: #4a6eff !important;
     font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .photo-tag {
-    color: #43ff6a;
+    color: #43ff6a !important;
     font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
 .gallery-tag {
-    color: #ff3a65;
+    color: #ff3a65 !important;
     font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
@@ -123,7 +140,7 @@ body.cda {
     font-family: Candara, Verdana, sans-serif;
 }
 
-/* large square image in items in listings (photos, articles) */
+/* large square image in items in articles on the homepage */
 .item-image-div {
     border-radius: 1.5vmin;
     float: left;
@@ -254,16 +271,26 @@ body.cda {
     display: inline-block;
 }
 
+.photo-listing-homepage-container {
+    width: 98%;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
 /* div with photo-image-div - homepage listings for photos and galleries */
 .photo-listing-div {
-    width: 44vw;
     margin: auto;
     font-size: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
+
 
 /* read more for photos and galleries on homepage */
 .td-extra-link {
-    text-align: right;
+    text-align: center;
     padding-right:5%;
 }
 
@@ -452,9 +479,9 @@ body.cda {
 
 /* article item on homepage - header image size */
 .item-image-div-size {
-    width: 13.08vw;
-    height: 13.08vw;
-    margin-right: 0.5vw;
+    width: 25vw;
+    height: 25vw;
+    margin: 0.5vw 1vw 0.5vw 0.5vw;
 }
 
 /* size for photos and gallery images on homepage items */
@@ -547,4 +574,6 @@ body.cda {
 
 .container-tag-list {
     text-align: justify;
+    margin-left: 5px;
+    margin-right: 5px;
 }
