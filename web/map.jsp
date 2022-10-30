@@ -58,8 +58,8 @@
 
     </script>
 
-    <script src="cda/header.js"></script>
-    <script src="cda/map.js"></script>
+    <script src="cda/header.js?v=103022"></script>
+    <script src="cda/map.js?v=103022"></script>
 
     <% out.println(settingsTO.headerInjection); %>
 
@@ -76,7 +76,11 @@
     $('[data-role="header-main"]').header();
 
     document.addEventListener('bingMapApiLoaded', function(){
-        $('[data-role="content-main"]').CdaMap();
+        Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function(){
+            Microsoft.Maps.loadModule("Microsoft.Maps.SpatialMath", function () {
+                $('[data-role="content-main"]').CdaMap();
+            });
+        });
     });
 
     loadMap();
