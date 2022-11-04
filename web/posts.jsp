@@ -48,16 +48,22 @@
     <%
         MetaTO metaTO = ServletUtils.prepareMeta(request, application);
 
-        out.println(String.format("<meta property='og:url' content='%s' />", metaTO.getOgUrl()));
-        out.println("<meta property='og:type' content='article' />");
-        out.println(String.format("<meta property='og:title' content='%s' />", metaTO.getOgTitle()));
-        out.println(String.format("<meta property='og:description' content='%s' />", metaTO.getOgDescription()));
-        out.println(String.format("<meta property='og:image' content='%s' />", metaTO.getOgImage()));
+        out.println(String.format("<meta property='og:url' content='%s'>", metaTO.getOgUrl()));
+        out.println("<meta property='og:type' content='article'>");
+        out.println(String.format("<meta property='og:title' content='%s'>", metaTO.getOgTitle()));
+        String description = metaTO.getTwitterDescription();
+        if (description == null || description.isBlank()){
+            description = metaTO.getOgDescription();
+        }
+        out.println(String.format("<meta property='og:description' content='%s'>", description));
+        out.println(String.format("<meta property='og:image' content='%s'>", metaTO.getOgImage()));
 
-        /*
-        out.println(String.format("<meta name='description' content='%s'>", metaTO.getDescription()));
-        out.println(String.format("<meta name='keywords' content='%s'>", metaTO.getKeywords()));
-        out.println(String.format("<meta name='author' content='%s'>", metaTO.getAuthor()));*/
+        out.println("<meta property='twitter:card' content='summary_large_image'>");
+        out.println(String.format("<meta property='twitter:creator' content='%s'>", metaTO.getTwitterHandle()));
+        out.println(String.format("<meta property='twitter:site' content='%s'>", metaTO.getTwitterHandle()));
+        out.println(String.format("<meta property='twitter:image' content='%s'>", metaTO.getTwitterImage()));
+        out.println(String.format("<meta property='twitter:description' content='%s'>", metaTO.getTwitterDescription()));
+        out.println(String.format("<meta property='twitter:title' content='%s'>", metaTO.getTwitterTitle()));
 
     %>
 

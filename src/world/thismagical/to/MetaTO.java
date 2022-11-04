@@ -37,6 +37,12 @@ public class MetaTO {
     public String ogDescription;
     public String ogUrl;
 
+    public String twitterHandle; //@someone
+    public String twitterImage;
+    public String twitterDescription;
+    public String twitterTitle;
+
+
     public String websiteUrl; // http://www.example.org
 
     public String getDescription() {
@@ -67,7 +73,23 @@ public class MetaTO {
         return ogUrl;
     }
 
-    public static MetaTO fromPostVO(PostVO postVO, String websiteURL){
+    public String getTwitterHandle() {
+        return Tools.htmlSingleQuote(twitterHandle);
+    }
+
+    public String getTwitterImage() {
+        return twitterImage;
+    }
+
+    public String getTwitterDescription() {
+        return Tools.htmlSingleQuote(twitterDescription);
+    }
+
+    public String getTwitterTitle() {
+        return Tools.htmlSingleQuote(twitterTitle);
+    }
+
+    public static MetaTO fromPostVO(PostVO postVO, SettingsTO settingsTO){
         MetaTO metaTO = new MetaTO();
 
         metaTO.description = postVO.getTitle();
@@ -79,7 +101,7 @@ public class MetaTO {
         metaTO.ogTitle = postVO.getPostAttributionStr() + ": " + postVO.getTitle();
         metaTO.ogDescription = postVO.getTinyDescription();
 
-        metaTO.websiteUrl = Tools.normalizeURL(websiteURL);
+        metaTO.websiteUrl = Tools.normalizeURL(settingsTO.websiteURL);
 
         ImageVO imageVO = postVO.getMainImageVO();
         if (imageVO != null){
@@ -87,6 +109,25 @@ public class MetaTO {
         }
 
         metaTO.ogUrl = metaTO.websiteUrl + "/posts.jsp?" + postVO.getPostAttributionStr().toLowerCase() + "=" + postVO.getId();
+
+        //twitter cards
+        if (settingsTO.twitterProfile != null && !settingsTO.twitterProfile.isBlank()) {
+            String twitterHandle = Tools.normalizeURL(settingsTO.twitterProfile);
+            String[] tokens = twitterHandle.split("\\/");
+            if (tokens != null && tokens.length > 0) {
+                twitterHandle = tokens[tokens.length - 1];
+            }
+
+            metaTO.twitterHandle = "@" + twitterHandle;
+        }
+
+        metaTO.twitterTitle = metaTO.ogTitle;
+        String twitterDescription = postVO.getDescription();
+        if (twitterDescription != null && twitterDescription.length() > 200){
+            twitterDescription = twitterDescription.substring(0,201) + "...";
+        }
+        metaTO.twitterDescription = twitterDescription;
+        metaTO.twitterImage = metaTO.ogImage;
 
 
         return metaTO;
