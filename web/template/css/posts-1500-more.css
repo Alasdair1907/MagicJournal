@@ -270,6 +270,8 @@
 .side-panel-image-div-size {
     height: 5vw;
     width: 5vw;
+    max-height: 100px;
+    max-width: 100px;
     border-radius: 1.5vmin;
     margin-left: 0.3vw;
     margin-right: 0.3vw;
