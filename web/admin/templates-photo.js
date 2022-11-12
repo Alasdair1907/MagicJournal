@@ -84,8 +84,8 @@ let photoNewOrEdit = `
 <textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{photoVO.tinyDescription}}</textarea><br />
 
 <span class="text">Description:</span><br />
-<span class="smalltext">Basic BB code can be used. Max. 1000 characters, will be trimmed to 300 in listings.</span>
-<textarea class="input-textarea-description width-100-pc" maxlength="1000" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />
+<span class="smalltext">Basic BB code can be used. Max. 1920 characters, will be trimmed to 300 in listings.</span>
+<textarea class="input-textarea-description width-100-pc" maxlength="1920" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />
 
 <span class="text">Coordinates: (latitude, longitude)</span> <span data-role="select-on-map" class="link"> select on map</span>
 <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{photoVO.gpsCoordinates}}"><br />
