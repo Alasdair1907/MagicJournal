@@ -227,4 +227,12 @@ public class Tools {
 
         return input.replaceAll("'", "&apos;");
     }
+
+    public static String escapeLtGt(String input){
+        if (input == null){
+            return "";
+        }
+
+        return input.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    }
 }

@@ -44,11 +44,16 @@
 
             String postLink = Tools.normalizeURL(settingsTO.websiteURL) + "/posts.jsp?" + postVO.getPostAttributionStr().toLowerCase() + "=" + postVO.getId();
 
+            String description = Tools.escapeLtGt(postVO.getDescription());
+            if (description.length() > 300){
+                description = description.substring(0,297)+"...";
+            }
+
             out.println("<item>");
 
-            out.println("<title>"+postVO.getTitle()+"</title>");
+            out.println("<title>"+Tools.escapeLtGt(postVO.getTitle())+"</title>");
             out.println("<link>" + postLink + "</link>");
-            out.println("<description>" + postVO.getTinyDescription() + "</description>");
+            out.println("<description>" + description + "</description>");
             out.println("<pubDate>" + Tools.formatPubDate(postVO.getCreationDate()) + "</pubDate>");
 
             out.println("</item>");
