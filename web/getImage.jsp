@@ -40,22 +40,15 @@
             throw new FileNotFoundException("Image storage path is not set!");
         }
 
-        if (fileName != null && Tools.verifyFileName(fileName)) {
-
+        if (fileName != null && Tools.verifyFileName(fileName) && Files.exists(Paths.get(imageStorage, fileName))) {
             File imageFile = new File(Tools.getPath(imageStorage) + fileName);
             String contentType = Tools.getContentTypeByExtension(Tools.getExtension(fileName));
 
-            if (!imageFile.exists()) {
-                Tools.log("[WARN] File " + fileName + " doesn't exist!");
-            } else if (contentType == null) {
+            if (contentType == null) {
                 Tools.log("[WARN] Content type not found for image file " + fileName);
             } else {
-                Path path = Paths.get(imageStorage, fileName);
-                byte[] imageData = Files.readAllBytes(path);
-
                 response.setContentType(contentType);
-                response.getOutputStream().write(imageData);
-                response.getOutputStream().flush();
+                ServletUtils.handleUpload(imageFile, response.getOutputStream());
                 response.getOutputStream().close();
             }
         }

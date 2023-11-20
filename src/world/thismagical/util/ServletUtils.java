@@ -31,9 +31,12 @@ import world.thismagical.vo.PhotoVO;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.time.LocalDateTime;
 
 public class ServletUtils {
+
+    public static final int UPLOAD_BUFFER_SIZE = 100*1000;
 
     public static class Keys {
         public static final String SITEMAP_CACHE = "sitemapCache";
@@ -129,6 +132,24 @@ public class ServletUtils {
             application.setAttribute(Keys.SITEMAP_CACHE, sitemap);
 
             return sitemap;
+        }
+    }
+
+    public static void handleUpload(File upload, OutputStream responseOutputStream) throws IOException {
+        try {
+            FileInputStream fis = new FileInputStream(upload);
+            byte[] buffer = new byte[UPLOAD_BUFFER_SIZE];
+            int read = 1;
+            while (read > 0) {
+                read = fis.read(buffer, 0, UPLOAD_BUFFER_SIZE);
+
+                responseOutputStream.write(buffer, 0, read);
+                responseOutputStream.flush();
+            }
+            fis.close();
+        } catch (Exception ex){
+            Tools.log("[ERROR] handleUpload() error:" + ex.getMessage());
+            Tools.log(Tools.getStackTraceStr(ex));
         }
     }
 

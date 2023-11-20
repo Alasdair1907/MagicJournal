@@ -1,7 +1,4 @@
-<%@ page import="java.io.File" %>
 <%@ page import="world.thismagical.util.Tools" %>
-<%@ page import="java.io.InputStreamReader" %>
-<%@ page import="java.io.InputStream" %>
 <%@ page import="java.nio.file.Files" %>
 <%@ page import="java.nio.file.Path" %>
 <%@ page import="java.nio.file.Paths" %>
@@ -10,9 +7,9 @@
 <%@ page import="org.hibernate.Session" %>
 <%@ page import="world.thismagical.service.SettingsService" %>
 <%@ page import="world.thismagical.entity.OtherFileEntity" %>
-<%@ page import="java.io.FileNotFoundException" %>
 <%@ page import="world.thismagical.util.JsonApi" %>
 <%@ page import="world.thismagical.util.ServletUtils" %>
+<%@ page import="java.io.*" %>
 
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -45,13 +42,11 @@
             if (!file.exists()) {
                 Tools.log("[WARN] File " + fileName + " doesn't exist!");
             } else {
-                Path path = Paths.get(fileStorage, fileName);
-                byte[] fileData = Files.readAllBytes(path);
 
                 response.setContentType("application/octet-stream");
                 response.setHeader("Content-Disposition", "attachment; filename=\""+otherFileEntity.getDisplayName()+"\"");
-                response.getOutputStream().write(fileData);
-                response.getOutputStream().flush();
+
+                ServletUtils.handleUpload(file, response.getOutputStream());
                 response.getOutputStream().close();
             }
         }
