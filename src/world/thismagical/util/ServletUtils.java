@@ -139,9 +139,12 @@ public class ServletUtils {
         try {
             FileInputStream fis = new FileInputStream(upload);
             byte[] buffer = new byte[UPLOAD_BUFFER_SIZE];
-            int read = 1;
-            while (read > 0) {
+            int read = 0;
+            while (true) {
                 read = fis.read(buffer, 0, UPLOAD_BUFFER_SIZE);
+                if (read < 1){
+                    break;
+                }
 
                 responseOutputStream.write(buffer, 0, read);
                 responseOutputStream.flush();
