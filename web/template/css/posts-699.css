@@ -14,7 +14,7 @@
 }
 
 .article-image {
-    max-width: 80%;
+    max-width: 95%;
     max-height: 60vh;
     border-radius: 1vmin;
     cursor: pointer;
@@ -115,7 +115,7 @@
     border-left-color: lightgray;
     border-left-style: solid;
     font-style: italic;
-    font-size: 1.3rem; /*1.9vmin;*/
+    font-size: 1.1rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
 
@@ -291,17 +291,18 @@
 }
 
 .bb-youtube-embed-size {
-    width: 50vw;
-    height: 28vw;
+    width: 90vw;
+    height: 50vw;
     margin-top: 2vmin;
     margin-bottom: 2vmin;
 }
 
 .bb-quote-size {
-    width: 70%;
+    width: 80%;
     border-width: 1vw;
     padding-left: 1vw;
-    margin-left: 1vw;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 2.0vmin;
     margin-bottom: 2.0vmin;
 }

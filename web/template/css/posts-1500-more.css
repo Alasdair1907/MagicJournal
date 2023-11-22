@@ -1,9 +1,10 @@
 /* main container for articles, inside which rendered article text is displayed */
 .post-main {
     text-align: justify;
-    margin-top: 2vmin;
+    margin-top: 5px;
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 10px;
 }
 
 .article-image-container {
@@ -88,6 +89,11 @@
     font-family: Candara, Verdana, sans-serif;
 }
 
+p.paragraph {
+    column-count: 2;
+    column-gap: 25px;
+}
+
 .bb-bold {
     font-weight: bold;
 }
@@ -124,6 +130,7 @@
     align-items: baseline;
     margin-top: 0.7vmin;
     margin-bottom: 0.7vmin;
+    padding-left: 30%;
 }
 
 .bb-bullet {
@@ -309,7 +316,7 @@
     width: 60%;
     border-width: 1vw;
     padding-left: 1vw;
-    margin-left: 1vw;
+    margin-left: 15%;
     margin-top: 2.0vmin;
     margin-bottom: 2.0vmin;
 }

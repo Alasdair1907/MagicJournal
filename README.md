@@ -71,7 +71,7 @@ Content is managed through the administration panel. More users with various pri
 
 5. Build the project:<br />
     ./gradlew build<br />
-    (on windows, gradlew.sh build)
+    (on windows, gradlew.bat build)
 
     If the project has been built successfully, you will see the following message:
     BUILD SUCCESSFUL

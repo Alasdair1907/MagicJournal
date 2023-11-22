@@ -43,7 +43,7 @@ let bbYouTube = `
 `;
 
 let bulletListOpen = `
-<div class="bb-bullet-list bb-bullet-{{count}}"><i class="fas fa-dot-circle bb-bullet"></i><span class="text-main">
+<div class="bb-bullet-list bb-bullet-{{count}}"><i class="bb-bullet">•</i><span class="text-main">
 `;
 
 let hyperLinkTemplate = `

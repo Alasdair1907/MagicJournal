@@ -33,10 +33,16 @@ let bulletListCloseTag = new RegExp(/\[\s*\/\s*x+\s*\]\s*(?:<br>)*/, 'g'); // [/
 
 let lineBreakTag = new RegExp(/\[\s*br\s*\]\s*(?:<br>)*/, 'g'); // [br]
 
+let emptyParagraphs = new RegExp(/<p class=\"paragraph\">(\s*<br\s*\/?>)*\s*<\/p>/, 'g');  // empty paragraphs (also with whitespaces and <br>'s)
+
+
 //[url=http://www.example.org?var=foo&bar=23&q= W00t123]Blah blah[/url]
 // group 1 - link
 // group 2 - link text
 let hypertextLinkTag = new RegExp(/\[\s*url\s*=\s*(.+?)\s*\](.+?)(?:\[\s*\/\s*url\s*])/, 'g');
+
+let pOpen = "<p class=\"paragraph\">";
+let pClose = "</p>";
 
 /*
 Transforming data divs into what we want to see
@@ -75,6 +81,10 @@ let render = function(text){
 
     text = basicRender(text);
 
+    // headings (used to be in basicRender, but that was not a good idea)
+    text = text.replace(subHeadingOpenTag, pClose+"<span class='bb-heading'>");
+    text = text.replace(subHeadingCloseTag, "</span>"+pOpen);
+
     // embedded youtube videos
     let youtubeBBElements = [];
     let youtubeVideoIds = [];
@@ -89,13 +99,13 @@ let render = function(text){
     for (let i = 0; i < youtubeBBElements.length; i++) {
         let ytElement = youtubeBBElements[i];
         let hBbYouTube = Handlebars.compile(bbYouTube);
-        text = text.split(ytElement).join(hBbYouTube({videoCode: youtubeVideoIds[i]}));
+        text = text.split(ytElement).join(pClose + hBbYouTube({videoCode: youtubeVideoIds[i]}) + pOpen);
     }
 
     // quotes
 
-    text = text.replace(quoteOpenTag, "<div class='bb-quote bb-quote-size'>");
-    text = text.replace(quoteCloseTag, "</div>");
+    text = text.replace(quoteOpenTag, pClose + "<div class='bb-quote bb-quote-size'>");
+    text = text.replace(quoteCloseTag, "</div>" + pOpen);
 
     // bullet lists
 
@@ -114,12 +124,12 @@ let render = function(text){
         let count = bulletCounts[i];
 
         let hBulletListOpen = Handlebars.compile(bulletListOpen);
-        text = text.split(bulletTag).join(hBulletListOpen({count: count}));
+        text = text.split(bulletTag).join(pClose + hBulletListOpen({count: count}));
     }
 
-    text = text.replace(bulletListCloseTag, "</span></div>");
-
+    text = text.replace(bulletListCloseTag, "</span></div>"+pOpen);
     text = text.replace(lineBreakTag, "<br>" );
+    text = text.replace(emptyParagraphs, "");
 
     return text;
 };
@@ -128,6 +138,7 @@ let render = function(text){
 basic render - italics, bold, newlines, links - used in descriptions as well
  */
 let basicRender = function(text){
+    text = pOpen + text + pClose;
     text = newlineToBr(text);
     text = clearExcessiveLineBreaks(text);
 
@@ -136,9 +147,6 @@ let basicRender = function(text){
 
     text = text.replace(italicOpenTag, "<span class='bb-italic'>");
     text = text.replace(italicCloseTag, "</span>");
-
-    text = text.replace(subHeadingOpenTag, "<span class='bb-heading'>");
-    text = text.replace(subHeadingCloseTag, "</span>");
 
     // links
     let urlTags = [];

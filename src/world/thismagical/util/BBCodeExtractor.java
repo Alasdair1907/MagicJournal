@@ -35,6 +35,9 @@ public class BBCodeExtractor {
     public static String REGEX_IMG_ID = "\\s*\\[\\s*img\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*"; // \[\s*img\s*id\s*\=\s*([0-9]+)\s*\]
     public static String REGEX_FILE_ID = "\\s*\\[\\s*file\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*";
 
+    public static String pOpen = "<p class=\"paragraph\">";
+    public static String pClose = "</p>";
+
     private final static Pattern regexImgId = Pattern.compile(REGEX_IMG_ID);
     private final static Pattern regexFileId = Pattern.compile(REGEX_FILE_ID);
 
@@ -114,9 +117,9 @@ public class BBCodeExtractor {
             String imageHtml = "";
 
             if (imageFileEntity != null) {
-
                 imageHtml = String.format("<div class='article-image-container' data-type='image' data-id='%d' data-preview='%s' data-image='%s' data-title='%s'></div>",
                         imageId, imageFileEntity.getPreviewFileName(), imageFileEntity.getFileName(), escapeSingleQuotes(imageFileEntity.getTitle()));
+                imageHtml = pClose + imageHtml + pOpen;
             }  // todo: alert user that the image he used has been deleted
 
             text = text.replaceAll(Pattern.quote(bbCodeData.imgExpressions.get(i)), imageHtml);
@@ -147,6 +150,7 @@ public class BBCodeExtractor {
             if (otherFileEntity != null) {
                 fileHtml = String.format("<div class='file-container' data-type='file' data-id='%d' data-displayname='%s' data-description='%s'></div>",
                         fileId, otherFileEntity.getDisplayName(), escapeSingleQuotes(otherFileEntity.getDescription()));
+                fileHtml = pClose + fileHtml + pOpen;
             } // todo: alert user that the file he used has been deleted
 
             text = text.replaceAll(Pattern.quote(bbCodeData.fileExpressions.get(i)), fileHtml);

@@ -29,7 +29,7 @@ psql -U demo -h localhost -d demodb -f create-tables.postgres.sql
 
 5. Build the project:
 ./gradlew build
-(on windows, gradlew.sh build)
+(on windows, gradlew.bat build)
 
 If the project has been built successfully, you will see the following message:
 BUILD SUCCESSFUL

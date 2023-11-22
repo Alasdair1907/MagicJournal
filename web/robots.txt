@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://www.thismagical.world/sitemap.jsp
+Sitemap: https://www.terrestrialjournal.com/sitemap.jsp

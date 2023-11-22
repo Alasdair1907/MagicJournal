@@ -11,12 +11,12 @@ import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 
 @Field
-String api = "http://localhost:8080/admin/jsonApi.jsp"
-//String api = "https://terrestrialjournal.com/admin/jsonApi.jsp"
+//String api = "http://localhost:8080/admin/jsonApi.jsp"
+String api = "https://terrestrialjournal.com/admin/jsonApi.jsp"
 
 @Field
-String imageSource = "http://localhost:8080/getImage.jsp?filename="
-//String imageSource = "https://terrestrialjournal.com/getImage.jsp?filename="
+//String imageSource = "http://localhost:8080/getImage.jsp?filename="
+String imageSource = "https://terrestrialjournal.com/getImage.jsp?filename="
 @Field
 List<String> apiTests = [
         "action=getArticleVOByArticleIdPreprocessed&data=1",
@@ -52,7 +52,7 @@ int repeats = 1000
 @Field
 int sleepMillis = 10 // between repeats
 @Field
-int imageDownloaderConnections = 2000
+int imageDownloaderConnections = 100
 @Field
 int imageDownloadSleepMillis = 10 // between downloading each buffer, not whole image!
 

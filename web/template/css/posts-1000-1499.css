@@ -123,6 +123,7 @@
     align-items: baseline;
     margin-top: 0.7vmin;
     margin-bottom: 0.7vmin;
+    padding-left: 30%;
 }
 
 .bb-bullet {
@@ -305,7 +306,7 @@
     width: 60%;
     border-width: 1vw;
     padding-left: 1vw;
-    margin-left: 1vw;
+    margin-left: 15%;
     margin-top: 2.0vmin;
     margin-bottom: 2.0vmin;
 }

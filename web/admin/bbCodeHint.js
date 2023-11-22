@@ -57,7 +57,6 @@ let bbCodeHintModal = `
                 <span style="text-align: center; display: block; text-decoration: underline">Basic BBCode (photo and gallery descriptions)</span>
                 <b>[b]bold[/b]</b><br />
                 <b>[i]italics[/i]</b><br />
-                <b>[h]header[/h]</b><br />
                 <br />
                 <b>[url=http://www.example.org]Example link[/url]</b><br />
                 Will create a hyperlink with the text 'Example link' pointing to 'http://www.example.org'<br />
