@@ -80,6 +80,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
             $(this).addClass("div-image-selected");
 
             $selectedImgInfo.data("id", imageId);
+            $selectedImgInfo.data("comment", $(this).data("comment"));
 
             $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
             $imageSelectPreviewImg.show();
@@ -114,6 +115,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
                 $(this).addClass("div-image-selected");
 
                 $selectedImgInfo.data("id", imageId);
+                $selectedImgInfo.data("comment", $(this).data("comment"));
 
                 $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename=" + previewFile);
                 $imageSelectPreviewImg.show();
@@ -146,6 +148,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
                 $(this).addClass("div-image-selected");
 
                 $selectedImgInfo.data("id", imageId);
+                $selectedImgInfo.data("comment", $(this).data("comment"));
 
                 $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
                 $imageSelectPreviewImg.show();
@@ -185,10 +188,12 @@ let imageSelect = async function($modalJQueryElement, articleId){
     });
 
     let selectedId = null;
+    let comment = null;
 
     $imageInsertSubmit.unbind();
     $imageInsertSubmit.click(function(){
         selectedId = $selectedImgInfo.data("id");
+        comment = $selectedImgInfo.data("comment");
         $imageSelectMain.html('');
         $imageInsertSubmit.prop("disabled","disabled");
         $imageSelectModal.modal('hide');
@@ -197,7 +202,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
     while (selectedId === null) {
         await new Promise(r => setTimeout(r, 50));
         if (selectedId) {
-            return selectedId;
+            return {selectedId:selectedId, comment:comment};
         }
     }
 
@@ -324,13 +329,13 @@ let recentGalleriesTemplate = `
 
 let imageVOListDisplay = `
 {{#each imageVOList}}
-<div data-id="{{this.thisObjId}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.thisObjId}}" data-comment="{{this.originalFileName}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 
 let photoVOListDisplay = `
 {{#each photoVOList}}
-<div data-id="{{this.imageVO.thisObjId}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.imageVO.thisObjId}}" data-comment="{{this.imageVO.originalFileName}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 

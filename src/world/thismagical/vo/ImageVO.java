@@ -35,6 +35,7 @@ public class ImageVO {
     public String gpsCoordinates;
 
     public Double aspectRatio;
+    public String originalFileName;
     
     public ImageVO() {
         
@@ -52,6 +53,7 @@ public class ImageVO {
         this.gpsCoordinates = imageFileEntity.getGpsCoordinates();
 
         this.aspectRatio = imageFileEntity.getAspectRatio();
+        this.originalFileName = imageFileEntity.getOriginalFileName();
     }
 
     public List<String> getAllFilesList(){

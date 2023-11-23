@@ -89,7 +89,8 @@ $.widget("admin.articlesWidget", {
         $articleUpdateImageButton.unbind();
         $articleUpdateImageButton.click(await async function(){
 
-            let newImageId = await imageSelect($modalAnchor, articleVO.id);
+            let newImageData = await imageSelect($modalAnchor, articleVO.id);
+            let newImageId = newImageData.selectedId;
 
             if (!newImageId){
                 return;
@@ -210,8 +211,9 @@ $.widget("admin.articlesWidget", {
         $imageInsertButton.unbind();
         $imageInsertButton.click(await async function(){
             let textAreaPosition = $textElem.prop("selectionStart");
-            let selectedImgId = await imageSelect($modalAnchor, articleVO.id);
-            let bbCode = "[img id=" + selectedImgId + "]";
+            let selectedImgData = await imageSelect($modalAnchor, articleVO.id);
+            let selectedImgId = selectedImgData.selectedId;
+            let bbCode = "\r\n[img id=" + selectedImgId + "] ^^//" + selectedImgData.comment + "\r\n";
             insertAtPosition($textElem, textAreaPosition, bbCode);
         });
 

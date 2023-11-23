@@ -43,6 +43,8 @@ let bbCodeHintModal = `
                 <b>[i]italics[/i]</b><br />
                 <b>[h]header[/h]</b><br />
                 <br />
+                <b>^^//</b> This is a comment - everything that goes after this sequence, will not be displayed in the article<br />
+                <br />
                 <b>[youtube video=BEWz4SXfyCQ]</b><br />
                 (in this example, the address of the video would be https://www.youtube.com/watch?v=BEWz4SXfyCQ)<br />
                 <br />

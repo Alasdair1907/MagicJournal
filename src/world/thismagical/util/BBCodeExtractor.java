@@ -35,6 +35,8 @@ public class BBCodeExtractor {
     public static String REGEX_IMG_ID = "\\s*\\[\\s*img\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*"; // \[\s*img\s*id\s*\=\s*([0-9]+)\s*\]
     public static String REGEX_FILE_ID = "\\s*\\[\\s*file\\s*id\\s*\\=\\s*([0-9]+)\\s*\\]\\s*";
 
+    public static String REGEX_COMMENTS = "\\^\\^\\/\\/.*";
+
     public static String pOpen = "<p class=\"paragraph\">";
     public static String pClose = "</p>";
 
@@ -81,6 +83,10 @@ public class BBCodeExtractor {
     }
 
     public static String preprocess(String text, Session session){
+
+        text = text.trim();
+        // remove comments
+        text = text.replaceAll(REGEX_COMMENTS, "");
 
         /*
          * just handle the stuff that can't be easily and efficiently be handled on the frontend - resolve

@@ -103,4 +103,6 @@ let insertAtPosition = function($textarea, cursorPos, toInsert){
     let textAfter  = text.substring(cursorPos, text.length);
 
     $textarea.val(textBefore + toInsert + textAfter);
+    $textarea.focus();
+    $textarea.prop('selectionEnd', (cursorPos+toInsert.length) );
 };

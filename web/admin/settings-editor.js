@@ -257,8 +257,9 @@ $.widget('admin.settingsEditor', {
             $imageInsertButton.unbind();
             $imageInsertButton.click(await async function(){
                 let textAreaPosition = $aboutTextarea.prop("selectionStart");
-                let selectedImgId = await imageSelect($modalAnchor, undefined);
-                let bbCode = "[img id=" + selectedImgId + "]";
+                let selectedImgData = await imageSelect($modalAnchor, undefined);
+                let selectedImgId = selectedImgData.selectedId;
+                let bbCode = "\r\n[img id=" + selectedImgId + "] ^^//" + selectedImgData.comment + "\r\n";
                 insertAtPosition($aboutTextarea, textAreaPosition, bbCode);
             });
 
