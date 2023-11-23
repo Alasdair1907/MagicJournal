@@ -565,10 +565,10 @@ body.cda {
 }
 
 .container-footing-tight {
-    display: none;
     margin-top:3px;
 }
 .container-footing-normal {
+    display: none;
     margin-top:3px;
 }
 
