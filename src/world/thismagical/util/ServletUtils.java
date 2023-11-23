@@ -97,15 +97,15 @@ public class ServletUtils {
         try (Session session = sessionFactory.openSession()) {
             if (Tools.strIsNumber(article)) {
                 Long articleId = Long.parseLong(article);
-                ArticleVO articleVO = ArticleService.getArticleVObyArticleId(articleId, session);
+                ArticleVO articleVO = ArticleService.getArticleVObyArticleId(articleId, null, session);
                 return MetaTO.fromPostVO(articleVO, settingsTO);
             } else if (Tools.strIsNumber(photo)) {
                 Long photoId = Long.parseLong(photo);
-                PhotoVO photoVO = PhotoService.getPhotoVObyPhotoId(photoId, session);
+                PhotoVO photoVO = PhotoService.getPhotoVObyPhotoId(photoId, null, session);
                 return MetaTO.fromPostVO(photoVO, settingsTO);
             } else if (Tools.strIsNumber(gallery)) {
                 Long galleryId = Long.parseLong(gallery);
-                GalleryVO galleryVO = GalleryService.getGalleryVOByGalleryId(galleryId, session);
+                GalleryVO galleryVO = GalleryService.getGalleryVOByGalleryId(galleryId, null, session);
                 return MetaTO.fromPostVO(galleryVO, settingsTO);
             }
         } catch (Exception ex){

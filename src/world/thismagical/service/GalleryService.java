@@ -86,11 +86,12 @@ public class GalleryService extends PostService {
         return res;
     }
 
-    public static GalleryVO getGalleryVOByGalleryId(Long galleryId, Session session){
+    public static GalleryVO getGalleryVOByGalleryId(Long galleryId, String userGuid, Session session){
         GalleryEntity galleryEntity = (GalleryEntity) GalleryDao.getPostEntityById(galleryId, GalleryEntity.class, session);
         if (galleryEntity == null){
             return null;
         }
+        AuthorizationService.checkUnpublishedViewPrivileges(galleryEntity, userGuid, session);
 
         return entitiesToVos(Collections.singletonList(galleryEntity), BasicPostFilter.DEFAULT_GALLERY_REPRESENTATION_IMAGES, session).get(0);
     }

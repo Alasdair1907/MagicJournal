@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import world.thismagical.dao.AuthorDao;
 import world.thismagical.dao.SessionDao;
 import world.thismagical.entity.AuthorEntity;
+import world.thismagical.entity.PostEntity;
 import world.thismagical.entity.SessionEntity;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.SettingsTO;
@@ -289,5 +290,13 @@ public class AuthorizationService {
         }
 
         return true;
+    }
+
+    public static void checkUnpublishedViewPrivileges(PostEntity postEntity, String userGuid, Session session){
+        if (!Boolean.TRUE.equals(postEntity.getPublished())){
+            if (!Boolean.TRUE.equals(AuthorizationService.isSessionValid(userGuid, session))){
+                throw new RuntimeException("User not authorized to view unpublished articles");
+            }
+        }
     }
 }

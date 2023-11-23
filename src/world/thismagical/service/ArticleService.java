@@ -18,10 +18,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
-import world.thismagical.entity.AuthorEntity;
-import world.thismagical.entity.ArticleEntity;
-import world.thismagical.entity.PostIndexItem;
-import world.thismagical.entity.TagEntity;
+import world.thismagical.entity.*;
 import world.thismagical.filter.BasicPostFilter;
 import world.thismagical.to.JsonAdminResponse;
 import world.thismagical.to.ArticleTO;
@@ -41,8 +38,9 @@ import static world.thismagical.service.AuthorizationService.getAuthorEntityBySe
 public class ArticleService extends PostService {
 
 
-    public static ArticleVO getArticleVObyArticleId(Long articleId, Session session){
+    public static ArticleVO getArticleVObyArticleId(Long articleId, String userGuid, Session session){
         ArticleEntity articleEntity = (ArticleEntity) ArticleDao.getPostEntityById(articleId, ArticleEntity.class, session);
+        AuthorizationService.checkUnpublishedViewPrivileges(articleEntity, userGuid, session);
         ArticleVO articleVO = new ArticleVO(articleEntity);
 
         articleVO.titleImageVO = FileDao.getImageById(articleEntity.getTitleImageId(), session);
@@ -51,8 +49,8 @@ public class ArticleService extends PostService {
         return articleVO;
     }
 
-    public static ArticleVO getArticleVObyArticleIdPreprocessed(Long articleId, Session session){
-        ArticleVO articleVO = getArticleVObyArticleId(articleId, session);
+    public static ArticleVO getArticleVObyArticleIdPreprocessed(Long articleId, String userGuid, Session session){
+        ArticleVO articleVO = getArticleVObyArticleId(articleId, userGuid, session);
         articleVO.articleText = BBCodeExtractor.preprocess(articleVO.articleText, session);
         return articleVO;
     }

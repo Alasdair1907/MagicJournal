@@ -255,7 +255,7 @@ $.widget("admin.articlesWidget", {
         let jsonAdminReponse = await $.ajax({
             url: 'jsonApi.jsp',
             method: 'POST',
-            data: {data:articleId , action:"getArticleVOByArticleId"}
+            data: {data:articleId , action:"getArticleVOByArticleId", guid: Cookies.get("guid")}
         });
 
         let adminResponse = JSON.parse(jsonAdminReponse);

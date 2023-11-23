@@ -178,7 +178,7 @@ public class JsonApi {
         actionToErrorMessage.put("getPhotoVOByPhotoId", "Error getting photo by id");
         actionToFunction.put("getPhotoVOByPhotoId", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return JsonAdminResponse.success(PhotoService.getPhotoVObyPhotoId(id, request.session));
+            return JsonAdminResponse.success(PhotoService.getPhotoVObyPhotoId(id, request.userGuid, request.session));
         });
 
         actionToErrorMessage.put("getPhotoImageVO", "Error getting image for photo");
@@ -252,7 +252,7 @@ public class JsonApi {
         actionToErrorMessage.put("getGalleryVOByGalleryId", "Error loading gallery object");
         actionToFunction.put("getGalleryVOByGalleryId", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return JsonAdminResponse.success(GalleryService.getGalleryVOByGalleryId(id, request.session));
+            return JsonAdminResponse.success(GalleryService.getGalleryVOByGalleryId(id, request.userGuid, request.session));
         });
 
         actionToErrorMessage.put("toggleGalleryPublish", "Error toggling gallery publish status");
@@ -317,13 +317,13 @@ public class JsonApi {
         actionToErrorMessage.put("getArticleVOByArticleId", "Error loading article data");
         actionToFunction.put("getArticleVOByArticleId", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, request.session));
+            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleId(id, request.userGuid, request.session));
         });
 
         actionToErrorMessage.put("getArticleVOByArticleIdPreprocessed", "Error loading article data");
         actionToFunction.put("getArticleVOByArticleIdPreprocessed", (JsonApiRequestContext request) -> {
             Long id = Long.parseLong(request.data);
-            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleIdPreprocessed(id, request.session));
+            return JsonAdminResponse.success(ArticleService.getArticleVObyArticleIdPreprocessed(id, request.userGuid, request.session));
         });
 
         actionToErrorMessage.put("getArticleTitleImageVO", "Error loading article title image");

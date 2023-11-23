@@ -36,8 +36,9 @@ import java.util.stream.Collectors;
 
 public class PhotoService extends PostService {
 
-    public static PhotoVO getPhotoVObyPhotoId(Long photoId, Session session){
+    public static PhotoVO getPhotoVObyPhotoId(Long photoId, String userGuid, Session session){
         PhotoEntity photoEntity = (PhotoEntity) PhotoDao.getPostEntityById(photoId, PhotoEntity.class, session);
+        AuthorizationService.checkUnpublishedViewPrivileges(photoEntity, userGuid, session);
         PhotoVO photoVO = new PhotoVO(photoEntity);
 
         List<ImageVO> imageVOList = FileDao.getImages(PostAttribution.PHOTO, Collections.singletonList(photoEntity.getId()), session);

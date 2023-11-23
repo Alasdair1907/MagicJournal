@@ -82,7 +82,7 @@ $.widget("magic.posts", {
     },
 
     _displayArticle: async function(self, articleId){
-        let articleVO = await ajaxCda({action: "getArticleVOByArticleIdPreprocessed", data: articleId});
+        let articleVO = await ajaxCda({action: "getArticleVOByArticleIdPreprocessed", data: articleId, guid: Cookies.get("guid")});
         
         let hArticleTemplate = Handlebars.compile(articleTemplate);
         self.element.html(hArticleTemplate({articleVO: articleVO, articleText: render(articleVO.articleText) }));
@@ -98,7 +98,7 @@ $.widget("magic.posts", {
     },
 
     _displayGallery: async function(self, galleryId){
-        let galleryVO = await ajaxCda({action: "getGalleryVOByGalleryId", data: galleryId});
+        let galleryVO = await ajaxCda({action: "getGalleryVOByGalleryId", data: galleryId, guid: Cookies.get("guid")});
 
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
         self.element.html(hGalleryTemplate({galleryVO: galleryVO, galleryDescription: basicRender(galleryVO.description)}));
@@ -113,7 +113,7 @@ $.widget("magic.posts", {
     },
 
     _displayPhoto: async function(self, photoId) {
-        let photoVO = await ajaxCda({action: "getPhotoVOByPhotoId", data: photoId});
+        let photoVO = await ajaxCda({action: "getPhotoVOByPhotoId", data: photoId, guid: Cookies.get("guid")});
 
         let hPhotoTemplate = Handlebars.compile(photoTemplate);
         self.element.html(hPhotoTemplate({photoVO: photoVO, photoDescription: basicRender(photoVO.description)}));

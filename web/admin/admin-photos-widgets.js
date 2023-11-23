@@ -182,7 +182,7 @@ $.widget("admin.photosWidget", {
         let jsonAdminReponse = await $.ajax({
             url: 'jsonApi.jsp',
             method: 'POST',
-            data: {data:photoId , action:"getPhotoVOByPhotoId"}
+            data: {data:photoId , action:"getPhotoVOByPhotoId", guid:Cookies.get("guid")}
         });
 
         let adminResponse = JSON.parse(jsonAdminReponse);

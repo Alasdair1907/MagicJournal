@@ -168,7 +168,7 @@ $.widget("admin.galleriesWidget", {
         let jsonAdminReponse = await $.ajax({
             url: 'jsonApi.jsp',
             method: 'POST',
-            data: {data:galleryId , action:"getGalleryVOByGalleryId"}
+            data: {data:galleryId , action:"getGalleryVOByGalleryId", guid:Cookies.get("guid")}
         });
 
         let adminResponse = JSON.parse(jsonAdminReponse);
