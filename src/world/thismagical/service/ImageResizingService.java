@@ -26,6 +26,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import org.imgscalr.Scalr;
+import java.io.IOException;
 
 public class ImageResizingService {
 
@@ -71,12 +73,7 @@ public class ImageResizingService {
                 newY = maxHeightForVertical;
             }
 
-            BufferedImage outputImage = new BufferedImage(newX, newY, inputImage.getType());
-            Graphics2D g2d = outputImage.createGraphics();
-
-            g2d.drawImage(inputImage, 0, 0, newX, newY, null);
-            g2d.dispose();
-
+            BufferedImage outputImage = Scalr.resize(inputImage, Scalr.Method.ULTRA_QUALITY, newX, newY);
             ImageIO.write(outputImage, Tools.getExtension(inputFileName), new File(outputFileName));
 
             return aspectRatio;
