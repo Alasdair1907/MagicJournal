@@ -2,8 +2,9 @@
 .post-main {
     text-align: justify;
     margin-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
 }
 
 .article-image-container {
@@ -34,6 +35,7 @@
     width: 100%;
     display: flex;
     align-items: flex-start;
+    justify-content: center;
 }
 
 .side-panel-container {
@@ -85,6 +87,11 @@
     font-size: 1.2rem; /*1.8vmin;*/
     font-style: italic;
     font-family: Candara, Verdana, sans-serif;
+}
+
+p.paragraph {
+    column-count: 2;
+    column-gap: 25px;
 }
 
 .bb-bold {
@@ -257,6 +264,7 @@
     margin-left: 1%;
     margin-right: 0.5%;
     width: 74.5%;
+    max-width: 1300px;
 }
 
 .side-container {
@@ -269,6 +277,8 @@
 .side-panel-image-div-size {
     height: 5vw;
     width: 5vw;
+    max-height: 100px;
+    max-width: 100px;
     border-radius: 1.5vmin;
     margin-left: 0.3vw;
     margin-right: 0.3vw;
@@ -312,19 +322,19 @@
 }
 
 .bb-bullet-1 {
-    margin-left: 1.15vw; /*1vw;*/
+    margin-left: 1vw;
 }
 .bb-bullet-2 {
-    margin-left: 3.45vw; /*3vw;*/
+    margin-left: 3vw;
 }
 .bb-bullet-3 {
-    margin-left: 5.75vw; /*5vw;*/
+    margin-left: 5vw;
 }
 .bb-bullet-4 {
-    margin-left: 8.05vw; /*7vw;*/
+    margin-left: 7vw;
 }
 .bb-bullet-5 {
-    margin-left: 10.35vw; /*9vw;*/
+    margin-left: 9vw;
 }
 
 
@@ -338,7 +348,7 @@
 
 .jg > span, .jg::after {
     --ratio: var(--r);
-    --row-height: 30vh;
+    --row-height: min(30vh, 400px);
     flex-basis: calc(var(--ratio) * var(--row-height));
 }
 
