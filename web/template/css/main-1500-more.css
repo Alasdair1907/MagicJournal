@@ -76,6 +76,12 @@ body.cda {
 }
 
 .homepage-section-heading {
+    width: 70% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.homepage-view-all-link-panel {
     width: 30% !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -84,6 +90,14 @@ body.cda {
 .item-container-heading {
     color: white;
     font-size: 1.8rem; /*2.7vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.homepage-view-all-link {
+    font-size: 1.2rem;
     font-family: Candara, Verdana, sans-serif;
     display: inline-block;
     width: 100%;
@@ -202,13 +216,16 @@ body.cda {
 }
 
 .tag-cloud-advanced-link {
+    margin-top: 10px !important;
+}
+
+.bright-button {
     display: block;
     background: white;
     color: black !important;
     width: 200px;
     text-align: center;
     margin: auto;
-    margin-top: 10px;
     border-radius: 10px; /*1.5vmin;*/
     text-decoration: none !important;
 }
@@ -577,4 +594,49 @@ body.cda {
     width: 96%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* hlat - Homepage LATest */
+.hlat-table {
+    width: 68%;
+}
+
+.hlat-picture {
+    border-radius: 10px;
+    width: 20vw;
+    height: 15vw;
+    max-width: 600px;
+    max-height: 450px;
+}
+
+.hlat-toppost-content-td {
+    padding: 10px;
+}
+
+.hlat-latest-header {
+    background-color: #d3d3d35c;
+    color: white;
+    border-radius: 10px;
+}
+
+.hlat-item-heading {
+    margin-top: 5px;
+}
+
+.hlat-subheading-container {
+    margin-top: 10px;
+}
+
+.hlat-item-text {
+    margin-top: 10px;
+}
+
+.hlat-footing-container {
+    margin-top: 30px;
+}
+
+.hlat-panel {
+    width: 30%;
+    margin-top: auto;
+    margin-bottom: auto;
 }

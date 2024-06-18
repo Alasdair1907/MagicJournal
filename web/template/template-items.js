@@ -31,11 +31,6 @@ let articleRepresentation = `
         <span class="text-main item-text">{{this.description}}</span>
         <span class="afterfloat">&nbsp;</span>
         
-        <div class="post-info-line container-footing-normal">
-            <!--<div><span class="text-main">Author: </span><a class="main-a text-main" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a></div>-->
-            <span class="text-main">{{this.creationDateStr}}</span>
-            <a class="main-a text-main" href="posts.jsp?article={{this.id}}">Read more</a>
-        </div>
     </div>
     
     <div class="container-footing-tight">
@@ -129,6 +124,56 @@ let galleryRepresentationCompact = `
 </div>
 `;
 
+
+let latestPostsHomepage = `
+
+<div class="container-primary container-primary-element container-tag-list">
+    <div style="width: 100%; display: flex; flex-wrap: wrap; margin-left: auto; margin-right: auto; justify-content: space-between;">
+            <!-- the latest and greatest post goes here -->
+                <table class="hlat-table">
+                <tr>
+                    <td>
+                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}">
+                        <div class="hlat-picture" style="background-position: center; 
+                        background-size: cover; background-image: url('getImage.jsp?filename={{latestPostImage}}')"></div>
+                         </a>
+                    </td>
+                    <td class="hlat-toppost-content-td">
+                        <span class="item-container-heading hlat-latest-header">Latest Posts</span>
+                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
+                        <div class="item-tags-subheading-container hlat-subheading-container">
+                            {{#each latestPostVO.tagEntityList}}
+                            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="{{../latestPostTagClass}}">#{{this.tag}}</span></a>&nbsp;
+                            {{/each}}
+                        </div>
+                        <span class="text-main item-text hlat-item-text">{{latestPostVO.description}}</span>
+                        
+                        <div class="container-footing-tight hlat-footing-container">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="width: 70%">
+                                        <span class="text-main post-info-token center-block">{{latestPostVO.creationDateStr}}</span>
+                                    </td>
+                                    <td style="width: 30%">
+                                        <a class="main-a text-main center-block" href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}">View {{latestPostLinkClass}}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </table>
+                
+                <!-- remaining posts go here -->
+                <div class="hlat-panel">
+                    {{#each furtherLatestPostVOs}}
+                        ${sidePanelClassSwitch}
+                    {{/each}}
+                </div>
+    </div>                
+</div>
+`;
+
 // requires tagDigestVOList
 let tagListMenu = `
 
@@ -137,7 +182,7 @@ let tagListMenu = `
     {{#each tagDigestVOList}}
         <a class="text-main tag-cloud-a" href="posts.jsp?tags={{this.title}}">#{{this.title}}</a>&nbsp;
     {{/each}}
-    <a class="main-a text-main tag-cloud-advanced-link" href="posts.jsp?advanced=true">Advanced search</a>
+    <a class="main-a text-main tag-cloud-advanced-link bright-button" href="posts.jsp?advanced=true">Advanced search</a>
 </div>
 `;
 
@@ -149,7 +194,7 @@ let photoListingHomepage = `
     <tr>
     <td style="width:33%">&nbsp;</td>
     <td style="width:33%;text-align: center;"><span class="item-container-heading">Latest Photos</span></td>
-    <td style="width:33%" class="td-extra-link"><a class="main-a text-main" href="posts.jsp?photos=true">View all photos</a></td>
+    <td style="width:33%" class="td-extra-link"><a class="main-a text-main bright-button" href="posts.jsp?photos=true">View all photos</a></td>
     </tr>
     </table>
     

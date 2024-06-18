@@ -72,6 +72,12 @@ body.cda {
 }
 
 .homepage-section-heading {
+    width: 70% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.homepage-view-all-link-panel {
     width: 40% !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -85,6 +91,14 @@ body.cda {
     width: 100%;
     text-align: center;
     /*margin-bottom: 1vmin;*/
+}
+
+.homepage-view-all-link {
+    font-size: 1.2rem;
+    font-family: Candara, Verdana, sans-serif;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
 }
 
 /* span with heading for post item in listings */
@@ -199,14 +213,17 @@ body.cda {
 }
 
 .tag-cloud-advanced-link {
+    margin-top: 10px !important;
+}
+
+.bright-button {
     display: block;
     background: white;
     color: black !important;
     width: 200px;
     text-align: center;
     margin: auto;
-    margin-top: 10px;
-    border-radius: 1.5vmin;
+    border-radius: 10px; /*1.5vmin;*/
     text-decoration: none !important;
 }
 
@@ -547,4 +564,47 @@ body.cda {
     width: 96%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* hlat - Homepage LATest */
+.hlat-table {
+    width: 68%;
+}
+
+.hlat-picture {
+    border-radius: 10px;
+    width: 20vw;
+    height: 15vw;
+    max-width: 600px;
+    max-height: 450px;
+}
+
+.hlat-toppost-content-td {
+    padding: 10px;
+}
+
+.hlat-latest-header {
+    display: none;
+}
+
+.hlat-item-heading {
+    margin-top: 1px;
+}
+
+.hlat-subheading-container {
+    margin-top: 1px;
+}
+
+.hlat-item-text {
+    margin-top: 1px;
+}
+
+.hlat-footing-container {
+    margin-top: 10px;
+}
+
+.hlat-panel {
+    width: 30%;
+    margin-top: auto;
+    margin-bottom: auto;
 }

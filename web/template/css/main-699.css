@@ -83,6 +83,12 @@ body.cda {
     margin-right: auto !important;
 }
 
+.homepage-view-all-link-panel {
+    width: 60% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
 .item-container-heading {
     color: white;
     font-size: 1.5rem;
@@ -91,6 +97,14 @@ body.cda {
     width: 100%;
     text-align: center;
     /*margin-bottom: 1vmin;*/
+}
+
+.homepage-view-all-link {
+    font-size: 1.0rem;
+    font-family: Candara, Verdana, sans-serif;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
 }
 
 /* span with heading for post item in listings */
@@ -115,7 +129,7 @@ body.cda {
 }
 
 .gallery-representation-homepage {
-    width: 48%;
+    width: 98%;
     margin-left: 2px;
     margin-right: 2px;
 }
@@ -204,14 +218,18 @@ body.cda {
 }
 
 .tag-cloud-advanced-link {
+    margin: auto;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+}
+
+.bright-button {
     display: block;
     background: white;
     color: black !important;
     width: 150px;
     text-align: center;
     margin: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
     border-radius: 1.5vmin;
     text-decoration: none !important;
 }
@@ -581,4 +599,53 @@ body.cda {
     text-align: justify;
     margin-left: 5px;
     margin-right: 5px;
+}
+
+
+/* hlat - Homepage LATest */
+.hlat-table {
+    width: 100%;
+}
+
+.hlat-picture {
+    border-radius: 10px;
+    width: 20vw;
+    height: 20vw;
+    max-width: 600px;
+    max-height: 450px;
+}
+
+.hlat-toppost-content-td {
+    padding: 3px;
+}
+
+.hlat-latest-header {
+    display: none;
+}
+
+.hlat-item-heading {
+    margin-top: 1px;
+}
+
+.hlat-subheading-container {
+    margin-top: 1px;
+}
+
+.hlat-item-text {
+    margin-top: 1px;
+}
+
+.hlat-footing-container {
+    margin-top: 10px;
+}
+
+.hlat-panel {
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.hlat-panel-image-override {
+    height: 10vw !important;
+    width: 10vw !important;
 }
