@@ -17,7 +17,8 @@
 $.widget("magic.sidePanel", {
 
     options: {
-        sidePanelPostsTO: null
+        sidePanelPostsTO: null,
+        displayLatest: true
     },
 
     // use helper.js/getSidepanelData() to get data
@@ -28,7 +29,12 @@ $.widget("magic.sidePanel", {
         let sidePanelPostsTO = ops.sidePanelPostsTO;
 
         let hSidePanelBase = Handlebars.compile(sidePanelBase);
-        self.element.html(hSidePanelBase({associated: sidePanelPostsTO.associated, related: sidePanelPostsTO.related, latest: sidePanelPostsTO.latest}));
+        self.element.html(hSidePanelBase({
+            associated: sidePanelPostsTO.associated,
+            related: sidePanelPostsTO.related,
+            latest: sidePanelPostsTO.latest,
+            displayLatest: ops.displayLatest
+        }));
 
     }
 });

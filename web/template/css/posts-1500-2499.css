@@ -50,6 +50,22 @@
     background-color: rgba(240, 248, 255, 0.31);
 }
 
+.item-heading-related-gallery {
+    margin-top: -20px;
+}
+
+.side-panel-item-wrappers-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.side-panel-item-wrapper {
+    width: 31%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
 .file-container {
     display: block;
     margin-top: 2.0vmin;
@@ -253,7 +269,7 @@ p.paragraph {
 
 .photo-image {
     max-width: 100%;
-    max-height: 70vh;
+    max-height: 90vh;
     border-radius: 1.5vmin;
     cursor: pointer;
     display: block;
@@ -265,6 +281,13 @@ p.paragraph {
     margin-right: 0.5%;
     width: 74.5%;
     max-width: 1100px;
+}
+
+.post-container-gallery {
+    width: 90%;
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .side-container {

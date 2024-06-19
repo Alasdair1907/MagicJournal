@@ -99,15 +99,22 @@ $.widget("magic.posts", {
 
     _displayGallery: async function(self, galleryId){
         let galleryVO = await ajaxCda({action: "getGalleryVOByGalleryId", data: galleryId, guid: Cookies.get("guid")});
+        let sidePanelData = await getSidepanelData(0, POST_ATTRIBUTION_GALLERY, galleryId);
+
+        let associatedPostVOs = sidePanelData.associated;
+        let relatedPostVOs = sidePanelData.related;
+        let relatedCount = (!!associatedPostVOs ? associatedPostVOs.length : 0) + (!!relatedPostVOs ? relatedPostVOs.length : 0);
 
         let hGalleryTemplate = Handlebars.compile(galleryTemplate);
-        self.element.html(hGalleryTemplate({galleryVO: galleryVO, galleryDescription: basicRender(galleryVO.description)}));
+        self.element.html(hGalleryTemplate({
+            galleryVO: galleryVO,
+            galleryDescription: basicRender(galleryVO.description),
+            associatedPostVOs: associatedPostVOs,
+            relatedPostVOs: relatedPostVOs,
+            hasRelated: (relatedCount > 0)
+        }));
 
         self._handleClickableImages(self, true);
-
-        let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
-        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_GALLERY, galleryId);
-        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
 
         document.title = galleryVO.title;
     },

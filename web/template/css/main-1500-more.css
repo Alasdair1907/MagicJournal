@@ -601,6 +601,10 @@ body.cda {
     width: 68%;
 }
 
+.hlat-nonmobile-hide {
+    display: none;
+}
+
 .hlat-picture {
     border-radius: 10px;
     width: 20vw;

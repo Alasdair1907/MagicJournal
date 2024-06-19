@@ -1,13 +1,15 @@
 html {
-    font-size: 12px;
+    font-size: 15px;
 }
 
 body.cda {
     background-color: black;
     background-image: url("../background.jpg?v=103022");
-    background-size: cover;
+    /*background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
+    background-repeat: repeat-y;
+    background-size: auto 1000px;
     min-height: 100vh;
 }
 
@@ -585,6 +587,7 @@ body.cda {
     display: none;
 }
 
+
 .container-tag-list {
     text-align: justify;
     margin-left: 10px;
@@ -593,13 +596,26 @@ body.cda {
 
 /* hlat - Homepage LATest */
 .hlat-table {
-    width: 68%;
+    width: 100%;
 }
+
+.hlat-mobile-hide {
+    display: none;
+}
+
+.hlat-mobile-float {
+    float: left;
+    margin-right: 10px;
+}
+/*
+.hlat-tablet-width {
+    width: 68%;
+}*/
 
 .hlat-picture {
     border-radius: 10px;
-    width: 20vw;
-    height: 15vw;
+    width: 25vw;
+    height: 25vw;
     max-width: 600px;
     max-height: 450px;
 }
@@ -629,7 +645,7 @@ body.cda {
 }
 
 .hlat-panel {
-    width: 30%;
+    width: 100%;
     margin-top: auto;
     margin-bottom: auto;
 }

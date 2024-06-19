@@ -130,7 +130,7 @@ let latestPostsHomepage = `
 <div class="container-primary container-primary-element container-tag-list">
     <div style="width: 100%; display: flex; flex-wrap: wrap; margin-left: auto; margin-right: auto; justify-content: space-between;">
             <!-- the latest and greatest post goes here -->
-                <table class="hlat-table">
+                <table class="hlat-table hlat-mobile-hide">
                 <tr>
                     <td>
                         <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}">
@@ -164,6 +164,40 @@ let latestPostsHomepage = `
                 </tr>
                 </table>
                 
+                <div class="hlat-nonmobile-hide hlat-tablet-width">
+                    <div>
+                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
+                        <div class="item-tags-subheading-container hlat-subheading-container">
+                            {{#each latestPostVO.tagEntityList}}
+                            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="{{../latestPostTagClass}}">#{{this.tag}}</span></a>&nbsp;
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div>
+                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="hlat-mobile-float">
+                        <div class="hlat-picture" style="background-position: center; 
+                        background-size: cover; background-image: url('getImage.jsp?filename={{latestPostImage}}')"></div>
+                         </a>
+                         
+                         <span class="text-main item-text hlat-item-text">{{latestPostVO.description}}</span>
+                         
+                    </div>
+                
+                    <div class="container-footing-tight hlat-footing-container">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 70%">
+                                    <span class="text-main post-info-token center-block">{{latestPostVO.creationDateStr}}</span>
+                                </td>
+                                <td style="width: 30%">
+                                    <a class="main-a text-main center-block" href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}">View {{latestPostLinkClass}}</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                
+                </div>
+                
                 <!-- remaining posts go here -->
                 <div class="hlat-panel">
                     {{#each furtherLatestPostVOs}}
@@ -182,7 +216,7 @@ let tagListMenu = `
     {{#each tagDigestVOList}}
         <a class="text-main tag-cloud-a" href="posts.jsp?tags={{this.title}}">#{{this.title}}</a>&nbsp;
     {{/each}}
-    <a class="main-a text-main tag-cloud-advanced-link bright-button" href="posts.jsp?advanced=true">Advanced search</a>
+    <a class="main-a text-main tag-cloud-advanced-link bright-button" href="posts.jsp?advanced=true">Search All Posts</a>
 </div>
 `;
 

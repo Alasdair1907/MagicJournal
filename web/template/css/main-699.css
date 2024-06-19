@@ -607,10 +607,19 @@ body.cda {
     width: 100%;
 }
 
+.hlat-mobile-hide {
+    display: none;
+}
+
+.hlat-mobile-float {
+    float: left;
+    margin-right: 10px;
+}
+
 .hlat-picture {
     border-radius: 10px;
-    width: 20vw;
-    height: 20vw;
+    width: 30vw;
+    height: 30vw;
     max-width: 600px;
     max-height: 450px;
 }
@@ -643,9 +652,4 @@ body.cda {
     width: 100%;
     margin-top: auto;
     margin-bottom: auto;
-}
-
-.hlat-panel-image-override {
-    height: 10vw !important;
-    width: 10vw !important;
 }
