@@ -29,7 +29,7 @@ $.widget("magic.homepage", {
             limit: 16
         };
         let basicPostFilterTOGalleries = {
-            limit: 6,
+            limit: 8,
             galleryRepresentationImages: 8
         };
         let latestPostsFilter = {

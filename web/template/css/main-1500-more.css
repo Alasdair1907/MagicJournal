@@ -525,9 +525,9 @@ body.cda {
 
 /* size for photos and gallery images on homepage items */
 .photo-image-div-size {
-    width: 10.8vw;
+    width: 11.2vw;
     max-width: 194px;
-    height: 10.8vw;
+    height: 11.2vw;
     max-height: 194px;
     margin: 0.1vw;
 }
@@ -605,16 +605,25 @@ body.cda {
     display: none;
 }
 
+.hlat-nonphone-hide {
+    display: none;
+}
+
 .hlat-picture {
     border-radius: 10px;
     width: 20vw;
-    height: 15vw;
+    height: 17vw;
     max-width: 600px;
-    max-height: 450px;
+    max-height: 500px;
+}
+
+.hlat-toppost-image-td {
+    width: 30%;
 }
 
 .hlat-toppost-content-td {
     padding: 10px;
+    vertical-align: baseline;
 }
 
 .hlat-latest-header {
@@ -643,4 +652,10 @@ body.cda {
     width: 30%;
     margin-top: auto;
     margin-bottom: auto;
+}
+
+
+.map-warning {
+    width: 50%;
+    margin: auto;
 }

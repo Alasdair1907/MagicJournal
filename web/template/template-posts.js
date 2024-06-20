@@ -14,6 +14,60 @@
     
 */
 
+let homepagePhonePanelArticleTemplate = `
+<a class="general-a" href="posts.jsp?article={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="article-tag side-panel-tag">article</span><span class="mobile-hide"><br /></span>
+    <div class="side-panel-image-div side-panel-image-div-size hlat-mobile-panel-image-override" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')"></div>
+    <div class="hlat-phone-panel-texts">
+        <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
+        <span class="hlat-panel-date-text">{{this.creationDateStr}}</span>
+    </div>
+</div>
+</a>
+`;
+
+let homepagePhonePanelPhotoTemplate = `
+<a class="general-a" href="posts.jsp?photo={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="photo-tag side-panel-tag">photo</span><span class="mobile-hide"><br /></span>
+    <div class="side-panel-image-div side-panel-image-div-size hlat-mobile-panel-image-override" style="background-image: url('getImage.jsp?filename={{this.imageVO.thumbnail}}')"></div>
+    <div class="hlat-phone-panel-texts">
+        <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
+        <span class="hlat-panel-date-text">{{this.creationDateStr}}</span>
+    </div>
+</div>
+</a>
+`;
+let homepagePhonePanelGalleryTemplate = `
+<a class="general-a" href="posts.jsp?gallery={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="gallery-tag side-panel-tag">gallery</span><span class="mobile-hide"><br /></span>
+    <div class="side-panel-image-div side-panel-image-div-size hlat-mobile-panel-image-override" style="background-image: url('getImage.jsp?filename={{this.galleryRepresentation.[0].thumbnail}}')"></div>
+    <div class="hlat-phone-panel-texts">
+        <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
+        <span class="hlat-panel-date-text">{{this.creationDateStr}}</span>
+    </div>
+</div>
+</a>
+`;
+
+let homepagePhonePanelClassSwitch = `
+{{#if this.isArticle}}
+${homepagePhonePanelArticleTemplate}
+{{/if}}
+
+{{#if this.isPhoto}}
+${homepagePhonePanelPhotoTemplate}
+{{/if}}
+
+{{#if this.isGallery}}
+${homepagePhonePanelGalleryTemplate}
+{{/if}}
+`;
+
+
+
 let sidePanelArticleTemplate = `
 <a class="general-a" href="posts.jsp?article={{this.id}}">
 <div class="side-panel-container side-panel-container-size">

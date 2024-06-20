@@ -509,8 +509,8 @@ body.cda {
 
 /* size for photos and gallery images on homepage items */
 .photo-image-div-size {
-    width: 21.6vw;
-    height: 21.6vw;
+    width: 23vw;
+    height: 23vw;
     margin: 0.1vw;
 }
 
@@ -607,13 +607,19 @@ body.cda {
     width: 100%;
 }
 
+/* phones and tablets */
 .hlat-mobile-hide {
     display: none;
 }
+/*phones only */
+.hlat-phone-hide {
+    display: none;
+}
+
 
 .hlat-mobile-float {
     float: left;
-    margin-right: 10px;
+    margin-right: 0.5vw;
 }
 
 .hlat-picture {
@@ -650,6 +656,29 @@ body.cda {
 
 .hlat-panel {
     width: 100%;
-    margin-top: auto;
+    margin-top: 4px;
     margin-bottom: auto;
+}
+
+.hlat-panel-date-text {
+    color: rgb(128, 128, 128);
+    font-size: 1.0rem; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.hlat-phone-panel-texts {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    max-width: 65%;
+}
+
+.hlat-mobile-panel-image-override {
+    height: 20vw !important;
+    width: 20vw !important;
+}
+
+.map-warning {
+    width: 90%;
+    margin: auto;
 }

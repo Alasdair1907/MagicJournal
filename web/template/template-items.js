@@ -132,7 +132,7 @@ let latestPostsHomepage = `
             <!-- the latest and greatest post goes here -->
                 <table class="hlat-table hlat-mobile-hide">
                 <tr>
-                    <td>
+                    <td class="hlat-toppost-image-td">
                         <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}">
                         <div class="hlat-picture" style="background-position: center; 
                         background-size: cover; background-image: url('getImage.jsp?filename={{latestPostImage}}')"></div>
@@ -199,9 +199,14 @@ let latestPostsHomepage = `
                 </div>
                 
                 <!-- remaining posts go here -->
-                <div class="hlat-panel">
+                <div class="hlat-panel hlat-phone-hide">
                     {{#each furtherLatestPostVOs}}
                         ${sidePanelClassSwitch}
+                    {{/each}}
+                </div>
+                <div class="hlat-panel hlat-nonphone-hide">
+                    {{#each furtherLatestPostVOs}}
+                        ${homepagePhonePanelClassSwitch}
                     {{/each}}
                 </div>
     </div>                

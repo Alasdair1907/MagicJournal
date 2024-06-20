@@ -64,12 +64,15 @@
     <% out.println(settingsTO.headerInjection); %>
 
     <link rel="alternate" type="application/rss+xml" title="<% out.print(settingsTO.websiteName); %>" href="rss.jsp" />
-
 </head>
 <body class="cda">
 
 <div data-role="header-main" class="width-100-pc"></div>
-<div data-role="content-main" class="width-100-pc"></div>
+<div data-role="content-main" class="width-100-pc">
+    <div class="container-primary container-primary-element map-warning">
+        <span class="item-heading" id="map-warning-remove">Map should load in a few seconds. Map functionality may be affected by certain adblock browsers, such as Vivaldi etc.</span>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -78,6 +81,7 @@
     document.addEventListener('bingMapApiLoaded', function(){
         Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function(){
             Microsoft.Maps.loadModule("Microsoft.Maps.SpatialMath", function () {
+                document.getElementById("map-warning-remove").remove();
                 $('[data-role="content-main"]').CdaMap();
             });
         });
