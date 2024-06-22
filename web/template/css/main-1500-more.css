@@ -615,8 +615,8 @@ body.cda {
 
 .hlat-picture {
     border-radius: 10px;
-    width: 20vw;
-    height: 17vw;
+    width: 30vw;
+    height: 23vw;
     max-width: 600px;
     max-height: 500px;
 }
@@ -667,4 +667,8 @@ body.cda {
 .view-all-photos {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.height-balancer {
+    margin-top: 25px !important;
 }

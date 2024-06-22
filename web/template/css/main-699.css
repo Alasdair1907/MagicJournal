@@ -627,16 +627,17 @@ body.cda {
 
 
 .hlat-mobile-float {
-    float: left;
-    margin-right: 0.5vw;
+    /*float: left;
+    margin-right: 0.5vw;*/
 }
 
 .hlat-picture {
-    border-radius: 10px;
-    width: 30vw;
-    height: 30vw;
-    max-width: 600px;
+    border-radius: 1.5vmin;
+    width: 99%;
+    height: 70vw;
+    max-width: 700px;
     max-height: 450px;
+    margin: 0.5vw auto;
 }
 
 .hlat-toppost-content-td {

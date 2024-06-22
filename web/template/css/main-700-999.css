@@ -618,14 +618,14 @@ body.cda {
 }
 
 .hlat-tablet-width {
-    width: 57%;
+    width: 59%;
     margin: auto;
 }
 
 .hlat-picture {
     border-radius: 10px;
-    width: 15vw;
-    height: 15vw;
+    width: 27vw;
+    height: 21vw;
     max-width: 600px;
     max-height: 450px;
 }

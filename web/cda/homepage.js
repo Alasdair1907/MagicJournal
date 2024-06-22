@@ -36,7 +36,7 @@ $.widget("magic.homepage", {
             needArticles: true,
             needPhotos: true,
             needGalleries: true,
-            itemsPerPage: 4
+            itemsPerPage: 5
         };
 
         let basicPostFilterTOs = [basicPostFilterTOArticles, basicPostFilterTOPhotos, basicPostFilterTOGalleries]

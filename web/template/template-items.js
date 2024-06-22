@@ -140,15 +140,15 @@ let latestPostsHomepage = `
                     </td>
                     <td class="hlat-toppost-content-td">
                         <span class="item-container-heading hlat-latest-header">Latest Posts</span>
-                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
-                        <div class="item-tags-subheading-container hlat-subheading-container">
+                        <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading height-balancer">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
+                        <div class="item-tags-subheading-container hlat-subheading-container height-balancer">
                             {{#each latestPostVO.tagEntityList}}
                             <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="{{../latestPostTagClass}}">#{{this.tag}}</span></a>&nbsp;
                             {{/each}}
                         </div>
-                        <span class="text-main item-text hlat-item-text">{{latestPostVO.description}}</span>
+                        <span class="text-main item-text hlat-item-text height-balancer">{{latestPostVO.description}}</span>
                         
-                        <div class="container-footing-tight hlat-footing-container">
+                        <div class="container-footing-tight hlat-footing-container height-balancer">
                             <table style="width: 100%">
                                 <tr>
                                     <td style="width: 70%">
@@ -165,7 +165,7 @@ let latestPostsHomepage = `
                 </table>
                 
                 <div class="hlat-nonmobile-hide hlat-tablet-width">
-                    <div>
+                    <div class="hlat-phone-hide">
                         <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
                     </div>
                     <div>
@@ -173,6 +173,10 @@ let latestPostsHomepage = `
                         <div class="hlat-picture" style="background-position: center; 
                         background-size: cover; background-image: url('getImage.jsp?filename={{latestPostImage}}')"></div>
                          </a>
+                         
+                         <div class="hlat-nonphone-hide">
+                             <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
+                         </div>
                          
                          <div class="item-tags-subheading-container hlat-subheading-container">
                             {{#each latestPostVO.tagEntityList}}
