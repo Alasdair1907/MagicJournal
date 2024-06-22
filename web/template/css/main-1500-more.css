@@ -397,6 +397,10 @@ body.cda {
     background-color: rgba(240, 248, 255, 0.09);
 }
 
+.selectables-tags-container {
+    justify-content: space-between;
+}
+
 .selectable {
     border-style: solid;
     border-color: white;
@@ -658,4 +662,9 @@ body.cda {
 .map-warning {
     width: 50%;
     margin: auto;
+}
+
+.view-all-photos {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

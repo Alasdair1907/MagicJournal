@@ -402,6 +402,10 @@ body.cda {
     background-color: rgba(240, 248, 255, 0.09);
 }
 
+.selectables-tags-container {
+    justify-content: space-between;
+}
+
 .selectable {
     border-style: solid;
     border-color: white;
@@ -611,6 +615,11 @@ body.cda {
 .hlat-mobile-hide {
     display: none;
 }
+
+.hlat-tablet-width {
+    width:100%;
+}
+
 /*phones only */
 .hlat-phone-hide {
     display: none;
@@ -681,4 +690,9 @@ body.cda {
 .map-warning {
     width: 90%;
     margin: auto;
+}
+
+.view-all-photos {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

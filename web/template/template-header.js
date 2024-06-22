@@ -76,8 +76,8 @@ let headerMain = `
         {{#if settingsTO.twitterProfile}}
         <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
-            <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">twitter</span>
+            <i class="fab fa-x-twitter desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">X.com</span>
         </div>
         </a>
         {{/if}}
@@ -188,8 +188,8 @@ let headerMain = `
         {{#if settingsTO.twitterProfile}}
         <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
-            <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">twitter</span>
+            <i class="fab fa-x-twitter desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">X.com</span>
         </div>
         </a>
         {{/if}}
@@ -249,8 +249,8 @@ let extraMenuOverlay = `
         {{#if settingsTO.twitterProfile}}
         <a class="general-a" target="_blank" href="{{settingsTO.twitterProfile}}">
         <div class="desktop-menu-item">
-            <i class="fab fa-twitter desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">twitter</span>
+            <i class="fab fa-x-twitter desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">X.com</span>
         </div>
         </a>
         {{/if}}

@@ -70,17 +70,23 @@ $.widget("magic.homepage", {
             furtherLatestPostVOs = latestPostVOList.posts.slice(1);
 
             if (latestPostVO.hasOwnProperty("isArticle")){
-                latestPostImage = latestPostVO.titleImageVO.preview;
+                if (latestPostVO.titleImageVO) {
+                    latestPostImage = latestPostVO.titleImageVO.thumbnail;
+                }
                 latestPostTagClass = "article-tag";
                 latestPostLinkClass = "article";
                 latestPostPreTitle = "";
             } else if (latestPostVO.hasOwnProperty("isPhoto")){
-                latestPostImage = latestPostVO.imageVO.preview;
+                if (latestPostVO.imageVO) {
+                    latestPostImage = latestPostVO.imageVO.thumbnail;
+                }
                 latestPostTagClass = "photo-tag";
                 latestPostLinkClass = "photo";
                 latestPostPreTitle = "Photo: ";
             } else if (latestPostVO.hasOwnProperty("isGallery")){
-                latestPostImage = latestPostVO.galleryRepresentation[0].preview;
+                if (latestPostVO.galleryRepresentation && latestPostVO.galleryRepresentation.length > 0) {
+                    latestPostImage = latestPostVO.galleryRepresentation[0].thumbnail;
+                }
                 latestPostTagClass = "gallery-tag";
                 latestPostLinkClass = "gallery";
                 latestPostPreTitle = "Gallery: ";

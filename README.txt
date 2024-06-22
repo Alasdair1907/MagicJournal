@@ -8,7 +8,8 @@ To get this code running:
 - PostgreSQL (12)
 - GIT
 
-Download latest version of tomcat archive from http://tomcat.apache.org/
+Download tomcat from http://tomcat.apache.org/
+Compatible versions: 9.0.90 or newer (10.x not currently supported because of different package paths - jakarta instead of javax)
 
 2. Get the source code:
 git clone https://github.com/Alasdair1907/thismagicalworld.git
@@ -26,6 +27,7 @@ Edit these lines:
 psql -U demo -h localhost -d demodb -f create-tables.postgres.sql
 
 4. Copy contents of the tomcat lib folder (the one inside the downloaded tomcat archive) to the project's /lib folder
+Open the web.xml file, edit the path for temporary storage of uploaded files (inside the <location> tag)
 
 5. Build the project:
 ./gradlew build

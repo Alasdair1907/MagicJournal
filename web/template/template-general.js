@@ -108,7 +108,7 @@ let dynamicSearchCdaTemplate = `
         <span class="selectable selectable-default" data-class="selectable-selected-gallery" data-role="post-type" data-id="galleries">Galleries</span>
     </div>
     <span class="selectable-heading">Select tags:</span>
-    <div class="selectables-container">
+    <div class="selectables-container selectables-tags-container">
         {{#each tags}}
             <span class="selectable selectable-default text-main" data-role="post-tag" data-id="{{this}}">{{this}}</span>
         {{/each}}

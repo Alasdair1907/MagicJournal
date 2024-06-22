@@ -3,4 +3,33 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <servlet>
+        <servlet-name>jsp</servlet-name>
+        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+        <init-param>
+            <param-name>fork</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xpoweredBy</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>3</load-on-startup>
+        <multipart-config>
+            <location>C:/files/temp</location>
+            <max-file-size>50000000</max-file-size>
+            <max-request-size>200000000</max-request-size>
+            <file-size-threshold>50000000</file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
+    </servlet-mapping>
+
+
+
 </web-app>

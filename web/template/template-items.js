@@ -167,17 +167,18 @@ let latestPostsHomepage = `
                 <div class="hlat-nonmobile-hide hlat-tablet-width">
                     <div>
                         <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="general-a"><span class="item-heading anything-link hlat-item-heading">{{latestPostPreTitle}}{{latestPostVO.title}}</span></a>
-                        <div class="item-tags-subheading-container hlat-subheading-container">
-                            {{#each latestPostVO.tagEntityList}}
-                            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="{{../latestPostTagClass}}">#{{this.tag}}</span></a>&nbsp;
-                            {{/each}}
-                        </div>
                     </div>
                     <div>
                         <a href="posts.jsp?{{latestPostLinkClass}}={{latestPostVO.id}}" class="hlat-mobile-float">
                         <div class="hlat-picture" style="background-position: center; 
                         background-size: cover; background-image: url('getImage.jsp?filename={{latestPostImage}}')"></div>
                          </a>
+                         
+                         <div class="item-tags-subheading-container hlat-subheading-container">
+                            {{#each latestPostVO.tagEntityList}}
+                            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="{{../latestPostTagClass}}">#{{this.tag}}</span></a>&nbsp;
+                            {{/each}}
+                        </div>
                          
                          <span class="text-main item-text hlat-item-text">{{latestPostVO.description}}</span>
                          
@@ -233,7 +234,7 @@ let photoListingHomepage = `
     <tr>
     <td style="width:33%">&nbsp;</td>
     <td style="width:33%;text-align: center;"><span class="item-container-heading">Latest Photos</span></td>
-    <td style="width:33%" class="td-extra-link"><a class="main-a text-main bright-button" href="posts.jsp?photos=true">View all photos</a></td>
+    <td style="width:33%" class="td-extra-link"></td>
     </tr>
     </table>
     
@@ -245,6 +246,9 @@ let photoListingHomepage = `
         </a>
     {{/each}}
     </div>
+    
+    <a class="main-a text-main bright-button view-all-photos" href="posts.jsp?photos=true">View all photos</a>
+    
 </div>
 `;
 

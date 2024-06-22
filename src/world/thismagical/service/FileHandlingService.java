@@ -20,7 +20,6 @@ package world.thismagical.service;
 import org.apache.tomcat.util.http.fileupload.FileItemIterator;
 import org.apache.tomcat.util.http.fileupload.FileItemStream;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import world.thismagical.dao.*;
@@ -40,19 +39,13 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import javax.tools.Tool;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.*;
 
 public class FileHandlingService {
-
-    public static Integer sizeThreshold = 54428800;
-    public static Integer sizeMax = 54428800;
-
     public static void deleteImages(List<ImageVO> imageVOList, Session session){
 
         if (imageVOList == null || imageVOList.isEmpty()) {
@@ -203,40 +196,28 @@ public class FileHandlingService {
 
     // expects only one uploaded file. returns partial OtherFileEntity with original file name and the new file name.
     public static OtherFileEntity handleUploadOtherFile(HttpServletRequest request, AuthorEntity uploadAuthor, SettingsTO settingsTO){
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        factory.setSizeThreshold(sizeThreshold);
-        factory.setRepository(new File(settingsTO.otherFilesStoragePath));
-        ServletFileUpload upload = new ServletFileUpload(factory);
-
-        upload.setFileSizeMax(sizeMax);
 
         OtherFileEntity res = null;
 
         try {
-            FileItemIterator fileItemIterator = upload.getItemIterator(request);
-            while (fileItemIterator.hasNext()){
+            Collection<Part> parts = request.getParts();
+            for (Part part : parts){
+                String fName = part.getSubmittedFileName();
+                InputStream is = part.getInputStream();
+                String newFileName = UUID.randomUUID().toString();
+                Path path = Paths.get(settingsTO.otherFilesStoragePath, newFileName);
 
-                FileItemStream fis = fileItemIterator.next();
-
-                if (!fis.isFormField()){
-
-                    String fName = fis.getName();
-                    InputStream is = fis.openStream();
-                    String newFileName = UUID.randomUUID().toString();
-                    Path path = Paths.get(settingsTO.otherFilesStoragePath, newFileName);
-
-                    try {
-                        if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
-                            res = new OtherFileEntity();
-                            res.setFileName(newFileName);
-                            res.setOriginalFileName(fName);
-                        }
-                        is.close();
-                    } catch (Exception ex){
-                        is.close();
-                        Files.deleteIfExists(path);
-                        throw ex;
+                try {
+                    if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
+                        res = new OtherFileEntity();
+                        res.setFileName(newFileName);
+                        res.setOriginalFileName(fName);
                     }
+                    is.close();
+                } catch (Exception ex){
+                    is.close();
+                    Files.deleteIfExists(path);
+                    throw ex;
                 }
             }
         } catch (Exception ex){
@@ -246,64 +227,59 @@ public class FileHandlingService {
         return res;
     }
 
-    public static List<ImageFileEntity> handleUploadImage(HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO){
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        factory.setSizeThreshold(sizeThreshold);
-        factory.setRepository(new File(settingsTO.temporaryFolderPath));
-        ServletFileUpload upload = new ServletFileUpload(factory);
-
-        upload.setFileSizeMax(sizeMax);
-
+    public static List<ImageFileEntity> handleUploadImage(HttpServletRequest request, ImageFileEntity imageFileEntityStub, SettingsTO settingsTO) throws Exception {
+        Collection<Part> parts = request.getParts();
         List<ImageFileEntity> fileEntities = new ArrayList<>();
 
         try {
-            FileItemIterator fileItemIterator = upload.getItemIterator(request);
-            while (fileItemIterator.hasNext()){
+            for (Part part : parts){
 
-                FileItemStream fis = fileItemIterator.next();
-
-                if (!fis.isFormField()){
-                    String fName = fis.getName();
-                    String extension = Tools.getExtension(fName);
-
-                    if (extension == null) {
-                        Tools.log("Could not process file "+fName+": no extension detected.");
-                        continue;
-                    }
-
-                    InputStream is = fis.openStream();
-
-                    String newFileNameBase = UUID.randomUUID().toString();
-
-                    String newFileName = newFileNameBase + "." + extension;
-                    String newFileNamePreview = newFileNameBase + "_preview." + extension;
-                    String newFileNameThumbnail = newFileNameBase + "_thumb." + extension;
-
-                    Path path = Paths.get(settingsTO.imageStoragePath, newFileName);
-
-                    try {
-                        if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
-
-                            Double aspectRatio = ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
-                            ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
-
-                            ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
-                            fileEntity.setFileName(newFileName);
-                            fileEntity.setPreviewFileName(newFileNamePreview);
-                            fileEntity.setThumbnailFileName(newFileNameThumbnail);
-                            fileEntity.setOriginalFileName(fName);
-                            fileEntity.setAspectRatio(aspectRatio);
-                            fileEntity.setOrderNumber(1000L);
-
-                            fileEntities.add(fileEntity);
-                        }
-                        is.close();
-                    } catch (Exception ex){
-                        is.close();
-                        Files.deleteIfExists(path);
-                        throw ex;
-                    }
+                Tools.log("part name: " + part.getName() + " part submitted file name: " + part.getSubmittedFileName());
+                if (!part.getName().startsWith("fileInput")){
+                    continue;
                 }
+
+                InputStream is = part.getInputStream();
+
+                String fName = part.getSubmittedFileName();
+                String extension = Tools.getExtension(fName);
+
+                if (extension == null) {
+                    Tools.log("Could not process file "+fName+": no extension detected.");
+                    continue;
+                }
+
+                String newFileNameBase = UUID.randomUUID().toString();
+
+                String newFileName = newFileNameBase + "." + extension;
+                String newFileNamePreview = newFileNameBase + "_preview." + extension;
+                String newFileNameThumbnail = newFileNameBase + "_thumb." + extension;
+
+                Path path = Paths.get(settingsTO.imageStoragePath, newFileName);
+
+                try {
+                    if (Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING) > 0) {
+
+                        Double aspectRatio = ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNamePreview, settingsTO.previewX, settingsTO.previewY);
+                        ImageResizingService.resize(Tools.getPath(settingsTO.imageStoragePath) + newFileName, Tools.getPath(settingsTO.imageStoragePath) + newFileNameThumbnail, settingsTO.thumbX, settingsTO.thumbY);
+
+                        ImageFileEntity fileEntity = new ImageFileEntity(imageFileEntityStub);
+                        fileEntity.setFileName(newFileName);
+                        fileEntity.setPreviewFileName(newFileNamePreview);
+                        fileEntity.setThumbnailFileName(newFileNameThumbnail);
+                        fileEntity.setOriginalFileName(fName);
+                        fileEntity.setAspectRatio(aspectRatio);
+                        fileEntity.setOrderNumber(1000L);
+
+                        fileEntities.add(fileEntity);
+                    }
+                    is.close();
+                } catch (Exception ex){
+                    is.close();
+                    Files.deleteIfExists(path);
+                    throw ex;
+                }
+
             }
         } catch (Exception ex){
             Tools.log(ex.getMessage());
@@ -506,7 +482,11 @@ public class FileHandlingService {
         }
 
         SettingsTO settingsTO = SettingsService.getSettings(session);
-        Files.delete(Paths.get(settingsTO.otherFilesStoragePath, otherFileEntity.getFileName()));
+
+        try {
+            Files.delete(Paths.get(settingsTO.otherFilesStoragePath, otherFileEntity.getFileName()));
+        } catch (NoSuchFileException ignored){
+        }
 
         if (!session.getTransaction().isActive()){
             session.beginTransaction();

@@ -125,7 +125,7 @@ public class BBCodeExtractor {
             if (imageFileEntity != null) {
                 imageHtml = String.format("<div class='article-image-container' data-type='image' data-id='%d' data-preview='%s' data-image='%s' data-title='%s'></div>",
                         imageId, imageFileEntity.getPreviewFileName(), imageFileEntity.getFileName(), escapeSingleQuotes(imageFileEntity.getTitle()));
-                imageHtml = pClose + imageHtml + pOpen;
+                imageHtml = "\n" + pClose + imageHtml + pOpen;
             }  // todo: alert user that the image he used has been deleted
 
             text = text.replaceAll(Pattern.quote(bbCodeData.imgExpressions.get(i)), imageHtml);
