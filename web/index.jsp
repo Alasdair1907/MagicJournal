@@ -41,8 +41,8 @@ response.setDateHeader("Expires", -1);
 
     <title><% out.print(settingsTO.websiteName); %></title>
 
-    <script src="cda/homepage.js"></script>
-    <script src="cda/header.js"></script>
+    <script src="cda/homepage.js?v=230624"></script>
+    <script src="cda/header.js?v=230624"></script>
 
     <% out.println(settingsTO.headerInjection); %>
 
@@ -52,7 +52,11 @@ response.setDateHeader("Expires", -1);
   <body class="cda">
 
   <div data-role="header-main" class="width-100-pc"></div>
-  <div data-role="content-main" class="width-100-pc"></div>
+  <div data-role="content-main" class="width-100-pc">
+    <div class="container-primary container-primary-element map-warning">
+      <span class="item-heading">Loading, please wait...</span>
+    </div>
+  </div>
 
   <script type="text/javascript">
     console.log("Calling header initializer...");

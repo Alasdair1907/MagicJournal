@@ -87,7 +87,11 @@
 <body class="cda">
 
 <div data-role="header-main" class="width-100-pc"></div>
-<div data-role="content-main" class="width-100-pc"></div>
+<div data-role="content-main" class="width-100-pc">
+    <div class="container-primary container-primary-element map-warning">
+        <span class="item-heading">Loading, please wait...</span>
+    </div>
+</div>
 
 <script type="text/javascript">
 

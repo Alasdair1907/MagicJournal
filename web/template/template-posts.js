@@ -140,7 +140,7 @@ let sidePanelBase = `
 let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.articleText -->
 
 <div class="post-content-and-panel-container">
-    <div class="container-primary container-primary-element post-container">
+    <div class="container-primary-article container-primary-element post-container">
         <span class="item-heading">{{articleVO.title}}</span>
 
         <div class="post-render-info-line">
@@ -167,7 +167,7 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
 let galleryTemplate = `
 <div class="post-content-and-panel-container">
     <div class="post-container-gallery">
-        <div class="container-primary container-primary-element">
+        <div class="container-primary-article container-primary-element">
             <span class="item-heading">{{galleryVO.title}}</span>
 
             <div class="post-render-info-line">
@@ -223,7 +223,7 @@ let photoTemplate = `
 
     <div class="post-container">
 
-        <div class="container-primary container-primary-element">
+        <div class="container-primary-article container-primary-element">
             <span class="item-heading">{{photoVO.title}}</span>
 
             <div class="post-render-info-line">
