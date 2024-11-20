@@ -114,7 +114,7 @@ public class SeoTools {
 
     static String getImageNodeFull(SettingsTO settingsTO, ImageVO imageVO, String defaultTitle){
         String imageNode = "<image:image>";
-        imageNode += "<image:loc>" + Tools.normalizeURL(settingsTO.websiteURL) + "/getImage.jsp?filename=" + imageVO.image + "</image:loc>";
+        imageNode += "<image:loc>" + Tools.normalizeURL(settingsTO.websiteURL) + "/getImage.jsp?filename=" + imageVO.preview + "</image:loc>";
 
         if (imageVO.title != null && !imageVO.title.isEmpty()){
             imageNode += "<image:title>" + imageVO.title + "</image:title>";
