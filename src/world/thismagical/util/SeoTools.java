@@ -60,7 +60,7 @@ public class SeoTools {
 
         for (ArticleEntity articleEntity : articleEntities){
 
-            StringBuilder node = new StringBuilder(getUrlNodeBase(settingsTO, articleEntity.getId(), articleEntity.getLastModifiedDate()));
+            StringBuilder node = new StringBuilder(getUrlNodeBase(settingsTO, articleEntity.getId(), articleEntity.getLastModifiedDate(), "article"));
 
             BBCodeExtractor.BBCodeData bbCodeData = BBCodeExtractor.parse(articleEntity.getArticleText());
             if (bbCodeData.imgIds != null && !bbCodeData.imgIds.isEmpty()){
@@ -79,14 +79,14 @@ public class SeoTools {
 
 
         for (PhotoVO photoVO : photoVOList){
-            String node = getUrlNodeBase(settingsTO, photoVO.getId(), photoVO.getLastModified());
+            String node = getUrlNodeBase(settingsTO, photoVO.getId(), photoVO.getLastModified(), "photo");
             node += getImageNodeFull(settingsTO, photoVO.getMainImageVO(), photoVO.getTitle());
             node += "</url>";
             res.append(node);
         }
 
         for (GalleryVO galleryVO : galleryVOList){
-            StringBuilder node = new StringBuilder(getUrlNodeBase(settingsTO, galleryVO.getId(), galleryVO.getLastModified()));
+            StringBuilder node = new StringBuilder(getUrlNodeBase(settingsTO, galleryVO.getId(), galleryVO.getLastModified(), "gallery"));
 
             if (galleryVO.imageVOList != null && !galleryVO.imageVOList.isEmpty()){
                 for (ImageVO imageVO : galleryVO.imageVOList){
@@ -103,9 +103,9 @@ public class SeoTools {
         return res.toString();
     }
 
-    static String getUrlNodeBase(SettingsTO settingsTO, Long id, LocalDateTime lastModified){
+    static String getUrlNodeBase(SettingsTO settingsTO, Long id, LocalDateTime lastModified, String postTypeBase){
         String node = "<url>";
-        node += "<loc>" + Tools.normalizeURL(settingsTO.websiteURL)+ "/posts.jsp?article=" + id + "</loc>";
+        node += "<loc>" + Tools.normalizeURL(settingsTO.websiteURL)+ "/posts.jsp?" + postTypeBase + "=" + id + "</loc>";
         node += "<lastmod>" + lastModified.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "</lastmod>";
         node += "<changefreq>monthly</changefreq>";
 
