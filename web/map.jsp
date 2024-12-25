@@ -5,10 +5,10 @@
     response.setDateHeader("Expires", -1);
 %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
 <%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="world.thismagical.util.ServletUtils" %><%--
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 6/30/2020

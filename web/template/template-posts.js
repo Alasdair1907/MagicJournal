@@ -139,6 +139,10 @@ let sidePanelBase = `
 
 let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.articleText -->
 
+<script>
+document.title = "{{articleVO.title}}";
+</script>
+
 <div class="post-content-and-panel-container">
     <div class="container-primary-article container-primary-element post-container">
         <span class="item-heading">{{articleVO.title}}</span>
@@ -163,8 +167,31 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
 </div>
 `;
 
+let galleryTemplateRelatedPostsBlock = `
+{{#if hasRelated}}
+<span class="item-heading item-heading-related-gallery">Related posts</span>
+<div class="side-panel-item-wrappers-container">
+    {{#each associatedPostVOs}}
+        <div class="side-panel-item-wrapper">
+            ${sidePanelClassSwitch}
+        </div>
+    {{/each}}
+    {{#each relatedPostVOs}}
+        <div class="side-panel-item-wrapper">
+            ${sidePanelClassSwitch}
+        </div>
+    {{/each}}
+</div>
+{{/if}}
+`;
+
 
 let galleryTemplate = `
+
+<script>
+document.title = "{{galleryVO.title}}";
+</script>
+
 <div class="post-content-and-panel-container">
     <div class="post-container-gallery">
         <div class="container-primary-article container-primary-element">
@@ -185,21 +212,7 @@ let galleryTemplate = `
                 {{{galleryDescription}}}
             </div>  
             
-            {{#if hasRelated}}
-                <span class="item-heading item-heading-related-gallery">Related posts</span>
-                <div class="side-panel-item-wrappers-container">
-                    {{#each associatedPostVOs}}
-                        <div class="side-panel-item-wrapper">
-                            ${sidePanelClassSwitch}
-                        </div>
-                    {{/each}}
-                    {{#each relatedPostVOs}}
-                        <div class="side-panel-item-wrapper">
-                            ${sidePanelClassSwitch}
-                        </div>
-                    {{/each}}
-                </div>
-            {{/if}}
+            <div data-role="gallery-associated-posts"></div>
             
         </div>
         
@@ -219,6 +232,11 @@ let galleryTemplate = `
 </div>`;
 
 let photoTemplate = `
+
+<script>
+document.title = "{{photoVO.title}}";
+</script>
+
 <div class="post-content-and-panel-container">
 
     <div class="post-container">

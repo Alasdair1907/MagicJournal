@@ -1,8 +1,8 @@
-<%@ page import="world.thismagical.util.Tools" %>
+<%@ page import="com.terrestrialjournal.util.Tools" %>
 <%@ page import="org.hibernate.SessionFactory" %>
 <%@ page import="org.hibernate.Session" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
-<%@ page import="world.thismagical.util.JsonApi" %><%--
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 12/15/2019
@@ -46,6 +46,7 @@
     <script src="admin-articles-widgets.js"></script>
     <script src="author-profile-editor.js"></script>
     <script src="settings-editor.js"></script>
+    <script src="render-control.js"></script>
 
     <script src="TagEditor.js"></script>
     <script src="ImageManager.js"></script>
@@ -57,6 +58,10 @@
     <script src="FileFilter.js"></script>
     <script src="MapPick.js"></script>
     <script src="bbCodeHint.js"></script>
+
+    <script src="../cda/bbcode.js"></script>
+    <script src="../template/template-posts.js"></script>
+    <script src="../template/template-bbcode.js"></script>
 
     <link rel="stylesheet" href="main.css">
 

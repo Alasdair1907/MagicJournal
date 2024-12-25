@@ -2,16 +2,16 @@
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ page import="org.hibernate.Session" %>
 <%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="world.thismagical.service.FileHandlingService" %>
-<%@ page import="world.thismagical.to.ImageUploadTO" %>
-<%@ page import="world.thismagical.to.OtherFileTO" %>
-<%@ page import="world.thismagical.util.Tools" %>
+<%@ page import="com.terrestrialjournal.service.FileHandlingService" %>
+<%@ page import="com.terrestrialjournal.to.ImageUploadTO" %>
+<%@ page import="com.terrestrialjournal.to.OtherFileTO" %>
+<%@ page import="com.terrestrialjournal.util.Tools" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.List" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
-<%@ page import="world.thismagical.util.ServletUtils" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %>
 <%
 
     SessionFactory sessionFactory = ServletUtils.getSessionFactory(application);

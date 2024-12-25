@@ -144,6 +144,12 @@ body.admin {
     color: white;
 }
 
+.button-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .btn-vertical {
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;

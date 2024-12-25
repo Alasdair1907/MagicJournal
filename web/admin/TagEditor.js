@@ -20,10 +20,11 @@ $.widget("admin.TagEditor", {
 <span class="item-container-heading">Tag Editor</span>
 <span class="text">Tags, comma separated list:</span><br />
 <input type="text" class="form-control input width-100-pc" value="{{tagListStr}}" data-role="tagsinput"/><br />
-<button type="button" class="btn btn-light btn-std btn-vertical" data-role="save-or-update-tags">Save</button>
+<span class="text">The tag list gets saved when the post is saved</span><br />
 </div>
     `,
     _create: async function(){
+        console.log("TagEditor() _create");
         let self = this;
 
         // active: true/false
@@ -36,13 +37,32 @@ $.widget("admin.TagEditor", {
     },
 
     _init: async function(){
+        console.log("TagEditor() _init");
         let self = this;
         let ops = this.options;
 
         await self._display(self, ops);
     },
 
+    getTagTO: function() {
+        console.log("TagEditor() getTagTO");
+        let self = this;
+        let ops = this.options;
+
+        let $tagsInput = self.element.find('[data-role=tagsinput]');
+        let newTags = $tagsInput.val();
+        let tagTOSave = {
+            attribution: ops.attributionClass,
+            objectId: ops.objectId,
+            tagListStr: newTags
+        };
+
+        return tagTOSave;
+    },
+
     _display: async function(self, ops){
+
+        console.log("TagEditor() _display");
 
         let tagTORequest = {
             attribution: ops.attributionClass,
@@ -53,29 +73,5 @@ $.widget("admin.TagEditor", {
 
         let hTemplate = Handlebars.compile(self._template);
         self.element.html(hTemplate({tagListStr: tagList.tagListStr}));
-
-        let $saveOrUpdateButton = self.element.find('[data-role=save-or-update-tags]');
-        let $tagsInput = self.element.find('[data-role=tagsinput]');
-
-        $saveOrUpdateButton.unbind();
-        $saveOrUpdateButton.click(await async function(){
-
-            let buttonText = spinButton($saveOrUpdateButton);
-
-            let newTags = $tagsInput.val();
-
-            let tagTOSave = {
-                attribution: ops.attributionClass,
-                objectId: ops.objectId,
-                tagListStr: newTags
-            };
-
-            await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagTOSave)}, "error saving tags");
-            unSpinButton($saveOrUpdateButton, buttonText);
-        });
-
-        if (isDemo()){
-            $saveOrUpdateButton.prop("disabled", true);
-        }
     }
 });

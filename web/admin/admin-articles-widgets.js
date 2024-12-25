@@ -81,6 +81,7 @@ $.widget("admin.articlesWidget", {
         let $helperImageManager = element.find('[data-role="article-helper-image-manager"]');
         let $articleUpdateImageButton = element.find('[data-role="data-article-update-image"]');
 
+        self.$tagEditorDiv = $tagEditorDiv;
         $tagEditorDiv.TagEditor({attributionClass: 2, objectId: articleVO.id});
         $relationEditorDiv.RelationManager({attributionClass: 2, objectId: articleVO.id});
         $helperImageManager.ImageManager({attributionClass: 2, objectId: articleVO.id});
@@ -249,9 +250,33 @@ $.widget("admin.articlesWidget", {
     },
 
     _saveOrUpdateArticle: async function(articleTO){
+        let self = this;
+
         let articleTOJson = JSON.stringify(articleTO);
-        return await ajax({data:articleTOJson, action:"saveOrUpdateArticle"}, "error saving or updating article");
+        let res = await ajax({data:articleTOJson, action:"saveOrUpdateArticle"}, "error saving or updating article");
+        if (articleTO.id !== undefined && articleTO.id !== null){
+            let tagsTO = self.$tagEditorDiv.TagEditor('getTagTO');
+            await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagsTO)}, "error saving tags");
+
+            let articleVO = await ajax({data:articleTO.id, action:"getArticleVOByArticleIdPreprocessed", guid: Cookies.get("guid")});
+
+            let renderDiv = document.createElement("div");
+            renderDiv.setAttribute("display","none");
+            let $renderDiv = $(renderDiv);
+
+            let hArticleTemplate = Handlebars.compile(articleTemplate);
+            $renderDiv.html(hArticleTemplate({articleVO: articleVO, articleText: render(articleVO.articleText) }));
+            postRender($renderDiv);
+
+            let preRender = $renderDiv.html();
+            renderDiv.remove();
+
+            articleTO.preRender = preRender;
+            return await ajax({data:JSON.stringify(articleTO), action:"saveOrUpdateArticle"}, "error saving or updating article");
+        }
+        return res;
     },
+
 
     _loadArticle: async function(articleId){
         let jsonAdminReponse = await $.ajax({

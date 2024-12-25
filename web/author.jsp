@@ -4,13 +4,13 @@
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setDateHeader("Expires", -1);
 %>
-<%@ page import="world.thismagical.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
 <%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="world.thismagical.vo.ArticleVO" %>
-<%@ page import="world.thismagical.service.ArticleService" %>
-<%@ page import="world.thismagical.util.ServletUtils" %><%--
+<%@ page import="com.terrestrialjournal.vo.ArticleVO" %>
+<%@ page import="com.terrestrialjournal.service.ArticleService" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 7/1/2020

@@ -181,20 +181,40 @@ $.widget("admin.galleriesWidget", {
     },
 
     _saveOrUpdateGallery: async function(galleryTO){
+        let self = this;
         let galleryTOJson = JSON.stringify(galleryTO);
-        let jsonAdminResponse = await $.ajax({
-            url: 'jsonApi.jsp',
-            method: 'POST',
-            data: {data:galleryTOJson, action:"saveOrUpdateGallery"}
-        });
+        let res = await ajax({data:galleryTOJson, action:"saveOrUpdateGallery", guid:Cookies.get("guid")});
 
-        let adminResponse = JSON.parse(jsonAdminResponse);
+        if (galleryTO.id !== undefined && galleryTO.id !== null) {
 
-        if (adminResponse.success === false){
-            alert("error saving or updating gallery: "+adminResponse.errorDescription);
-        } else {
-            return adminResponse.data;
+            let tagsTO = self.$tagEditorDiv.TagEditor('getTagTO');
+            await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagsTO)}, "error saving tags");
+
+            let galleryVO = await ajax({
+                action: "getGalleryVOByGalleryId",
+                data: galleryTO.id,
+                guid: Cookies.get("guid")
+            });
+
+            let renderDiv = document.createElement("div");
+            renderDiv.setAttribute("display","none");
+            let $renderDiv = $(renderDiv);
+
+            let hGalleryTemplate = Handlebars.compile(galleryTemplate);
+            $renderDiv.html(hGalleryTemplate({
+                galleryVO: galleryVO,
+                galleryDescription: basicRender(galleryVO.description)
+            }));
+
+            let preRender = $renderDiv.html();
+            renderDiv.remove();
+
+            galleryTO.preRender = preRender;
+            return await ajax({data:JSON.stringify(galleryTO), action:"saveOrUpdateGallery", guid:Cookies.get("guid")});
         }
+
+        return res;
+
     },
 
     _edit: async function(element, galleryVO, self){
@@ -221,6 +241,7 @@ $.widget("admin.galleriesWidget", {
         let $relationEditorDiv = element.find('[data-role="gallery-relation-editor"]');
         let $galleryImageManagerDiv = element.find('[data-role="gallery-image-manager"]');
 
+        self.$tagEditorDiv = $tagEditorDiv;
         $tagEditorDiv.TagEditor({attributionClass: 0, objectId: galleryVO.id});
         $relationEditorDiv.RelationManager({attributionClass: 0, objectId: galleryVO.id});
         $galleryImageManagerDiv.ImageManager({attributionClass: 0, objectId: galleryVO.id});

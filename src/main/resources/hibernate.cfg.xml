@@ -19,17 +19,18 @@
 
         <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <mapping class="world.thismagical.entity.AuthorEntity"/>
-        <mapping class="world.thismagical.entity.SessionEntity"/>
-        <mapping class="world.thismagical.entity.ImageFileEntity"/>
-        <mapping class="world.thismagical.entity.PhotoEntity"/>
-        <mapping class="world.thismagical.entity.TagEntity"/>
-        <mapping class="world.thismagical.entity.GalleryEntity"/>
-        <mapping class="world.thismagical.entity.ArticleEntity"/>
-        <mapping class="world.thismagical.entity.RelationEntity"/>
-        <mapping class="world.thismagical.entity.KeyValueEntity"/>
-        <mapping class="world.thismagical.entity.OtherFileEntity"/>
-        <mapping class="world.thismagical.entity.PostIndexItem"/>
+        <mapping class="com.terrestrialjournal.entity.AuthorEntity"/>
+        <mapping class="com.terrestrialjournal.entity.SessionEntity"/>
+        <mapping class="com.terrestrialjournal.entity.ImageFileEntity"/>
+        <mapping class="com.terrestrialjournal.entity.PhotoEntity"/>
+        <mapping class="com.terrestrialjournal.entity.TagEntity"/>
+        <mapping class="com.terrestrialjournal.entity.GalleryEntity"/>
+        <mapping class="com.terrestrialjournal.entity.ArticleEntity"/>
+        <mapping class="com.terrestrialjournal.entity.RelationEntity"/>
+        <mapping class="com.terrestrialjournal.entity.KeyValueEntity"/>
+        <mapping class="com.terrestrialjournal.entity.OtherFileEntity"/>
+        <mapping class="com.terrestrialjournal.entity.PostIndexItem"/>
+        <mapping class="com.terrestrialjournal.entity.PhotostoryEntity"/>
 
         <!-- DB schema will be updated if needed -->
 

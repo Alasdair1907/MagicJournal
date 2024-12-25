@@ -1,12 +1,12 @@
 <%@page trimDirectiveWhitespaces="true"%>
-<%@ page import="world.thismagical.to.SettingsTO" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.vo.PostVOListUnified" %>
-<%@ page import="world.thismagical.vo.PostVO" %>
-<%@ page import="world.thismagical.util.Tools" %>
-<%@ page import="world.thismagical.util.BBCodeExtractor" %>
-<%@ page import="world.thismagical.vo.ImageVO" %>
-<%@ page import="world.thismagical.util.ServletUtils" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.vo.PostVOListUnified" %>
+<%@ page import="com.terrestrialjournal.vo.PostVO" %>
+<%@ page import="com.terrestrialjournal.util.Tools" %>
+<%@ page import="com.terrestrialjournal.util.BBCodeExtractor" %>
+<%@ page import="com.terrestrialjournal.vo.ImageVO" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %>
 <%--
   Created by IntelliJ IDEA.
   User: Alasdair

@@ -1,17 +1,17 @@
 <%@ page import="java.io.File" %>
-<%@ page import="world.thismagical.util.Tools" %>
+<%@ page import="com.terrestrialjournal.util.Tools" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.nio.file.Files" %>
 <%@ page import="java.nio.file.Path" %>
 <%@ page import="java.nio.file.Paths" %>
 <%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
 <%@ page import="org.hibernate.Session" %>
-<%@ page import="world.thismagical.service.SettingsService" %>
+<%@ page import="com.terrestrialjournal.service.SettingsService" %>
 <%@ page import="java.io.FileNotFoundException" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.util.ServletUtils" %><%--
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %><%--
   Created by IntelliJ IDEA.
   User: Alasdair
   Date: 1/2/2020

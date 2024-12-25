@@ -72,6 +72,7 @@ $.widget("admin.photosWidget", {
         let $tagEditorDiv = element.find('[data-role="photo-tag-editor"]');
         let $relationManagerDiv = element.find('[data-role="photo-relation-manager"]');
 
+        self.$tagEditorDiv = $tagEditorDiv;
         $tagEditorDiv.TagEditor({attributionClass: 1, objectId: photoVO.id});
         $relationManagerDiv.RelationManager({attributionClass: 1, objectId: photoVO.id});
 
@@ -145,53 +146,39 @@ $.widget("admin.photosWidget", {
     },
 
     _getPhotoImageVO: async function(photoId){
-        let jsonAdminResponse = await $.ajax({
-            url: 'jsonApi.jsp',
-            method: 'POST',
-            data: {data:photoId,action:"getPhotoImageVO"}
-        });
-
-        let adminResponse = JSON.parse(jsonAdminResponse);
-
-        if (adminResponse.success === false){
-            alert("error getting image data for photo: "+adminResponse.errorDescription);
-        } else {
-            return adminResponse.data;
-        }
-
+        return await ajax({data:photoId,action:"getPhotoImageVO"});
     },
 
     _saveOrUpdatePhoto: async function(photoTO){
+        let self = this;
+
         let photoTOJson = JSON.stringify(photoTO);
-        let jsonAdminResponse = await $.ajax({
-            url: 'jsonApi.jsp',
-            method: 'POST',
-            data: {data:photoTOJson, action:"saveOrUpdatePhoto"}
-        });
+        let res = await ajax({data:photoTOJson, action:"saveOrUpdatePhoto"});
 
-        let adminResponse = JSON.parse(jsonAdminResponse);
+        if (photoTO.id !== undefined && photoTO.id !== null){
+            let tagsTO = self.$tagEditorDiv.TagEditor('getTagTO');
+            await ajax({action: "saveOrUpdateTags", guid: Cookies.get("guid"), data: JSON.stringify(tagsTO)}, "error saving tags");
 
-        if (adminResponse.success === false){
-            alert("error saving or updating photo: "+adminResponse.errorDescription);
-        } else {
-            return adminResponse.data;
+            let photoVO = await ajax({data:photoTO.id , action:"getPhotoVOByPhotoId", guid:Cookies.get("guid")});
+            let renderDiv = document.createElement("div");
+            renderDiv.setAttribute("display","none");
+            let $renderDiv = $(renderDiv);
+
+            let hPhotoTemplate = Handlebars.compile(photoTemplate);
+            $renderDiv.html(hPhotoTemplate({photoVO: photoVO, photoDescription: basicRender(photoVO.description)}));
+
+            let preRender = $renderDiv.html();
+            renderDiv.remove();
+
+            photoTO.preRender = preRender;
+            return await ajax({data:JSON.stringify(photoTO), action:"saveOrUpdatePhoto"});
         }
+
+        return res;
     },
 
     _loadPhoto: async function(photoId){
-        let jsonAdminReponse = await $.ajax({
-            url: 'jsonApi.jsp',
-            method: 'POST',
-            data: {data:photoId , action:"getPhotoVOByPhotoId", guid:Cookies.get("guid")}
-        });
-
-        let adminResponse = JSON.parse(jsonAdminReponse);
-
-        if (adminResponse.success === false){
-            alert("error loading photo: "+adminResponse.errorDescription);
-        } else {
-            return adminResponse.data;
-        }
+        return await ajax({data:photoId , action:"getPhotoVOByPhotoId", guid:Cookies.get("guid")});
     },
 
     _display: async function(self, basicPostFilterTO, refreshSearch){

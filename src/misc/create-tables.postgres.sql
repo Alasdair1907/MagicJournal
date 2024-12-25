@@ -39,7 +39,8 @@ tiny_description varchar(256),
 author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
-published boolean
+published boolean,
+prerender text
 );
 
 CREATE TABLE tags (
@@ -61,7 +62,8 @@ tiny_description varchar(256),
 author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
-published boolean
+published boolean,
+prerender text
 );
 
 CREATE TABLE articles (
@@ -75,7 +77,8 @@ article_text text,
 author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
-published boolean
+published boolean,
+prerender text
 );
 
 CREATE TABLE relations (
@@ -110,6 +113,21 @@ post_id bigint,
 author_login varchar(128),
 creation_date timestamp,
 has_geo boolean
+);
+
+CREATE TABLE photostories (
+id bigserial PRIMARY KEY,
+index_id bigint,
+title varchar(128),
+description varchar(1024),
+tiny_description varchar(256),
+title_image_id bigint,
+json_content text,
+author_id bigint,
+creation_date timestamp,
+gps_coordinates varchar(128),
+published boolean,
+prerender text
 );
 
 INSERT INTO authors (login, password, privilege_level) VALUES ('admin','5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', 2);

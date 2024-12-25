@@ -1,14 +1,14 @@
-<%@ page import="world.thismagical.util.Tools" %>
+<%@ page import="com.terrestrialjournal.util.Tools" %>
 <%@ page import="java.nio.file.Files" %>
 <%@ page import="java.nio.file.Path" %>
 <%@ page import="java.nio.file.Paths" %>
 <%@ page import="org.hibernate.SessionFactory" %>
-<%@ page import="world.thismagical.to.SettingsTO" %>
+<%@ page import="com.terrestrialjournal.to.SettingsTO" %>
 <%@ page import="org.hibernate.Session" %>
-<%@ page import="world.thismagical.service.SettingsService" %>
-<%@ page import="world.thismagical.entity.OtherFileEntity" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.util.ServletUtils" %>
+<%@ page import="com.terrestrialjournal.service.SettingsService" %>
+<%@ page import="com.terrestrialjournal.entity.OtherFileEntity" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %>
 <%@ page import="java.io.*" %>
 
 

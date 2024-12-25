@@ -115,6 +115,7 @@ $.widget("admin.editorPanel", {
         let $galleriesEditButton = self.element.find('[data-role=edit-galleries]');
         let $articlesEditButton = self.element.find('[data-role=edit-articles]');
         let $settingsEditButton = self.element.find('[data-role="edit-settings"]');
+        let $renderControlButton = self.element.find('[data-role="render-control"]');
 
         let $profileEdit = self.element.find('[data-role="edit-profile"]');
         let $logout = self.element.find('[data-role=logout]');
@@ -163,6 +164,12 @@ $.widget("admin.editorPanel", {
         $settingsEditButton.click(function(){
             $board.html("");
             $board.settingsEditor();
+        });
+
+        $renderControlButton.unbind();
+        $renderControlButton.click(function() {
+            $board.html("");
+            $board.renderControl();
         });
 
     }

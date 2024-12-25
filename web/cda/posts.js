@@ -30,7 +30,7 @@ $.widget("magic.posts", {
 
         } else if (params.has("article")){
 
-            // load article
+            // handle pre-loaded & pre-rendered article
             let articleId = params.get("article");
             await self._displayArticle(self, articleId);
             return;
@@ -82,57 +82,38 @@ $.widget("magic.posts", {
     },
 
     _displayArticle: async function(self, articleId){
-        let articleVO = await ajaxCda({action: "getArticleVOByArticleIdPreprocessed", data: articleId, guid: Cookies.get("guid")});
-        
-        let hArticleTemplate = Handlebars.compile(articleTemplate);
-        self.element.html(hArticleTemplate({articleVO: articleVO, articleText: render(articleVO.articleText) }));
-
-        postRender(self.element);
         self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_ARTICLE, articleId);
         $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
-
-        document.title = articleVO.title;
     },
 
     _displayGallery: async function(self, galleryId){
-        let galleryVO = await ajaxCda({action: "getGalleryVOByGalleryId", data: galleryId, guid: Cookies.get("guid")});
-        let sidePanelData = await getSidepanelData(0, POST_ATTRIBUTION_GALLERY, galleryId);
 
+        let sidePanelData = await getSidepanelData(0, POST_ATTRIBUTION_GALLERY, galleryId);
         let associatedPostVOs = sidePanelData.associated;
         let relatedPostVOs = sidePanelData.related;
         let relatedCount = (!!associatedPostVOs ? associatedPostVOs.length : 0) + (!!relatedPostVOs ? relatedPostVOs.length : 0);
 
-        let hGalleryTemplate = Handlebars.compile(galleryTemplate);
-        self.element.html(hGalleryTemplate({
-            galleryVO: galleryVO,
-            galleryDescription: basicRender(galleryVO.description),
+        let $galleryRelatedBlock = self.element.find('div[data-role="gallery-associated-posts"]');
+        let hGalleryRelatedBlockTemplate = Handlebars.compile(galleryTemplateRelatedPostsBlock);
+        $galleryRelatedBlock.html(hGalleryRelatedBlockTemplate({
             associatedPostVOs: associatedPostVOs,
             relatedPostVOs: relatedPostVOs,
             hasRelated: (relatedCount > 0)
-        }));
+            }));
+
 
         self._handleClickableImages(self, true);
-
-        document.title = galleryVO.title;
     },
 
     _displayPhoto: async function(self, photoId) {
-        let photoVO = await ajaxCda({action: "getPhotoVOByPhotoId", data: photoId, guid: Cookies.get("guid")});
-
-        let hPhotoTemplate = Handlebars.compile(photoTemplate);
-        self.element.html(hPhotoTemplate({photoVO: photoVO, photoDescription: basicRender(photoVO.description)}));
-
         self._handleClickableImages(self);
 
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_PHOTO, photoId);
         $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
-
-
-        document.title = photoVO.title;
     },
 
     _displayAbout: async function(self){

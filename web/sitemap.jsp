@@ -1,6 +1,6 @@
-<%@ page import="world.thismagical.util.SeoTools" %>
-<%@ page import="world.thismagical.util.JsonApi" %>
-<%@ page import="world.thismagical.util.ServletUtils" %>
+<%@ page import="com.terrestrialjournal.util.SeoTools" %>
+<%@ page import="com.terrestrialjournal.util.JsonApi" %>
+<%@ page import="com.terrestrialjournal.util.ServletUtils" %>
 <%@page trimDirectiveWhitespaces="true"%>
 <%--
   Created by IntelliJ IDEA.

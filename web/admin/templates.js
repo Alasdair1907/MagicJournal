@@ -57,6 +57,7 @@ let administrationRoot = `
 <button type="button" class="btn btn-dark btn-std" data-role="edit-galleries">Galleries</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-authors">Authors</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-settings">Settings</button>
+<button type="button" class="btn btn-dark btn-std" data-role="render-control">Render control</button>
 </div>
 <div class="admin-panel-right-side">
 <span class="text">You are logged in as: {{login}}</span>
