@@ -64,6 +64,7 @@ $.widget('admin.renderControl', {
                 needArticles: true,
                 needPhotos: true,
                 needGalleries: true,
+                needPhotostories: true,
                 requireGeo: false,
                 itemsPerPage: 1000000000
             };
@@ -142,6 +143,45 @@ $.widget('admin.renderControl', {
                         self._logAppend("photo ID " + post.id + " render updated OK (" + res + ")\r\n");
                     } else {
                         self._logAppend("photo ID " + post.id + " render update FAILED\r\n");
+                    }
+                } else if (post.isPhotostory) {
+                    self._logAppend("collage ID " + post.id + "\r\n");
+
+                    let photostoryVO = await ajax({data:post.id , action:"getPhotostoryVOByPhotostoryId", guid:Cookies.get("guid")});
+                    let renderDiv = document.createElement("div");
+                    renderDiv.setAttribute("display","none");
+                    let $renderDiv = $(renderDiv);
+                    let hPhotostoryTemplate = Handlebars.compile(photostoryTemplate);
+
+                    let PSItems = [];
+                    if (photostoryVO.content && photostoryVO.content.PSItems){
+                        PSItems = photostoryVO.content.PSItems;
+                    }
+                    PSItems.sort((itemA, itemB) => itemA.order - itemB.order);
+                    for (let i = 0; i < PSItems.length; i++) {
+                        let PSItem = PSItems[i];
+                        if (PSItem.isText) {
+                            PSItem.text = basicRender(PSItem.text, false);
+                        }
+                    }
+
+                    $renderDiv.html(hPhotostoryTemplate(
+                        {photostoryVO: photostoryVO, PSItems: PSItems }
+                    ));
+
+                    let preRender = $renderDiv.html();
+                    renderDiv.remove();
+
+                    let updateRenderRequest = {
+                        postId: post.id,
+                        render: preRender
+                    };
+                    let res = await ajax({data: JSON.stringify(updateRenderRequest), action:"updatePhotostoryRender", guid: Cookies.get("guid")});
+
+                    if (res > 0){
+                        self._logAppend("collage ID " + post.id + " render updated OK (" + res + ")\r\n");
+                    } else {
+                        self._logAppend("collage ID " + post.id + " render update FAILED\r\n");
                     }
                 }
             }

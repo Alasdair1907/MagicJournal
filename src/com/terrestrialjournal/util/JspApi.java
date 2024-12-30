@@ -3,6 +3,7 @@ package com.terrestrialjournal.util;
 import com.terrestrialjournal.service.ArticleService;
 import com.terrestrialjournal.service.GalleryService;
 import com.terrestrialjournal.service.PhotoService;
+import com.terrestrialjournal.service.PhotostoryService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -34,7 +35,16 @@ public class JspApi {
             return "<span>error loading photo</span>";
         }
     }
-    
+
+
+    public static String getPhotostoryRender(Long id, String userGuid, SessionFactory sessionFactory){
+        try (Session session = sessionFactory.openSession()){
+            return PhotostoryService.getPreRenderByPhotostoryId(id, userGuid, session);
+        } catch (Exception ex){
+            Tools.handleException(ex);
+            return "<span>error loading collage</span>";
+        }
+    }
     
 
 }

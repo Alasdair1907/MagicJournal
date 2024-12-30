@@ -177,6 +177,7 @@ public class PostService {
                 case ARTICLE -> postVOList.addAll(ArticleService.articleEntitiesToArticleVOs((List)e.getValue(), session));
                 case GALLERY -> postVOList.addAll(GalleryService.entitiesToVos((List)e.getValue(), imageFullness.getGalleryImagesCount(), session));
                 case PHOTO -> postVOList.addAll(PhotoService.photoEntitiesToVOs((List)e.getValue(), session));
+                case PHOTOSTORY -> postVOList.addAll(PhotostoryService.photostoryEntitiesToPhotostoryVOs((List)e.getValue(), session));
             }
         });
         return postVOList;

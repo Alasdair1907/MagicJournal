@@ -23,11 +23,63 @@
 .article-image-title {
     display: block;
     color: white;
-    font-size: 1.0rem; /*1.8vmin;*/
+    font-size: 1.1rem; /*1.8vmin;*/
     font-style: italic;
     font-family: Candara, Verdana, sans-serif;
 }
 
+
+.container-photostory-post-heading{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.photostory-items-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.photostory-universal-container-div {
+    width: 100%;
+    margin-bottom: 3px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+.photostory-title-container {
+    width:100%;
+    margin-top: 0;
+}
+.photostory-title-subcontainer {
+    width:100%;
+    margin-bottom: 0.5vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.photostory-title-span {
+    color: white;
+    font-size: 1.3rem; /*2.7vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.photostory-image-img {
+    max-width: 100%;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+.photostory-image-caption {
+
+}
+.photostory-text {
+    text-align: justify;
+    display: block;
+    margin: 10px;
+}
 
 
 .post-content-and-panel-container {

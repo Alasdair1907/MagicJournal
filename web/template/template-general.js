@@ -25,12 +25,12 @@ let homepageListing = `
 
     
     <div class="container-primary container-primary-element homepage-section-heading">
-        <span class="item-container-heading">Latest articles</span>
+        <span class="item-container-heading">Latest articles & collages</span>
     </div>
 
     <div style="width: 100%; display: flex; flex-wrap: wrap; margin-left: auto; margin-right: auto; justify-content: center;">
-        {{#each articleVOList}}
-            ${articleRepresentation}
+        {{#each articlePhotostoryVOList}}
+            ${articlePhotostoryRepresentation}
         {{/each}}
     </div>
     
@@ -92,6 +92,10 @@ ${pagingInfoLine}
         ${galleryRepresentationCompact}
     {{/if}}
     
+    {{#if this.isPhotostory}}
+        ${photostoryRepresentationCompact}
+    {{/if}}
+    
     {{/each}}
 </div>
 
@@ -103,6 +107,7 @@ let dynamicSearchCdaTemplate = `
 <div class="container-primary container-primary-element">
     <span class="selectable-heading">Select post types:</span>
     <div class="selectables-container">
+        <span class="selectable selectable-default" data-class="selectable-selected-collage" data-role="post-type" data-id="collages">Collages</span>
         <span class="selectable selectable-default" data-class="selectable-selected-article" data-role="post-type" data-id="articles">Articles</span>
         <span class="selectable selectable-default" data-class="selectable-selected-photo" data-role="post-type" data-id="photos">Photos</span>
         <span class="selectable selectable-default" data-class="selectable-selected-gallery" data-role="post-type" data-id="galleries">Galleries</span>

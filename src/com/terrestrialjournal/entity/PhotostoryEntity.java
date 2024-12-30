@@ -1,7 +1,6 @@
 package com.terrestrialjournal.entity;
 
 import com.terrestrialjournal.util.PostAttribution;
-import com.terrestrialjournal.vo.ArticleVO;
 import com.terrestrialjournal.vo.PhotostoryVO;
 import com.terrestrialjournal.vo.PostVO;
 
@@ -153,7 +152,7 @@ public class PhotostoryEntity implements Serializable, PostEntity {
 
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
 
-    public PostAttribution getPostAttribution() { return PostAttribution.ARTICLE; }
+    public PostAttribution getPostAttribution() { return PostAttribution.PHOTOSTORY; }
 
     public PostVO toBaseVO(){
         return new PhotostoryVO(this);

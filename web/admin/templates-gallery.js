@@ -129,6 +129,7 @@ let galleryNewOrEdit = `
         <input type="text" class="form-control input width-100-pc" data-role="data-gps-coordinates" value="{{galleryVO.gpsCoordinates}}"><br />
 
         <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update" {{#if demoUser}}disabled="disabled"{{/if}}>Save & Close</button>
+        <button type="button" class="btn btn-light btn-std btn-vertical" data-role="data-gallery-save-or-update-preview" {{#if demoUser}}disabled="disabled"{{/if}}>Save & Preview</button>
     </div>
 
     <div class="highres-line-item width-medium item-right">

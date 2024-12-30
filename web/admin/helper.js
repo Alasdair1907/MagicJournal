@@ -2,6 +2,7 @@ var POST_ATTRIBUTION_GALLERY = 0;
 var POST_ATTRIBUTION_PHOTO = 1;
 var POST_ATTRIBUTION_ARTICLE = 2;
 var POST_ATTRIBUTION_PROFILE = 3;
+var POST_ATTRIBUTION_PHOTOSTORY = 4;
 
 let ajaxCda = async function(data, errDescrDefault){
     return await ajax(data, errDescrDefault, true);

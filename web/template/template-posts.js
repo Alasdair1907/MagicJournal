@@ -27,6 +27,20 @@ let homepagePhonePanelArticleTemplate = `
 </a>
 `;
 
+let homepagePhonePanelPhotostoryTemplate = `
+<a class="general-a" href="posts.jsp?collage={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="collage-tag side-panel-tag">collage</span><span class="mobile-hide"><br /></span>
+    <div class="side-panel-image-div side-panel-image-div-size hlat-mobile-panel-image-override" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')"></div>
+    <div class="hlat-phone-panel-texts">
+        <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
+        <span class="hlat-panel-date-text">{{this.creationDateStr}}</span>
+    </div>
+</div>
+</a>
+`;
+
+
 let homepagePhonePanelPhotoTemplate = `
 <a class="general-a" href="posts.jsp?photo={{this.id}}">
 <div class="side-panel-container side-panel-container-size">
@@ -64,6 +78,10 @@ ${homepagePhonePanelPhotoTemplate}
 {{#if this.isGallery}}
 ${homepagePhonePanelGalleryTemplate}
 {{/if}}
+
+{{#if this.isPhotostory}}
+${homepagePhonePanelPhotostoryTemplate}
+{{/if}}
 `;
 
 
@@ -72,6 +90,16 @@ let sidePanelArticleTemplate = `
 <a class="general-a" href="posts.jsp?article={{this.id}}">
 <div class="side-panel-container side-panel-container-size">
     <span class="article-tag side-panel-tag">article</span><span class="mobile-hide"><br /></span>
+    <div class="side-panel-image-div side-panel-image-div-size" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')"></div>
+    <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
+</div>
+</a>
+`;
+
+let sidePanelPhotostoryTemplate = `
+<a class="general-a" href="posts.jsp?collage={{this.id}}">
+<div class="side-panel-container side-panel-container-size">
+    <span class="collage-tag side-panel-tag">collage</span><span class="mobile-hide"><br /></span>
     <div class="side-panel-image-div side-panel-image-div-size" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')"></div>
     <span class="text-main side-panel-title">{{this.title}}</span><span class="mobile-hide"><br /></span>
 </div>
@@ -109,6 +137,10 @@ ${sidePanelPhotoTemplate}
 {{#if this.isGallery}}
 ${sidePanelGalleryTemplate}
 {{/if}}
+
+{{#if this.isPhotostory}}
+${sidePanelPhotostoryTemplate}
+{{/if}}
 `;
 
 //
@@ -137,11 +169,45 @@ let sidePanelBase = `
 {{/if}}
 `;
 
-let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.articleText -->
+let bottomPanelBase = `
 
-<script>
-document.title = "{{articleVO.title}}";
-</script>
+{{#if hasRelated}}
+<span class="item-heading">Related posts</span>
+<div class="side-panel-item-wrappers-container">
+    {{#if associated}}
+    {{#each associated}}
+        <div class="side-panel-item-wrapper">
+            ${sidePanelClassSwitch}
+        </div>
+    {{/each}}
+    {{/if}}
+    
+    {{#if related}}
+    {{#each related}}
+        <div class="side-panel-item-wrapper">
+            ${sidePanelClassSwitch}
+        </div>
+    {{/each}}
+    {{/if}}
+</div>
+{{/if}}
+
+{{#if latest}}
+<span class="item-heading">Latest posts</span>
+<div class="side-panel-item-wrappers-container">
+
+    {{#each latest}}
+    <div class="side-panel-item-wrapper">
+    ${sidePanelClassSwitch}
+    </div>
+    {{/each}}
+{{/if}}
+
+</div>
+
+`;
+
+let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.articleText -->
 
 <div class="post-content-and-panel-container">
     <div class="container-primary-article container-primary-element post-container">
@@ -186,11 +252,62 @@ let galleryTemplateRelatedPostsBlock = `
 `;
 
 
-let galleryTemplate = `
+let photostoryTemplate = `
 
-<script>
-document.title = "{{galleryVO.title}}";
-</script>
+<div class="post-content-and-panel-container">
+    <div class="post-container-gallery">
+        <div class="container-primary-article container-primary-element container-photostory-post-heading">
+            <span class="item-heading">{{photostoryVO.title}}</span>
+
+            <div class="post-render-info-line">
+                Author: <a class="main-a" href="author.jsp?author={{photostoryVO.authorVO.login}}">{{photostoryVO.authorVO.displayName}}</a>,
+                date posted: {{photostoryVO.creationDateStr}}</span>
+            </div>
+
+            <div class="item-tags-subheading-container">
+                {{#each photostoryVO.tagEntityList}}
+                <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="collage-tag">#{{this.tag}}</span></a>&nbsp;
+                {{/each}}
+            </div>            
+        </div>
+        
+        <div class="photostory-items-container">
+        {{#each PSItems}}
+            {{#if this.isTitle}}
+            <div class="photostory-title-container">
+                <div class="container-primary-article container-primary-element photostory-title-subcontainer">
+                    <span class="photostory-title-span">{{this.titleText}}</span>
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if this.isImage}}
+                <div class="container-primary-article photostory-universal-container-div">
+                    <img alt="{{this.caption}}" class="photostory-image-img" src="getImage.jsp?filename={{this.previewFile}}" data-role="inline-image" data-image="{{this.mainFile}}" data-title="" />
+                    <span class="text-main photostory-image-caption">{{this.caption}}</span>
+                </div>
+            {{/if}}
+            
+            {{#if this.isText}}
+                <div class="container-primary-article photostory-universal-container-div">
+                    <span class="text-main photostory-text">{{{this.text}}}</span>
+                </div>
+            {{/if}}
+        
+        {{/each}}
+        </div>
+        
+    </div>
+    
+    
+    
+</div>
+
+<div data-role="base-panel-container" class="post-container-gallery container-primary-article container-primary-element"></div>
+
+`;
+
+let galleryTemplate = `
 
 <div class="post-content-and-panel-container">
     <div class="post-container-gallery">
@@ -215,8 +332,6 @@ document.title = "{{galleryVO.title}}";
             <div data-role="gallery-associated-posts"></div>
             
         </div>
-        
-
 
         <div class="container-primary container-primary-element">
 
@@ -229,13 +344,14 @@ document.title = "{{galleryVO.title}}";
             </div>
         </div>
     </div>
-</div>`;
+</div>
+
+<div data-role="base-panel-container" class="post-container-gallery container-primary-article container-primary-element"></div>
+
+`;
 
 let photoTemplate = `
 
-<script>
-document.title = "{{photoVO.title}}";
-</script>
 
 <div class="post-content-and-panel-container">
 

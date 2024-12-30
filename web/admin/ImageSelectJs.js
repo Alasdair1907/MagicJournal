@@ -19,7 +19,7 @@
  * modalJQueryElement element where modal html will be placed
  * ID of selected image file
  */
-let imageSelect = async function($modalJQueryElement, articleId){
+let imageSelect = async function($modalJQueryElement, postId, isArticleEditor, isPhotostoryEditor){
 
     $modalJQueryElement.html(imageSelectionModal);
 
@@ -31,6 +31,11 @@ let imageSelect = async function($modalJQueryElement, articleId){
     $imageSelectModal.modal('show');
 
     let $articleSrc = $modalJQueryElement.find('[data-role="image-select-article"]');
+
+    if (postId === undefined || postId === null){
+        $articleSrc.hide();
+    }
+
     let $photoSrc = $modalJQueryElement.find('[data-role="image-select-photo"]');
     let $gallerySrc = $modalJQueryElement.find('[data-role="image-select-gallery"]');
 
@@ -81,6 +86,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
             $selectedImgInfo.data("id", imageId);
             $selectedImgInfo.data("comment", $(this).data("comment"));
+            $selectedImgInfo.data("thumbnail", $(this).data("thumbnail"));
 
             $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
             $imageSelectPreviewImg.show();
@@ -89,12 +95,20 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
     refreshRecentGalleries();
 
-    if (articleId !== undefined) {
+    if (postId !== undefined) {
         $articleSrc.unbind();
         $articleSrc.click(await async function () {
             $imageSelectFilterAnchor.html("");
             $imageSelectMain.html(modalSpinner);
-            let imageVOList = await getImageVOList(articleId, 2);
+            let imageVOList = null;
+
+            if (isArticleEditor) {
+             imageVOList = await getImageVOList(postId, POST_ATTRIBUTION_ARTICLE);
+            }
+            if (isPhotostoryEditor) {
+                imageVOList = await getImageVOList(postId, POST_ATTRIBUTION_PHOTOSTORY)
+            }
+
             $imageSelectMain.html("");
 
             let hImageVOListDisplay = Handlebars.compile(imageVOListDisplay);
@@ -116,6 +130,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
                 $selectedImgInfo.data("id", imageId);
                 $selectedImgInfo.data("comment", $(this).data("comment"));
+                $selectedImgInfo.data("thumbnail", $(this).data("thumbnail"));
 
                 $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename=" + previewFile);
                 $imageSelectPreviewImg.show();
@@ -149,6 +164,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
 
                 $selectedImgInfo.data("id", imageId);
                 $selectedImgInfo.data("comment", $(this).data("comment"));
+                $selectedImgInfo.data("thumbnail", $(this).data("thumbnail"));
 
                 $imageSelectPreviewImg.attr("src", "../getImage.jsp?filename="+previewFile);
                 $imageSelectPreviewImg.show();
@@ -188,12 +204,14 @@ let imageSelect = async function($modalJQueryElement, articleId){
     });
 
     let selectedId = null;
+    let selectedThumbnail = null;
     let comment = null;
 
     $imageInsertSubmit.unbind();
     $imageInsertSubmit.click(function(){
         selectedId = $selectedImgInfo.data("id");
         comment = $selectedImgInfo.data("comment");
+        selectedThumbnail = $selectedImgInfo.data("thumbnail");
         $imageSelectMain.html('');
         $imageInsertSubmit.prop("disabled","disabled");
         $imageSelectModal.modal('hide');
@@ -202,7 +220,7 @@ let imageSelect = async function($modalJQueryElement, articleId){
     while (selectedId === null) {
         await new Promise(r => setTimeout(r, 50));
         if (selectedId) {
-            return {selectedId:selectedId, comment:comment};
+            return {selectedId:selectedId, comment:comment, selectedThumbnail:selectedThumbnail};
         }
     }
 
@@ -281,9 +299,9 @@ let imageSelectionModal = `
             <div class="modal-body">
                 <span class="modal-title">Select source</span><br />
 
-                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-article" data-id="2">This article</button>
-                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-photo" data-id="1">Photos</button>
-                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery" data-id="0">Galleries</button>
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-article">This article/photostory</button>
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-photo">Photos</button>
+                <button class="btn btn-secondary btn-std btn-vertical" data-role="image-select-gallery">Galleries</button>
                 
                 <hr class="hr-black">
                 
@@ -329,13 +347,13 @@ let recentGalleriesTemplate = `
 
 let imageVOListDisplay = `
 {{#each imageVOList}}
-<div data-id="{{this.thisObjId}}" data-comment="{{this.originalFileName}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.thisObjId}}" data-comment="{{this.originalFileName}}" data-thumbnail="{{this.thumbnail}}" data-preview="{{this.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 
 let photoVOListDisplay = `
 {{#each photoVOList}}
-<div data-id="{{this.imageVO.thisObjId}}" data-comment="{{this.imageVO.originalFileName}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
+<div data-id="{{this.imageVO.thisObjId}}" data-comment="{{this.imageVO.originalFileName}}" data-thumbnail="{{this.imageVO.thumbnail}}" data-preview="{{this.imageVO.preview}}" data-role="image-select-list" class="image-select-tiles" style="background-image:url('../getImage.jsp?filename={{this.imageVO.thumbnail}}');">&nbsp;</div>
 {{/each}}
 `;
 

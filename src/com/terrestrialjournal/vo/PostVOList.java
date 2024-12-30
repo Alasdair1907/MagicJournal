@@ -28,4 +28,5 @@ public class PostVOList {
     public PagingVO articles;
     public PagingVO photos;
     public PagingVO galleries;
+    public PagingVO photostories;
 }

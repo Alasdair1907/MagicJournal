@@ -17,12 +17,10 @@ package com.terrestrialjournal.util;
                                                                                                    
 */
 
+import com.terrestrialjournal.service.*;
+import com.terrestrialjournal.vo.PhotostoryVO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import com.terrestrialjournal.service.ArticleService;
-import com.terrestrialjournal.service.GalleryService;
-import com.terrestrialjournal.service.PhotoService;
-import com.terrestrialjournal.service.SettingsService;
 import com.terrestrialjournal.to.MetaTO;
 import com.terrestrialjournal.to.SettingsTO;
 import com.terrestrialjournal.vo.ArticleVO;
@@ -91,6 +89,7 @@ public class ServletUtils {
         String article = request.getParameter("article");
         String photo = request.getParameter("photo");
         String gallery = request.getParameter("gallery");
+        String photostory = request.getParameter("collage");
 
         SessionFactory sessionFactory = getSessionFactory(application);
         SettingsTO settingsTO = getSettings(application);
@@ -108,6 +107,10 @@ public class ServletUtils {
                 Long galleryId = Long.parseLong(gallery);
                 GalleryVO galleryVO = GalleryService.getGalleryVOByGalleryId(galleryId, null, session);
                 return MetaTO.fromPostVO(galleryVO, settingsTO);
+            } else if (Tools.strIsNumber(photostory)) {
+                Long photostoryId = Long.parseLong(photostory);
+                PhotostoryVO photostoryVO = PhotostoryService.getPhotostoryVObyPhotostoryId(photostoryId, null, session);
+                return MetaTO.fromPostVO(photostoryVO, settingsTO);
             }
         } catch (Exception ex){
             Tools.handleException(ex);

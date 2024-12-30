@@ -52,12 +52,18 @@ Demo Login<br />
 let administrationRoot = `
 <div class="admin-panel-top">
 <div class="admin-panel-left-side">
+<button type="button" class="btn btn-dark btn-std" data-role="edit-photostories">Collages</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-articles">Articles</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-photos">Photos</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-galleries">Galleries</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-authors">Authors</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-settings">Settings</button>
 <button type="button" class="btn btn-dark btn-std" data-role="render-control">Render control</button>
+<button type="button" class="btn btn-dark btn-std" data-role="render-control">Render control</button>
+
+<button type="button" class="btn btn-secondary btn-std" data-role="wallpaper-cloud"><i class="fa-solid fa-cloud"></i></button>
+<button type="button" class="btn btn-secondary btn-std" data-role="wallpaper-planet"><i class="fa-solid fa-earth-europe"></i></button>
+
 </div>
 <div class="admin-panel-right-side">
 <span class="text">You are logged in as: {{login}}</span>

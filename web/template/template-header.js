@@ -12,11 +12,18 @@ let headerMain = `
 
         <a class="general-a desktop-menu-item-a" href="index.jsp">
         <div class="desktop-menu-item">
-            <i class="fas fa-home desktop-menu-icon">&nbsp;</i>
+            <i class="fas fa-landmark desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">home</span>
         </div>
         </a>
 
+
+        <a class="general-a desktop-menu-item-a" href="posts.jsp?collages=true">
+        <div class="desktop-menu-item">
+            <i class="far fa-newspaper desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">collages</span>
+        </div>
+        </a>
 
         <a class="general-a desktop-menu-item-a" href="posts.jsp?articles=true">
         <div class="desktop-menu-item">
@@ -38,6 +45,19 @@ let headerMain = `
             <span class="desktop-menu-text">galleries</span>
         </div>
         </a>
+        
+    </div>
+    </div>
+
+    <!-- logo -->
+    <div class="header-subdiv">
+    <!-- add container-primary class below for brighter backgrounds -->
+    <a class="general-a" href="index.jsp"><img src="template/logo-full-white.png?v=ver123024_3" class="header-logo" alt="{{settingsTO.websiteName}}"></a>
+    </div>
+
+    <!-- right menu -->
+    <div class="header-subdiv">
+    <div class="container-primary desktop-menu-div higher">
 
         <a class="general-a desktop-menu-item-a" href="posts.jsp?about=true">
         <div class="desktop-menu-item">
@@ -52,18 +72,7 @@ let headerMain = `
             <span class="desktop-menu-text">map</span>
         </div>
         </a>
-    </div>
-    </div>
 
-    <!-- logo -->
-    <div class="header-subdiv">
-    <!-- add container-primary class below for brighter backgrounds -->
-    <a class="general-a" href="index.jsp"><img src="template/logo-full-white.png?v=103022" class="header-logo" alt="{{settingsTO.websiteName}}"></a>
-    </div>
-
-    <!-- subscriptions menu -->
-    <div class="header-subdiv">
-    <div class="container-primary desktop-menu-div higher">
 
         {{#if settingsTO.facebookProfile}}
         <a class="general-a desktop-menu-item-a" target="_blank" href="{{settingsTO.facebookProfile}}">
@@ -125,8 +134,15 @@ let headerMain = `
 
         <a class="general-a" href="index.jsp">
         <div class="desktop-menu-item">
-            <i class="fas fa-home desktop-menu-icon">&nbsp;</i>
+            <i class="fas fa-landmark desktop-menu-icon">&nbsp;</i>
             <span class="desktop-menu-text">home</span>
+        </div>
+        </a>
+
+        <a class="general-a" href="posts.jsp?collages=true">
+        <div class="desktop-menu-item">
+            <i class="far fa-newspaper desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">collages</span>
         </div>
         </a>
 
@@ -150,25 +166,11 @@ let headerMain = `
             <span class="desktop-menu-text">galleries</span>
         </div>
         </a>
-
-        <a class="general-a" href="posts.jsp?about=true">
-        <div class="desktop-menu-item">
-            <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">about</span>
-        </div>
-        </a>
-
-        <a class="general-a" href="map.jsp">
-        <div class="desktop-menu-item">
-            <i class="fas fa-globe-europe desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">map</span>
-        </div>
-        </a>
         
         <a class="general-a menu-normal-screen-hide" href="javascript:void(42);" data-role="lowres-extra-menu">
         <div class="desktop-menu-item">
-            <i class="fas fa-bell desktop-menu-icon">&nbsp;</i>
-            <span class="desktop-menu-text">subscribe</span>
+            <i class="fas fa-atom desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">more</span>
         </div>
         </a>
         
@@ -176,6 +178,20 @@ let headerMain = `
             &nbsp;
         </div>
         
+        
+        <a class="general-a  menu-tiny-screen-hide" href="posts.jsp?about=true">
+        <div class="desktop-menu-item">
+            <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">about</span>
+        </div>
+        </a>
+
+        <a class="general-a  menu-tiny-screen-hide" href="map.jsp">
+        <div class="desktop-menu-item">
+            <i class="fas fa-globe-europe desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">map</span>
+        </div>
+        </a>
         
         {{#if settingsTO.facebookProfile}}
         <a class="general-a menu-tiny-screen-hide" target="_blank" href="{{settingsTO.facebookProfile}}">
@@ -237,6 +253,21 @@ let extraMenuOverlay = `
 <div class="extra-menu-overlay">
     <div class="extra-menu-container" data-role="extra-menu-container">
         <div class="width-100-pc extra-menu-icons-container">
+
+        <a class="general-a" href="posts.jsp?about=true">
+        <div class="desktop-menu-item">
+            <i class="far fa-lightbulb desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">about</span>
+        </div>
+        </a>
+
+        <a class="general-a" href="map.jsp">
+        <div class="desktop-menu-item">
+            <i class="fas fa-globe-europe desktop-menu-icon">&nbsp;</i>
+            <span class="desktop-menu-text">map</span>
+        </div>
+        </a>
+
 
         {{#if settingsTO.facebookProfile}}
         <a class="general-a " target="_blank" href="{{settingsTO.facebookProfile}}">

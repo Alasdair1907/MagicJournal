@@ -79,6 +79,7 @@ $.widget("magic.DynamicSearchCda", {
         let $articlesSelectable = self.element.find('[data-role="post-type"][data-id="articles"]');
         let $photosSelectable = self.element.find('[data-role="post-type"][data-id="photos"]');
         let $galleriesSelectable = self.element.find('[data-role="post-type"][data-id="galleries"]');
+        let $collagesSelectable = self.element.find('[data-role="post-type"][data-id="collages"]');
 
         if (pagingRequestFilter.needArticles){
             self._setSelected($articlesSelectable);
@@ -90,6 +91,10 @@ $.widget("magic.DynamicSearchCda", {
 
         if (pagingRequestFilter.needGalleries){
             self._setSelected($galleriesSelectable);
+        }
+
+        if (pagingRequestFilter.needPhotostories){
+            self._setSelected($collagesSelectable);
         }
 
         if (pagingRequestFilter.tags){
@@ -139,6 +144,7 @@ $.widget("magic.DynamicSearchCda", {
         pagingRequestFilter.needArticles = false;
         pagingRequestFilter.needPhotos = false;
         pagingRequestFilter.needGalleries = false;
+        pagingRequestFilter.needPhotostories = false;
 
         let $postTypes = self.element.find('[data-role="post-type"][data-selected="selected"]');
         $.each($postTypes, function(index, value){
@@ -154,6 +160,11 @@ $.widget("magic.DynamicSearchCda", {
                 pagingRequestFilter.needGalleries = true;
                 nothingSelected = false;
             }
+            if ($(value).data("id") === "collages"){
+                pagingRequestFilter.needPhotostories = true;
+                nothingSelected = false;
+            }
+
         });
 
         if (nothingSelected){

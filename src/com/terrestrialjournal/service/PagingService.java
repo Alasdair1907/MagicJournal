@@ -62,6 +62,7 @@ public class PagingService {
         postVOList.articles = new PagingVO(PostAttribution.ARTICLE);
         postVOList.photos = new PagingVO(PostAttribution.PHOTO);
         postVOList.galleries = new PagingVO(PostAttribution.GALLERY);
+        postVOList.photostories = new PagingVO(PostAttribution.PHOTOSTORY);
 
         if (totalItems == 0){
             return postVOList;
@@ -83,6 +84,8 @@ public class PagingService {
                 case GALLERY:
                     postVOList.galleries.ids.add(postIndexItem.getPostId());
                     break;
+                case PHOTOSTORY:
+                    postVOList.photostories.ids.add(postIndexItem.getPostId());
             }
         });
 
@@ -111,6 +114,13 @@ public class PagingService {
             postVOList.galleries.page = (List) GalleryService.listAllGalleryVOs(basicPostFilter, 4, session);
         }
 
+        if (postVOList.photostories.ids != null && !postVOList.photostories.ids.isEmpty()){
+            BasicPostFilter basicPostFilter = new BasicPostFilter();
+            basicPostFilter.ids = postVOList.photostories.ids;
+
+            postVOList.photostories.page = (List) PhotostoryService.listAllPhotostoryVOs(basicPostFilter, session);
+        }
+
         return postVOList;
     }
 
@@ -120,6 +130,7 @@ public class PagingService {
         postVOs.addAll( (List) postVOList.articles.page);
         postVOs.addAll( (List) postVOList.photos.page);
         postVOs.addAll( (List) postVOList.galleries.page);
+        postVOs.addAll( (List) postVOList.photostories.page);
 
         postVOs.sort( (postA, postB) -> {
             if (postA.getCreationDate().isAfter(postB.getCreationDate())){

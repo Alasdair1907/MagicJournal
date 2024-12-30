@@ -49,6 +49,16 @@ $.widget("admin.loginPanel", {
             });
         }
 
+
+        let chosenWallpaper = Cookies.get("background");
+        if (chosenWallpaper){
+            if (chosenWallpaper === "clouds"){
+                $('body').css('background-image', 'url("../resources/background-admin-clouds.jpg")');
+            } else if (chosenWallpaper === "planet"){
+                $('body').css('background-image', 'url("../resources/background-admin.jpg")');
+            }
+        }
+
         let $userLoginForm = self.element.find('[data-role=author_login]');
         let $userPasswordForm = self.element.find('[data-role=author_password]');
         let $loginButton = self.element.find('[data-role=perform_login]');
@@ -114,6 +124,11 @@ $.widget("admin.editorPanel", {
         let $photosEditButton = self.element.find('[data-role=edit-photos');
         let $galleriesEditButton = self.element.find('[data-role=edit-galleries]');
         let $articlesEditButton = self.element.find('[data-role=edit-articles]');
+        let $photostoriesEditButton = self.element.find('[data-role=edit-photostories]');
+
+        let $wallpaperCloud = self.element.find('[data-role="wallpaper-cloud"]');
+        let $wallpaperPlanet = self.element.find('[data-role="wallpaper-planet"]');
+
         let $settingsEditButton = self.element.find('[data-role="edit-settings"]');
         let $renderControlButton = self.element.find('[data-role="render-control"]');
 
@@ -144,6 +159,12 @@ $.widget("admin.editorPanel", {
             $board.articlesWidget();
         });
 
+        $photostoriesEditButton.unbind();
+        $photostoriesEditButton.click(function(){
+            $board.html("");
+            $board.photostoriesWidget();
+        })
+
         $profileEdit.unbind();
         $profileEdit.click(function(){
             $board.html("");
@@ -172,5 +193,25 @@ $.widget("admin.editorPanel", {
             $board.renderControl();
         });
 
+        let chosenWallpaper = Cookies.get("background");
+        if (chosenWallpaper){
+            if (chosenWallpaper === "clouds"){
+                $('body').css('background-image', 'url("../resources/background-admin-clouds.jpg")');
+            } else if (chosenWallpaper === "planet"){
+                $('body').css('background-image', 'url("../resources/background-admin.jpg")');
+            }
+        }
+
+        $wallpaperCloud.unbind();
+        $wallpaperCloud.click(function(){
+            $('body').css('background-image', 'url("../resources/background-admin-clouds.jpg")');
+            Cookies.set("background", "clouds");
+        });
+
+        $wallpaperPlanet.unbind();
+        $wallpaperPlanet.click(function(){
+            $('body').css('background-image', 'url("../resources/background-admin.jpg")');
+            Cookies.set("background", "planet");
+        });
     }
 });

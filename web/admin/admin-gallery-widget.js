@@ -229,6 +229,7 @@ $.widget("admin.galleriesWidget", {
         let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
         let $submitElem = element.find('[data-role="data-gallery-save-or-update"]');
+        let $submitElemPreview = element.find('[data-role="data-gallery-save-or-update-preview"]');
 
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
         let $mapPickLink = element.find('[data-role="select-on-map"]');
@@ -246,16 +247,8 @@ $.widget("admin.galleriesWidget", {
         $relationEditorDiv.RelationManager({attributionClass: 0, objectId: galleryVO.id});
         $galleryImageManagerDiv.ImageManager({attributionClass: 0, objectId: galleryVO.id});
 
-        $submitElem.unbind();
-        $submitElem.click(await async function(){
-
-            if (!checkCoordinates($gpsElem.val())){
-                return;
-            }
-
-            spinButton($submitElem);
-
-            let galleryTO = {
+        let getGalleryTO = function(){
+            return {
                 id: $idElem.val(),
                 title: $titleElem.val(),
                 tinyDescription: $tinyDescrElem.val(),
@@ -263,8 +256,15 @@ $.widget("admin.galleriesWidget", {
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")
             };
+        };
 
-
+        $submitElem.unbind();
+        $submitElem.click(await async function(){
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
+            spinButton($submitElem);
+            let galleryTO = getGalleryTO();
             let res = await self._saveOrUpdateGallery(galleryTO);
             if (res !== undefined){
                 self.element.html('');
@@ -272,5 +272,18 @@ $.widget("admin.galleriesWidget", {
             }
 
         });
+
+        $submitElemPreview.unbind();
+        $submitElemPreview.click(await async function(){
+            if (!checkCoordinates($gpsElem.val())){
+                return;
+            }
+            let buttonText = spinButton($submitElemPreview);
+            let galleryTO = getGalleryTO();
+            let res = await self._saveOrUpdateGallery(galleryTO);
+            unSpinButton($submitElemPreview, buttonText)
+            window.open("../posts.jsp?gallery="+$idElem.val(), "_blank");
+        });
+
     },
 });

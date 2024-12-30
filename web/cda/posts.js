@@ -23,23 +23,29 @@ $.widget("magic.posts", {
         let params = new URLSearchParams(window.location.search);
 
         if (params.has("gallery")){
-            // load gallery
+
             let galleryId = params.get("gallery");
             await self._displayGallery(self, galleryId);
             return;
 
         } else if (params.has("article")){
 
-            // handle pre-loaded & pre-rendered article
             let articleId = params.get("article");
             await self._displayArticle(self, articleId);
             return;
 
-        } else if (params.has("photo")){
-            // load photo
+        } else if (params.has("photo")) {
+
             let photoId = params.get("photo");
             await self._displayPhoto(self, photoId);
             return;
+
+        } else if (params.has("collage")) {
+
+            let collageId = params.get("collage");
+            await self._displayCollage(self, collageId);
+            return;
+
 
         } else if (params.has("about")){
             await self._displayAbout(self);
@@ -91,7 +97,7 @@ $.widget("magic.posts", {
 
     _displayGallery: async function(self, galleryId){
 
-        let sidePanelData = await getSidepanelData(0, POST_ATTRIBUTION_GALLERY, galleryId);
+        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_GALLERY, galleryId);
         let associatedPostVOs = sidePanelData.associated;
         let relatedPostVOs = sidePanelData.related;
         let relatedCount = (!!associatedPostVOs ? associatedPostVOs.length : 0) + (!!relatedPostVOs ? relatedPostVOs.length : 0);
@@ -105,6 +111,9 @@ $.widget("magic.posts", {
             }));
 
 
+        let $basePanelContainer = self.element.find('[data-role="base-panel-container"]');
+        $basePanelContainer.sidePanel({sidePanelPostsTO: sidePanelData, bottomPanel: true});
+
         self._handleClickableImages(self, true);
     },
 
@@ -114,6 +123,15 @@ $.widget("magic.posts", {
         let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
         let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_PHOTO, photoId);
         $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
+    },
+
+    _displayCollage: async function(self, collageId) {
+
+        let $basePanelContainer = self.element.find('[data-role="base-panel-container"]');
+        let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_PHOTOSTORY, collageId);
+        $basePanelContainer.sidePanel({sidePanelPostsTO: sidePanelData, bottomPanel: true});
+
+        self._handleClickableImages(self);
     },
 
     _displayAbout: async function(self){

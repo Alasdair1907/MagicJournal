@@ -263,10 +263,14 @@ public class PostDao {
         Query galleryQuery = session.createQuery(String.format(base, "GalleryEntity", publishClause));
         galleryQuery.setParameter("indexIds", indexIds);
 
+        Query photostoryQuery = session.createQuery(String.format(base, "PhotostoryEntity", publishClause));
+        photostoryQuery.setParameter("indexIds", indexIds);
+
         if (publishStatus != null){
             articleQuery.setParameter("published", publishStatus);
             photoQuery.setParameter("published", publishStatus);
             galleryQuery.setParameter("published", publishStatus);
+            photostoryQuery.setParameter("published", publishStatus);
         }
 
         List<PostEntity> resultList = new ArrayList<>();
@@ -274,6 +278,7 @@ public class PostDao {
         resultList.addAll(articleQuery.getResultList());
         resultList.addAll(photoQuery.getResultList());
         resultList.addAll(galleryQuery.getResultList());
+        resultList.addAll(photostoryQuery.getResultList());
 
         return resultList;
     }

@@ -31,6 +31,16 @@ let getSidepanelData = async function(latestPostsCount, postAttributionClass, po
     };
 
     let sidePanelPostsTO = await ajaxCda({data: JSON.stringify(sidePanelRequestTO), action: "getSidePanelPosts"}, "error fetching side panel posts");
+
+    // these both set hasRelated, because this is used in the newer bottom panel
+    // that doesn't distinguish between related and associated
+    if (sidePanelPostsTO.associated && sidePanelPostsTO.associated.length > 0){
+        sidePanelPostsTO.hasRelated = true;
+    }
+    if (sidePanelPostsTO.related && sidePanelPostsTO.related.length > 0){
+        sidePanelPostsTO.hasRelated = true;
+    }
+
     return sidePanelPostsTO;
 }
 
@@ -57,6 +67,11 @@ let getPagingRequestFilterFromParams = function(){
         postsRequested = true;
     }
 
+    if (params.has("collages") && params.get("collages") === "true"){
+        filter.needPhotostories = true;
+        postsRequested = true;
+    }
+
     if (params.has("pageNum") && isNumber(params.get("pageNum"))){
         filter.page = parseInt(params.get("pageNum"));
     } else {
@@ -75,6 +90,7 @@ let getPagingRequestFilterFromParams = function(){
         filter.needArticles = true;
         filter.needPhotos = true;
         filter.needGalleries = true;
+        filter.needPhotostories = true;
     }
     
     return filter;
@@ -98,6 +114,10 @@ let getParamsStrFromPagingRequestFilter = function(base, filter, advanced = fals
 
     if (filter.needGalleries){
         request += "galleries=true&";
+    }
+
+    if (filter.needPhotostories){
+        request += "collages=true&";
     }
 
     if (filter.page === null){
@@ -126,18 +146,22 @@ let getLocationHeaderByFilter = function(filter) {
         return "Posts by Author";
     }
 
-    let needs = [!!filter.needArticles, !!filter.needPhotos, !!filter.needGalleries];
+    let needs = [!!filter.needArticles, !!filter.needPhotos, !!filter.needGalleries, !!filter.needPhotostories];
 
-    if (arrEqual(needs, [true, false, false])) {
+    if (arrEqual(needs, [true, false, false, false])) {
         return "Articles";
     }
 
-    if (arrEqual(needs, [false, true, false])) {
+    if (arrEqual(needs, [false, true, false, false])) {
         return "Photos";
     }
-    if (arrEqual(needs, [false, false, true])) {
+    if (arrEqual(needs, [false, false, true, false])) {
         return "Galleries";
     }
+    if (arrEqual(needs, [false, false, false, true])) {
+        return "Collages";
+    }
+
     return "";
 };
 

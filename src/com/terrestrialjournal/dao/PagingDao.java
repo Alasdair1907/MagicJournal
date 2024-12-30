@@ -85,6 +85,10 @@ public class PagingDao {
             postAttributionList.add(PostAttribution.PHOTO.getId());
         }
 
+        if (Boolean.TRUE.equals(pagingRequestFilter.needPhotostories)){
+            postAttributionList.add(PostAttribution.PHOTOSTORY.getId());
+        }
+
         return postAttributionList;
     }
 

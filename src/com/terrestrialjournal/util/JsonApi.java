@@ -2,6 +2,7 @@ package com.terrestrialjournal.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.terrestrialjournal.to.photostory.PhotostoryTO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import com.terrestrialjournal.dao.*;
@@ -370,6 +371,65 @@ public class JsonApi {
             return PostService.updatePostRender(renderRequest.postId, renderRequest.render,
                     PostAttribution.ARTICLE, request.userGuid, request.session);
         });
+        
+        
+        /*
+        Photostories edit
+         */
+
+        actionToErrorMessage.put("saveOrUpdatePhotostory", "Error saving or updating photostory");
+        actionToFunction.put("saveOrUpdatePhotostory", (JsonApiRequestContext request) -> {
+            PhotostoryTO photostoryTO = request.objectMapper.readValue(request.data, PhotostoryTO.class);
+            return PhotostoryService.createOrUpdatePhotostory(photostoryTO, request.session);
+        });
+
+        actionToErrorMessage.put("listAllPhotostoryVOs", "Error listing photostorys");
+        actionToFunction.put("listAllPhotostoryVOs", (JsonApiRequestContext request) -> {
+            BasicPostFilterTO basicPostFilterTO = null;
+            if (request.data != null && !request.data.isEmpty()){
+                basicPostFilterTO = request.objectMapper.readValue(request.data, BasicPostFilterTO.class);
+            }
+            BasicPostFilter basicPostFilter = BasicPostFilter.fromTO(basicPostFilterTO, request.session);
+            return JsonAdminResponse.success(PhotostoryService.listAllPhotostoryVOs(basicPostFilter, request.session));
+        });
+
+        actionToErrorMessage.put("getPhotostoryVOByPhotostoryId", "Error loading photostory data");
+        actionToFunction.put("getPhotostoryVOByPhotostoryId", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return JsonAdminResponse.success(PhotostoryService.getPhotostoryVObyPhotostoryId(id, request.userGuid, request.session));
+        });
+
+        actionToErrorMessage.put("getPhotostoryTitleImageVO", "Error loading photostory title image");
+        actionToFunction.put("getPhotostoryTitleImageVO", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotostoryService.getPhotostoryTitleImageVO(id, request.session);
+        });
+
+        actionToErrorMessage.put("togglePhotostoryPublish", "Error toggling photostory publish status");
+        actionToFunction.put("togglePhotostoryPublish", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotostoryService.togglePostPublishStatus(id, PostAttribution.PHOTOSTORY, request.userGuid, request.session);
+        });
+
+        actionToErrorMessage.put("deletePhotostory", "Error deleting photostory");
+        actionToFunction.put("deletePhotostory", (JsonApiRequestContext request) -> {
+            Long id = Long.parseLong(request.data);
+            return PhotostoryService.deletePost(id, PostAttribution.PHOTOSTORY, request.userGuid, request.session);
+        });
+
+        actionToErrorMessage.put("setPhotostoryTitleImageId", "Error setting photostory title image ID");
+        actionToFunction.put("setPhotostoryTitleImageId", (JsonApiRequestContext request) -> {
+            PhotostoryTO photostoryTO = request.objectMapper.readValue(request.data, PhotostoryTO.class);
+            return PhotostoryService.setPhotostoryTitleImageId(photostoryTO, request.userGuid, request.session);
+        });
+
+        actionToErrorMessage.put("updatePhotostoryRender", "Error updating photostory render");
+        actionToFunction.put("updatePhotostoryRender", (JsonApiRequestContext request) -> {
+            UpdateRenderRequest renderRequest = request.objectMapper.readValue(request.data, UpdateRenderRequest.class);
+            return PostService.updatePostRender(renderRequest.postId, renderRequest.render,
+                    PostAttribution.PHOTOSTORY, request.userGuid, request.session);
+        });
+        
 
         /*
         Relations
@@ -391,6 +451,12 @@ public class JsonApi {
         actionToFunction.put("deleteRelation", (JsonApiRequestContext request) -> {
             Long relationId = Long.parseLong(request.data);
             return RelationService.deleteRelation(request.userGuid, relationId, request.session);
+        });
+
+        actionToErrorMessage.put("listConcernedPhotostoryVOs", "Error listing concerned collages for relation");
+        actionToFunction.put("listConcernedPhotostoryVOs", (JsonApiRequestContext request) -> {
+            PostTO postTO = request.objectMapper.readValue(request.data, PostTO.class);
+            return JsonAdminResponse.success(RelationService.listConcernedPostVOs(postTO, PostAttribution.PHOTOSTORY, request.session));
         });
 
         actionToErrorMessage.put("listConcernedArticlesVOs", "Error listing concerned articles for relation");

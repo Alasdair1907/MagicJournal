@@ -36,6 +36,7 @@
     <script src="templates-photo.js"></script>
     <script src="templates-gallery.js"></script>
     <script src="templates-articles.js"></script>
+    <script src="templates-photostories.js"></script>
 
     <script src="helper.js"></script>
 
@@ -44,6 +45,7 @@
     <script src="admin-photos-widgets.js"></script>
     <script src="admin-gallery-widget.js"></script>
     <script src="admin-articles-widgets.js"></script>
+    <script src="admin-photostories-widgets.js"></script>
     <script src="author-profile-editor.js"></script>
     <script src="settings-editor.js"></script>
     <script src="render-control.js"></script>
@@ -51,6 +53,7 @@
     <script src="TagEditor.js"></script>
     <script src="ImageManager.js"></script>
     <script src="ImageSelectJs.js"></script>
+    <script src="textEditor.js"></script>
     <script src="RelationManager.js"></script>
     <script src="NoFuckingBullshitCheckbox.js"></script>
     <script src="FileSelect.js"></script>

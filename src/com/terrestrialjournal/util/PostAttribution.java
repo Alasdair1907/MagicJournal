@@ -12,7 +12,7 @@ public enum PostAttribution {
     PHOTO(Tools.int2short(1), "Photo", PhotoEntity.class, PhotoVO.class, true),
     ARTICLE(Tools.int2short(2), "Article", ArticleEntity.class, ArticleVO.class, true),
     PROFILE(Tools.int2short(3), "Author Profile", null, null, false),
-    PHOTOSTORY(Tools.int2short(4), "Photostory", PhotostoryEntity.class, PhotostoryVO.class, true);
+    PHOTOSTORY(Tools.int2short(4), "Collage", PhotostoryEntity.class, PhotostoryVO.class, true);
 
     private Short id;
     private String readable;

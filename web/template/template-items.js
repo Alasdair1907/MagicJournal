@@ -16,17 +16,34 @@
 
 
 // to be used at ArticleVO list context
-let articleRepresentation = `
+let articlePhotostoryRepresentation = `
 
 <div class="container-primary container-primary-element article-representation-homepage" style="display: flex; flex-direction: column;">
 
     <div style="flex: 1;">
+        {{#if this.isArticle}}
         <a href="posts.jsp?article={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
         <a href="posts.jsp?article={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
+        {{/if}}
+        
+        {{#if this.isPhotostory}}
+        <a href="posts.jsp?collage={{this.id}}" class="general-a"><div class="item-image-div item-image-div-size anything-link" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
+        <a href="posts.jsp?collage={{this.id}}" class="general-a"><span class="item-heading anything-link">{{this.title}}</span></a>
+        {{/if}}
+        
         <div class="item-tags-subheading-container">
+            {{#if this.isArticle}}
             {{#each this.tagEntityList}}
             <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="article-tag">#{{this.tag}}</span></a>&nbsp;
             {{/each}}
+            {{/if}}
+            
+            {{#if this.isPhotostory}}
+            {{#each this.tagEntityList}}
+            <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="collage-tag">#{{this.tag}}</span></a>&nbsp;
+            {{/each}}
+            {{/if}}
+            
         </div>
         <span class="text-main item-text">{{this.description}}</span>
         <span class="afterfloat">&nbsp;</span>
@@ -43,7 +60,13 @@ let articleRepresentation = `
                     <span class="text-main post-info-token center-block">{{this.creationDateStr}}</span>
                 </td>
                 <td style="width: 30%">
+                    {{#if this.isArticle}}
                     <a class="main-a text-main center-block" href="posts.jsp?article={{this.id}}">Read more</a>
+                    {{/if}}
+                    
+                    {{#if this.isPhotostory}}
+                    <a class="main-a text-main center-block" href="posts.jsp?collage={{this.id}}">View collage</a>
+                    {{/if}}
                 </td>
             </tr>
         </table>
@@ -70,6 +93,29 @@ let articleRepresentationCompact = `
     </div>
     <div class="post-info-line">
         <a class="main-a text-main article-tag" href="posts.jsp?article={{this.id}}">READ ARTICLE</a>
+    </div>
+</div>
+`;
+
+// PhotostoryVO
+let photostoryRepresentationCompact = `
+<div class="container-primary container-primary-element compact-container compact-item-size">
+    <a href="posts.jsp?collage={{this.id}}" class="general-a"><div class="compact-item-image-div compact-item-image-div-size" style="background-image: url('getImage.jsp?filename={{this.titleImageVO.thumbnail}}')" ></div></a>
+    <a href="posts.jsp?collage={{this.id}}" class="general-a"><span class="item-heading">{{this.title}}</span></a>
+    <div class="item-tags-subheading-container">
+        {{#each this.tagEntityList}}
+        
+        <a href="posts.jsp?tags={{this.tag}}" class="general-a"><span class="collage-tag">#{{this.tag}}</span></a>&nbsp;
+       
+        {{/each}}
+    </div>
+    <span class="text-main item-text compact-item-text">{{this.description}}</span>
+    <div class="post-info-line">
+        <!--<a class="main-a text-main post-info-compact-token" href="author.jsp?author={{this.authorVO.login}}">{{this.authorVO.displayName}}</a>-->
+        <span class="text-main post-info-compact-token">{{this.creationDateStr}}</span>
+    </div>
+    <div class="post-info-line">
+        <a class="main-a text-main collage-tag" href="posts.jsp?collage={{this.id}}">VIEW COLLAGE</a>
     </div>
 </div>
 `;
@@ -251,7 +297,7 @@ let photoListingHomepage = `
     {{/each}}
     </div>
     
-    <a class="main-a text-main bright-button view-all-photos" href="posts.jsp?photos=true">View all photos</a>
+    <a class="main-a bright-button homepage-view-all-link" href="posts.jsp?photos=true">View all photos</a>
     
 </div>
 `;

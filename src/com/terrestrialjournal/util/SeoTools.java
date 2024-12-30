@@ -17,6 +17,10 @@ package com.terrestrialjournal.util;
                                                                                                    
 */
 
+import com.terrestrialjournal.service.PhotostoryService;
+import com.terrestrialjournal.to.photostory.PSItemTO;
+import com.terrestrialjournal.to.photostory.PhotostoryTO;
+import com.terrestrialjournal.vo.PhotostoryVO;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import com.terrestrialjournal.dao.FileDao;
@@ -47,6 +51,7 @@ public class SeoTools {
         List<ArticleEntity> articleEntities = (List) PostDao.listAllPosts(null, ArticleEntity.class, session);
         List<PhotoVO> photoVOList = PhotoService.listAllPhotoVOs(new BasicPostFilter(), session);
         List<GalleryVO> galleryVOList = GalleryService.listAllGalleryVOs(new BasicPostFilter(), 0, session);
+        List<PhotostoryVO> photostoryVOList = PhotostoryService.listAllPhotostoryVOs(new BasicPostFilter(), session);
 
         SettingsTO settingsTO = SettingsService.getSettings(session);
         if (settingsTO.websiteURL == null || settingsTO.websiteURL.isEmpty()){
@@ -89,6 +94,20 @@ public class SeoTools {
             if (galleryVO.imageVOList != null && !galleryVO.imageVOList.isEmpty()){
                 for (ImageVO imageVO : galleryVO.imageVOList){
                     node.append(getImageNodeFull(settingsTO, imageVO, galleryVO.getTitle()));
+                }
+            }
+
+            node.append("</url>");
+            res.append(node);
+        }
+
+        for (PhotostoryVO photostoryVO : photostoryVOList){
+            StringBuilder node = new StringBuilder(getUrlNodeBase(settingsTO, photostoryVO.getId(), photostoryVO.getLastModified(), "collage"));
+
+            List<ImageVO> imageVOs = PhotostoryService.getImageVOList(photostoryVO, session);
+            if (imageVOs != null && !imageVOs.isEmpty()){
+                for (ImageVO imageVO : imageVOs){
+                    node.append(getImageNodeFull(settingsTO, imageVO, photostoryVO.getTitle()));
                 }
             }
 

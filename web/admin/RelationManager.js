@@ -61,6 +61,7 @@ $.widget("admin.RelationManager", {
     <div class="modal-body">
       <span class="modal-title">Select source</span><br />
       
+      <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-photostory" data-id="3">Collages</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-article" data-id="2">Articles</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-photo" data-id="1">Photos</button>
       <button class="btn btn-secondary btn-std btn-vertical" data-role="relation-gallery" data-id="0">Galleries</button> <br />
@@ -125,10 +126,43 @@ $.widget("admin.RelationManager", {
         let $mainElem = self.element.find('[data-role="modal-relation-select-main"]');
         let $searchAnchor = self.element.find('[data-role="modal-posts-search"]');
 
+        let $photostorySrc = self.element.find('[data-role="relation-photostory"]');
         let $articleSrc = self.element.find('[data-role="relation-article"]');
         let $photoSrc = self.element.find('[data-role="relation-photo"]');
         let $gallerySrc = self.element.find('[data-role="relation-gallery"]');
 
+
+        $photostorySrc.unbind();
+        $photostorySrc.click(await async function(){
+
+
+            let photostoryDisplay = async function(ignore, basicPostFilterTO){
+
+                let postTO = {postAttributionClass: ops.attributionClass, postObjectId: ops.objectId, basicPostFilterTO: basicPostFilterTO};
+                let postTOJson = JSON.stringify(postTO);
+
+                let photostoryVOList = await ajax({action: "listConcernedPhotostoryVOs", data: postTOJson}, "error listing articles");
+                if (photostoryVOList === undefined){
+                    return;
+                }
+
+                let hModalListingTemplate = Handlebars.compile(self._modalListingTemplate);
+                $mainElem.html(hModalListingTemplate({postVOList: photostoryVOList, class: "4"}));
+
+                let $selectables = $mainElem.find('[data-role="relation-target-selected"]');
+                $selectables.unbind();
+                $selectables.click(await async function(){
+                    let dstObjectId = $(this).data('id');
+                    let dstObjectClassShort = $(this).data('class');
+
+                    await self._processSelect(self, ops, dstObjectId, dstObjectClassShort, $modalElem);
+                });
+            };
+
+            $mainElem.html('');
+            postFilter($searchAnchor, {userGuid : Cookies.get("guid")}, photostoryDisplay, null);
+
+        });
 
 
         $articleSrc.unbind();

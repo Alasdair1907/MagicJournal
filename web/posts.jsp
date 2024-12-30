@@ -53,6 +53,8 @@
     <%
         MetaTO metaTO = ServletUtils.prepareMeta(request, application);
 
+        out.println("<title>"+metaTO.getTitle()+"</title>");
+
         out.println(String.format("<meta property='og:url' content='%s'>", metaTO.getOgUrl()));
         out.println("<meta property='og:type' content='article'>");
         out.println(String.format("<meta property='og:title' content='%s'>", metaTO.getOgTitle()));
@@ -76,8 +78,6 @@
 
     <jsp:include page="head-standard.jsp"/>
     <jsp:include page="head-client.jsp"/>
-
-    <title></title>
 
     <script src="cda/posts.js"></script>
     <script src="cda/header.js"></script>
@@ -107,6 +107,8 @@
             numberParam = request.getParameter("article");
         } else if (paramMap.containsKey("photo")) {
             numberParam = request.getParameter("photo");
+        } else if (paramMap.containsKey("collage")) {
+            numberParam = request.getParameter("collage");
         } else {
             out.println("<div class='container-primary container-primary-element map-warning'>");
             out.println("<span class='item-heading'>Loading, please wait...</span>");
@@ -130,6 +132,8 @@
                 out.println(JspApi.getArticleRender(number, ServletUtils.getCookieValue(request, "guid"), sessionFactory));
             } else if (paramMap.containsKey("photo")) {
                 out.println(JspApi.getPhotoRender(number, ServletUtils.getCookieValue(request, "guid"), sessionFactory));
+            } else if (paramMap.containsKey("collage")) {
+                out.println(JspApi.getPhotostoryRender(number, ServletUtils.getCookieValue(request, "guid"), sessionFactory));
             }
         }
 

@@ -137,8 +137,10 @@ let render = function(text){
 /*
 basic render - italics, bold, newlines, links - used in descriptions as well
  */
-let basicRender = function(text){
-    text = pOpen + text + pClose;
+let basicRender = function(text, useParagraph = true){
+    if (useParagraph) {
+        text = pOpen + text + pClose;
+    }
     text = newlineToBr(text);
     text = clearExcessiveLineBreaks(text);
 

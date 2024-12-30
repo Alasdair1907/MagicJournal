@@ -24,6 +24,8 @@ public class PagingRequestFilter {
     public Boolean needPhotos;
     public Boolean needGalleries;
 
+    public Boolean needPhotostories;
+
     public Integer page;
 
     public List<String> tags;
@@ -38,6 +40,7 @@ public class PagingRequestFilter {
         pagingRequestFilter.needArticles = true;
         pagingRequestFilter.needPhotos = true;
         pagingRequestFilter.needGalleries = true;
+        pagingRequestFilter.needPhotostories = true;
         pagingRequestFilter.itemsPerPage = count;
         return pagingRequestFilter;
     }

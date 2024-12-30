@@ -23,7 +23,7 @@ $.widget("magic.homepage", {
 
         console.log("homepage display()");
         let basicPostFilterTOArticles = {
-            limit: 10
+            limit: 0
         };
         let basicPostFilterTOPhotos = {
             limit: 16
@@ -36,15 +36,23 @@ $.widget("magic.homepage", {
             needArticles: true,
             needPhotos: true,
             needGalleries: true,
+            needPhotostories: true,
             itemsPerPage: 5
         };
+
+        let latestArticlesAndPhotostories = {
+            needArticles: true,
+            needPhotostories: true,
+            itemsPerPage: 12
+        };
+
 
         let basicPostFilterTOs = [basicPostFilterTOArticles, basicPostFilterTOPhotos, basicPostFilterTOGalleries]
         let postVOListWithTagListMenu = await ajaxCda({data: JSON.stringify(basicPostFilterTOs), action: "listHomepage"});
         let latestPostVOList = await ajaxCda({data: JSON.stringify(latestPostsFilter), action: "processPagingRequestUnified"});
+        let latestArticlesAndPhotostoriesVOList = await ajaxCda({data: JSON.stringify(latestArticlesAndPhotostories), action: "processPagingRequestUnified"});
 
-
-        let articleVOList = postVOListWithTagListMenu[0];
+        //let articleVOList = postVOListWithTagListMenu[0];
         let photoVOList = postVOListWithTagListMenu[1];
         let galleryVOList = postVOListWithTagListMenu[2];
         let tagListMenu = postVOListWithTagListMenu[3];
@@ -90,13 +98,20 @@ $.widget("magic.homepage", {
                 latestPostTagClass = "gallery-tag";
                 latestPostLinkClass = "gallery";
                 latestPostPreTitle = "Gallery: ";
+            } else if (latestPostVO.hasOwnProperty("isPhotostory")){
+                if (latestPostVO.titleImageVO) {
+                    latestPostImage = latestPostVO.titleImageVO.thumbnail;
+                }
+                latestPostTagClass = "collage-tag";
+                latestPostLinkClass = "collage";
+                latestPostPreTitle = "";
             }
             hasLatestPosts = true;
         }
 
         let hHomepageListing = Handlebars.compile(homepageListing);
         self.element.html(hHomepageListing({
-            articleVOList: articleVOList,
+            articlePhotostoryVOList: latestArticlesAndPhotostoriesVOList.posts,
             tagDigestVOList: tagListMenu,
             photoVOList: photoVOList,
             galleryVOList: galleryVOList,

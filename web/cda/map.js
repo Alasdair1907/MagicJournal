@@ -101,6 +101,8 @@ $.widget("magic.CdaMap", {
                     color = 'blue';
                 } else if (postVO.isPhoto){
                     color = '#9AE620';
+                } else if (postVO.isPhotostory){
+                    color = '#8c2c71'
                 }
 
                 let pin = new Microsoft.Maps.Pushpin(location, {text: '+', color: color});
@@ -158,7 +160,17 @@ $.widget("magic.CdaMap", {
                         var pushpin = e.target.containedPushpins[i];
 
                         var postVO = pushpin.metadata.postVO;
-                        var postClass = postVO.isArticle ? 'Article' : ( postVO.isPhoto ? 'Photo' : 'Gallery' );
+
+                        var postClass = "undefined";
+                        if (postVO.isArticle){
+                            postClass = 'Article';
+                        } else if (postVO.isPhoto){
+                            postClass = 'Photo';
+                        } else if (postVO.isGallery){
+                            postClass = 'Gallery';
+                        } else if (postVO.isPhotostory){
+                            postClass = 'Collage';
+                        }
 
                         descriptionText += '[' + postClass + '] <a href="posts.jsp?' + postClass.toLowerCase() + '=' + postVO.id + '" target="_blank">'+ postVO.title + '</a><br />'
                     }
@@ -198,7 +210,18 @@ $.widget("magic.CdaMap", {
         let pushpinClickedHandler = function(e){
             let postVO = e.target.metadata.postVO;
 
-            let postClass = postVO.isArticle ? 'Article' : ( postVO.isPhoto ? 'Photo' : 'Gallery' );
+
+            var postClass = "undefined";
+            if (postVO.isArticle){
+                postClass = 'Article';
+            } else if (postVO.isPhoto){
+                postClass = 'Photo';
+            } else if (postVO.isGallery){
+                postClass = 'Gallery';
+            } else if (postVO.isPhotostory){
+                postClass = 'Collage';
+            }
+
             let mainImageVO = postVO.mainImageVO
 
             infobox.setOptions({

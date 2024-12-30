@@ -28,12 +28,18 @@ $.widget("magic.sidePanel", {
 
         let sidePanelPostsTO = ops.sidePanelPostsTO;
 
-        let hSidePanelBase = Handlebars.compile(sidePanelBase);
+        let template = sidePanelBase;
+        if (ops.bottomPanel){
+            template = bottomPanelBase;
+        }
+
+        let hSidePanelBase = Handlebars.compile(template);
         self.element.html(hSidePanelBase({
             associated: sidePanelPostsTO.associated,
             related: sidePanelPostsTO.related,
             latest: sidePanelPostsTO.latest,
-            displayLatest: ops.displayLatest
+            displayLatest: ops.displayLatest,
+            hasRelated: sidePanelPostsTO.hasRelated
         }));
 
     }

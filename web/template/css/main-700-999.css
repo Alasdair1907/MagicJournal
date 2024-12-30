@@ -4,7 +4,7 @@ html {
 
 body.cda {
     background-color: black;
-    background-image: url("../background.jpg?v=240624");
+    background-image: url("../background.jpg?v=ver123024_3");
     /*background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;*/
@@ -152,6 +152,12 @@ body.cda {
 
 .gallery-tag {
     color: #ff3a65 !important;
+    font-size: 1.3rem; /*1.9vmin;*/
+    font-family: Candara, Verdana, sans-serif;
+}
+
+.collage-tag {
+    color: #a63aff !important;
     font-size: 1.3rem; /*1.9vmin;*/
     font-family: Candara, Verdana, sans-serif;
 }
@@ -442,6 +448,10 @@ body.cda {
 
 .selectable-selected-gallery {
     background-color: #9d0000;
+}
+
+.selectable-selected-collage {
+    background-color: #6f0fbe;
 }
 
 .center-block {

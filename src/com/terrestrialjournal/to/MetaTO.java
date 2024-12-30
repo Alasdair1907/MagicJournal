@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class MetaTO {
 
     /* <meta name="description" content="blah"> */
+    public String title;
     public String description;
     public String keywords; // e.g. "Free web tutorials"
     public String author;
@@ -43,6 +44,8 @@ public class MetaTO {
 
 
     public String websiteUrl; // http://www.example.org
+
+    public String getTitle() { return Tools.htmlSingleQuote(title); }
 
     public String getDescription() {
         return Tools.htmlSingleQuote(description);
@@ -91,6 +94,7 @@ public class MetaTO {
     public static MetaTO fromPostVO(PostVO postVO, SettingsTO settingsTO){
         MetaTO metaTO = new MetaTO();
 
+        metaTO.title = postVO.getTitle();
         metaTO.description = postVO.getTitle();
         metaTO.author = postVO.getAuthorVO().displayName;
         if (postVO.getTagEntityList() != null){

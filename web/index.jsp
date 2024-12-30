@@ -41,8 +41,8 @@ response.setDateHeader("Expires", -1);
 
     <title><% out.print(settingsTO.websiteName); %></title>
 
-    <script src="cda/homepage.js?v=230624"></script>
-    <script src="cda/header.js?v=230624"></script>
+    <script src="cda/homepage.js?v=ver123024_3"></script>
+    <script src="cda/header.js?v=ver123024_3"></script>
 
     <% out.println(settingsTO.headerInjection); %>
 

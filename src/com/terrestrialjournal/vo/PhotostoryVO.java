@@ -15,8 +15,11 @@ package com.terrestrialjournal.vo;
 */
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.terrestrialjournal.entity.PhotostoryEntity;
 import com.terrestrialjournal.entity.TagEntity;
+import com.terrestrialjournal.to.photostory.PSItemTO;
+import com.terrestrialjournal.to.photostory.PhotostoryContentTO;
 import com.terrestrialjournal.util.PostAttribution;
 import com.terrestrialjournal.util.Tools;
 
@@ -41,6 +44,7 @@ public class PhotostoryVO implements PostVO {
     public Boolean isPhotostory;
 
     public String jsonContent;
+    public PhotostoryContentTO content;
     public ImageVO titleImageVO;
 
     public List<TagEntity> tagEntityList;
@@ -64,6 +68,15 @@ public class PhotostoryVO implements PostVO {
         this.postAttribution = PostAttribution.PHOTOSTORY.getId();
         this.isPhotostory = true;
         this.preRender = photostoryEntity.getPreRender();
+        this.content = null;
+        if (photostoryEntity.getJsonContent() != null && !photostoryEntity.getJsonContent().isBlank()){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                this.content = objectMapper.readValue(photostoryEntity.getJsonContent(), PhotostoryContentTO.class);
+            } catch (Exception ex){
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     @Override
@@ -135,5 +148,21 @@ public class PhotostoryVO implements PostVO {
     @Override
     public void setPreRender(String preRender) {
         this.preRender = preRender;
+    }
+
+    public String getJsonContent() {
+        return jsonContent;
+    }
+
+    public void setJsonContent(String jsonContent) {
+        this.jsonContent = jsonContent;
+    }
+
+    public PhotostoryContentTO getContent() {
+        return content;
+    }
+
+    public void setContent(PhotostoryContentTO content) {
+        this.content = content;
     }
 }
