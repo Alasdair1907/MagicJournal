@@ -93,6 +93,18 @@ let photostoryNewOrEdit = `
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="add-image-block-button"><i class="fa fa-image"></i> Add image block</button>
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="add-text-block-button"><i class="fa fa-text-width"></i> Add text block</button>
 <button type="button" class="btn btn-light btn-std btn-vertical" data-role="bb-code-hint-button"><i class="fas fa-pencil-alt"></i> BBCode hint</button>
+<br />
+<span class="text">Insert items:</span> 
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <label class="btn btn-std btn-radio btn-secondary">
+        <input type="radio" name="insertionPoint" data-role="insertion-point-type" data-id="bottom" checked="checked"> Bottom
+    </label>
+    <label class="btn btn-std btn-radio btn-secondary">
+        <input type="radio" name="insertionPoint" data-role="insertion-point-type" data-id="location"> Location
+    </label>
+</div>
+
+<input type="number" maxlength="5" data-role="insertion-location">
 
 <div class="photostory-editor-board" data-role="photostory-editor-board">
 

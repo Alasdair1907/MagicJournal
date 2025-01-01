@@ -141,44 +141,109 @@ $.widget("admin.photostoriesWidget", {
             maxOrder: 0
         };
 
+        let getInsertionPosition = function(){
+            let positionType = self.element.find('[data-role="insertion-point-type"]:checked').data("id")
+
+            if (positionType === "bottom"){
+                return self.PSEditorVars.maxOrder;
+            } else if (positionType === "location"){
+                let val = self.element.find('[data-role="insertion-location"]').val();
+                if (val === null || val === undefined || val === ""){
+                    alert('Insertion type set to location, but no location provided');
+                    return self.PSEditorVars.maxOrder;
+                }
+                val = Number(val);
+                if (val > self.PSEditorVars.maxOrder){
+                    return self.PSEditorVars.maxOrder;
+                }
+                if (val < 0){
+                    return 0;
+                }
+                return val;
+            }
+        };
+        let shiftOrdersUpFromOrderIncl = function(from){
+            for (let PSItem of self.PSItems){
+                if (PSItem.order >= from){
+                    PSItem.order += 1;
+                }
+            }
+        };
+        let updateMaxOrder = function(){
+            let newMaxOrder = 0;
+            for (let PSItem of self.PSItems){
+                if (PSItem.order > newMaxOrder){
+                    newMaxOrder = PSItem.order;
+                }
+            }
+            if (self.PSItems.length > 0){
+                newMaxOrder += 1;
+            }
+            self.PSEditorVars.maxOrder = newMaxOrder;
+        }
+
+
         $addTitleBlockBtn.unbind();
         $addTitleBlockBtn.click(function(){
+
+            let insertionPosition = getInsertionPosition();
+
             let PSTitleTO = {
-                order: self.PSEditorVars.maxOrder,
+                order: insertionPosition,
                 titleText: "",
                 itemType: "PS_ITEM_TITLE"
             };
-            self.PSEditorVars.maxOrder += 1;
+
+            if (insertionPosition !== self.PSEditorVars.maxOrder){
+                shiftOrdersUpFromOrderIncl(insertionPosition);
+            }
+
             self.PSItems.push(PSTitleTO);
+            updateMaxOrder();
 
             boardRefresh();
         });
 
         $addImageBlockBtn.unbind();
         $addImageBlockBtn.click(function(){
+
+            let insertionPosition = getInsertionPosition();
+
             let PSImageTO = {
-                order: self.PSEditorVars.maxOrder,
+                order: insertionPosition,
                 caption: "",
                 itemType: "PS_ITEM_IMAGE",
                 thumbnailFile: "",
                 imageID: null
             };
-            self.PSEditorVars.maxOrder += 1;
+
+            if (insertionPosition !== self.PSEditorVars.maxOrder){
+                shiftOrdersUpFromOrderIncl(insertionPosition);
+            }
+
             self.PSItems.push(PSImageTO);
+            updateMaxOrder();
 
             boardRefresh();
         });
 
         $addTextBlockBtn.unbind();
         $addTextBlockBtn.click(function(){
+
+            let insertionPosition = getInsertionPosition();
+
             let PSTextTO = {
-                order: self.PSEditorVars.maxOrder,
+                order: insertionPosition,
                 text: "",
                 itemType: "PS_ITEM_TEXT"
             };
 
-            self.PSEditorVars.maxOrder += 1;
+            if (insertionPosition !== self.PSEditorVars.maxOrder){
+                shiftOrdersUpFromOrderIncl(insertionPosition);
+            }
+
             self.PSItems.push(PSTextTO);
+            updateMaxOrder();
 
             boardRefresh();
         });
@@ -262,17 +327,13 @@ $.widget("admin.photostoriesWidget", {
                 let itemIndex = getElemIndexByOrder(order);
                 if (itemIndex !== -1){
                     self.PSItems.splice(itemIndex, 1);
-                    let newMaxOrder = 0;
                     for (let i = 0; i < self.PSItems.length; i++){
                         let PSItem = self.PSItems[i];
                         if (PSItem.order >= itemIndex){
                             PSItem.order -= 1;
                         }
-                        if (PSItem.order > newMaxOrder){
-                            newMaxOrder = PSItem.order;
-                        }
                     }
-                    self.PSEditorVars.maxOrder = newMaxOrder + 1;
+                    updateMaxOrder();
                 }
                 boardRefresh();
             });
@@ -449,11 +510,8 @@ $.widget("admin.photostoriesWidget", {
             unSpinButton($submitElemPreview, buttonText);
 
             if (res !== undefined || res !== null){
-                self.element.html('');
-                await self._display(self);
+                window.open("../posts.jsp?collage="+$idElem.val(), "_blank");
             }
-
-            window.open("../posts.jsp?collage="+$idElem.val(), "_blank");
 
         });
 

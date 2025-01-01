@@ -328,6 +328,12 @@
     width: 74.5%;
 }
 
+.post-container-article {
+    margin-left: auto;
+    margin-right: auto;
+    width: 74.5%;
+}
+
 .post-container-gallery {
     width: 90%;
     max-width: 1800px;

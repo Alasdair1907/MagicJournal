@@ -335,6 +335,13 @@ p.paragraph {
     max-width: 1100px;
 }
 
+.post-container-article {
+    margin-left: auto;
+    margin-right: auto;
+    width: 74.5%;
+    max-width: 1100px;
+}
+
 .post-container-gallery {
     width: 90%;
     max-width: 1800px;

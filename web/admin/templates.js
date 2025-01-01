@@ -59,7 +59,6 @@ let administrationRoot = `
 <button type="button" class="btn btn-dark btn-std" data-role="edit-authors">Authors</button>
 <button type="button" class="btn btn-dark btn-std" data-role="edit-settings">Settings</button>
 <button type="button" class="btn btn-dark btn-std" data-role="render-control">Render control</button>
-<button type="button" class="btn btn-dark btn-std" data-role="render-control">Render control</button>
 
 <button type="button" class="btn btn-secondary btn-std" data-role="wallpaper-cloud"><i class="fa-solid fa-cloud"></i></button>
 <button type="button" class="btn btn-secondary btn-std" data-role="wallpaper-planet"><i class="fa-solid fa-earth-europe"></i></button>

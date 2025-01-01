@@ -325,6 +325,12 @@
     width: 98%;
 }
 
+.post-container-article {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .post-container-gallery {
     width: 98%;
     max-width: 1800px;

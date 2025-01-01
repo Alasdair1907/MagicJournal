@@ -210,7 +210,7 @@ let bottomPanelBase = `
 let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.articleText -->
 
 <div class="post-content-and-panel-container">
-    <div class="container-primary-article container-primary-element post-container">
+    <div class="container-primary-article container-primary-element post-container-article">
         <span class="item-heading">{{articleVO.title}}</span>
 
         <div class="post-render-info-line">
@@ -229,8 +229,12 @@ let articleTemplate = `<!-- ArticleVO  articleVO, render - rendered articleVO.ar
         </div>
     </div>
 
-    <div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>
+    <!--<div data-role="side-container-div" class="container-primary container-primary-element side-container"></div>-->
 </div>
+
+<div data-role="base-panel-container" class="container-primary-article container-primary-element post-container-article"></div>
+
+
 `;
 
 let galleryTemplateRelatedPostsBlock = `

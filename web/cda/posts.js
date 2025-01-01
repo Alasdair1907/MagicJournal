@@ -90,9 +90,9 @@ $.widget("magic.posts", {
     _displayArticle: async function(self, articleId){
         self._handleClickableImages(self);
 
-        let $sidePanelDiv = self.element.find('[data-role="side-container-div"]');
+        let $basePanelContainer = self.element.find('[data-role="base-panel-container"]');
         let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_ARTICLE, articleId);
-        $sidePanelDiv.sidePanel({sidePanelPostsTO: sidePanelData});
+        $basePanelContainer.sidePanel({sidePanelPostsTO: sidePanelData, bottomPanel: true});
     },
 
     _displayGallery: async function(self, galleryId){

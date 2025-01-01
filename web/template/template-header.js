@@ -52,7 +52,7 @@ let headerMain = `
     <!-- logo -->
     <div class="header-subdiv">
     <!-- add container-primary class below for brighter backgrounds -->
-    <a class="general-a" href="index.jsp"><img src="template/logo-full-white.png?v=ver123024_3" class="header-logo" alt="{{settingsTO.websiteName}}"></a>
+    <a class="general-a" href="index.jsp"><img src="template/logo-full-white.png?v=ver010125" class="header-logo" alt="{{settingsTO.websiteName}}"></a>
     </div>
 
     <!-- right menu -->

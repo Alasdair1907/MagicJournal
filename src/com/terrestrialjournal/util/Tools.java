@@ -142,7 +142,7 @@ public class Tools {
         }
 
         ZonedDateTime gmt = getGmt(localDateTime);
-        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm")) + " GMT";
+        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm"));
 
         // 21 luglio 2020 20:44 GMT - that might happen if server is somewhere in the world...
         String[] gmtTokens = gmtFormat.split(" ");
@@ -158,7 +158,7 @@ public class Tools {
         }
 
         ZonedDateTime gmt = getGmt(localDateTime);
-        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm:ss")) + " GMT";
+        String gmtFormat = gmt.format(DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm:ss"));
 
         // 21 luglio 2020 20:44 GMT - that might happen if server is somewhere in the world...
         String[] gmtTokens = gmtFormat.split(" ");

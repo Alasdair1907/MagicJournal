@@ -58,8 +58,8 @@
 
     </script>
 
-    <script src="cda/header.js?v=ver123024_3"></script>
-    <script src="cda/map.js?v=ver123024_3"></script>
+    <script src="cda/header.js?v=ver010125"></script>
+    <script src="cda/map.js?v=ver010125"></script>
 
     <% out.println(settingsTO.headerInjection); %>
 

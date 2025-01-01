@@ -280,14 +280,8 @@ let tagListMenu = `
 let photoListingHomepage = `
 <div class="container-primary container-primary-element photo-listing-homepage-container">
 
-    <table style="width: 100%;">
-    <tr>
-    <td style="width:33%">&nbsp;</td>
-    <td style="width:33%;text-align: center;"><span class="item-container-heading">Latest Photos</span></td>
-    <td style="width:33%" class="td-extra-link"></td>
-    </tr>
-    </table>
-    
+    <span class="item-container-heading">Latest Photos</span>
+   
    
     <div class="photo-listing-div">
     {{#each photoVOList}}

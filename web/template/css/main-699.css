@@ -4,7 +4,7 @@ html {
 
 body.cda {
     background-color: black;
-    background-image: url("../background.jpg?v=ver123024_3");
+    background-image: url("../background.jpg?v=ver010125");
     /*background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;*/
@@ -84,7 +84,7 @@ body.cda {
 }
 
 .homepage-section-heading {
-    width: 60% !important;
+    width: 80% !important;
     margin-left: auto !important;
     margin-right: auto !important;
 }
@@ -308,8 +308,8 @@ body.cda {
 
 .photo-listing-homepage-container {
     width: 98%;
-    margin-left: 2px;
-    margin-right: 2px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* div with photo-image-div - homepage listings for photos and galleries */
