@@ -287,7 +287,14 @@ let photostoryTemplate = `
 
             {{#if this.isImage}}
                 <div class="container-primary-article photostory-universal-container-div">
-                    <img alt="{{this.caption}}" class="photostory-image-img" src="getImage.jsp?filename={{this.previewFile}}" data-role="inline-image" data-image="{{this.mainFile}}" data-title="" />
+                    <img alt="{{this.caption}}" 
+                        class="photostory-image-img" 
+                        src="getImage.jsp?filename={{this.previewFile}}" 
+                        data-role="inline-image" 
+                        data-image="{{this.mainFile}}" 
+                        data-title=""
+                        data-index="{{this.index}}" data-boundary="{{#if this.first}}first{{/if}}{{#if this.last}}last{{/if}}"
+                         />
                     <span class="text-main photostory-image-caption">{{this.caption}}</span>
                 </div>
             {{/if}}

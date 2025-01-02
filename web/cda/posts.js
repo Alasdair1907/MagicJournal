@@ -131,7 +131,7 @@ $.widget("magic.posts", {
         let sidePanelData = await getSidepanelData(10, POST_ATTRIBUTION_PHOTOSTORY, collageId);
         $basePanelContainer.sidePanel({sidePanelPostsTO: sidePanelData, bottomPanel: true});
 
-        self._handleClickableImages(self);
+        self._handleClickableImages(self, true);
     },
 
     _displayAbout: async function(self){

@@ -556,10 +556,25 @@ $.widget("admin.photostoriesWidget", {
                 PSItems = photostoryVO.content.PSItems;
             }
             PSItems.sort((itemA, itemB) => itemA.order - itemB.order);
+            let imgIndex = 0;
             for (let i = 0; i < PSItems.length; i++) {
                 let PSItem = PSItems[i];
                 if (PSItem.isText) {
                     PSItem.text = basicRender(PSItem.text, false);
+                }
+                if (PSItem.isImage){
+                    PSItem.index = imgIndex;
+                    if (imgIndex == 0){
+                        PSItem.first = true;
+                    }
+                    imgIndex += 1;
+                }
+            }
+            for (let i = PSItems.length-1; i >= 0; i--){
+                let PSItem = PSItems[i];
+                if (PSItem.isImage){
+                    PSItem.last = true;
+                    break;
                 }
             }
 
