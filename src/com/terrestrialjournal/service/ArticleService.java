@@ -125,6 +125,7 @@ public class ArticleService extends PostService {
         articleEntity.setLastModifiedDate(LocalDateTime.now());
         articleEntity.setTitle(Tools.nullToEmpty(articleTO.title));
         articleEntity.setDescription(Tools.nullToEmpty(articleTO.description));
+        articleEntity.setSEDescription(Tools.nullToEmpty(articleTO.seDescription));
         articleEntity.setTinyDescription(Tools.nullToEmpty(articleTO.tinyDescription));
         articleEntity.setGpsCoordinates(Tools.nullToEmpty(articleTO.gpsCoordinates));
 

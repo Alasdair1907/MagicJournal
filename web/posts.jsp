@@ -54,6 +54,7 @@
         MetaTO metaTO = ServletUtils.prepareMeta(request, application);
 
         out.println("<title>"+metaTO.getTitle()+"</title>");
+        out.println("<meta name='description' content='" + metaTO.getSeDescription() + "'>");
 
         out.println(String.format("<meta property='og:url' content='%s'>", metaTO.getOgUrl()));
         out.println("<meta property='og:type' content='article'>");

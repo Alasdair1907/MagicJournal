@@ -154,6 +154,7 @@ public class GalleryService extends PostService {
         galleryEntity.setTitle(Tools.nullToEmpty(galleryTO.title));
         galleryEntity.setTinyDescription(Tools.nullToEmpty(galleryTO.tinyDescription));
         galleryEntity.setDescription(Tools.nullToEmpty(galleryTO.description));
+        galleryEntity.setSEDescription(Tools.nullToEmpty(galleryTO.seDescription));
         galleryEntity.setGpsCoordinates(Tools.nullToEmpty(galleryTO.gpsCoordinates));
         galleryEntity.setPreRender(galleryTO.preRender);
 

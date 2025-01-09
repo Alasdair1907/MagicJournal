@@ -81,9 +81,18 @@ let articleNewOrEdit = `
 <span class="smalltext">Brief description for social media posts</span><br />
 <textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{articleVO.tinyDescription}}</textarea><br />
 
+
+
 <span class="text">Description:</span><br />
 <span class="smalltext">max. 300 characters</span><br />
 <textarea class="input-textarea-description-article width-100-pc" maxlength="300" data-role="data-description">{{articleVO.description}}</textarea><br />
+
+
+
+<span class="text">Search Engine Description: (meta name='description')</span><br />
+<span class="smalltext">max. 200 characters</span><br />
+<textarea class="input-textarea-description-article width-100-pc" maxlength="200" data-role="data-se-description">{{articleVO.seDescription}}</textarea><br />
+
 <br />
 <span class="text">Article Text:</span><br />
 

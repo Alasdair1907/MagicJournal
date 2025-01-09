@@ -201,6 +201,7 @@ public class PhotostoryService extends PostService {
         photostoryEntity.setLastModifiedDate(LocalDateTime.now());
         photostoryEntity.setTitle(Tools.nullToEmpty(photostoryTO.title));
         photostoryEntity.setDescription(Tools.nullToEmpty(photostoryTO.description));
+        photostoryEntity.setSEDescription(Tools.nullToEmpty(photostoryTO.seDescription));
         photostoryEntity.setTinyDescription(Tools.nullToEmpty(photostoryTO.tinyDescription));
         photostoryEntity.setGpsCoordinates(Tools.nullToEmpty(photostoryTO.gpsCoordinates));
 

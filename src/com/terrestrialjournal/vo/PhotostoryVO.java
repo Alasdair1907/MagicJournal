@@ -31,6 +31,8 @@ public class PhotostoryVO implements PostVO {
     public Long indexId;
     public String title;
     public String description;
+    public String seDescription;
+
     public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
@@ -77,6 +79,7 @@ public class PhotostoryVO implements PostVO {
                 throw new RuntimeException(ex);
             }
         }
+        this.seDescription = photostoryEntity.getSEDescription();
     }
 
     @Override
@@ -164,5 +167,13 @@ public class PhotostoryVO implements PostVO {
 
     public void setContent(PhotostoryContentTO content) {
         this.content = content;
+    }
+
+    public String getSEDescription() {
+        return seDescription;
+    }
+
+    public void setSEDescription(String seDescription) {
+        this.seDescription = seDescription;
     }
 }

@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
 
 public class MetaTO {
 
-    /* <meta name="description" content="blah"> */
+    public String seDescription; // <meta name='description' content='Descriptive, keyword-rich text that talks about the page content goes here.'>
+
     public String title;
     public String description;
     public String keywords; // e.g. "Free web tutorials"
@@ -91,9 +92,15 @@ public class MetaTO {
         return Tools.htmlSingleQuote(twitterTitle);
     }
 
+    public String getSeDescription() {
+        return Tools.htmlSingleQuote(seDescription);
+    }
+
+
     public static MetaTO fromPostVO(PostVO postVO, SettingsTO settingsTO){
         MetaTO metaTO = new MetaTO();
 
+        metaTO.seDescription = postVO.getSEDescription();
         metaTO.title = postVO.getTitle();
         metaTO.description = postVO.getTitle();
         metaTO.author = postVO.getAuthorVO().displayName;
@@ -103,6 +110,7 @@ public class MetaTO {
 
         metaTO.ogTitle = postVO.getPostAttributionStr() + ": " + postVO.getTitle();
         metaTO.ogDescription = postVO.getTinyDescription();
+
 
         metaTO.websiteUrl = Tools.normalizeURL(settingsTO.websiteURL);
 

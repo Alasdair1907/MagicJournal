@@ -32,6 +32,9 @@ public interface PostEntity {
     String getDescription();
     void setDescription(String description);
 
+    String getSEDescription();
+    void setSEDescription(String seDescription);
+
     String getTinyDescription();
     void setTinyDescription(String tinyDescription);
 

@@ -43,6 +43,9 @@ public class PhotoEntity implements Serializable, PostEntity {
     @Column(name="description")
     private String description;
 
+    @Column(name="se_description")
+    String seDescription;
+
     @Column(name="tiny_description")
     String tinyDescription;
 
@@ -158,5 +161,12 @@ public class PhotoEntity implements Serializable, PostEntity {
 
     public void setPreRender(String preRender) {
         this.preRender = preRender;
+    }
+
+    public String getSEDescription(){
+        return seDescription;
+    }
+    public void setSEDescription(String seDescription){
+        this.seDescription = seDescription;
     }
 }

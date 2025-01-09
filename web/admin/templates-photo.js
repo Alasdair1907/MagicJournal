@@ -83,6 +83,13 @@ let photoNewOrEdit = `
 <span class="smalltext">Brief description for social media posts</span><br />
 <textarea class="input-textarea-tiny-description width-100-pc" maxlength="256" data-role="data-tinydescription">{{photoVO.tinyDescription}}</textarea><br />
 
+
+<span class="text">Search Engine Description: (meta name='description')</span><br />
+<span class="smalltext">max. 200 characters</span><br />
+<textarea class="input-textarea-description-article width-100-pc" maxlength="200" data-role="data-se-description">{{photoVO.seDescription}}</textarea><br />
+
+
+
 <span class="text">Description:</span><br />
 <span class="smalltext">Basic BB code can be used. Max. 1920 characters, will be trimmed to 300 in listings.</span>
 <textarea class="input-textarea-description width-100-pc" maxlength="1920" rows="20" data-role="data-description">{{photoVO.description}}</textarea><br />

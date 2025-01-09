@@ -16,3 +16,8 @@ CREATE TABLE photostories (
 ALTER TABLE articles ADD COLUMN prerender text;
 ALTER TABLE photos ADD COLUMN prerender text;
 ALTER TABLE galleries ADD COLUMN prerender text;
+
+ALTER TABLE articles ADD COLUMN se_description varchar(255);
+ALTER TABLE photos ADD COLUMN se_description varchar(255);
+ALTER TABLE galleries ADD COLUMN se_description varchar(255);
+ALTER TABLE photostories ADD COLUMN se_description varchar(255);

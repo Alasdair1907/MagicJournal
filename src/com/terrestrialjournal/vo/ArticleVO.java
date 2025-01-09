@@ -27,6 +27,7 @@ public class ArticleVO implements PostVO {
     public Long indexId;
     public String title;
     public String description;
+    public String seDescription;
     public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
@@ -63,6 +64,7 @@ public class ArticleVO implements PostVO {
         this.postAttribution = PostAttribution.ARTICLE.getId();
         this.isArticle = true;
         this.preRender = articleEntity.getPreRender();
+        this.seDescription = articleEntity.getSEDescription();
     }
 
     @Override
@@ -134,5 +136,13 @@ public class ArticleVO implements PostVO {
     @Override
     public void setPreRender(String preRender) {
         this.preRender = preRender;
+    }
+
+    public String getSEDescription() {
+        return seDescription;
+    }
+
+    public void setSEDescription(String seDescription) {
+        this.seDescription = seDescription;
     }
 }

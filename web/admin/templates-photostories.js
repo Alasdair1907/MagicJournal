@@ -84,6 +84,12 @@ let photostoryNewOrEdit = `
 <span class="text">Description:</span><br />
 <span class="smalltext">max. 300 characters</span><br />
 <textarea class="input-textarea-description-photostory width-100-pc" maxlength="300" data-role="data-description">{{photostoryVO.description}}</textarea><br />
+
+<span class="text">Search Engine Description: (meta name='description')</span><br />
+<span class="smalltext">max. 200 characters</span><br />
+<textarea class="input-textarea-description-article width-100-pc" maxlength="200" data-role="data-se-description">{{photostoryVO.seDescription}}</textarea><br />
+
+
 <br />
 <span class="text">Photostory Text:</span><br />
 

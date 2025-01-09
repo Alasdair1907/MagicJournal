@@ -30,6 +30,7 @@ public class GalleryVO implements PostVO {
     public Long indexId;
     public String title;
     public String description;
+    public String seDescription;
     public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
@@ -64,6 +65,7 @@ public class GalleryVO implements PostVO {
         this.postAttribution = PostAttribution.GALLERY.getId();
         this.isGallery = true;
         this.preRender = galleryEntity.getPreRender();
+        this.seDescription = galleryEntity.getSEDescription();
     }
 
     @Override
@@ -140,6 +142,14 @@ public class GalleryVO implements PostVO {
     @Override
     public void setPreRender(String preRender) {
         this.preRender = preRender;
+    }
+
+    public String getSEDescription() {
+        return seDescription;
+    }
+
+    public void setSEDescription(String seDescription) {
+        this.seDescription = seDescription;
     }
 
 }

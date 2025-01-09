@@ -40,7 +40,8 @@ author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
 published boolean,
-prerender text
+prerender text,
+se_description varchar(255)
 );
 
 CREATE TABLE tags (
@@ -63,7 +64,8 @@ author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
 published boolean,
-prerender text
+prerender text,
+se_description varchar(255)
 );
 
 CREATE TABLE articles (
@@ -78,7 +80,8 @@ author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
 published boolean,
-prerender text
+prerender text,
+se_description varchar(255)
 );
 
 CREATE TABLE relations (
@@ -127,7 +130,8 @@ author_id bigint,
 creation_date timestamp,
 gps_coordinates varchar(128),
 published boolean,
-prerender text
+prerender text,
+se_description varchar(255)
 );
 
 INSERT INTO authors (login, password, privilege_level) VALUES ('admin','5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8', 2);

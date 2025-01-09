@@ -30,6 +30,8 @@ public class PhotoVO implements PostVO {
     public Long indexId;
     public String title;
     public String description;
+    public String seDescription;
+
     public String tinyDescription;
     public AuthorVO authorVO;
     public LocalDateTime creationDate;
@@ -63,6 +65,7 @@ public class PhotoVO implements PostVO {
         this.postAttribution = PostAttribution.PHOTO.getId();
         isPhoto = true;
         this.preRender = photoEntity.getPreRender();
+        this.seDescription = photoEntity.getSEDescription();
     }
 
     @Override
@@ -138,4 +141,11 @@ public class PhotoVO implements PostVO {
         this.preRender = preRender;
     }
 
+    public String getSEDescription() {
+        return seDescription;
+    }
+
+    public void setSEDescription(String seDescription) {
+        this.seDescription = seDescription;
+    }
 }

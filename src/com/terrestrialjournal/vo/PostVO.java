@@ -8,6 +8,8 @@ import java.util.List;
 public interface PostVO {
     String getTitle();
     String getDescription();
+
+    String getSEDescription();
     AuthorVO getAuthorVO();
     LocalDateTime getCreationDate();
     String getPostAttributionStr();

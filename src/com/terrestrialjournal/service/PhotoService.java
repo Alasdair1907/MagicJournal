@@ -130,6 +130,7 @@ public class PhotoService extends PostService {
         photoEntity.setTitle(Tools.nullToEmpty(photoTO.title));
         photoEntity.setTinyDescription(Tools.nullToEmpty(photoTO.tinyDescription));
         photoEntity.setDescription(Tools.nullToEmpty(photoTO.description));
+        photoEntity.setSEDescription(Tools.nullToEmpty(photoTO.seDescription));
         photoEntity.setGpsCoordinates(Tools.nullToEmpty(photoTO.gpsCoordinates));
         if (newPhoto) {
             photoEntity.setPublished(photoTO.published);

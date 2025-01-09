@@ -59,6 +59,7 @@ $.widget("admin.photosWidget", {
         let $titleElem = element.find('[data-role="data-title"]');
         let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
+        let $seDescrElem = element.find('[data-role="data-se-description"]');
 
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
         let $mapSelectLink = element.find('[data-role="select-on-map"]');
@@ -131,6 +132,7 @@ $.widget("admin.photosWidget", {
                 title: $titleElem.val(),
                 tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
+                seDescription: $seDescrElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")
             };

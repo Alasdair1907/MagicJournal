@@ -63,6 +63,7 @@ $.widget("admin.articlesWidget", {
         let $titleElem = element.find('[data-role="data-title"]');
         let $tinyDescrElem = element.find('[data-role="data-tinydescription"]');
         let $descrElem = element.find('[data-role=data-description]');
+        let $seDescrElem = element.find('[data-role="data-se-description"]');
         let $textElem = element.find('[data-role="data-article-text"]');
 
         let $gpsElem = element.find('[data-role=data-gps-coordinates]');
@@ -135,6 +136,7 @@ $.widget("admin.articlesWidget", {
                 title: $titleElem.val(),
                 tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
+                seDescription: $seDescrElem.val(),
                 articleText: $textElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")
@@ -160,6 +162,7 @@ $.widget("admin.articlesWidget", {
                 title: $titleElem.val(),
                 tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
+                seDescription: $seDescrElem.val(),
                 articleText: $textElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")
@@ -186,6 +189,7 @@ $.widget("admin.articlesWidget", {
                 title: $titleElem.val(),
                 tinyDescription: $tinyDescrElem.val(),
                 description: $descrElem.val(),
+                seDescription: $seDescrElem.val(),
                 articleText: $textElem.val(),
                 gpsCoordinates: $gpsElem.val(),
                 sessionGuid: Cookies.get("guid")

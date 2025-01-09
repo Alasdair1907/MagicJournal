@@ -22,6 +22,7 @@ public class GalleryTO {
     public String title;
     public String tinyDescription;
     public String description;
+    public String seDescription;
     public String gpsCoordinates;
     public String sessionGuid;
     public Boolean published;

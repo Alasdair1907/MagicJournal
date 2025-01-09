@@ -25,6 +25,9 @@ public class ArticleEntity implements Serializable, PostEntity {
     @Column(name="description")
     String description;
 
+    @Column(name="se_description")
+    String seDescription;
+
     @Column(name="tiny_description")
     String tinyDescription;
 
@@ -163,5 +166,12 @@ public class ArticleEntity implements Serializable, PostEntity {
 
     public void setPreRender(String preRender) {
         this.preRender = preRender;
+    }
+
+    public String getSEDescription(){
+        return seDescription;
+    }
+    public void setSEDescription(String seDescription){
+        this.seDescription = seDescription;
     }
 }
